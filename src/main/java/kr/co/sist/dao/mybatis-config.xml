@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<properties resource="properties/database.properties"/>
+<typeAliases>
+
+
+
+
+</typeAliases>
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+      	<!-- .properties를 이용해서 넣을 수 있음 -->
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${id}"/>
+        <property name="password" value="${pass}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+  
+  
+  
+  
+  </mappers>
+</configuration>
