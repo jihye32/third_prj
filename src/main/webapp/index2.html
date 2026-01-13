@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>중고나라 디자인 확인용 (수정됨)</title>
+
+<link rel="stylesheet" as="style" crossorigin
+	href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+
+<link rel="stylesheet"
+	href="https://web.joongna.com/main-web/_next/static/css/9d2b0939952400cb.css" />
+<link rel="stylesheet"
+	href="https://web.joongna.com/main-web/_next/static/css/a4ef56fda630c4e5.css" />
+
+<style>
+/* 3. [중요] 폰트 강제 적용 및 화면 보임 처리 */
+body, html {
+	font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui,
+		Roboto, sans-serif !important;
+	opacity: 1 !important; /* 혹시 CSS가 화면을 숨기고 있다면 강제로 보이게 함 */
+	visibility: visible !important;
+}
+
+/* 링크 클릭 시 이동 방지 */
+a {
+	cursor: pointer;
+}
+</style>
+
+<script type="text/javascript">
+	function openDrawer() {
+		document.getElementById('drawer').classList.add('open');
+		document.getElementById('overlay').classList.add('open');
+	}
+
+	function closeDrawer() {
+		document.getElementById('drawer').classList.remove('open');
+		document.getElementById('overlay').classList.remove('open');
+	}
+</script>
+</head>
+<body>
+	<div id="__next">
+		<div class="flex flex-col min-h-screen bg-white">
+			<header id="siteHeader"
+				class="headerThree relative z-20 w-full h-16 sm:h-20 lg:h-36 xl:h-40 max-[480px]:mt-[73px]">
+				<div id="header_items_wrapper"
+					class="px-4 md:px-8 lg:px-0 h-16 sm:h-20 lg:h-36 xl:h-40 w-full transition duration-200 ease-in-out border-b border-jnGray-300 fixed z-20 text-gray-700 bg-white innerSticky body-font">
+					<div
+						class="h-full lg:h-20 xl:h-24 px-0 lg:px-8 2xl:px-16 max-w-[1024px] min-[1600px]:max-w-[1280px] flex items-center mx-auto box-content justify-between relative before:absolute before:w-screen before:bg-[#F1F1F1] before:bottom-0">
+
+						<div class="flex flex-1 lg:max-w-[200px]">
+							<a style="width: 200px; height: 30px"
+								class="ga4_main_top_logo max-[1023px]:!w-[97px] max-[1023px]:!h-[16px] lg:w-full lg:flex-1 inline-flex focus:outline-none relative"
+								href="#"> <img alt="Joonggonara"
+								style="position: absolute; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0;"
+								src="https://web.joongna.com/main-web/assets/images/custom-logo.svg" />
+							</a>
+						</div>
+
+						<div class="hidden relative flex-1 ms-7 me-7 xl:ms-9 lg:block">
+							<form role="search" novalidate=""
+								class="w-full relative flex items-center h-10 overflow-hidden rounded-md bg-jnGray-200 px-3 py-[10px] lg:px-5 space-x-2">
+								<label for="search"
+									class="flex items-center py-0.5 flex-none w-4 h-4"> <svg
+										width="24" height="24" viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+										class="w-[16px] h-[16px] text-[#9CA3AF]">
+										<path
+											d="M10.0278 19.0556C14.3233 19.0556 17.8056 15.5733 17.8056 11.2778C17.8056 6.98223 14.3233 3.5 10.0278 3.5C5.73223 3.5 2.25 6.98223 2.25 11.2778C2.25 15.5733 5.73223 19.0556 10.0278 19.0556Z"
+											stroke="currentColor" stroke-width="1.5"
+											stroke-linecap="round" stroke-linejoin="round"
+											fill="transparent"></path>
+										<path d="M21 21.8999L15.5 16.8999" stroke="currentColor"
+											stroke-width="1.5" stroke-linecap="round"
+											stroke-linejoin="round"></path></svg>
+								</label> <input id="search-box"
+									placeholder="어떤 상품을 찾으시나요? 카페상품, 앱상품 모두 검색"
+									class="flex-auto text-sm text-heading bg-transparent placeholder-[#9CA3AF] overflow-hidden text-ellipsis whitespace-nowrap outline-none" />
+							</form>
+						</div>
+
+						<div class="hidden lg:flex relative w-[300px]">
+							<ul
+								class="flex w-full text-sm font-medium list-none text-jnGray-900 break-keep">
+								<li class="flex items-center justify-center pr-3">
+									<button class="flex items-center justify-center">
+										<div class="relative cursor-pointer">
+											<svg xmlns="http://www.w3.org/2000/svg" width="24"
+												height="24" fill="none">
+												<path stroke="#141313" stroke-linecap="round"
+													stroke-linejoin="round" stroke-width="1.5"
+													d="M20.797 12.2c0 1.639-.438 3.175-1.204 4.5l.46 3.035a.9.9 0 0 1-1.23.968l-2.526-.708a9 9 0 1 1 4.5-7.796"
+													clip-rule="evenodd"></path>
+												<path fill="#141313" stroke="#141313" stroke-width="0.15"
+													d="M8.864 12.2a1.075 1.075 0 1 0-2.15 0 1.075 1.075 0 0 0 2.15 0Zm4 0a1.075 1.075 0 1 0-2.15 0 1.075 1.075 0 0 0 2.15 0Zm4 0a1.075 1.075 0 1 0-2.15 0 1.075 1.075 0 0 0 2.15 0Z"></path></svg>
+										</div>
+										<p class="ml-1">채팅하기</p>
+									</button>
+								</li>
+								<li
+									class="after:contents-[''] after:absolute after:w-[1px] after:h-4 after:bg-jnGray-300 after:right-0 before:contents-[''] before:absolute before:w-[1px] before:h-4 before:bg-jnGray-300 before:left-0 relative flex items-center justify-center px-3">
+									<a class="flex items-center justify-center [&>p]:ml-1" href="#">
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+											xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M13.6859 20.6926H4.92323C3.88605 20.6926 3.08773 19.8241 3.20716 18.8409L4.49579 8.32142C4.5775 7.63983 5.18096 7.12109 5.89756 7.12109H15.8168C16.5334 7.12109 17.1369 7.6338 17.2186 8.32142L17.91 14.0701"
+												stroke="currentColor" stroke-width="1.5"></path>
+											<path
+												d="M8.35938 9.35156V9.5868C8.35938 10.7751 9.47828 11.7462 10.8486 11.7462C12.219 11.7462 13.3379 10.7751 13.3379 9.5868V9.35156"
+												stroke="currentColor" stroke-width="1.5"
+												stroke-linecap="round" stroke-linejoin="round"></path>
+											<path
+												d="M7.35938 7.72983V6.25112C7.35938 4.34555 8.90414 2.80078 10.8097 2.80078V2.80078C12.7153 2.80078 14.26 4.34555 14.26 6.25112V7.72983"
+												stroke="currentColor" stroke-width="1.5"></path>
+											<path
+												d="M17.1179 22.4245C19.3694 22.4245 21.1968 20.5969 21.1968 18.347C21.1968 16.0972 19.3694 14.2695 17.1179 14.2695C14.8665 14.2695 13.0391 16.0972 13.0391 18.347C13.0391 20.5969 14.8665 22.4245 17.1179 22.4245Z"
+												stroke="currentColor" stroke-width="1.5"
+												stroke-linecap="round" stroke-linejoin="round"></path>
+											<path d="M17.1406 19.9298V16.7461" stroke="currentColor"
+												stroke-width="1.2" stroke-linecap="round"
+												stroke-linejoin="round"></path>
+											<path d="M15.5312 18.3439H18.7149" stroke="currentColor"
+												stroke-width="1.2" stroke-linecap="round"
+												stroke-linejoin="round"></path></svg>
+										<p>판매하기</p>
+								</a>
+								</li>
+								<li class="relative flex flex-1 pl-3">
+									<button class="flex items-center justify-center [&>p]:ml-1">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											fill="none">
+											<path stroke="#141313" stroke-linecap="round"
+												stroke-linejoin="round" stroke-width="1.5"
+												d="M16.775 7.716a3.619 3.619 0 1 1-7.238.005 3.619 3.619 0 0 1 7.238-.005M13.15 13.371c-4.026 0-7.298 3.184-7.4 7.145h14.8c-.102-3.961-3.374-7.145-7.4-7.145"></path></svg>
+										<p>마이</p>
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div
+						class="md:px-8 2xl:px-16 lg:flex lg:h-16 items-center min-[1600px]:max-w-[1280px] max-w-[1024px] hidden headerBottom mx-auto box-content">
+						<div class="relative flex-shrink-0 categoryMenu hidden lg:block">
+							<div
+								class="flex items-center justify-center gap-2 px-3.5 xl:px-4 text-sm relative font-semibold text-white transition-colors rounded-md cursor-pointer h-11 bg-heading hover:bg-black">
+								<svg stroke="currentColor" fill="currentColor" stroke-width="0"
+									viewBox="0 0 20 20" class="text-xl" height="1em" width="1em"
+									xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd"
+										d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+										clip-rule="evenodd"></path></svg>
+								카테고리
+							</div>
+						</div>
+						<nav
+							class="headerMenu flex w-full h-full relative hidden lg:flex ms-3.5 xl:ms-5 min-w-0 overflow-auto flex-1">
+							<div class="menuItem group cursor-pointer shrink-0">
+								<a
+									class="relative inline-flex items-center px-3 py-3 text-sm font-normal xl:text-base text-heading xl:px-4 group-hover:text-black whitespace-nowrap h-full">이벤트</a>
+							</div>
+							<div class="menuItem group cursor-pointer shrink-0">
+								<a
+									class="relative inline-flex items-center px-3 py-3 text-sm font-normal xl:text-base text-heading xl:px-4 group-hover:text-black whitespace-nowrap h-full">J쿠폰</a>
+							</div>
+							<div class="menuItem group cursor-pointer shrink-0">
+								<a
+									class="relative inline-flex items-center px-3 py-3 text-sm font-normal xl:text-base text-heading xl:px-4 group-hover:text-black whitespace-nowrap h-full">사기조회</a>
+							</div>
+							<div class="menuItem group cursor-pointer shrink-0">
+								<a
+									class="relative inline-flex items-center px-3 py-3 text-sm font-normal xl:text-base text-heading xl:px-4 group-hover:text-black whitespace-nowrap h-full">시세조회</a>
+							</div>
+							<div class="menuItem group cursor-pointer shrink-0">
+								<a
+									class="relative inline-flex items-center px-3 py-3 text-sm font-normal xl:text-base text-heading xl:px-4 group-hover:text-black whitespace-nowrap h-full">읽을거리</a>
+							</div>
+							<div class="cursor-pointer menuItem group shrink-0">
+								<a
+									class="relative inline-flex items-center px-3 py-3 text-sm font-normal xl:text-base text-heading xl:px-4 group-hover:text-black whitespace-nowrap h-full">찜한
+									상품</a>
+							</div>
+						</nav>
+					</div>
+				</div>
+			</header>
+
+			<main class="relative flex-grow border-b-2" style="min-height: 500px">
+				<div
+					class="mx-auto max-w-[1280px] px-5 md:px-8 2xl:px-16 box-content">
+					<article
+						class="flex flex-col justify-center mx-auto mt-6 w-full lg:mt-8 md:w-1/2">
+						<div class="flex flex-col space-y-5">
+							<h2
+								class="text-2xl font-semibold text-jnGray-900 mt-8 text-center">고객센터</h2>
+							<div class="h-[1px] bg-jnGray-900 my-5 "></div>
+							<h3 class="text-2xl font-semibold text-jnGray-900">자주 묻는 질문
+								FAQ</h3>
+						</div>
+
+						<div
+							class="flex items-center justify-between rounded-md bg-jnGray-200 py-[10px] my-4">
+							<form novalidate="" role="search" class="w-full">
+								<label for="search" class="flex items-center"> <span
+									class="px-3"> <svg width="20" height="20"
+											viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+											class="md:w-4 xl:w-5 md:h-4 xl:h-5">
+											<path
+												d="M10.0278 19.0556C14.3233 19.0556 17.8056 15.5733 17.8056 11.2778C17.8056 6.98223 14.3233 3.5 10.0278 3.5C5.73223 3.5 2.25 6.98223 2.25 11.2778C2.25 15.5733 5.73223 19.0556 10.0278 19.0556Z"
+												stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"
+												stroke-linejoin="round" fill="white"></path>
+											<path d="M21 21.8999L15.5 16.8999" stroke="#9CA3AF"
+												stroke-width="1.5" stroke-linecap="round"
+												stroke-linejoin="round"></path></svg>
+								</span> <input id="search" type="search"
+									class="w-full h-full text-sm bg-transparent outline-none placeholder-jnGray-500 10 text-heading lg:text-base placeholder:text-sm"
+									placeholder="궁금하신 점을 검색해 주세요." autoComplete="off" />
+								</label>
+							</form>
+						</div>
+
+						<section class="flex flex-col">
+							<ul class="flex flex-col py-4 w-full">
+								<li><button
+										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
+										<div class="flex flex-col flex-1 items-start mr-2">
+											<span class="text-left"><span
+												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[판매자]
+													안심결제로 물건을 판매했는데 판매대금은 언제 입금되나요?</span></span><span
+												class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
+										</div>
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+											class="-rotate-90 rotate-[0deg]">
+											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
+												stroke-width="1.5" stroke-linecap="round"
+												stroke-linejoin="round"></path></svg>
+									</button></li>
+								<li><button
+										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
+										<div class="flex flex-col flex-1 items-start mr-2">
+											<span class="text-left"><span
+												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">계좌
+													전송 기능이 무엇인가요?</span></span><span
+												class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
+										</div>
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+											class="-rotate-90 rotate-[0deg]">
+											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
+												stroke-width="1.5" stroke-linecap="round"
+												stroke-linejoin="round"></path></svg>
+									</button></li>
+								<li><button
+										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
+										<div class="flex flex-col flex-1 items-start mr-2">
+											<span class="text-left"><span
+												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[안심보상제도]
+													안심보상제도란?</span></span><span
+												class="mt-1 text-xs font-medium text-jnGray-500">안심보상</span>
+										</div>
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+											class="-rotate-90 rotate-[0deg]">
+											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
+												stroke-width="1.5" stroke-linecap="round"
+												stroke-linejoin="round"></path></svg>
+									</button></li>
+								<li><button
+										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
+										<div class="flex flex-col flex-1 items-start mr-2">
+											<span class="text-left"><span
+												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[판매자]
+													판매자 수수료가 무엇인가요?</span></span><span
+												class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
+										</div>
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+											class="-rotate-90 rotate-[0deg]">
+											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
+												stroke-width="1.5" stroke-linecap="round"
+												stroke-linejoin="round"></path></svg>
+									</button></li>
+								<li><button
+										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
+										<div class="flex flex-col flex-1 items-start mr-2">
+											<span class="text-left"><span
+												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">등급은
+													어떻게 분류되나요?</span></span><span
+												class="mt-1 text-xs font-medium text-jnGray-500">셀프검수</span>
+										</div>
+										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+											class="-rotate-90 rotate-[0deg]">
+											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
+												stroke-width="1.5" stroke-linecap="round"
+												stroke-linejoin="round"></path></svg>
+									</button></li>
+							</ul>
+						</section>
+
+						<div
+							class="grid grid-cols-2 gap-2 justify-between items-center w-full mb-[120px]">
+							<button onclick="openDrawer()"
+								class="flex justify-center w-full py-3 text-sm font-medium text-center bg-white border border-solid rounded border-jnGray-300 text-jnGray-900 break-keep">1:1
+								문의</button>
+							<button
+								class="flex justify-center w-full py-3 text-sm font-medium text-center bg-white border border-solid rounded border-jnGray-300 text-jnGray-900 break-keep">문의내역</button>
+							<button
+								class="flex justify-center w-full py-3 text-sm font-medium text-center bg-white border border-solid rounded border-jnGray-300 text-jnGray-900 break-keep col-span-2">안심보상
+								내역</button>
+						</div>
+					</article>
+				</div>
+			</main>
+
+			<footer class="bg-jnGray-100">
+				<div
+					class="text-xs leading-[14.32px] text-jnGray-600 px-5 xl:px-0 mx-auto mt-8 mb-10 xl:mt-10 xl:mb-11 max-w-[1024px] min-[1600px]:max-w-[1280px]">
+					<section class="flex flex-col justify-between md:flex-row">
+						<div class="mb-6 md:mb-0">
+							<h4 class="mb-3 font-bold text-jnGray-900">(주)중고나라 사업자 정보</h4>
+							<ul class="[&amp;&gt;li]:mb-2">
+								<li class="flex items-center">(주)중고나라
+									<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>대표자 : 최인욱
+								</li>
+								<li>사업자 등록번호 : 215-87-87482</li>
+								<li>통신판매신고번호 : 제2024-서울강남-06966호</li>
+								<li>주소 : 서울 강남구 테헤란로 415 L7 호텔 강남타워 4층 407~428호</li>
+								<li>대표번호 : 1533-7861</li>
+								<li>메일 : joongna@joonggonara.co.kr</li>
+								<li>호스팅제공자 : 아마존웹서비스</li>
+							</ul>
+							<div class="flex">
+								<h5
+									class="font-semibold leading-[17px] tracking-[0.2px] mr-3 text-jnGray-700">Contact</h5>
+								<ul class="flex items-center">
+									<li><a href="https://seller.joonggonara.co.kr/">중고나라
+											셀러 회원 신청</a></li>
+									<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+									<li><a href="https://vvd.bz/eFFQ">중고나라 광고 문의</a></li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<hr class="w-full h-[1px] mt-8 mb-4 xl:my-5">
+					<section class="flex flex-col justify-between lg:flex-row">
+						<div class="lg:w-[100%]">
+							<ul
+								class="flex flex-wrap items-center mb-5 leading-loose xl:mb-3 text-jnGray-900">
+								<a class="" href="/terms">이용약관</a>
+								<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+								<a class="font-bold" href="/privacy-policy">개인정보처리방침</a>
+								<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+								<a class="" href="/member-dispute">분쟁처리절차</a>
+								<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+								<a class="" href="/youthpolicy">청소년보호정책</a>
+								<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+								<a class=""
+									href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=2158787482&amp;apv_perm_no=">사업자정보확인</a>
+								<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+								<a class="" href="/post-policy">게시글 수집 및 이용 안내</a>
+								<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+								<a class="" href="/cs-center">중고나라 고객센터</a>
+								<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+								<a class="" href="/notice">공지사항</a>
+							</ul>
+							<p class="leading-[22px]">“중고나라” 상점의 판매상품을 제외한 모든 상품들에 대하여,
+								(주)중고나라는 통신판매중개자로서 거래 당사자가 아니며 판매 회원과 구매 회원 간의 상품거래 정보 및 거래에
+								관여하지 않고, 어떠한 의무와 책임도 부담하지 않습니다.</p>
+						</div>
+					</section>
+				</div>
+			</footer>
+		</div>
+	</div>
+	<div id="drawer" class="drawer">
+		<div class="drawer-header">
+			<h2>1:1 문의</h2>
+			<button onclick="closeDrawer()">닫기 X</button>
+		</div>
+		<div class="drawer-content">
+			<div class="basic-layout css-f1iq23">
+				<header class="css-k0sx5n">
+					<div class="css-nh9e3h">
+						<div class="css-1afmzpj">
+							<h1 class="css-1gl63ht">1:1 문의</h1>
+							<div class="css-dsqfz5">
+								<button class=" css-17i5ava" name="뒤로가기" aria-label="뒤로가기"
+									title="뒤로가기">
+									<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+										xmlns="http://www.w3.org/2000/svg" class="css-wsqqvh">
+										<path
+											d="M12.5 19.5L4.42491 12.3749C4.19932 12.1759 4.19932 11.8241 4.42491 11.6251L12.5 4.5"
+											stroke="currentColor" stroke-width="1.5"
+											stroke-linecap="round" stroke-linejoin="round"></path></svg>
+								</button>
+							</div>
+							<div class="css-1ay3cpr"></div>
+						</div>
+					</div>
+					<div class="css-16zjptt"></div>
+				</header>
+				<main role="main" aria-label="본문 영역" id="container"
+					class="container css-1ej580f" tabindex="-1"
+					style="scroll-margin-top: 48px;">
+					<article class="css-khmaje">
+						<div class="notice">
+							<svg width="20px" height="20px" viewBox="0 0 20 20 " fill="none"
+								xmlns="http://www.w3.org/2000/svg" class="css-wsqqvh">
+								<g clip-path="url(#clip0_20017_80683)">
+								<path d="M18.5001 9.67749H15.1451" stroke="#5A616B"
+									stroke-width="1.3" stroke-miterlimit="10"
+									stroke-linecap="round" stroke-linejoin="round"></path>
+								<path d="M17.7445 5.07663L14.9962 7.00098" stroke="#5A616B"
+									stroke-width="1.3" stroke-miterlimit="10"
+									stroke-linecap="round" stroke-linejoin="round"></path>
+								<path d="M14.998 12.2741L17.7462 14.1985" stroke="#5A616B"
+									stroke-width="1.3" stroke-miterlimit="10"
+									stroke-linecap="round" stroke-linejoin="round"></path>
+								<mask id="path-4-inside-1_20017_80683" fill="white">
+								<path
+									d="M11.9075 3.9025V16.105L5.765 12.325C5.585 12.2125 5.3825 12.16 5.1725 12.16H2.375V7.8325H5.18C5.39 7.8325 5.5925 7.7725 5.765 7.6675L11.9075 3.9025ZM12.245 2.5C12.1025 2.5 11.9525 2.545 11.81 2.6425L5.18 6.7075H2.0375C1.6025 6.7075 1.25 7.075 1.25 7.525V12.4525C1.25 12.9025 1.6025 13.2775 2.0375 13.2775H5.18L11.8175 17.3575C11.9525 17.455 12.1025 17.5 12.2525 17.5C12.6575 17.5 13.04 17.1625 13.04 16.675V3.325C13.0325 2.8375 12.6575 2.5 12.245 2.5Z"></path></mask>
+								<path
+									d="M11.9075 3.9025V16.105L5.765 12.325C5.585 12.2125 5.3825 12.16 5.1725 12.16H2.375V7.8325H5.18C5.39 7.8325 5.5925 7.7725 5.765 7.6675L11.9075 3.9025ZM12.245 2.5C12.1025 2.5 11.9525 2.545 11.81 2.6425L5.18 6.7075H2.0375C1.6025 6.7075 1.25 7.075 1.25 7.525V12.4525C1.25 12.9025 1.6025 13.2775 2.0375 13.2775H5.18L11.8175 17.3575C11.9525 17.455 12.1025 17.5 12.2525 17.5C12.6575 17.5 13.04 17.1625 13.04 16.675V3.325C13.0325 2.8375 12.6575 2.5 12.245 2.5Z"
+									fill="#5A616B"></path>
+								<path
+									d="M11.9075 3.9025H13.4075V1.22373L11.1236 2.62362L11.9075 3.9025ZM11.9075 16.105L11.1214 17.3825L13.4075 18.7893V16.105H11.9075ZM5.765 12.325L4.96998 13.597L4.97885 13.6025L5.765 12.325ZM2.375 12.16H0.875V13.66H2.375V12.16ZM2.375 7.8325V6.3325H0.875V7.8325H2.375ZM5.765 7.6675L6.54492 8.94881L6.54888 8.94638L5.765 7.6675ZM11.81 2.6425L12.594 3.92128L12.626 3.90166L12.657 3.88046L11.81 2.6425ZM5.18 6.7075V8.2075H5.60323L5.96405 7.98628L5.18 6.7075ZM5.18 13.2775L5.9655 11.9996L5.60415 11.7775H5.18V13.2775ZM11.8175 17.3575L12.6957 16.1415L12.6505 16.1088L12.603 16.0796L11.8175 17.3575ZM13.04 3.325H14.54V3.31346L14.5398 3.30193L13.04 3.325ZM10.4075 3.9025V16.105H13.4075V3.9025H10.4075ZM12.6936 14.8275L6.55115 11.0475L4.97885 13.6025L11.1214 17.3825L12.6936 14.8275ZM6.56 11.053C6.12045 10.7783 5.6376 10.66 5.1725 10.66V13.66C5.1274 13.66 5.04955 13.6467 4.97 13.597L6.56 11.053ZM5.1725 10.66H2.375V13.66H5.1725V10.66ZM3.875 12.16V7.8325H0.875V12.16H3.875ZM2.375 9.3325H5.18V6.3325H2.375V9.3325ZM5.18 9.3325C5.67521 9.3325 6.1462 9.1915 6.54492 8.9488L4.98508 6.3862C5.0388 6.3535 5.10479 6.3325 5.18 6.3325V9.3325ZM6.54888 8.94638L12.6914 5.18138L11.1236 2.62362L4.98112 6.38862L6.54888 8.94638ZM12.245 1C11.7793 1 11.3371 1.14852 10.963 1.40454L12.657 3.88046C12.5679 3.94148 12.4257 4 12.245 4V1ZM11.026 1.36372L4.39595 5.42872L5.96405 7.98628L12.594 3.92128L11.026 1.36372ZM5.18 5.2075H2.0375V8.2075H5.18V5.2075ZM2.0375 5.2075C0.719869 5.2075 -0.25 6.30184 -0.25 7.525H2.75C2.75 7.84817 2.48513 8.2075 2.0375 8.2075V5.2075ZM-0.25 7.525V12.4525H2.75V7.525H-0.25ZM-0.25 12.4525C-0.25 13.6575 0.702502 14.7775 2.0375 14.7775V11.7775C2.5025 11.7775 2.75 12.1475 2.75 12.4525H-0.25ZM2.0375 14.7775H5.18V11.7775H2.0375V14.7775ZM4.3945 14.5554L11.032 18.6354L12.603 16.0796L5.9655 11.9996L4.3945 14.5554ZM10.9393 18.5735C11.3342 18.8588 11.7926 19 12.2525 19V16C12.4124 16 12.5708 16.0512 12.6957 16.1415L10.9393 18.5735ZM12.2525 19C13.4768 19 14.54 18 14.54 16.675H11.54C11.54 16.325 11.8382 16 12.2525 16V19ZM14.54 16.675V3.325H11.54V16.675H14.54ZM14.5398 3.30193C14.5199 2.00768 13.4895 1 12.245 1V4C11.8255 4 11.5451 3.66732 11.5402 3.34807L14.5398 3.30193Z"
+									fill="#5A616B" mask="url(#path-4-inside-1_20017_80683)"></path></g>
+								<defs>
+								<clipPath id="clip0_20017_80683">
+								<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
+							<p>현재 문의량이 급증하여 답변이 지연되고 있습니다. 순차적으로 답변드리고 있으니 회원 여러분의 양해를
+								부탁드립니다.</p>
+						</div>
+						<form class="css-u8cy8q">
+							<button type="button" class="css-1ftomrc">
+								<span>첫 번째 문의유형을 선택해 주세요.</span>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+									xmlns="http://www.w3.org/2000/svg" class="css-ypdb8q">
+									<path
+										d="M3.5 6L9.61194 13.5224C9.81204 13.7687 10.188 13.7687 10.3881 13.5224L16.5 6"
+										stroke="currentColor" stroke-width="1.5"
+										stroke-linecap="round" stroke-linejoin="round"></path></svg>
+							</button>
+							<button type="button" disabled="" class="css-tsv9yy">
+								<span>두 번째 문의유형을 선택해 주세요.</span>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+									xmlns="http://www.w3.org/2000/svg" class="css-ypdb8q">
+									<path
+										d="M3.5 6L9.61194 13.5224C9.81204 13.7687 10.188 13.7687 10.3881 13.5224L16.5 6"
+										stroke="currentColor" stroke-width="1.5"
+										stroke-linecap="round" stroke-linejoin="round"></path></svg>
+							</button>
+							<button type="button" disabled="" class="css-tsv9yy">
+								<span>세 번째 문의유형을 선택해 주세요.</span>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+									xmlns="http://www.w3.org/2000/svg" class="css-ypdb8q">
+									<path
+										d="M3.5 6L9.61194 13.5224C9.81204 13.7687 10.188 13.7687 10.3881 13.5224L16.5 6"
+										stroke="currentColor" stroke-width="1.5"
+										stroke-linecap="round" stroke-linejoin="round"></path></svg>
+							</button>
+							<div class="input contentContainer">
+								<textarea placeholder="정확한 답변을 위해 문의 내용을 자세히 작성해 주세요."
+									class="content"></textarea>
+							</div>
+							<span class="inputFileLabel">사진/동영상 첨부</span>
+							<div class="inputFile css-148ys3r">
+								<input type="file" accept="image/*,video/*" multiple="">
+								<ul>
+									<li><button class="inputFileButton" type="button">
+											<svg width="32px" height="32px" viewBox="0 0 32 32"
+												fill="none" xmlns="http://www.w3.org/2000/svg"
+												class="css-3h4enx" style="fill: rgb(156, 163, 175);">
+												<path fill-rule="evenodd" clip-rule="evenodd"
+													d="M15.728 20.4461C13.6481 20.4461 11.9619 18.7599 11.9619 16.68C11.9619 14.6001 13.6481 12.9138 15.728 12.9138C17.8079 12.9138 19.4942 14.6001 19.4942 16.68C19.4942 18.7599 17.8079 20.4461 15.728 20.4461Z"
+													fill="##C2C6CE"></path>
+												<path fill-rule="evenodd" clip-rule="evenodd"
+													d="M10.4564 7.32295C10.9376 6.00587 11.5097 5.15997 12.8118 5.15997H17.9241C19.2253 5.15997 19.7975 6.00463 20.2785 7.32003H20.7897C24.7543 7.32003 27.968 10.4192 27.968 14.2417V19.119C27.968 22.9409 24.7543 26.04 20.7897 26.04H10.6669C6.7023 26.04 3.48798 22.9409 3.48798 19.119V14.2417C3.48798 10.487 6.58918 7.4303 10.4564 7.32295ZM21.3772 16.68C21.3772 19.8001 18.8481 22.3292 15.728 22.3292C12.6079 22.3292 10.0788 19.8001 10.0788 16.68C10.0788 13.5599 12.6079 11.0308 15.728 11.0308C18.8481 11.0308 21.3772 13.5599 21.3772 16.68ZM21.5988 11.88C21.5988 12.4 22.0204 12.8216 22.5403 12.8216C23.0603 12.8216 23.4819 12.4 23.4819 11.88C23.4819 11.36 23.0603 10.9385 22.5403 10.9385C22.0204 10.9385 21.5988 11.36 21.5988 11.88Z"
+													fill="##C2C6CE"></path></svg>
+											<p>0/10</p>
+										</button></li>
+									<li id="qna-image-list"><ul class="css-ysygdx"></ul></li>
+								</ul>
+							</div>
+							<div class="submit">
+								<button type="submit" disabled="">등록</button>
+							</div>
+						</form>
+					</article>
+				</main>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

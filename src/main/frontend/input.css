@@ -1,0 +1,13 @@
+@import "tailwindcss";
+/* 현재 위치가 src/main/frontend 일 때 */
+@source "../resources/templates/**/*.html";;
+
+@theme {
+  /* 중고나라에서 사용하는 커스텀 색상 정의 */
+  --color-jnGray-100: #F5F5F5;
+  --color-jnGray-200: #EEEEEE;
+  --color-jnGray-300: #E0E0E0;
+  --color-jnGray-500: #9E9E9E;
+  --color-jnGray-600: #757575;
+  --color-jnGray-900: #212121;
+}
