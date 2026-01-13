@@ -1,4 +1,4 @@
-package kr.co.test;
+package kr.co.sist;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

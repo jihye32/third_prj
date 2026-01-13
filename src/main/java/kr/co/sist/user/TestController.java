@@ -1,4 +1,4 @@
-package kr.co.test.design; // 본인의 패키지명에 맞게 수정
+package kr.co.sist.user; // 본인의 패키지명에 맞게 수정
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
