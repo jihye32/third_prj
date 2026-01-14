@@ -9,11 +9,36 @@
 
 <!-- 하얀색 배경 -->
 <div th:fragment="drawerFrame(contentFragment)" id="drawerContainer">
-    <div id="overlay" class="fixed inset-0 bg-black/50 z-[9998] hidden opacity-0 transition-opacity duration-300" onclick="closeDrawer()"></div>
+	<script type="text/javascript">
+    function closeDrawer() {
+        // 서랍 닫기
+        document.getElementById('drawer').classList.add('translate-x-full');
+        
+        // 배경 숨기기
+        const overlay = document.getElementById('overlay');
+        overlay.classList.add('opacity-0');
+        setTimeout(() => overlay.classList.add('hidden'), 300); // 애니메이션 시간만큼 대기
 
-    <div id="drawer" class="fixed top-0 right-0 w-full max-w-[480px] h-full bg-white z-[9999] translate-x-full transition-transform duration-300 flex flex-col">
-    	<div th:replace="${contentFragment}"></div>
-    </div>
+        // 뒷배경 스크롤 허용
+        document.body.style.overflow = '';
+    }
+	</script>
+	<div id="overlay"
+		class="fixed inset-0 bg-black/50 z-[9998] hidden opacity-0 transition-opacity duration-300"
+		onclick="closeDrawer()"></div>
+
+	<div id="drawer"
+		class="fixed top-0 right-0 w-full max-w-[480px] h-full bg-white z-[9999] translate-x-full transition-transform duration-300 flex flex-col">
+
+		<header class="p-5 border-b flex justify-between items-center">
+			<h2 id="drawerTitle" class="text-lg font-bold">제목 없음</h2>
+			<button onclick="closeDrawer()" class="p-2 text-2xl">✕</button>
+		</header>
+
+		<div class="flex-1 overflow-y-auto p-5">
+			<div th:replace="${contentFragment}"></div>
+		</div>
+	</div>
 </div>
 
 
@@ -22,8 +47,7 @@
 
 
 
-
-<!-- 화면별 사용할 form -->
+	<!-- 화면별 사용할 form -->
 <div th:fragment="reportForm">
     <textarea class="w-full border p-2" placeholder="신고 내용을 적어주세요."></textarea>
     <button class="bg-red-500 text-white w-full py-2 mt-4">신고 제출</button>
