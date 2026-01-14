@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>중고나라 1:1 문의 작동 수정됨</title> 
+<link th:href="@{/css/output.css}" rel="stylesheet">
+
+
+<style>
+    /* 기본 설정 */
+    body, html {
+        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        overflow-x: hidden; /* 가로 스크롤 방지 */
+    }
+    a { cursor: pointer; }
+
+    /* --------------------------------------- */
+    /* [추가됨] 우측 슬라이드 Drawer CSS 시작 */
+    /* --------------------------------------- */
+    
+    /* 1. 어두운 배경 (Overlay) */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 */
+        z-index: 9998; /* 헤더보다 위에 */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .overlay.open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* 2. 우측 서랍 (Drawer) */
+    .drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        max-width: 480px; /* 모바일 꽉 참, PC는 적당한 너비 */
+        height: 100%;
+        background-color: white;
+        z-index: 9999; /* 오버레이보다 위에 */
+        transform: translateX(100%); /* 기본 상태: 화면 오른쪽 밖으로 숨김 */
+        transition: transform 0.3s ease-in-out; /* 부드러운 이동 효과 */
+        box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+    }
+    .drawer.open {
+        transform: translateX(0); /* 화면 안으로 이동 */
+    }
+
+    /* 서랍 내부 스크롤 처리 */
+    .drawer-content {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 중고나라 원래 CSS와 충돌 방지용 헤더 수정 */
+    .drawer header.css-k0sx5n {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10;
+        padding: 0 20px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+    }
+</style>
+
+<script type="text/javascript">
+	function openDrawer() {
+		document.getElementById('drawer').classList.add('open');
+		document.getElementById('overlay').classList.add('open');
+        // 뒤쪽 스크롤 막기
+        document.body.style.overflow = 'hidden';
+	}
+
+	function closeDrawer() {
+		document.getElementById('drawer').classList.remove('open');
+		document.getElementById('overlay').classList.remove('open');
+        // 뒤쪽 스크롤 허용
+        document.body.style.overflow = '';
+	}
+</script>
+</head>
+<body>
+    <div id="overlay" class="overlay" onclick="closeDrawer()"></div>
+
+    <div id="__next">
+		<div class="flex flex-col min-h-screen bg-white">
+			<div th:replace="~{template/header :: headerImgFragment}"></div>
+			<div th:replace="~{template/header :: headerFragment}"></div>
+
+			<main class="relative flex-grow border-b-2" style="min-height: 500px">
+				<div class="mx-auto max-w-[1280px] px-5 md:px-8 2xl:px-16 box-content">
+					<!-- article 넣는 곳 -->
+					<article class="flex flex-col justify-center mx-auto mt-6 w-full lg:mt-8 md:w-1/2">
+                        <div class="flex flex-col space-y-5">
+							<h2 class="text-2xl font-semibold text-jnGray-900 mt-8 text-center">고객센터</h2>
+							<div class="h-[1px] bg-jnGray-900 my-5 "></div>
+							<h3 class="text-2xl font-semibold text-jnGray-900">자주 묻는 질문 FAQ</h3>
+						</div>
+
+                        <div class="flex items-center justify-between rounded-md bg-jnGray-200 py-[10px] my-4">
+							<form novalidate="" role="search" class="w-full">
+								<label for="search" class="flex items-center"> <span class="px-3"> <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="md:w-4 xl:w-5 md:h-4 xl:h-5"><path d="M10.0278 19.0556C14.3233 19.0556 17.8056 15.5733 17.8056 11.2778C17.8056 6.98223 14.3233 3.5 10.0278 3.5C5.73223 3.5 2.25 6.98223 2.25 11.2778C2.25 15.5733 5.73223 19.0556 10.0278 19.0556Z" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="white"></path><path d="M21 21.8999L15.5 16.8999" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span> <input id="search" type="search" class="w-full h-full text-sm bg-transparent outline-none placeholder-jnGray-500 10 text-heading lg:text-base placeholder:text-sm" placeholder="궁금하신 점을 검색해 주세요." autoComplete="off" />
+								</label>
+							</form>
+						</div>
+
+                        <section class="flex flex-col">
+							<ul class="flex flex-col py-4 w-full">
+								<li><button class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300"><div class="flex flex-col flex-1 items-start mr-2"><span class="text-left"><span class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[판매자] 안심결제로 물건을 판매했는데 판매대금은 언제 입금되나요?</span></span><span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span></div><svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="-rotate-90 rotate-[0deg]"><path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></li>
+								<li><button class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300"><div class="flex flex-col flex-1 items-start mr-2"><span class="text-left"><span class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">계좌 전송 기능이 무엇인가요?</span></span><span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span></div><svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="-rotate-90 rotate-[0deg]"><path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></li>
+								<li><button class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300"><div class="flex flex-col flex-1 items-start mr-2"><span class="text-left"><span class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[안심보상제도] 안심보상제도란?</span></span><span class="mt-1 text-xs font-medium text-jnGray-500">안심보상</span></div><svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="-rotate-90 rotate-[0deg]"><path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></li>
+								<li><button class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300"><div class="flex flex-col flex-1 items-start mr-2"><span class="text-left"><span class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[판매자] 판매자 수수료가 무엇인가요?</span></span><span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span></div><svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="-rotate-90 rotate-[0deg]"><path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></li>
+								<li><button class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300"><div class="flex flex-col flex-1 items-start mr-2"><span class="text-left"><span class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">등급은 어떻게 분류되나요?</span></span><span class="mt-1 text-xs font-medium text-jnGray-500">셀프검수</span></div><svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="-rotate-90 rotate-[0deg]"><path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></li>
+							</ul>
+						</section>
+
+                        <div class="grid grid-cols-2 gap-2 justify-between items-center w-full mb-[120px]">
+							<!-- <button onclick="openDrawer()" class="flex justify-center w-full py-3 text-sm font-medium text-center bg-white border border-solid rounded border-jnGray-300 text-jnGray-900 break-keep">1:1 문의</button>
+							<button class="flex justify-center w-full py-3 text-sm font-medium text-center bg-white border border-solid rounded border-jnGray-300 text-jnGray-900 break-keep">문의내역</button> -->
+							<button onclick="openDrawer()" class="flex justify-center w-full py-3 text-sm font-medium text-center bg-white border border-solid rounded border-jnGray-300 text-jnGray-900 break-keep col-span-2">1:1 문의</button>
+						</div>
+					</article>
+				</div>
+			</main>
+
+            <div th:replace="~{template/footer :: footerFragment}"></div>
+
+		</div>
+	</div>
+
+    <div id="drawer" class="drawer">
+        <header class="css-k0sx5n">
+            <div class="css-nh9e3h" style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                <h1 class="css-1gl63ht" style="font-size:18px; font-weight:bold;">1:1 문의</h1>
+                <button onclick="closeDrawer()" class="css-17i5ava" aria-label="닫기" style="background:none; border:none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="drawer-content">
+			<div class="basic-layout css-f1iq23" style="padding:20px;">
+				<main role="main" aria-label="본문 영역" id="container" class="container css-1ej580f">
+					<article class="css-khmaje">
+						<div class="notice" style="background-color:#F9FAFB; padding:15px; border-radius:8px; margin-bottom:20px;">
+                            <div style="display:flex; gap:10px;">
+                                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#5A616B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <p style="font-size:13px; color:#5A616B; line-height:1.5; margin:0;">
+                                    현재 문의량이 급증하여 답변이 지연되고 있습니다. 순차적으로 답변드리고 있으니 회원 여러분의 양해를 부탁드립니다.
+                                </p>
+                            </div>
+						</div>
+
+						<form class="css-u8cy8q" style="display:flex; flex-direction:column; gap:10px;">
+							<button type="button" class="css-1ftomrc" style="display:flex; justify-content:space-between; padding:15px; border:1px solid #ddd; border-radius:8px; background:white; cursor:pointer;">
+								<span style="font-size:14px; color:#333;">첫 번째 문의유형을 선택해 주세요.</span>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="M6 8l4 4 4-4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+							</button>
+							<button type="button" disabled style="display:flex; justify-content:space-between; padding:15px; border:1px solid #eee; border-radius:8px; background:#f9f9f9; color:#999; cursor:not-allowed;">
+								<span style="font-size:14px;">두 번째 문의유형을 선택해 주세요.</span>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="M6 8l4 4 4-4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+							</button>
+							<button type="button" disabled style="display:flex; justify-content:space-between; padding:15px; border:1px solid #eee; border-radius:8px; background:#f9f9f9; color:#999; cursor:not-allowed;">
+								<span style="font-size:14px;">세 번째 문의유형을 선택해 주세요.</span>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="M6 8l4 4 4-4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+							</button>
+
+							<div class="input contentContainer" style="margin-top:10px;">
+								<textarea placeholder="정확한 답변을 위해 문의 내용을 자세히 작성해 주세요." style="width:100%; height:150px; padding:15px; border:1px solid #ddd; border-radius:8px; resize:none; font-family:inherit;"></textarea>
+							</div>
+
+                            <div style="margin-top:20px;">
+                                <span style="font-size:14px; font-weight:bold; display:block; margin-bottom:10px;">사진/동영상 첨부</span>
+                                <div style="display:flex; gap:10px;">
+                                    <button type="button" style="width:80px; height:80px; border:1px dashed #ddd; border-radius:8px; background:white; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#999;">
+                                        <span style="font-size:24px;">+</span>
+                                        <span style="font-size:12px;">0/10</span>
+                                    </button>
+                                </div>
+                            </div>
+
+							<div class="submit" style="margin-top:30px;">
+								<button type="submit" disabled style="width:100%; padding:15px; background:#eee; color:#999; border:none; border-radius:8px; font-weight:bold; cursor:not-allowed;">등록</button>
+							</div>
+						</form>
+					</article>
+				</main>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

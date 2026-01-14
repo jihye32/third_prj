@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+</head>
+<body>
+<footer th:fragment="footerFragment" class="bg-jnGray-100">
+	<div class="text-xs leading-[14.32px] text-jnGray-600 px-5 xl:px-0 mx-auto mt-8 mb-10 xl:mt-10 xl:mb-11 max-w-[1024px] min-[1600px]:max-w-[1280px]">
+	<section class="flex flex-col justify-between md:flex-row">
+	<div class="mb-6 md:mb-0">
+		<h4 class="mb-3 font-bold text-jnGray-900">프로젝트 정보</h4>
+			<ul class="[&amp;&gt;li]:mb-2">
+				<li class="flex items-center">(1조)사이트명
+					<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>나경원, 안세홍, 윤자빈, 임다민, 임성우, 하지혜
+				</li>
+				<li>사업자 등록번호 : 111-11-11111</li>
+				<li>통신판매신고번호 : 제2026-xxxx-01140호</li>
+				<li>주소 : 서울 강남구 테헤란로70길 12 H타워 9층</li>
+				<li>센터번호 : 02-3482-4632</li>
+				<li>문의 : sist.co.kr</li>
+				<li>호스팅제공자 : 쌍용교육센터</li>
+			</ul>
+	</div>
+	</section>
+	
+	<hr class="w-full h-[1px] mt-8 mb-4 xl:my-5">
+	
+	<section class="flex flex-col justify-between lg:flex-row">
+	<div class="lg:w-[100%]">
+	<ul class="flex flex-wrap items-center mb-5 leading-loose xl:mb-3 text-jnGray-900">
+		<a class="" href="/cs-center">고객센터</a><!-- 헤더 고객센터랑 같은 주소로 이동 -->
+		
+		<div class="w-[1px] h-2 bg-[#E0E0E0] mx-2"></div>
+		
+		<a class="" href="/notice">공지사항</a><!-- 헤더 고객센터랑 같은 주소로 이동 -->
+	</ul>
+	<p class="leading-[22px]">
+		“사이트명” 상점의 판매상품을 제외한 모든 상품들에 대하여,
+		(1조)사이트명는 통신판매중개자로서 거래 당사자가 아니며 판매 회원과 구매 회원 간의 상품거래 정보 및 거래에
+		관여하지 않고, 어떠한 의무와 책임도 부담하지 않습니다.</p>
+	</div>
+	</section>
+	</div>
+</footer>
+</body>
+</html>
