@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+<style type="text/css">
+
+</style>
+<!-- JQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+    function openDrawer(title) {
+        const titleElement = document.getElementById('drawerTitle');
+        if (titleElement && title) {
+            titleElement.innerText = title;
+        }
+
+        // 서랍 열기
+        document.getElementById('drawer').classList.remove('translate-x-full');
+        
+        // 배경 보이기
+        const overlay = document.getElementById('overlay');
+        overlay.classList.remove('hidden');
+        setTimeout(() => overlay.classList.remove('opacity-0'), 10); // 부드러운 효과를 위해
+
+        // 뒷배경 스크롤 방지
+        document.body.style.overflow = 'hidden';
+    }
+</script>
+</head>
+<body>
+	<div th:replace="~{template/wrapper_frm :: drawerFrame(~{template/wrapper_frm :: reportForm})}"></div>
+    <button onclick="openDrawer('신고하기')">신고하기 열기</button>
+</body>
+</html>
