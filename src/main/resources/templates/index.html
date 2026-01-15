@@ -9,14 +9,10 @@
 <style type="text/css">
 
 </style>
-
+<!-- JQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-function openDrawer(title) {
-    document.getElementById('drawerTitle').innerText = title; // 제목 변경
-    document.getElementById('drawer').classList.remove('translate-x-full');
-    document.getElementById('overlay').classList.remove('hidden');
-    // ... 나머지 로직
-}
+
 </script>
 </head>
 <body>
@@ -27,16 +23,7 @@ function openDrawer(title) {
 
 			<main class="relative flex-grow border-b-2" style="min-height: 500px">
 				<div class="mx-auto max-w-[1280px] px-5 md:px-8 2xl:px-16 box-content">
-					<!-- article 넣는 곳 -->
-    
-    
-    <!-- test -->
-    <div th:replace="~{user/template/drawer_wrapper :: drawerFrame(~{user/template/forms :: reportForm})}"></div>
-
-    <button onclick="openDrawer()">신고하기 열기</button>
-					
-	
-	
+					<!-- article 넣는 곳 -->	
 	
 	
 				</div>
