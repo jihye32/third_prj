@@ -8,6 +8,6 @@ public class TestWrapperController {
 
 	@GetMapping("/wrapper")
 	public String TestWrapper() {
-		return "template/wrapper_test";
+		return "template/sample";
 	}
 }

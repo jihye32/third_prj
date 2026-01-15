@@ -9,27 +9,43 @@
 
 </style>
 <!-- JQuery CDN -->
-<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-$(function(){
-	
-});
+    function openDrawer(title) {
+        const titleElement = document.getElementById('drawerTitle');
+        if (titleElement && title) {
+            titleElement.innerText = title;
+        }
+
+        // 서랍 열기
+        document.getElementById('drawer').classList.remove('translate-x-full');
+        
+        // 배경 보이기
+        const overlay = document.getElementById('overlay');
+        overlay.classList.remove('hidden');
+        setTimeout(() => overlay.classList.remove('opacity-0'), 10); // 부드러운 효과를 위해
+
+        // 뒷배경 스크롤 방지
+        document.body.style.overflow = 'hidden';
+    }
 </script>
 </head>
 <body>
 <div id="__next">
 	<div class="flex flex-col min-h-screen bg-white">
-	<div th:replace="~{template/header :: headerImgFragment}"></div>
-	<div th:replace="~{template/header :: headerFragment}"></div>
+	<th:block th:replace="~{template/header :: headerImgFragment}"></th:block>
+	<th:block th:replace="~{template/header :: headerFragment}"></th:block>
 
 	<main class="relative flex-grow border-b-2" style="min-height: 500px">
 	<div class="mx-auto max-w-[1280px] px-5 md:px-8 2xl:px-16 box-content">
 					<!-- article 넣는 곳 -->
+    <button onclick="openDrawer('채팅')">채팅</button>
 	</div>
 	</main>
 	
-	<div th:replace="~{template/footer :: footerFragment}"></div>
+	<th:block th:replace="~{template/footer :: footerFragment}"></th:block>
 	</div>
 </div>
+	<div th:replace="~{template/wrapper_frm :: drawerFrame(~{template/wrapper_frm :: chatListForm})}"></div>
 </body>
 </html>
