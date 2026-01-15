@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<header id="kakaoHead" th:fragment="header">
+    <div class="tit_logo">쌍용장터 관리자센터</div>
+    <div class="util_menu">
+        <a th:href="@{/logout}" class="btn_logout">로그아웃</a>
+    </div>
+</header>
+
+<aside class="menu_side" th:fragment="sidebar">
+    <div class="menu_group">관리자 메뉴</div>
+    <ul class="list_menu">
+        <li class="menu_item" th:classappend="${menu == 'dashboard' ? 'active' : ''}">
+            <a th:href="@{/manage/dashboard}" class="menu_link">대시보드</a>
+        </li>
+        
+        <li class="menu_item" th:classappend="${menu == 'product' ? 'active' : ''}">
+            <a th:href="@{/manage/product}" class="menu_link">물품관리</a>
+        </li>
+
+        <li class="menu_item" th:classappend="${menu == 'member' ? 'active' : ''}">
+            <a th:href="@{/manage/member}" class="menu_link">회원관리</a>
+        </li>
+        
+        <li class="menu_item" th:classappend="${menu == 'customer' ? 'active' : ''}">
+            <div class="menu_title">고객센터관리</div>
+            <ul class="sub_menu_list">
+                <li class="sub_menu_item" th:classappend="${subMenu == 'faq' ? 'sub_active' : ''}">
+                    <a th:href="@{/manage/faq/faq}">- FAQ 관리</a>
+                </li>
+                <li class="sub_menu_item" th:classappend="${subMenu == 'ask' ? 'sub_active' : ''}">
+                    <a th:href="@{/manage/ask/ask}">- 1:1 문의관리</a>
+                </li>
+                <li class="sub_menu_item" th:classappend="${subMenu == 'notice' ? 'sub_active' : ''}">
+                    <a th:href="@{/manage/notice/notice}">- 공지사항관리</a>
+                </li>
+            </ul>
+        </li>
+        
+        <li class="menu_item" th:classappend="${menu == 'report' ? 'active' : ''}">
+            <a th:href="@{/manage/report}" class="menu_link">신고관리</a>
+        </li>
+        
+        <li class="menu_item" th:classappend="${menu == 'sales' ? 'active' : ''}">
+            <a th:href="@{/manage/sales}" class="menu_link">매출관리</a>
+        </li>
+    </ul>
+
+    <script>
+        document.querySelectorAll('.menu_title').forEach(title => {
+            title.addEventListener('click', () => {
+                const parentLi = title.parentElement;
+                parentLi.classList.toggle('active');
+            });
+        });
+    </script>
+</aside>
+
+</html>
