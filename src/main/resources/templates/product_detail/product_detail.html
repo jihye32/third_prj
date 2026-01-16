@@ -148,23 +148,22 @@ function openReportForm() {
 									viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round"
 										stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-								<a th:href="@{'#'}" class="text-gray-900 hover:text-black" 
-								th:text="${'RAM/VGA/SOUND'}">
-								상품 카테고리 들어가는 곳
-								</a>
+								<a th:href="@{'#'}" class="text-gray-900 hover:text-black"
+									th:text="${'RAM/VGA/SOUND'}"> 상품 카테고리 들어가는 곳 </a>
 							</nav>
 
 							<div class="mb-6">
-								<h1	class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight" 
-								th:text="${'새제품) 기가바이트 RTX 5070 Ti 그래픽카드 팝니다. 110만원'}">
+								<h1
+									class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight"
+									th:text="${'새제품) 기가바이트 RTX 5070 Ti 그래픽카드 팝니다. 110만원'}">
 									상품명 들어가는 곳</h1>
-								<div class="text-3xl font-extrabold text-black mb-1" th:text="${'1,100,000원'}">
-								상품 가격 들어가는 곳</div>
+								<div class="text-3xl font-extrabold text-black mb-1"
+									th:text="${'1,100,000원'}">상품 가격 들어가는 곳</div>
 								<div class="text-xs text-gray-400">
-								<span th:text="${'20시간'}">현재 시간 - 끌올 시간(60분을 넘기지 않은다면 분 기준으로)</span>전 ·
-								조회 <span th:text="${'288'}">조회 수 하는거던가?</span> ·
-								채팅 <span th:text="${'9'}">채팅 개수도 보여주던가?</span> ·
-								찜 <span>2</span>
+									<span th:text="${'20시간'}">현재 시간 - 끌올 시간(60분을 넘기지 않은다면 분	기준으로)</span>전 ·
+									조회 <span th:text="${'288'}">조회 수 하는거</span> ·
+									채팅 <span th:text="${'9'}">채팅 개수는 할 수 있으면</span> ·
+									찜 <span th:text="${'2'}">찜 개수</span>
 								</div>
 							</div>
 
@@ -203,8 +202,90 @@ function openReportForm() {
 								<span class="text-sm text-gray-400 w-24 shrink-0">상품 상태</span> <span
 									class="text-sm text-gray-600 font-medium">새상품</span>
 							</div>
-
-							<div class="flex items-center gap-2 pt-6 mt-4">
+							
+							<!-- 판매자와 아이디가 같은 경우(결제가 된 상태) -->
+							<!-- 
+							<div class="flex items-center pt-4 mt-4">
+								<button
+									class="flex-1 h-12 border border-black font-bold text-black rounded-md hover:bg-gray-50 transition">
+									발송완료</button>
+							</div>
+							 -->
+							<!-- 판매자와 아이디가 같은 경우(결제가 되지 않은 상태) -->
+<!-- 
+								<div
+									class="flex pt-4 items-center space-s-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white">
+									<ul class="flex w-full rounded bg-Gray-100">
+										<li
+											class="flex flex-1 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']"><button
+												class="flex flex-col items-center py-[6px]">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M5 8.99995V13.9656C5 17.8505 7.91015 21 11.5 21C15.0899 21 18 17.8505 18 13.9656V5"
+														stroke="#141313" stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path>
+													<rect x="4.25" y="4" width="1.5" height="1" rx="0.5"
+														fill="#141313"></rect>
+													<rect x="4.25" y="6" width="1.5" height="1" rx="0.5"
+														fill="#141313"></rect>
+													<path d="M15 7L18 4L21 7" stroke="#141313"
+														stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path></svg>
+												<p class="mt-1 text-xs font-medium text-center">위로 올리기</p>
+											</button></li>
+										<li
+											class="flex flex-1 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']"><button
+												class="flex flex-col items-center py-[6px]">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path d="M12 21H21" stroke="#141313" stroke-width="1.5"
+														stroke-linecap="round" stroke-linejoin="round"></path>
+													<path
+														d="M7.91993 19.7931C8.05181 19.7601 8.17224 19.6919 8.26836 19.5958L19.9497 7.91448C20.2034 7.66076 20.4047 7.35954 20.542 7.02803C20.6793 6.69652 20.75 6.34121 20.75 5.98239C20.75 5.62357 20.6793 5.26826 20.542 4.93675C20.4047 4.60524 20.2034 4.30402 19.9497 4.0503C19.696 3.79657 19.3948 3.59531 19.0633 3.45799C18.7317 3.32068 18.3764 3.25 18.0176 3.25C17.2929 3.25 16.5979 3.53788 16.0855 4.0503L4.40418 15.7316C4.30806 15.8278 4.23987 15.9482 4.2069 16.0801L3.27239 19.8181C3.2085 20.0737 3.28338 20.344 3.46967 20.5303C3.65596 20.7166 3.92632 20.7915 4.1819 20.7276L7.91993 19.7931Z"
+														stroke="#141313" stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path></svg>
+												<p class="mt-1 text-xs font-medium text-center">수정</p>
+											</button></li>
+										<li
+											class="flex flex-1 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']"><button
+												class="flex flex-col items-center py-[6px]">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+														stroke="#141313" stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path>
+													<path d="M16 9L10.5 14.5L8 12" stroke="#141313"
+														stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path></svg>
+												<p class="mt-1 text-xs font-medium text-center">상태 변경</p>
+											</button></li>
+										<li
+											class="flex flex-1 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']"><button
+												class="flex flex-col items-center py-[6px]">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path d="M3 6H5H21" stroke="#141313" stroke-width="1.5"
+														stroke-linecap="round" stroke-linejoin="round"></path>
+													<path
+														d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
+														stroke="#141313" stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path>
+													<path d="M10 11V17" stroke="#141313" stroke-width="1.5"
+														stroke-linecap="round" stroke-linejoin="round"></path>
+													<path d="M14 11V17" stroke="#141313" stroke-width="1.5"
+														stroke-linecap="round" stroke-linejoin="round"></path></svg>
+												<p class="mt-1 text-xs font-medium text-center">삭제</p>
+											</button></li>
+									</ul>
+								</div>
+ -->								
+					
+					
+					<!-- 판매자와 아이디가 다른 경우/로그인을 하지 않은 경우 -->			
+<!-- 
+							<div class="flex items-center gap-2 pt-4 mt-4">
 								<button class="p-2 hover:bg-gray-50">
 									<svg class="w-7 h-7 text-gray-300" fill="none"
 										stroke="currentColor" viewBox="0 0 24 24">
@@ -218,8 +299,13 @@ function openReportForm() {
 								<button onclick="openReportForm()"
 									class="flex-1 h-12 bg-black text-white font-bold rounded-md hover:bg-gray-800 transition">
 									구매하기</button>
+
 							</div>
-						</div>
+ -->					
+ 
+ 
+ 
+ 						</div>
 					</div>
 					<div
 						class="block lg:flex lg:min-h-[591px] space-y-12 lg:space-y-0 lg:gap-[72px] lg:mb-12 max-lg:pt-7">
