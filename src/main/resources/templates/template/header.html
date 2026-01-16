@@ -10,29 +10,54 @@
 </head>
 <body>
 
-	<div th:fragment="headerImgFragment"
-		class="ga4_main_top_banner flex h-[60px] w-full cursor-pointer max-[480px]:hidden z-20 fixed top-0 bg-[#141313]">
-		<a th:href="@{#}" target="_self"
-			class="w-full max-w-[1960px] relative mx-auto"> <img
-			src="/main-web/_next/static/media/app-download-banner.16dfe881.webp"
-			alt="중고나라 검색페이지 이동 이미지" fetchpriority="high" decoding="async"
-			data-nimg="fill" class="object-cover h-full mx-auto"
-			style="position: absolute; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0; color: transparent">
+<div th:fragment="headerImgFragment" class="ga4_main_top_banner flex h-[60px] w-full cursor-pointer max-[480px]:hidden z-20 fixed top-0 bg-[#141313]">
+	<a th:href="@{#}" target="_self" class="w-full max-w-[1960px] relative mx-auto">
+	<img src="/main-web/_next/static/media/app-download-banner.16dfe881.webp"
+		alt="중고나라 검색페이지 이동 이미지" fetchpriority="high" decoding="async"
+		data-nimg="fill" class="object-cover h-full mx-auto"
+		style="position: absolute; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0; color: transparent">
 			<!-- 이미지 수정이랑 메인으로 가는 링크 연결 필요합니다. -->
-		</a>
-	</div>
-	<header th:fragment="headerFragment" id="siteHeader"
-		class="headerThree relative z-20 w-full h-16 sm:h-20 lg:h-36 xl:h-40 lg:mt-[60px] max-[480px]:mt-[73px]">
+	</a>
+</div>
 
-		<div id="header_items_wrapper"
-			class="px-4 md:px-8 lg:px-0 h-16 sm:h-20 lg:h-36 xl:h-40 w-full transition duration-200 ease-in-out border-b border-jnGray-300 fixed z-20 text-gray-700 bg-white innerSticky body-font">
-			<div
-				class="h-full lg:h-20 xl:h-24 px-0 lg:px-8 2xl:px-16 max-w-[1024px] min-[1600px]:max-w-[1280px] flex items-center mx-auto box-content justify-between relative before:absolute before:w-screen before:bg-[#F1F1F1] before:bottom-0">
 
-				<div class="flex flex-1 lg:max-w-[200px]">
-					<a href="#" style="width: 200px; height: 30px"
-						class="ga4_main_top_logo max-[1023px]:!w-[97px] max-[1023px]:!h-[16px] lg:w-full lg:flex-1 inline-flex focus:outline-none relative">
-						<img
+
+
+
+<header th:fragment="headerFragment" id="siteHeader" class="headerThree relative z-20 w-full h-16 sm:h-20 lg:h-36 xl:h-40 lg:mt-[60px] max-[480px]:mt-[73px]">
+	<script type="text/javascript">
+	function openChatDrawer() {
+    	fetch('/chat/list')
+        .then(res => res.text())
+        .then(html => {
+           	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+           	document.getElementById('drawerContent').innerHTML = html;
+           	openDrawer('채팅'); // 서랍 여는 공통 함수 실행
+        });
+	}
+	function openDrawer(title) {
+    	const titleElement = document.getElementById('drawerTitle');
+    	if (titleElement && title) {
+        	titleElement.innerText = title;
+    	}
+
+    	// 서랍 열기
+    	document.getElementById('drawer').classList.remove('translate-x-full');
+    
+    	// 배경 보이기
+    	const overlay = document.getElementById('overlay');
+    	overlay.classList.remove('hidden');
+    	setTimeout(() => overlay.classList.remove('opacity-0'), 10); // 부드러운 효과를 위해
+
+    	// 뒷배경 스크롤 방지
+    	document.body.style.overflow = 'hidden';
+	}
+	</script>
+	<div id="header_items_wrapper" class="px-4 md:px-8 lg:px-0 h-16 sm:h-20 lg:h-36 xl:h-40 w-full transition duration-200 ease-in-out border-b border-jnGray-300 fixed z-20 text-gray-700 bg-white innerSticky body-font">
+		<div class="h-full lg:h-20 xl:h-24 px-0 lg:px-8 2xl:px-16 max-w-[1024px] min-[1600px]:max-w-[1280px] flex items-center mx-auto box-content justify-between relative before:absolute before:w-screen before:bg-[#F1F1F1] before:bottom-0">
+			<div class="flex flex-1 lg:max-w-[200px]">
+				<a href="#" style="width: 200px; height: 30px"	class="ga4_main_top_logo max-[1023px]:!w-[97px] max-[1023px]:!h-[16px] lg:w-full lg:flex-1 inline-flex focus:outline-none relative">
+					<img
 						src="https://web.joongna.com/main-web/assets/images/custom-logo.svg"
 						alt="Joonggonara"
 						style="position: absolute; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0;" />
@@ -65,7 +90,8 @@
 					<ul
 						class="flex w-full text-sm font-medium list-none text-jnGray-900 break-keep">
 						<li class="flex items-center justify-center pr-3">
-							<button class="flex items-center justify-center">
+							<button class="flex items-center justify-center"
+								onclick="openChatDrawer()">
 								<div class="relative cursor-pointer">
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 										fill="none">
@@ -125,7 +151,7 @@
 				class="md:px-8 2xl:px-16 lg:flex lg:h-16 items-center min-[1600px]:max-w-[1280px] max-w-[1024px] hidden headerBottom mx-auto box-content">
 				<div class="relative flex-shrink-0 categoryMenu hidden lg:block">
 					<div id="categoryBtn"
-	class="flex items-center justify-center gap-2
+						class="flex items-center justify-center gap-2
 	       px-3.5 xl:px-4 text-sm font-semibold
 	       text-white rounded-md cursor-pointer
 	       h-11 bg-black hover:bg-black">
@@ -138,7 +164,7 @@
 						카테고리
 					</div>
 					<div
-	class="absolute top-full left-0 mt-1
+						class="absolute top-full left-0 mt-1
 	       invisible opacity-0 transition-all duration-200
 	       bg-white subMenu shadow-header
 	       z-50 w-[240px] border border-gray-200 rounded-md">

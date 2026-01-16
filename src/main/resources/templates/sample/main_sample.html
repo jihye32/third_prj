@@ -12,13 +12,13 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-function openReportForm() {
-    fetch('/report/form')
+function openTest() {
+    fetch('/test')
         .then(res => res.text())
         .then(html => {
             // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
             document.getElementById('drawerContent').innerHTML = html;
-            openDrawer('제목'); // 서랍 여는 공통 함수 실행
+            openDrawer('테스트'); // 서랍 여는 공통 함수 실행
         });
 }
 </script>
@@ -32,6 +32,8 @@ function openReportForm() {
 			<main class="relative flex-grow border-b-1" style="min-height: 500px">
 
 				<!-- 메인 디자인 넣는 곳 -->
+				<!-- 디자인 작업 완 -->
+				<input type="button" value="샘플" onclick="openTest()"/>
 				
 			</main>
 			<div th:replace="~{template/footer :: footerFragment}"></div>

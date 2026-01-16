@@ -6,7 +6,7 @@
 <link th:href="@{/css/output.css}" rel="stylesheet">
 </head>
 <body>
-	<div th:fragment="drawerFrame(contentFragment)" id="drawerContainer">
+	<div th:fragment="drawerFrame" id="drawerContainer">
 		<script type="text/javascript">
 			 function closeDrawer() {
 			 // 서랍 닫기
@@ -46,7 +46,7 @@
 							<h2
 								class="flex flex-col md:flex-row justify-center items-center md:space-x-2 flex-1 text-lg font-semibold text-center text-jnGray-900">
 								<p class="mb-0">
-									<span class="flex items-center justify-center space-x-2"><span>채팅</span><span
+									<span class="flex items-center justify-center space-x-2" id="drawerTitle"><span>채팅</span><span
 										class="text-[10px] leading-[10px] px-[5px] py-[3px] bg-jnGray-900 text-jnGray-100 font-bold rounded-sm hidden">공식</span>
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none"
 											viewBox="0 0 20 20"
@@ -70,8 +70,8 @@
 						<div class="h-full overflow-auto">
 							<div class="flex flex-col h-full pb-[85px] sm:pb-0">
 							
-							<div class="flex-1 overflow-y-auto p-5">
-								<div th:replace="${contentFragment}"></div>
+							<div id="drawerContent" class="flex-1 overflow-y-auto p-5">
+								<!-- 여기에 폼 들어감 -->
 							</div>
 							
 							</div>
@@ -156,8 +156,7 @@
 	</div>
 
 	<div th:fragment="reportForm">
-		<textarea class="w-full border p-2" placeholder="신고 내용을 적어주세요."></textarea>
-		<button class="bg-red-500 text-white w-full py-2 mt-4">신고 제출</button>
+		<input type="text">
 	</div>
 
 	<div th:fragment="deliveryForm">
