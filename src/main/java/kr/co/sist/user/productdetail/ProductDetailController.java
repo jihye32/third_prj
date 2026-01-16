@@ -15,4 +15,8 @@ public class ProductDetailController {
 	public String testChat() {
 		return "template/wrapper_frm :: chatListForm";
 	}
+	@GetMapping("/sell/form")
+	public String openSellFrm() {
+		return "sell/product_sell :: sellFrm";
+	}
 }
