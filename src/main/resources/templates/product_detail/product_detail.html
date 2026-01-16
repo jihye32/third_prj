@@ -12,13 +12,13 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-function openReportForm() {
-    fetch('/report/form')
+function openSellForm() {
+    fetch('/sell/form')
         .then(res => res.text())
         .then(html => {
             // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
             document.getElementById('drawerContent').innerHTML = html;
-            openDrawer('신고'); // 서랍 여는 공통 함수 실행
+            openDrawer('거래 방법 선택'); // 서랍 여는 공통 함수 실행
         });
 }
 </script>
@@ -143,28 +143,29 @@ function openReportForm() {
 						</div>
 						<div class="max-w-[1024px] mx-auto bg-white">
 							<nav class="flex items-center text-sm mb-4">
-								<a href="/" class="text-gray-500 hover:text-black">홈</a>
+							<div class="flex text-gray-500 items-center">
+								<a href="/" class="hover:text-black">홈</a>
 								<svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor"
 									viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round"
 										stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-								<a th:href="@{'#'}" class="text-gray-900 hover:text-black" 
-								th:text="${'RAM/VGA/SOUND'}">
-								상품 카테고리 들어가는 곳
-								</a>
+							</div>
+								<a th:href="@{'#'}" class="text-gray-900 hover:text-black"
+									th:text="${'RAM/VGA/SOUND'}"> 상품 카테고리 들어가는 곳 </a>
 							</nav>
 
 							<div class="mb-6">
-								<h1	class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight" 
-								th:text="${'새제품) 기가바이트 RTX 5070 Ti 그래픽카드 팝니다. 110만원'}">
+								<h1
+									class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight"
+									th:text="${'새제품) 기가바이트 RTX 5070 Ti 그래픽카드 팝니다. 110만원'}">
 									상품명 들어가는 곳</h1>
-								<div class="text-3xl font-extrabold text-black mb-1" th:text="${'1,100,000원'}">
-								상품 가격 들어가는 곳</div>
+								<div class="text-3xl font-extrabold text-black mb-1"
+									th:text="${'1,100,000원'}">상품 가격 들어가는 곳</div>
 								<div class="text-xs text-gray-400">
-								<span th:text="${'20시간'}">현재 시간 - 끌올 시간(60분을 넘기지 않은다면 분 기준으로)</span>전 ·
-								조회 <span th:text="${'288'}">조회 수 하는거던가?</span> ·
-								채팅 <span th:text="${'9'}">채팅 개수도 보여주던가?</span> ·
-								찜 <span>2</span>
+									<span th:text="${'20시간'}">현재 시간 - 끌올 시간(60분을 넘기지 않은다면 분	기준으로)</span>전 ·
+									조회 <span th:text="${'288'}">조회 수 하는거</span> ·
+									채팅 <span th:text="${'9'}">채팅 개수는 할 수 있으면</span> ·
+									찜 <span th:text="${'2'}">찜 개수</span>
 								</div>
 							</div>
 
@@ -173,6 +174,9 @@ function openReportForm() {
 								<div
 									class="bg-gray-50 px-4 py-3 flex items-center gap-2 border-b border-gray-200">
 									<div class="flex items-center text-xs font-bold text-gray-800">
+									<!-- th:if로 무료배송이랑 직거래 선택햇는지 확인 -->
+									
+									
 										<span class="mr-1">📦</span> 무료배송 <span
 											class="mx-2 text-gray-300">|</span> 직거래
 									</div>
@@ -193,18 +197,101 @@ function openReportForm() {
 												<path fill-rule="evenodd"
 													d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
 													clip-rule="evenodd"></path></svg>
-											<span class="text-sm text-black cursor-pointer">이화동</span>
+											<span th:text="${'이화동'}" class="text-sm text-black cursor-pointer" >
+											직거래 설정한 동을 넣기</span>
 										</div>
 									</div>
 								</div>
 							</div>
 
 							<div class="flex gap-2">
-								<span class="text-sm text-gray-400 w-24 shrink-0">상품 상태</span> <span
-									class="text-sm text-gray-600 font-medium">새상품</span>
+								<span class="text-sm text-gray-400 w-24 shrink-0">상품 상태</span> 
+								<span th:text="${'새상품'}" class="text-sm text-gray-600 font-medium">
+								상품 상태 넣는 곳</span>
 							</div>
-
-							<div class="flex items-center gap-2 pt-6 mt-4">
+							
+							<!-- 판매자와 아이디가 같은 경우(결제가 된 상태) -->
+							<!-- 
+							<div class="flex items-center pt-4 mt-4">
+								<button
+									class="flex-1 h-12 border border-black font-bold text-black rounded-md hover:bg-gray-50 transition">
+									발송완료</button>
+							</div>
+							 -->
+							<!-- 판매자와 아이디가 같은 경우(결제가 되지 않은 상태) -->
+<!-- 
+								<div
+									class="flex pt-4 items-center space-s-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white">
+									<ul class="flex w-full rounded bg-Gray-100">
+										<li
+											class="flex flex-1 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']"><button
+												class="flex flex-col items-center py-[6px]">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M5 8.99995V13.9656C5 17.8505 7.91015 21 11.5 21C15.0899 21 18 17.8505 18 13.9656V5"
+														stroke="#141313" stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path>
+													<rect x="4.25" y="4" width="1.5" height="1" rx="0.5"
+														fill="#141313"></rect>
+													<rect x="4.25" y="6" width="1.5" height="1" rx="0.5"
+														fill="#141313"></rect>
+													<path d="M15 7L18 4L21 7" stroke="#141313"
+														stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path></svg>
+												<p class="mt-1 text-xs font-medium text-center">위로 올리기</p>
+											</button></li>
+										<li
+											class="flex flex-1 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']"><button
+												class="flex flex-col items-center py-[6px]">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path d="M12 21H21" stroke="#141313" stroke-width="1.5"
+														stroke-linecap="round" stroke-linejoin="round"></path>
+													<path
+														d="M7.91993 19.7931C8.05181 19.7601 8.17224 19.6919 8.26836 19.5958L19.9497 7.91448C20.2034 7.66076 20.4047 7.35954 20.542 7.02803C20.6793 6.69652 20.75 6.34121 20.75 5.98239C20.75 5.62357 20.6793 5.26826 20.542 4.93675C20.4047 4.60524 20.2034 4.30402 19.9497 4.0503C19.696 3.79657 19.3948 3.59531 19.0633 3.45799C18.7317 3.32068 18.3764 3.25 18.0176 3.25C17.2929 3.25 16.5979 3.53788 16.0855 4.0503L4.40418 15.7316C4.30806 15.8278 4.23987 15.9482 4.2069 16.0801L3.27239 19.8181C3.2085 20.0737 3.28338 20.344 3.46967 20.5303C3.65596 20.7166 3.92632 20.7915 4.1819 20.7276L7.91993 19.7931Z"
+														stroke="#141313" stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path></svg>
+												<p class="mt-1 text-xs font-medium text-center">수정</p>
+											</button></li>
+										<li
+											class="flex flex-1 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']"><button
+												class="flex flex-col items-center py-[6px]">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+														stroke="#141313" stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path>
+													<path d="M16 9L10.5 14.5L8 12" stroke="#141313"
+														stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path></svg>
+												<p class="mt-1 text-xs font-medium text-center">상태 변경</p>
+											</button></li>
+										<li
+											class="flex flex-1 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']"><button
+												class="flex flex-col items-center py-[6px]">
+												<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path d="M3 6H5H21" stroke="#141313" stroke-width="1.5"
+														stroke-linecap="round" stroke-linejoin="round"></path>
+													<path
+														d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
+														stroke="#141313" stroke-width="1.5" stroke-linecap="round"
+														stroke-linejoin="round"></path>
+													<path d="M10 11V17" stroke="#141313" stroke-width="1.5"
+														stroke-linecap="round" stroke-linejoin="round"></path>
+													<path d="M14 11V17" stroke="#141313" stroke-width="1.5"
+														stroke-linecap="round" stroke-linejoin="round"></path></svg>
+												<p class="mt-1 text-xs font-medium text-center">삭제</p>
+											</button></li>
+									</ul>
+								</div>
+ -->								
+					
+					
+					<!-- 판매자와 아이디가 다른 경우/로그인을 하지 않은 경우 -->			
+							<div class="flex items-center gap-2 pt-4 mt-4">
 								<button class="p-2 hover:bg-gray-50">
 									<svg class="w-7 h-7 text-gray-300" fill="none"
 										stroke="currentColor" viewBox="0 0 24 24">
@@ -215,11 +302,15 @@ function openReportForm() {
 								<button onclick="openChatDrawer()"
 									class="flex-1 h-12 border border-black font-bold text-black rounded-md hover:bg-gray-50 transition">
 									채팅하기</button>
-								<button onclick="openReportForm()"
+								<button onclick="openSellForm()"
 									class="flex-1 h-12 bg-black text-white font-bold rounded-md hover:bg-gray-800 transition">
 									구매하기</button>
+
 							</div>
-						</div>
+ 
+ 
+ 
+ 						</div>
 					</div>
 					<div
 						class="block lg:flex lg:min-h-[591px] space-y-12 lg:space-y-0 lg:gap-[72px] lg:mb-12 max-lg:pt-7">
@@ -241,21 +332,15 @@ function openReportForm() {
 										</div>
 										<div
 											class="text-xs whitespace-pre-nowrap text-jnGray-900 leading-[18px] [&amp;_br]:hidden">
-											<font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를
-												주고받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <a
-												href="jnapps3://?applink=report&amp;targetType=12230287&amp;reportedStore=11668291&amp;reportedProductSeq=224136410"
-												target="_blank" rel="noopener noreferrer"
-												style="color: rgb(20, 19, 19); font-weight: 600;"><u>중고나라로
-													신고</u></a>해 주세요
+											<font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 주고받는 행위는 사기에 노출</font>될 수 있으므로 즉시
+											<a href="#" target="_blank" rel="noopener noreferrer" style="color: rgb(20, 19, 19); font-weight: 600;"><u>중고나라로 신고</u></a>해 주세요
 										</div>
 									</div>
 									<article class="flex flex-col flex-1">
-										<p
+										<p th:text="${'GIGABYTE 지포스 RTX 5070 Ti WINDFORCE OC SFF D7 16GB 피씨디렉트 팝니다.'}"
 											class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">그래픽카드
-											GIGABYTE 지포스 RTX 5070 Ti WINDFORCE OC SFF D7 16GB 피씨디렉트 팝니다.
-											미개봉 새제품이며 가격은 택배비 포함 110만원입니다. 직거래는 서울 대학로근처에서 평일기준
-											9:00~18:00 사이에만 가능합니다. 정품이며 영수증은 공유하지않습니다. 가격절충은 따로하지않습니다.
-											제조년월은 시리얼 번호로 확인가능합니다.</p>
+											상품 설명 넣는 곳
+											</p>
 									</article>
 								</div>
 							</div>
@@ -264,21 +349,24 @@ function openReportForm() {
 						<div class="basis-[420px] max-lg:!mt-0 max-lg:pt-7">
 							<div name="product-store" class="w-full lg:w-[420px]">
 								<div class=" max-lg:px-5">
-									<a
-										class="flex items-center justify-between w-full pb-3 border-b border-gray-300 lg:pb-5"
-										href="/store/11668291"><h3
-											class="md:text-[22px] font-bold text-jnBlack text-lg">가게
-											정보</h3> <svg stroke="currentColor" fill="currentColor"
+									<a class="flex items-center justify-between w-full pb-3 border-b border-gray-300 lg:pb-5"
+										href="/store/11668291"><h3 class="md:text-[22px] font-bold text-jnBlack text-lg">가게 정보</h3>
+										<div class="text-gray-600">
+										 <svg stroke="currentColor" fill="currentColor"
 											stroke-width="0" viewBox="0 0 512 512" height="24" width="24"
 											xmlns="http://www.w3.org/2000/svg">
 												<path
-												d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path></svg></a>
+												d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path></svg>
+										</div>
+												</a>
 								</div>
 								<div class="flex flex-col">
 									<div class="max-lg:px-5">
 										<a class="flex justify-between items-center mt-6 mb-8 w-full"
 											href="/store/11668291"><div class="flex flex-col gap-1">
-												<p class="text-lg font-semibold text-jnGray-900">popsykm</p>
+												<p th:text="${'popsykm'}" class="text-lg font-semibold text-jnGray-900">
+												판매자 닉네임 넣어주기
+												</p>
 											</div>
 											<div class="flex items-center translate-x-4">
 												<img alt="프로파일" loading="lazy" width="48" height="48"
@@ -293,13 +381,15 @@ function openReportForm() {
 											<li
 												class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center"><span
 												class="text-xs font-normal text-jnGray-600 break-keep">판매상품</span>
-												<button disabled=""
-													class="block text-sm font-semibold text-jnblack mt-1 ">0</button></li>
+												<button th:text="${'0'}" disabled="" class="block text-sm font-semibold text-jnblack mt-1 ">
+													등록된 판매상품의 개수
+												</button>
+												</li>
 											<li
 												class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center"><span
 												class="text-xs font-normal text-jnGray-600 break-keep">거래후기</span>
-												<button
-													class="block text-sm font-semibold text-jnblack mt-1 underline underline-offset-[3px]">0</button></li>
+												<button th:text="${'0'}" class="block text-sm font-semibold text-jnblack mt-1 underline underline-offset-[3px]">
+													등록된 거래 후기</button></li>
 										</ul>
 									</div>
 									<div class="2xl:pt-2 max-lg:pb-5 mt-5 lg:mt-4 max-lg:px-5">
