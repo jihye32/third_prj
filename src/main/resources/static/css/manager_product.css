@@ -71,3 +71,140 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
 .pagination .page-link {
     color: #0c193a;
 }
+
+/* 검색창 스타일 (image_073420 반영) */
+.search-bar-wrap {
+    background-color: #f2f3f5;
+    padding: 12px 20px;
+    border-radius: 4px;
+}
+.search-input-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.search-icon {
+    color: #8e94a0;
+    font-size: 1.2rem;
+}
+.search-input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 15px;
+    color: #333;
+}
+
+/* 카테고리 버튼 및 드롭다운 */
+.categoryMenu { position: relative; }
+.category-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.category-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+    z-index: 1000;
+    display: none; /* 기본 숨김 */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+/* 호버 시 드롭다운 노출 */
+.categoryMenu:hover .category-dropdown {
+    display: block;
+}
+.dropdown-list {
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+}
+.dropdown-list li a {
+    display: block;
+    padding: 8px 20px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+.dropdown-list li a:hover {
+    background-color: #f0f2f5;
+}
+
+/* 정렬 옵션 */
+.sort-options { cursor: pointer; }
+
+
+
+/* 검색바 배경 및 박스 설정 */
+.search-bar-wrap {
+    background-color: #f2f3f5;
+    padding: 12px 20px;
+    border-radius: 4px;
+}
+.search-input-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.search-icon {
+    color: #8e94a0;
+    font-size: 1.1rem;
+}
+.search-input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 15px;
+    color: #333;
+}
+
+/* 카드 이미지 비율 및 스타일 */
+.card-img-top {
+    border-radius: 8px !important;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+.card:hover {
+    transform: translateY(-2px);
+    transition: 0.2s;
+}
+
+        .categoryMenu { position: relative; }
+        .subMenu {
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            width: 240px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            z-index: 50;
+            margin-top: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .categoryMenu:hover .subMenu { visibility: visible; opacity: 1; }
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 10px 24px;
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 14px;
+        }
+        .nav-link-custom:hover { background-color: #f3f4f6; color: #000; }
+        .btn-sort { border: none; background: none; font-size: 13px; color: #999; cursor: pointer; }
+        .btn-sort.active, .btn-sort:hover { color: #000; font-weight: bold; }
+        .divider { color: #eee; font-size: 11px; margin: 0 5px; pointer-events: none; }
