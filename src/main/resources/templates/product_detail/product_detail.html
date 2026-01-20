@@ -13,13 +13,40 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 function openSellForm() {
-    fetch('/sell/form')
+    fetch('/sell/type')
         .then(res => res.text())
         .then(html => {
             // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
             document.getElementById('drawerContent').innerHTML = html;
             openDrawer('거래 방법 선택'); // 서랍 여는 공통 함수 실행
         });
+}
+function openPaymentForm() {
+		fetch('/sell/payment')
+	.then(res => res.text())
+	.then(html => {
+    	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+    	document.getElementById('drawerContent').innerHTML = html;
+    	document.getElementById('drawerContent').scrollTop = 0;
+	});
+}
+function openSuccessForm() {
+		fetch('/sell/success')
+	.then(res => res.text())
+	.then(html => {
+    	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+    	document.getElementById('drawerContent').innerHTML = html;
+    	document.getElementById('drawerContent').scrollTop = 0;
+	});
+}
+function openFailForm() {
+		fetch('/sell/fail')
+	.then(res => res.text())
+	.then(html => {
+    	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+    	document.getElementById('drawerContent').innerHTML = html;
+    	document.getElementById('drawerContent').scrollTop = 0;
+	});
 }
 </script>
 </head>
@@ -218,8 +245,10 @@ function openSellForm() {
 									발송완료</button>
 							</div>
 							 -->
+							
+							
 							<!-- 판매자와 아이디가 같은 경우(결제가 되지 않은 상태) -->
-<!-- 
+							<!-- 
 								<div
 									class="flex pt-4 items-center space-s-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white">
 									<ul class="flex w-full rounded bg-Gray-100">
@@ -287,10 +316,10 @@ function openSellForm() {
 											</button></li>
 									</ul>
 								</div>
- -->								
 					
-					
+					-->
 					<!-- 판매자와 아이디가 다른 경우/로그인을 하지 않은 경우 -->			
+					
 							<div class="flex items-center gap-2 pt-4 mt-4">
 								<button class="p-2 hover:bg-gray-50">
 									<svg class="w-7 h-7 text-gray-300" fill="none"
@@ -309,7 +338,6 @@ function openSellForm() {
 							</div>
  
  
- 
  						</div>
 					</div>
 					<div
@@ -317,8 +345,7 @@ function openSellForm() {
 						<div name="product-description"
 							class="flex flex-col w-full lg:w-[680px] max-lg:mb-[60px] flex-auto max-lg:px-5 lg:mr-0">
 							<h3
-								class="md:text-[22px] lg:pb-5 pb-3 w-full text-lg font-bold border-b border-gray-300 basis-[48px] text-jnblack">상품
-								정보</h3>
+								class="md:text-[22px] lg:pb-5 pb-3 w-full text-lg font-bold border-b border-gray-300 basis-[48px] text-jnblack">상품 정보</h3>
 							<div
 								class="flex flex-col flex-1 basis-[465px] lg:basis-[475px] overflow-visible max-lg:basis-0">
 								<div class="flex flex-col h-auto">
@@ -332,20 +359,25 @@ function openSellForm() {
 										</div>
 										<div
 											class="text-xs whitespace-pre-nowrap text-jnGray-900 leading-[18px] [&amp;_br]:hidden">
-											<font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 주고받는 행위는 사기에 노출</font>될 수 있으므로 즉시
-											<a href="#" target="_blank" rel="noopener noreferrer" style="color: rgb(20, 19, 19); font-weight: 600;"><u>중고나라로 신고</u></a>해 주세요
+											<font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 주고받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <a href="#" target="_blank" rel="noopener noreferrer" style="color: rgb(20, 19, 19); font-weight: 600;"><u>중고나라로 신고</u></a>해 주세요
+											
+											<!-- 판매자 아이디와 로그인한 아이디가 같을 경우 보여주는 내용
+											<div class="text-xs whitespace-pre-wrap text-jnGray-900 leading-[18px] [&amp;_br]:hidden">안전한 거래를 위해 <font color="#009F1F" style="font-weight: 600;">계좌번호·연락처 등 개인정보 공유는 금지되며,</font> <b>위반 시 제재될 수 있습니다.</b></div>
+											-->
 										</div>
 									</div>
 									<article class="flex flex-col flex-1">
 										<p th:text="${'GIGABYTE 지포스 RTX 5070 Ti WINDFORCE OC SFF D7 16GB 피씨디렉트 팝니다.'}"
-											class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">그래픽카드
+											class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
 											상품 설명 넣는 곳
 											</p>
 									</article>
 								</div>
 							</div>
 						</div>
-						<hr class="bg-jnGray-200 w-full lg:hidden h-[6px] !mt-0">
+						
+						<!-- 판매자 아이디와 로그인한 아이디가 같을 경우 안보여줌 부분 -->
+						
 						<div class="basis-[420px] max-lg:!mt-0 max-lg:pt-7">
 							<div name="product-store" class="w-full lg:w-[420px]">
 								<div class=" max-lg:px-5">
