@@ -1683,11 +1683,6 @@
       padding-inline: calc(var(--spacing) * 4);
     }
   }
-  .sm\:pb-0 {
-    @media (width >= 40rem) {
-      padding-bottom: calc(var(--spacing) * 0);
-    }
-  }
   .sm\:text-2xl {
     @media (width >= 40rem) {
       font-size: var(--text-2xl);
@@ -1798,11 +1793,6 @@
   .lg\:grid {
     @media (width >= 64rem) {
       display: grid;
-    }
-  }
-  .lg\:hidden {
-    @media (width >= 64rem) {
-      display: none;
     }
   }
   .lg\:h-4 {
