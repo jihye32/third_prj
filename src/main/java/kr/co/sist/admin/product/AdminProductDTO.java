@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ProductDTO {
+public class AdminProductDTO {
 	
 	private int category, page, sell_num, product_num;
 	private int startNum;

@@ -7,17 +7,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Controller("admin")
-public class ProductController {
+@Controller
+public class AdminProductController {
 
     @Autowired
-    private ProductService ps;
+    private AdminProductService ps;
 
     /**
      * 상품 관리 메인 페이지 (목록 조회, 검색, 정렬, 페이지네이션)
      */
     @GetMapping("/manager/product/product_main") 
-    public String memberMainPage(ProductDTO pDTO, Model model) {
+    public String memberMainPage(AdminProductDTO pDTO, Model model) {
         // 1. 총 상품 수 조회 (검색 조건 포함)
         int totalCount = ps.getProductTotalCount(pDTO);
         
@@ -36,7 +36,7 @@ public class ProductController {
         pDTO.setTotalPage(totalPage);
         
         // 3. 데이터 조회 및 모델 추가
-        List<ProductDomain> productList = ps.getProductList(pDTO);
+        List<AdminProductDomain> productList = ps.getProductList(pDTO);
         String pagination = ps.getPaginationHtml(pDTO); // Bootstrap 기반 페이지네이션 생성
         
         model.addAttribute("productList", productList);
@@ -52,7 +52,7 @@ public class ProductController {
     @GetMapping("/manager/product/product_detail") 
     public String memberDetailPage(@RequestParam(defaultValue = "0") int ProductNo, Model model) {
         // 요구사항 반영: 상품 정보와 이미지를 각각 따로 조회하여 전달
-        ProductDomain pd = ps.getProductDetail(ProductNo);
+        AdminProductDomain pd = ps.getProductDetail(ProductNo);
         List<String> productImages = ps.getProductImages(ProductNo);
         
         model.addAttribute("productDetail", pd);

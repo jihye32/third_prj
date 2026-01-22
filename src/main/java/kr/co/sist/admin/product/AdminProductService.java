@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductService {
+public class AdminProductService {
     @Autowired
-    private ProductDAO pDAO;
+    private AdminProductDAO pDAO;
 
     // 1. 페이지네이션 연산 로직 (12개씩 출력 권장)
     public int pageScale() { return 12; }
@@ -22,8 +22,8 @@ public class ProductService {
     }
 
     // 2. 상품 목록 조회 (ProductDTO 사용 및 예외 처리)
-    public List<ProductDomain> getProductList(ProductDTO pDTO) {
-        List<ProductDomain> list = null;
+    public List<AdminProductDomain> getProductList(AdminProductDTO pDTO) {
+        List<AdminProductDomain> list = null;
         try {
             list = pDAO.selectProductList(pDTO);
         } catch (SQLException e) {
@@ -32,7 +32,7 @@ public class ProductService {
         return list;
     }
 
-    public int getProductTotalCount(ProductDTO pDTO) {
+    public int getProductTotalCount(AdminProductDTO pDTO) {
         int totalCount = 0;
         try {
             totalCount = pDAO.selectTotalCount(pDTO);
@@ -43,8 +43,8 @@ public class ProductService {
     }
 
     // 3. 상세 정보 조회 (이미지와 정보 분리 - 요구사항 반영)
-    public ProductDomain getProductDetail(int productNo) {
-        ProductDomain pd = null;
+    public AdminProductDomain getProductDetail(int productNo) {
+        AdminProductDomain pd = null;
         try {
             pd = pDAO.selectProductDetail(productNo);
         } catch (SQLException e) {
@@ -64,7 +64,7 @@ public class ProductService {
     }
 
     // 4. 페이지네이션 HTML 생성
-    public String getPaginationHtml(ProductDTO pDTO) {
+    public String getPaginationHtml(AdminProductDTO pDTO) {
         // 기존 Board 프로젝트의 pagination2 로직을 이식하여 리턴
         return "페이지네이션 태그 문자열";
     }
