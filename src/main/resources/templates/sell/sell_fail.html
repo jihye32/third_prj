@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<th:block th:fragment="sellFailFrm">
+<main role="main" aria-label="본문 영역" id="main-content" class="h-[calc(100%-var(--top-navigation-height))] overflow-auto relative">
+	<section class="outline-none flex flex-col justify-center items-center flex-nowrap py-[36px] w-full">
+		<div class="outline-none gap-4 flex flex-col justify-center items-center flex-nowrap">
+			<div class="outline-none gap-2 flex flex-col justify-start items-center flex-nowrap">
+				<div class="flex justify-center items-center w-[80px] h-[80px]" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  						<circle cx="256" cy="256" r="250" fill="#E13F3F" />
+     					    <rect x="231" y="110" width="50" height="210" rx="25" fill="white" />
+					        <circle cx="256" cy="390" r="30" fill="white" />
+					</svg>
+				</div>
+				<span class="whitespace-pre-line text-20 font-semibold text-gray-900">주문실패</span>
+			</div>
+			<div class="outline-none gap-1 flex flex-col justify-center items-center flex-nowrap">
+				<span class="whitespace-pre-line text-16 font-regular text-gray-600 text-center">잠시 후 다시 시도해주세요.</span>
+			</div>
+		</div>
+	</section>
+</main>
+<div class="absolute bottom-0 left-0 w-full bg-white py-4 px-5 z-50 mt-auto">
+	<div class="p-5 bg-white">
+		<button class="w-full h-14 bg-gray-900 text-white rounded-lg font-bold text-lg active:bg-gray-800 transition-colors" onclick="closeDrawer()">상품으로</button>
+	</div>
+</div>
+</th:block>
+</body>
+</html>
