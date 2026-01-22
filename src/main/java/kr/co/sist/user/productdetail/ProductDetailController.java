@@ -1,5 +1,6 @@
 package kr.co.sist.user.productdetail;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,29 +17,31 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/product")
-@Controller("UserProductController")
-public class ProductController {
+@Controller("UserProductDetailController")
+public class ProductDetailController {
 
-	@GetMapping("/product/detail")
-	public String testPage() {
-		return "product_detail/product_detail";
-	}
+	@Autowired
+	ProductDetailService ps;
 	
 	 // 1. 상세 페이지 조회
-    @GetMapping("/{num}")
-    public String searchProductDetail(@PathVariable int num, HttpServletRequest request , Model model) {
+    @GetMapping("/{pnum}")
+    public String searchProductDetail(@PathVariable int pnum, HttpServletRequest request , Model model) {
     	//서비스에서 상세정보 가져옴
-    	
+    	ProductDetailDomain pdd = ps.searchProduct(pnum);
+    	if(pdd == null) return "product/detail";//메인화면으로 이동시키기
+    	SellerDomain sd = ps.searchSeller(pdd.getStore());
     	//
-    	
     	
     	HttpSession ss = request.getSession();
     	String store = (String)ss.getAttribute("storeName");
     	boolean myProductFlag = false;
-        if(store == "domainStoreName") { //상세정보에 있는 seller_store와 session에 있는 storeName이 같은지 확인
-        	if("seller_status".equals("domainProduct_status")) {
+        if(pdd.getStore().equals(store)) { //로그인한 사람이 작성한 글인지 확인
+        	myProductFlag = true;
+        	if(pdd.getSellStatusCode()==3) {
         		//결제번호 확인하고
         	}
+        }else {
+        	ps.modifyViewCnt(pnum);
         }
 //        // [핵심 로직] 본인 상품 여부 확인 (Thymeleaf에서 버튼 분기 처리에 사용)
 //        boolean isOwner = product.getSellerId().equals(principal.getName());

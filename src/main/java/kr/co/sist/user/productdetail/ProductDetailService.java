@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ProductService {
+@Service("UserProductService")
+public class ProductDetailService {
 
 	@Autowired(required = false)
 	ProductDetailDAO pDAO;
@@ -45,37 +45,24 @@ public class ProductService {
 		return pDAO.updateViewCnt(pnum)==1;
 	}//updateViewCnt
 	
-	//마지막으로 끌올한 날 가져옴
-	public Date selectUpDate(int pnum) {
-		Date date = null;
-		
-		return date;
-	}//selectUpDate
-	//끌올 버튼을 누를 경우 현재 날짜로 변경
-	public int updateUpDate(int pnum) {
+	public int searchUpDate(int num) {
 		int cnt =0;
-		
+		//현재 날짜와 select으로 받은 날짜의 차이를 구해 반환
 		return cnt;
-	}//updateUpDate
+	}//searchUpDate
+	public boolean modifyUpDate(int pnum) {
+		return pDAO.updateUpDate(pnum)==1;
+	}//modifyUpDate
 	
-	//판매 상태 변경
-	public int updateProductStatus(int pnum) {
-		int cnt =0;
-		
-		return cnt;
-	}//updateProductStatus
+	public boolean modifyProductStatus(int pnum) {
+		return pDAO.updateProductStatus(pnum)==1;
+	}//modifyProductStatus
 	
-	//게시글 수정
-	public int updateProductDetail(ProductModifyDTO pmDTO) {
-		int cnt =0;
-		
-		return cnt;
-	}//updateProductDetail
+	public boolean modifyProductDetail(ProductModifyDTO pmDTO) {
+		return pDAO.updateProductDetail(pmDTO)==1;
+	}//modifyUpDate
 	
-	//게시글 삭제
-	public int deleteProduct(int pnum) {
-		int cnt =0;
-		
-		return cnt;
-	}//deleteProduct
+	public boolean removeProduct(int pnum) {
+		return pDAO.deleteProduct(pnum)==1;
+	}//removeProduct
 }

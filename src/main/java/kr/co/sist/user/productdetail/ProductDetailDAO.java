@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("UserProductDetailDAO")
 public class ProductDetailDAO {
 //////product detail domain에 들어갈 내용/////////////////////////////////////////////////////////////////////
 	//선택된 상품 번호로 상품의 정보 조회
