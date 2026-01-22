@@ -1,5 +1,5 @@
 package kr.co.sist.user.productdetail;
 
-public class ProductDetailService {
+public class ProductDAO {
 
 }
