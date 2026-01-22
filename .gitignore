@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Tailwind CSS Build ###
+# 만약 폴더 안에 있다면 아래처럼 경로를 적어주세요 (예시)
+src/main/resources/static/css/output.css
+
+# 추가로 node_modules도 없다면 꼭 넣어주세요
+node_modules/
