@@ -1,32 +1,25 @@
-package kr.co.sist.user.productdetail;
+package kr.co.sist.user.sell;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-public class ProductDetailController {
-
-	@GetMapping("/product/detail")
-	public String testPage() {
-		return "product_detail/product_detail";
-	}
-	@GetMapping("/chat/list")
-	public String testChat() {
-		return "template/wrapper_frm :: chatListForm";
-	}
-	@GetMapping("/sell/type")
+@RequestMapping("/sell")
+@Controller("UserSellController")
+public class SellController {
+	@GetMapping("/type")
 	public String openSellType() {
 		return "sell/delivery_type :: deliveryType";
 	}
-	@GetMapping("/sell/payment")
+	@GetMapping("/payment")
 	public String openSellFrm() {
 		return "sell/payment_form :: paymentFrm";
 	}
-	@GetMapping("/sell/success")
+	@GetMapping("/success")
 	public String openSuccessFrm() {
 		return "sell/sell_success :: sellSuccessFrm";
 	}
-	@GetMapping("/sell/fail")
+	@GetMapping("/fail")
 	public String openFailFrm() {
 		return "sell/sell_fail :: sellFailFrm";
 	}
