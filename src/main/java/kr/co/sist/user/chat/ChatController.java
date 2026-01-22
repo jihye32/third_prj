@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/chat")
-@Controller
+@Controller("UserChatController")
 public class ChatController {
 	@GetMapping("/list")
 	public String testChat() {

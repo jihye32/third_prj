@@ -3,7 +3,7 @@ package kr.co.sist.user.sample;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
+@Controller("UserSampleController")
 public class SampleController {
 
 	@GetMapping("/test/main")
