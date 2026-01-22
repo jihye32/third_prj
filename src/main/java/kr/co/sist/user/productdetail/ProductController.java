@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/product")
-@Controller
+@Controller("UserProductController")
 public class ProductController {
 
 	@GetMapping("/product/detail")
