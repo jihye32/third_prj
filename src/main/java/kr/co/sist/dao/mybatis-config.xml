@@ -24,5 +24,6 @@
   </environments>
   <mappers>
     <mapper resource="kr/co/sist/admin/product/productMapper.xml"/> 
+    <mapper resource="kr/co/sist/admin/board/BoardMapper.xml"/>
   </mappers>
 </configuration>
