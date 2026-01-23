@@ -4,14 +4,12 @@
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 <properties resource="properties/database.properties"/>
-
 <typeAliases>
 
 
 
 
 </typeAliases>
-
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -24,9 +22,7 @@
       </dataSource>
     </environment>
   </environments>
-  
- <mappers>
-  <mapper resource="kr/co/sist/admin/board/BoardMapper.xml"/>
-</mappers>
-
+  <mappers>
+    <mapper resource="kr/co/sist/admin/product/productMapper.xml"/> 
+  </mappers>
 </configuration>

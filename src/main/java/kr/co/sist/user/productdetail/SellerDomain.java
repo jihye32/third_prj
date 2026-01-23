@@ -9,4 +9,5 @@ import lombok.ToString;
 @ToString
 public class SellerDomain {
 	private int productCnt, reivewCnt;
+	private String sellerProfile;
 }

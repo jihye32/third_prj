@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("UserProductDetailDAO")
 public class ProductDetailDAO {
 //////product detail domain에 들어갈 내용/////////////////////////////////////////////////////////////////////
 	//선택된 상품 번호로 상품의 정보 조회
@@ -45,6 +45,12 @@ public class ProductDetailDAO {
 		return cnt;
 	}//cntSellProduct
 	
+	//발송완료 확인
+	public String selectSendFlag(int pnum) {
+		String flag = null;
+		
+		return flag;
+	}//selectSendFlag
 
 	
 //////seller domain에 들어갈 내용/////////////////////////////////////////////////////////////////////
@@ -61,6 +67,13 @@ public class ProductDetailDAO {
 		
 		return cnt;
 	}//cntReview
+	
+	public String selectSellerProfile(String store) {
+		String profile = null;
+		
+		return profile;
+	}//selectSellerProfile
+	
 	
 //////게시글 수정사항/////////////////////////////////////////////////////////////////////
 	//정상적인 확인을 위해서 boolean를 반환하지만 완성되고는 반환할 필요x
@@ -85,7 +98,7 @@ public class ProductDetailDAO {
 	}//updateUpDate
 	
 	//판매 상태 변경
-	public int updateProductStatus(int pnum) {
+	public int updateProductStatus(SellStatusDTO ssDTO) {
 		int cnt =0;
 		
 		return cnt;
