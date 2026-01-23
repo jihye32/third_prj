@@ -45,16 +45,23 @@ public class ProductDetailController {
     	list.add(2);
     	pdd.setDealType(list);
     	List<String> slist = new ArrayList<String>();
-    	slist.add("img_1");
-    	slist.add("img_2");
+    	slist.add("https://img2.joongna.com/media/original/2026/01/16/1768553238742cxo_wjZDC.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
+    	slist.add("https://img2.joongna.com/media/original/2026/01/16/1768553238742BfR_PXEkb.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
     	pdd.setImg(slist);
     	pdd.setPrice(100000000);
     	pdd.setProduct_num(100);
     	pdd.setProductStatus("Y");
-    	pdd.setSellStatusCode(2);//1: 판매중, 2: 예약중, 3: 판매완료
-    	pdd.setThumbnail("썸네일");
+    	pdd.setSellStatusCode(1);//1: 판매중, 2: 예약중, 3: 판매완료
+    	pdd.setThumbnail("https://img2.joongna.com/media/original/2026/01/16/176855323874331j_7cv0Z.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
     	pdd.setTitle("책책책책책책책책책");
     	pdd.setViewCnt(123);
+    	
+    	List<String> imgList = new ArrayList<String>();
+    	imgList.add(pdd.getThumbnail());
+    	for(String img : pdd.getImg()) {
+    		imgList.add(img);
+    	}
+    	pdd.setImg(imgList);
     	
     	SellerDomain sd = new SellerDomain();
     	sd.setStoreName("자바");
