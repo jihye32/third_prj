@@ -1,101 +1,105 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>쌍용장터 관리자센터 - 회원관리</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/manager_member.css}">
+<meta charset="UTF-8">
+<title>쌍용장터 관리자센터 - 회원관리</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/manager_member.css}">
+<style>
+/* 상세페이지 확인 및 내역 확인 버튼 색상 */
+.btn-navy {
+	background-color: #001f3f;
+	color: white;
+}
+
+.btn-navy:hover {
+	background-color: #001122;
+	color: white;
+}
+</style>
 </head>
 <body>
 
-    <header id="kakaoHead">
-        <div class="tit_logo">쌍용장터 관리자센터</div>
-        <div class="util_menu">
-            <a href="/logout" class="btn_logout">로그아웃</a>
-        </div>
-    </header>
+	<header id="kakaoHead">
+		<div class="tit_logo">쌍용장터 관리자센터</div>
+		<div class="util_menu">
+			<a th:href="@{/logout}" class="btn_logout">로그아웃</a>
+		</div>
+	</header>
 
-    <div class="wrapper">
-        <aside class="menu_side">
-            <div class="menu_group">관리자 메뉴</div>
-            <ul class="list_menu">
-                <li>대시보드</li>
-                <li><a th:href="@{/manage/product/product_main}"
+	<div class="wrapper">
+		<aside class="menu_side">
+			<div class="menu_group">관리자 메뉴</div>
+			<ul class="list_menu">
+				<li>대시보드</li>
+				<li><a th:href="@{/manage/product/product_main}"
 					style="text-decoration: none; color: inherit; display: block; width: 100%;">
 						물품관리 </a></li>
-                <li class="active">회원관리</li>
-                <li>고객센터관리</li>
-                <li>신고관리</li>
-                <li>매출관리</li>
-                <li>이벤트관리</li>
-            </ul>
-        </aside>
+				<li class="active">회원관리</li>
+				<li>고객센터관리</li>
+				<li>신고관리</li>
+				<li>매출관리</li>
+				<li>이벤트관리</li>
+			</ul>
+		</aside>
 
-        <main id="main-container">
-            <div class="container-fluid">
-                <h3 class="mb-4 fw-bold">회원관리</h3>
+		<main id="main-container">
+			<div class="container-fluid">
+				<h3 class="mb-4 fw-bold">회원관리</h3>
 
-                <div class="table_card">
-                    <table class="table table-hover align-middle text-center">
-                        <thead class="table-light">
-                            <tr>
-                                <th>회원 번호</th>
-                                <th>회원 아이디</th>
-                                <th>회원 E-mail</th>
-                                <th>계정 생성일</th>
-                                <th>계정 삭제</th>
-                                <th>상세페이지</th>
-                                <th>구매/판매내역</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>2</td>
-                                <td>ssar</td>
-                                <td>ssar@nate.com</td>
-                                <td>2023-02-16</td>
-                                <td><button class="btn btn-sm btn-danger btn-custom">삭제하기</button></td>
-                                <td><button class="btn btn-sm btn-navy btn-custom">상세페이지 확인</button></td>
-                                <td><button class="btn btn-sm btn-navy btn-custom">구매/판매내역 확인</button></td>
-                            </tr>
-                            <script>
-                                for(let i=3; i<=10; i++){
-                                    document.write(`
-                                    <tr>
-                                        <td>${i}</td>
-                                        <td>love${i-2}</td>
-                                        <td>love${i-2}@nate.com</td>
-                                        <td>2023-02-16</td>
-                                        <td><button class="btn btn-sm btn-danger btn-custom">삭제하기</button></td>
-                                        <td><button class="btn btn-sm btn-navy btn-custom">상세페이지 확인</button></td>
-                                        <td><button class="btn btn-sm btn-navy btn-custom">구매/판매내역 확인</button></td>
-                                    </tr>`);
-                                }
-                            </script>
-                        </tbody>
-                    </table>
+				<div class="table_card">
+					<table class="table table-hover align-middle text-center">
+						<thead class="table-light">
+							<tr>
+								<th>회원 번호</th>
+								<th>회원 아이디</th>
+								<th>회원 E-mail</th>
+								<th>계정 생성일</th>
+								<th>계정 삭제</th>
+								<th>상세페이지</th>
+								<th>구매/판매내역</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="m : ${memberList}">
+								<td th:text="${m.memberNo}">2</td>
+								<td th:text="${m.userId}">ssar</td>
+								<td th:text="${m.email}">ssar@nate.com</td>
+								<td th:text="${#dates.format(m.inputDate, 'yyyy-MM-dd')}">2023-02-16</td>
+								<td>
+									<button class="btn btn-sm btn-danger btn-custom">삭제하기</button>
+								</td>
+								<td>
+									<button class="btn btn-sm btn-navy btn-custom"
+										th:onclick="'location.href=\'/manage/member/member_detail?userId=' + ${m.userId} + '\''">
+										상세페이지 확인</button>
+								</td>
 
-                    <nav class="mt-4">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="changePage(1)">1</a></li>
-                            <li class="page-item active"><a class="page-link" href="javascript:void(0);" onclick="changePage(2)">2</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="changePage(3)">3</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="changePage(4)">4</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="changePage(5)">5</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="changePage(6)">6</a></li>
-                        </ul>
-                    </nav>
-                </div> 
-            </div>
-        </main>
-    </div>
+								<td>
+									<button class="btn btn-sm btn-navy btn-custom"
+										th:onclick="'location.href=\'/manage/member/member_product?userId=' + ${m.userId} + '\''">
+										구매/판매내역 확인</button>
+								</td>
+							</tr>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
-        function changePage(p) {
-            alert(p + " 페이지로 이동합니다.");
-            // 실제 이동 시: location.href = "?page=" + p;
-        }
-    </script>
+							<tr th:if="${#lists.isEmpty(memberList)}">
+								<td colspan="7" class="py-5 text-muted">등록된 회원이 없습니다.</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="mt-4 d-flex justify-content-center">
+						<div th:if="${pagination != null}" th:utext="${pagination}"></div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
