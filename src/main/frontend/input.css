@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* 1. 기존 templates 폴더 (Thymeleaf 사용 시) */
 @source "../resources/templates/**/*.html";
