@@ -6,104 +6,154 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/manager_product_detail.css}">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
-    <header id="kakaoHead">
-        <div class="tit_logo">쌍용장터 관리자센터</div>
+    <header id="kakaoHead" style="background-color: #f8f9fa; border-bottom: 1px solid #ddd; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div class="tit_logo" style="font-weight: bold; font-size: 20px;">쌍용장터 관리자센터</div>
         <div class="util_menu">
-            <a href="/logout" class="btn_logout">로그아웃</a>
+            <a th:href="@{/logout}" class="btn_logout" style="text-decoration: none; color: #333; font-weight: bold;">로그아웃</a>
         </div>
     </header>
 
-    <div class="wrapper">
-        <aside class="menu_side">
-            <div class="menu_group">관리자 메뉴</div>
-            <ul class="list_menu">
-                <li>대시보드</li>
-                <li class="active">물품관리</li>
-                <li>회원관리</li>
-                <li>고객센터관리</li>
-                <li>신고관리</li>
-                <li>매출관리</li>
-                <li>이벤트관리</li>
+    <div class="wrapper" style="display: flex;">
+        
+        <aside class="menu_side" style="width: 250px; background-color: #343a40; min-height: 100vh; color: white; padding-top: 20px;">
+            <div class="menu_group" style="padding: 10px 20px; font-size: 14px; color: #adb5bd;">관리자 메뉴</div>
+            <ul class="list_menu" style="list-style: none; padding: 0;">
+                <li style="padding: 12px 20px; cursor: pointer;">대시보드</li>
+                <li class="active" style="padding: 12px 20px; cursor: pointer; background-color: #007bff;">물품관리</li>
+                <li style="padding: 12px 20px; cursor: pointer;">회원관리</li>
+                <li style="padding: 12px 20px; cursor: pointer;">고객센터관리</li>
+                <li style="padding: 12px 20px; cursor: pointer;">신고관리</li>
             </ul>
         </aside>
 
-        <main id="main-container">
-            <div class="detail-wrapper">
+        <main id="main-container" style="flex: 1; padding: 30px;">
+            <div class="detail-wrapper" th:if="${product != null}">
                 
-                <div class="mgmt-header">
-                    <div class="mgmt-title">물품관리</div>
-                    <div class="mgmt-actions">
-                        <button class="btn-delete">상품 삭제</button>
-                        <select class="select-reason">
-                            <option>상품 삭제 사유 선택</option>
-                            <option>사기로 의심됨</option>
-                            <option>부적절한 물품</option>
-                            <option>현금 외 거래 유도</option>
+                <div class="mgmt-header d-flex justify-content-between align-items-center mb-4">
+                    <div class="mgmt-title h4 fw-bold">물품관리</div>
+                    <div class="mgmt-actions d-flex gap-2">
+                        <select class="form-select form-select-sm" id="deleteReason" style="width: 200px;">
+                            <option value="">삭제 사유 선택</option>
+                            <option value="사기로 의심됨">사기로 의심됨</option>
+                            <option value="부적절한 물품">부적절한 물품</option>
+                            <option value="현금 외 거래 유도">현금 외 거래 유도</option>
                         </select>
+                        <button class="btn btn-danger btn-sm" onclick="requestDelete()">상품 삭제</button>
                     </div>
                 </div>
 
-                <div class="product-info-grid">
-                    <div class="image-area">
-                        <div class="status-badge">
-                            <select class="form-select form-select-sm">
-                                <option>판매중</option>
-                                <option selected>예약중</option>
-                                <option>배송중</option>
-                                <option>판매완료</option>
+                <div class="product-info-grid row">
+                    <div class="col-md-5 image-area">
+                        <div class="status-badge mb-2">
+                            <select class="form-select form-select-sm" id="sellState" th:onchange="updateState([[${product.productNo}]])">
+                                <option value="판매중" th:selected="${product.sellState == '판매중'}">판매중</option>
+                                <option value="예약중" th:selected="${product.sellState == '예약중'}">예약중</option>
+                                <option value="판매완료" th:selected="${product.sellState == '판매완료'}">판매완료</option>
                             </select>
                         </div>
-                        <img src="https://via.placeholder.com/500" class="main-img" alt="상품 이미지">
-                        <div class="img-dots">
-                            <span class="dot active"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                        </div>
+                        <img th:src="${product.thumbnail != null ? product.thumbnail : 'https://placehold.co/500'}" class="img-fluid rounded shadow-sm" alt="상품 이미지">
                     </div>
 
-                    <div class="info-area">
-                        <h2 class="p-name">모아빈 분홍가디건</h2>
-                        <div class="p-price">43,000 <span>원</span></div>
-                        <div class="p-meta">
-                            <span>❤️ 7</span> <span>👁️ 190</span> <span>🕒 25분 전</span>
+                    <div class="col-md-7 info-area">
+                        <h2 class="p-name fw-bold mb-3" th:text="${product.productName}">상품명</h2>
+                        <div class="p-price h3 text-primary fw-bold mb-3">
+                            <span th:text="${product.price != null ? #numbers.formatInteger(product.price, 3, 'COMMA') : '0'}">0</span> 원
                         </div>
-                        <ul class="p-detail-list">
-                            <li><span class="label">· 상품상태</span> <span class="val">새 상품</span></li>
-                            <li><span class="label">· 직거래지역</span> <span class="val">서울특별시 강서구 화곡제8동</span></li>
+                        <div class="p-meta text-muted mb-4">
+                            <span th:text="'❤️ ' + ${product.likes}">❤️ 0</span> 
+                            <span class="mx-2">|</span>
+                            <span th:text="'👁️ ' + ${product.hits}">👁️ 0</span> 
+                            <span class="mx-2">|</span>
+                            <span th:text="${#dates.format(product.inputDate, 'yyyy-MM-dd')}">날짜</span>
+                        </div>
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item px-0"><span class="fw-bold text-muted mr-3">· 상품상태 :</span> <span th:text="${product.condition}">상태</span></li>
+                            <li class="list-group-item px-0"><span class="fw-bold text-muted mr-3">· 직거래지역 :</span> <span th:text="${product.location}">지역</span></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="row mt-5 pt-4 border-top">
                     <div class="col-lg-8">
-                        <h3 class="section-tit">상품정보</h3>
-                        <div class="section-content">
-                            밖에서 착용X<br>
-                            채팅주세요 ㅎㅎ<br>
-                            저는 키가 커서 기장이 좀 짧아 판매합니다ㅎ
-                        </div>
+                        <h3 class="h5 fw-bold mb-3">상품정보</h3>
+                        <div class="section-content text-break" style="white-space: pre-line;" th:text="${product.description}">설명</div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="store-card">
-                            <h3 class="section-tit mb-3">상점정보</h3>
-                            <div class="d-flex align-items-center gap-3 mb-4">
-                                <div class="store-profile"></div>
-                                <div>
-                                    <div class="fw-bold">봄봄좋아</div>
-                                    <div class="text-muted small">상품 21</div>
-                                </div>
+                        <div class="card bg-light border-0">
+                            <div class="card-body text-center">
+                                <h3 class="h6 fw-bold mb-3">상점정보</h3>
+                                <button class="btn btn-dark w-100" onclick="location.href='/manage/product/product_main'">목록으로</button>
                             </div>
-                            <button class="btn-list" onclick="location.href='product_main'">목록으로</button>
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
     </div>
 
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">상품 삭제 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMsg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제 실행</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        // 1. 상태 변경 AJAX
+        function updateState(pNo) {
+            const state = $('#sellState').val();
+            $.ajax({
+                url: '/manage/product/update_state',
+                type: 'POST',
+                data: { productNo: pNo, sellState: state },
+                success: function(res) {
+                    alert('상태가 [' + state + '](으)로 변경되었습니다.');
+                },
+                error: function() { alert('변경 실패'); }
+            });
+        }
+
+        // 2. 삭제 프로세스
+        let targetPno = [[${product != null ? product.productNo : 0}]];
+        
+        function requestDelete() {
+            const reason = $('#deleteReason').val();
+            if(!reason) {
+                alert('삭제 사유를 선택해주세요.');
+                return;
+            }
+            $('#modalMsg').text('[' + reason + '] 사유로 이 상품을 정말 삭제하시겠습니까?');
+            new bootstrap.Modal($('#deleteModal')).show();
+        }
+
+        function confirmDelete() {
+            const reason = $('#deleteReason').val();
+            $.ajax({
+                url: '/manage/product/delete_product',
+                type: 'POST',
+                data: { productNo: targetPno, deleteReason: reason },
+                success: function(res) {
+                    alert('삭제 처리가 완료되었습니다.');
+                    location.href = '/manage/product/product_main';
+                },
+                error: function() { alert('삭제 실패'); }
+            });
+        }
+    </script>
 </body>
 </html>

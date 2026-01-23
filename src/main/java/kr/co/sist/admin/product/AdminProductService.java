@@ -10,38 +10,60 @@ public class AdminProductService {
     @Autowired
     private AdminProductDAO pDAO;
 
-    // 1. 페이지네이션 연산 로직 (12개씩 출력 권장)
     public int pageScale() { return 12; }
 
-    public int totalPage(int totalCount, int pageScale) {
-        return (int)Math.ceil((double)totalCount / pageScale);
-    }
-
-    public int startNum(int currentPage, int pageScale) {
-        return currentPage * pageScale - pageScale + 1;
-    }
-
-    // 2. 상품 목록 조회 (ProductDTO 사용 및 예외 처리)
     public List<AdminProductDomain> getProductList(AdminProductDTO pDTO) {
-        List<AdminProductDomain> list = null;
         try {
-            list = pDAO.selectProductList(pDTO);
+            return pDAO.selectProductList(pDTO);
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return list;
     }
 
     public int getProductTotalCount(AdminProductDTO pDTO) {
-        int totalCount = 0;
         try {
-            totalCount = pDAO.selectTotalCount(pDTO);
+            return pDAO.selectTotalCount(pDTO);
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return totalCount;
     }
 
+    public String getPaginationHtml(AdminProductDTO pDTO, int totalCount) {
+        int totalPage = (int)Math.ceil((double)totalCount / pDTO.getPageScale());
+        int currentPage = pDTO.getCurrentPage();
+        int pageBlock = 5; 
+
+        // 파라미터 유지 (검색어, 카테고리, 정렬)
+        String queryParams = "";
+        if (pDTO.getKeyword() != null && !pDTO.getKeyword().isEmpty()) queryParams += "&keyword=" + pDTO.getKeyword();
+        if (pDTO.getSortBy() != null) queryParams += "&sort=" + pDTO.getSortBy();
+        if (pDTO.getCategory() != 0) queryParams += "&category=" + pDTO.getCategory();
+
+        int startPage = ((currentPage - 1) / pageBlock) * pageBlock + 1;
+        int endPage = startPage + pageBlock - 1;
+        if (endPage > totalPage) endPage = totalPage;
+
+        StringBuilder html = new StringBuilder();
+        html.append("<nav><ul class='pagination justify-content-center'>");
+
+        if (startPage > 1) {
+            html.append(String.format("<li class='page-item'><a class='page-link' href='?currentPage=%d%s'>&laquo;</a></li>", startPage - 1, queryParams));
+        }
+
+        for (int i = startPage; i <= endPage; i++) {
+            String active = (i == currentPage) ? "active" : "";
+            html.append(String.format("<li class='page-item %s'><a class='page-link' href='?currentPage=%d%s'>%d</a></li>", active, i, queryParams, i));
+        }
+
+        if (endPage < totalPage) {
+            html.append(String.format("<li class='page-item'><a class='page-link' href='?currentPage=%d%s'>&raquo;</a></li>", endPage + 1, queryParams));
+        }
+
+        html.append("</ul></nav>");
+        return html.toString();
+    }
     // 3. 상세 정보 조회 (이미지와 정보 분리 - 요구사항 반영)
     public AdminProductDomain getProductDetail(int productNo) {
         AdminProductDomain pd = null;
