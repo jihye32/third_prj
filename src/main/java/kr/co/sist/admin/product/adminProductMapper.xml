@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.admin.product">
+
+    <select id="selectTotalCount" resultType="int" parameterType="kr.co.sist.admin.product.AdminProductDTO">
+        SELECT  COUNT(*) 
+        FROM    product
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND productName LIKE '%' || #{keyword} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProductList" resultType="kr.co.sist.admin.product.AdminProductDomain" parameterType="kr.co.sist.admin.product.AdminProductDTO">
+        SELECT  *
+        FROM    (SELECT rownum rnum, p.* FROM (
+                   SELECT 
+                       productNo, productName, price, location, inputDate, sellState, thumbnail
+                   FROM product
+                   <where>
+                       <if test="keyword != null and keyword != ''">
+                           AND productName LIKE '%' || #{keyword} || '%'
+                       </if>
+                   </where>
+                   ORDER BY 
+                   <choose>
+                       <when test="sortBy == 'lowPrice'"> price ASC </when>
+                       <when test="sortBy == 'highPrice'"> price DESC </when>
+                       <otherwise> inputDate DESC </otherwise>
+                   </choose>
+                  ) p
+        )
+        WHERE rnum BETWEEN #{startNum} AND #{endNum}
+    </select>
+
+    <select id="selectProductDetail" resultType="kr.co.sist.admin.product.AdminProductDomain" parameterType="int">
+        SELECT productNo, productName, price, description, sellState, inputDate, location, thumbnail
+        FROM product
+        WHERE productNo = #{productNo}
+    </select>
+
+    <update id="updateProductState" parameterType="kr.co.sist.admin.product.AdminProductDTO">
+        UPDATE product SET sellState = #{sellState} WHERE productNo = #{productNo}
+    </update>
+
+    <update id="deleteProduct" parameterType="kr.co.sist.admin.product.AdminProductDTO">
+        UPDATE product SET deleteFlag = 'Y', deleteReason = #{deleteReason}, deleteDate = SYSDATE WHERE productNo = #{productNo}
+    </update>
+    
+    <select id="selectProductImages" resultType="String" parameterType="int">
+        SELECT imageName FROM product_images WHERE productNo = #{productNo} ORDER BY imageOrder ASC
+    </select>
+
+</mapper>
