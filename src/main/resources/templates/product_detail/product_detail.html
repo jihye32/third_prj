@@ -96,352 +96,280 @@ function openFailForm() {
 </script>
 </head>
 <body>
-	<div id="__next">
-		<div class="flex flex-col min-h-screen bg-white">
-			<div th:replace="~{template/header :: headerImgFragment}"></div>
-			<div th:replace="~{template/header :: headerFragment}"></div>
-			<main class="relative flex-grow border-b-1" style="min-height: 500px">
-				<div
-					class="mx-auto md:px-8 2xl:px-16 box-content max-w-[1024px] min-[1600px]:max-w-[1280px] lg:min-h-[950px] px-0"
-					style="height: auto !important; min-height: 0px !important;">
-					<th:block th:object="${ProductDetailDomain}">
-						<div
-							class="items-start block grid-cols-2 lg:grid gap-x-[72px] lg:pt-[72px] lg:pb-[52px] pt-0 max-lg:px-5">
-							<div class="flex flex-col">
-								<div class="relative overflow-hidden rounded-2xl">
-									<div
-										class="carouselWrapper relative product-gallery swiperThumbnail product-gallery-slider lg:sticky lg:top-56 overflow-hidden rounded-2xl">
-										<div
-											class="swiper swiper-initialized swiper-horizontal swiper-pointer-events"
-											dir="ltr">
-											<div class="swiper-wrapper">
-												<div class="swiper-slide swiper-slide-active"
-													style="width: 476px;">
-													<div
-														class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
-														<img alt="새제품) 기가바이트 RTX 5070 Ti 그래픽카드 팝니다. 110만원--0"
-															referrerpolicy="no-referrer" fetchpriority="high"
-															decoding="async" data-nimg="fill"
-															class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
-															src="https://img2.joongna.com/media/original/2026/01/15/1768450262363TnA_M2HL0.jpg?impolicy=resizeWatermark3&amp;ftext=popsykm"
-															style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													</div>
+<div id="__next">
+	<div class="flex flex-col min-h-screen bg-white">
+		<div th:replace="~{template/header :: headerImgFragment}"></div>
+		<div th:replace="~{template/header :: headerFragment}"></div>
+		<main class="relative flex-grow border-b-2" style="min-height: -webkit-fill-available">
+			<div class="mx-auto md:px-8 2xl:px-16 box-content max-w-[1024px] min-[1600px]:max-w-[1280px] lg:min-h-[950px] px-0">
+				<div class="items-start block grid-cols-2 lg:grid gap-x-[72px] lg:pt-[72px] lg:pb-[52px] pt-0 max-lg:px-5">
+					<!-- 이미지!!!!!!!!!!!!!!!!!!! -->
+					<div class="flex flex-col">
+						<div class="relative overflow-hidden rounded-2xl">
+							<div class="carouselWrapper relative product-gallery swiperThumbnail product-gallery-slider lg:sticky lg:top-56 overflow-hidden rounded-2xl">
+								<div class="swiper swiper-initialized swiper-horizontal swiper-pointer-events" dir="ltr">
+								
+								<!-- 이미지 들어가는 곳!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+									<div class="swiper-wrapper">
+										<div class="swiper-slide swiper-slide-active" style="width: 476px;">
+											<div class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
+												<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--0"
+													referrerpolicy="no-referrer" fetchpriority="high"
+													decoding="async" data-nimg="fill"
+													class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
+													src="https://img2.joongna.com/media/original/2026/01/16/1768553238742cxo_wjZDC.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4"
+													style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+											</div>
+										</div>
+										<div class="swiper-slide swiper-slide-next" style="width: 476px;">
+											<div class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
+												<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--1"
+													referrerpolicy="no-referrer" loading="lazy"
+													decoding="async" data-nimg="fill"
+													class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
+													src="https://img2.joongna.com/media/original/2026/01/16/1768553238742BfR_PXEkb.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4"
+													style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+											</div>
+										</div>
+										<div class="swiper-slide" style="width: 476px;">
+											<div class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
+													<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--2"
+														referrerpolicy="no-referrer" loading="lazy"
+														decoding="async" data-nimg="fill"
+														class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
+														src="https://img2.joongna.com/media/original/2026/01/16/1768553238743MCZ_JyLiW.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4"
+														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
 												</div>
-												<div class="swiper-slide swiper-slide-next"
-													style="width: 476px;">
-													<div
-														class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
-														<img alt="새제품) 기가바이트 RTX 5070 Ti 그래픽카드 팝니다. 110만원--1"
-															referrerpolicy="no-referrer" loading="lazy"
-															decoding="async" data-nimg="fill"
-															class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
-															src="https://img2.joongna.com/media/original/2026/01/15/1768450262585dSh_B7g5O.jpg?impolicy=resizeWatermark3&amp;ftext=popsykm"
-															style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													</div>
+											</div>
+											<div class="swiper-slide" style="width: 476px;">
+												<div
+													class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
+													<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--3"
+														referrerpolicy="no-referrer" loading="lazy"
+														decoding="async" data-nimg="fill"
+														class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
+														src="https://img2.joongna.com/media/original/2026/01/16/1768553238743NPN_yjxO9.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4"
+														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
 												</div>
-												<div class="swiper-slide" style="width: 476px;">
-													<div
-														class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
-														<img alt="새제품) 기가바이트 RTX 5070 Ti 그래픽카드 팝니다. 110만원--2"
-															referrerpolicy="no-referrer" loading="lazy"
-															decoding="async" data-nimg="fill"
-															class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
-															src="https://img2.joongna.com/media/original/2026/01/15/1768450262763Dxj_vcpOe.jpg?impolicy=resizeWatermark3&amp;ftext=popsykm"
-															style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													</div>
+											</div>
+											<div class="swiper-slide" style="width: 476px;">
+												<div
+													class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
+													<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--4"
+														referrerpolicy="no-referrer" loading="lazy"
+														decoding="async" data-nimg="fill"
+														class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
+														src="https://img2.joongna.com/media/original/2026/01/16/176855323874331j_7cv0Z.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4"
+														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
 												</div>
 											</div>
 										</div>
-										<button
-											class="w-7 h-7 text-black flex items-center justify-center absolute z-10 transition duration-250 transform -translate-y-1/2 top-1/2 focus:outline-none rounded-full text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl max-[1023px]:hidden left-4 bg-transparent shadow-transparent hover:bg-transparent hover:text-black !text-white !text-6xl swiper-button-disabled"
-											id="product-gallery-slider-prev" aria-label="prev-button"
-											disabled="">
-											<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
-												xmlns="http://www.w3.org/2000/svg" class="rotate-0">
-												<g filter="url(#filter0_d_19461_8348)">
-												<path fill-rule="evenodd" clip-rule="evenodd"
-													d="M15.8122 5.34218C16.4517 6.0669 16.3825 7.17278 15.6578 7.81224L8.645 14L15.6578 20.1878C16.3825 20.8273 16.4517 21.9331 15.8122 22.6579C15.1727 23.3826 14.0669 23.4517 13.3421 22.8122L5.26706 15.6872C4.25192 14.7914 4.25192 13.2086 5.26706 12.3129L13.3421 5.1878C14.0669 4.54835 15.1727 4.61747 15.8122 5.34218Z"
-													fill="white"></path></g>
-												<defs>
-												<filter id="filter0_d_19461_8348" x="0.505707" y="0.75"
-													width="19.7443" height="26.5" filterUnits="userSpaceOnUse"
-													color-interpolation-filters="sRGB">
-												<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-												<feColorMatrix in="SourceAlpha" type="matrix"
-													values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-													result="hardAlpha"></feColorMatrix>
-												<feOffset></feOffset>
-												<feGaussianBlur stdDeviation="2"></feGaussianBlur>
-												<feComposite in2="hardAlpha" operator="out"></feComposite>
-												<feColorMatrix type="matrix"
-													values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"></feColorMatrix>
-												<feBlend mode="normal" in2="BackgroundImageFix"
-													result="effect1_dropShadow_19461_8348"></feBlend>
-												<feBlend mode="normal" in="SourceGraphic"
-													in2="effect1_dropShadow_19461_8348" result="shape"></feBlend></filter></defs></svg>
-										</button>
-										<button
-											class="w-7 h-7 text-black flex items-center justify-center absolute z-10 transition duration-250 transform -translate-y-1/2 top-1/2 focus:outline-none rounded-full text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl max-[1023px]:hidden right-4 bg-transparent shadow-transparent hover:bg-transparent hover:text-black !text-white !text-6xl"
-											id="product-gallery-slider-next" aria-label="next-button">
-											<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
-												xmlns="http://www.w3.org/2000/svg" class="rotate-180">
-												<g filter="url(#filter0_d_19461_8348)">
-												<path fill-rule="evenodd" clip-rule="evenodd"
-													d="M15.8122 5.34218C16.4517 6.0669 16.3825 7.17278 15.6578 7.81224L8.645 14L15.6578 20.1878C16.3825 20.8273 16.4517 21.9331 15.8122 22.6579C15.1727 23.3826 14.0669 23.4517 13.3421 22.8122L5.26706 15.6872C4.25192 14.7914 4.25192 13.2086 5.26706 12.3129L13.3421 5.1878C14.0669 4.54835 15.1727 4.61747 15.8122 5.34218Z"
-													fill="white"></path></g>
-												<defs>
-												<filter id="filter0_d_19461_8348" x="0.505707" y="0.75"
-													width="19.7443" height="26.5" filterUnits="userSpaceOnUse"
-													color-interpolation-filters="sRGB">
-												<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-												<feColorMatrix in="SourceAlpha" type="matrix"
-													values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-													result="hardAlpha"></feColorMatrix>
-												<feOffset></feOffset>
-												<feGaussianBlur stdDeviation="2"></feGaussianBlur>
-												<feComposite in2="hardAlpha" operator="out"></feComposite>
-												<feColorMatrix type="matrix"
-													values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"></feColorMatrix>
-												<feBlend mode="normal" in2="BackgroundImageFix"
-													result="effect1_dropShadow_19461_8348"></feBlend>
-												<feBlend mode="normal" in="SourceGraphic"
-													in2="effect1_dropShadow_19461_8348" result="shape"></feBlend></filter></defs></svg>
-										</button>
 									</div>
-									<div
-										class="absolute z-10 px-2 py-1 text-sm text-white bg-black bg-opacity-50 rounded-full pointer-events-none top-6 right-6">1/5</div>
-								</div>
-							</div>
-							<div>
-								<div
-									class="flex items-center w-full chawkbazarBreadcrumb mt-5 mb-4 sm:mb-2 sm:mt-0">
-									<ol class="flex flex-wrap items-center w-full mt-0 lg:mt-0">
-										<li
-											class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading"><a
-											class="text-jnGray-500" href="/">홈</a></li>
-										<li
-											class="pl-0 mx-2 mt-0 text-sm leading-5 text-jnGray-500 lg:mt-0"><svg
-												width="17" height="17" viewBox="0 0 17 17" fill="none"
-												xmlns="http://www.w3.org/2000/svg" class=""
-												style="transform: rotate(0deg);">
-												<path
-													d="M5.6665 14.1667L10.9796 8.85363C11.1749 8.65837 11.1749 8.34179 10.9796 8.14653L5.6665 2.83341"
-													stroke="#9CA3AF" stroke-linecap="round"
-													stroke-linejoin="round"></path></svg></li>
-										<li
-											class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading"><a
-											class="capitalize text-jnGray-500" href="/search?category=12">게임</a></li>
-										<li
-											class="pl-0 mx-2 mt-0 text-sm leading-5 text-jnGray-500 lg:mt-0"><svg
-												width="17" height="17" viewBox="0 0 17 17" fill="none"
-												xmlns="http://www.w3.org/2000/svg" class=""
-												style="transform: rotate(0deg);">
-												<path
-													d="M5.6665 14.1667L10.9796 8.85363C11.1749 8.65837 11.1749 8.34179 10.9796 8.14653L5.6665 2.83341"
-													stroke="#9CA3AF" stroke-linecap="round"
-													stroke-linejoin="round"></path></svg></li>
-										<li
-											class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading"><a
-											class="capitalize text-jnblack" href="/search?category=201">플레이스테이션</a></li>
-									</ol>
-								</div>
-								<div>
-									<div>
-										<div class="flex gap-1 items-center mb-2 sm:hidden"></div>
-										<div
-											class="flex justify-between items-center max-lg:gap-5 lg:gap-10">
-											<h1
-												class="headline-semibold-18 text-jnGray-900 mb-0.5 break-all sm:headline-semibold-24 sm:mb-2">PS5
-												프로 플스5 프로 팝니다</h1>
-										</div>
-									</div>
-									<div class="flex items-center mb-2 sm:mb-1">
-										<div
-											class="font-bold md:text-[32px] mr-2 text-[26px] leading-9 md:leading-[38.19px] text-heading">830,000원</div>
-										<div class="hidden gap-1 items-center sm:flex"></div>
-									</div>
-									<div
-										class="flex items-center justify-between mb-4 text-xs font-normal">
-										<span class="text-jnGray-500 leading-[15px]">3일 전 · 조회
-											1546 · 채팅 7 · 찜 14</span>
-									</div>
-								</div>
-								<div
-									class="flex gap-2 items-center justify-between px-3 py-1.5 w-full text-xs bg-gray-200 border border-gray-300 text-jnBlack font-medium rounded-[4px] rounded-b-none">
-									<div class="flex gap-2 items-center">
-										<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
-											fill="none">
-											<g filter="url(#trade-info_svg__a)">
-											<path fill="url(#trade-info_svg__b)"
-												d="M5.25 9.256c0-1.015.823-1.838 1.838-1.838h10.798v14.014H7.088a1.84 1.84 0 0 1-1.838-1.838z"></path>
-											<path fill="url(#trade-info_svg__c)"
-												d="M21.332 9.256a1.84 1.84 0 0 0-1.838-1.838h-1.608v14.014h1.608a1.84 1.84 0 0 0 1.838-1.838z"></path>
-											<path fill="#DD9644" d="M9.695 7.454h3.436v2.607H9.695z"></path>
-											<rect width="2.857" height="4.856" x="12.107" y="11.707"
-												fill="#fff" rx="1.429"></rect>
-											<rect width="2.857" height="4.856" x="6.965" y="11.707"
-												fill="#fff" rx="1.429"></rect>
-											<rect width="1.714" height="3.035" x="12.107" y="12.316"
-												fill="#000" rx="0.857"></rect>
-											<rect width="1.714" height="3.035" x="6.965" y="12.316"
-												fill="#000" rx="0.857"></rect></g>
+									<button
+										class="w-7 h-7 text-black flex items-center justify-center absolute z-10 transition duration-250 transform -translate-y-1/2 top-1/2 focus:outline-none rounded-full text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl max-[1023px]:hidden left-4 bg-transparent shadow-transparent hover:bg-transparent hover:text-black !text-white !text-6xl swiper-button-disabled"
+										id="product-gallery-slider-prev" aria-label="prev-button"
+										disabled="">
+										<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
+											xmlns="http://www.w3.org/2000/svg" class="rotate-0">
+											<g filter="url(#filter0_d_19461_8348)">
+											<path fill-rule="evenodd" clip-rule="evenodd"
+												d="M15.8122 5.34218C16.4517 6.0669 16.3825 7.17278 15.6578 7.81224L8.645 14L15.6578 20.1878C16.3825 20.8273 16.4517 21.9331 15.8122 22.6579C15.1727 23.3826 14.0669 23.4517 13.3421 22.8122L5.26706 15.6872C4.25192 14.7914 4.25192 13.2086 5.26706 12.3129L13.3421 5.1878C14.0669 4.54835 15.1727 4.61747 15.8122 5.34218Z"
+												fill="white"></path></g>
 											<defs>
-											<linearGradient id="trade-info_svg__b" x1="11.568"
-												x2="11.568" y1="7.418" y2="21.432"
-												gradientUnits="userSpaceOnUse">
-											<stop stop-color="#FEC06F"></stop>
-											<stop offset="1" stop-color="#E4AC64"></stop></linearGradient>
-											<linearGradient id="trade-info_svg__c" x1="19.609"
-												x2="19.609" y1="7.418" y2="21.432"
-												gradientUnits="userSpaceOnUse">
-											<stop stop-color="#B58051"></stop>
-											<stop offset="1" stop-color="#A3754E"></stop></linearGradient>
-											<filter id="trade-info_svg__a" width="18.839" height="16.88"
-												x="5.25" y="4.661" color-interpolation-filters="sRGB"
-												filterUnits="userSpaceOnUse">
+											<filter id="filter0_d_19461_8348" x="0.505707" y="0.75"
+												width="19.7443" height="26.5" filterUnits="userSpaceOnUse"
+												color-interpolation-filters="sRGB">
 											<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-											<feColorMatrix in="SourceAlpha" result="hardAlpha"
-												values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix>
-											<feOffset dx="2.757" dy="-2.757"></feOffset>
+											<feColorMatrix in="SourceAlpha" type="matrix"
+												values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+												result="hardAlpha"></feColorMatrix>
+											<feOffset></feOffset>
+											<feGaussianBlur stdDeviation="2"></feGaussianBlur>
 											<feComposite in2="hardAlpha" operator="out"></feComposite>
-											<feColorMatrix
-												values="0 0 0 0 0.228887 0 0 0 0 0.343189 0 0 0 0 0.457482 0 0 0 0.12 0"></feColorMatrix>
-											<feBlend in2="BackgroundImageFix"
-												result="effect1_dropShadow_3206_72103"></feBlend>
-											<feBlend in="SourceGraphic"
-												in2="effect1_dropShadow_3206_72103" result="shape"></feBlend></filter></defs></svg>
-										<span class="text-inherit">직거래<span
-											class="mx-1 text-gray-300 last:hidden">|</span></span>
+											<feColorMatrix type="matrix"
+												values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"></feColorMatrix>
+											<feBlend mode="normal" in2="BackgroundImageFix"
+												result="effect1_dropShadow_19461_8348"></feBlend>
+											<feBlend mode="normal" in="SourceGraphic"
+												in2="effect1_dropShadow_19461_8348" result="shape"></feBlend></filter></defs></svg>
+									</button>
+									<button
+										class="w-7 h-7 text-black flex items-center justify-center absolute z-10 transition duration-250 transform -translate-y-1/2 top-1/2 focus:outline-none rounded-full text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl max-[1023px]:hidden right-4 bg-transparent shadow-transparent hover:bg-transparent hover:text-black !text-white !text-6xl"
+										id="product-gallery-slider-next" aria-label="next-button">
+										<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
+											xmlns="http://www.w3.org/2000/svg" class="rotate-180">
+											<g filter="url(#filter0_d_19461_8348)">
+											<path fill-rule="evenodd" clip-rule="evenodd"
+												d="M15.8122 5.34218C16.4517 6.0669 16.3825 7.17278 15.6578 7.81224L8.645 14L15.6578 20.1878C16.3825 20.8273 16.4517 21.9331 15.8122 22.6579C15.1727 23.3826 14.0669 23.4517 13.3421 22.8122L5.26706 15.6872C4.25192 14.7914 4.25192 13.2086 5.26706 12.3129L13.3421 5.1878C14.0669 4.54835 15.1727 4.61747 15.8122 5.34218Z"
+												fill="white"></path></g>
+											<defs>
+											<filter id="filter0_d_19461_8348" x="0.505707" y="0.75"
+												width="19.7443" height="26.5" filterUnits="userSpaceOnUse"
+												color-interpolation-filters="sRGB">
+											<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+											<feColorMatrix in="SourceAlpha" type="matrix"
+												values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+												result="hardAlpha"></feColorMatrix>
+											<feOffset></feOffset>
+											<feGaussianBlur stdDeviation="2"></feGaussianBlur>
+											<feComposite in2="hardAlpha" operator="out"></feComposite>
+											<feColorMatrix type="matrix"
+												values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"></feColorMatrix>
+											<feBlend mode="normal" in2="BackgroundImageFix"
+												result="effect1_dropShadow_19461_8348"></feBlend>
+											<feBlend mode="normal" in="SourceGraphic"
+												in2="effect1_dropShadow_19461_8348" result="shape"></feBlend></filter></defs></svg>
+									</button>
+								</div>
+								<div
+									class="absolute z-10 px-2 py-1 text-sm text-white bg-black bg-opacity-50 rounded-full pointer-events-none top-6 right-6">1/5</div>
+							</div>
+					</div>
+					<!-- 오른쪽 상품 내용 들어가는 곳 -->
+					<div th:object="${ProductDetailDomain}">
+						<div class="flex items-center w-full chawkbazarBreadcrumb mt-5 mb-4 sm:mb-2 sm:mt-0">
+							<ol class="flex flex-wrap items-center w-full mt-0 lg:mt-0">
+								<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
+									<a class="text-gray-500" href="/">홈</a></li>
+								<li class="pl-0 mx-2 mt-0 text-sm leading-5 text-jnGray-500 lg:mt-0"><svg
+											width="17" height="17" viewBox="0 0 17 17" fill="none"
+											xmlns="http://www.w3.org/2000/svg" class=""
+											style="transform: rotate(0deg);">
+											<path
+												d="M5.6665 14.1667L10.9796 8.85363C11.1749 8.65837 11.1749 8.34179 10.9796 8.14653L5.6665 2.83341"
+												stroke="#9CA3AF" stroke-linecap="round"
+												stroke-linejoin="round"></path></svg></li>
+								<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
+<!-- 									<a class="capitalize text-jnblack" href="/search?category=172">미러리스</a> -->
+									<a th:text="*{category}" class="capitalize text-black" href="/search?category=172"></a>
+								</li>
+							</ol>
+						</div>
+						<div>
+							<div>
+								<div class="flex justify-between items-center max-lg:gap-5 lg:gap-10">
+									<h1 th:text="*{title}" class="text-xl font-bold text-gray-900 mb-1 sm:text-2xl sm:mb-2 leading-tight break-keep tracking-tight">
+									제품명</h1>
+								</div>
+							</div>
+							<div class="flex items-center mb-2 sm:mb-1">
+								<div th:text="|*{#numbers.formatInteger(price,3,'COMMA')}원|" class="font-bold md:text-[32px] mr-2 text-[26px] leading-9 md:leading-[38.19px] text-heading">
+								제품가격</div>
+								</div>
+								<div class="flex items-center justify-between mb-4 text-xs font-normal text-gray-400">
+									<span class="text-jnGray-500 leading-[15px]">
+									<span th:text="*{viewCnt}"></span> 전 ·
+									조회 <span th:text="*{viewCnt}"></span> ·
+									채팅 <span th:text="*{chatCnt}"></span> ·
+									찜 <span th:text="*{bookmarkCnt}"></span>
+									</span>
+								</div>
+							</div>
+							<div class="flex gap-2 items-center justify-between px-3 py-1.5 w-full text-xs bg-gray-100 border border-gray-300 text-black font-medium rounded-[4px] rounded-b-none">
+								<div class="flex gap-2 items-center">
+									<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+										fill="none">
+										<g filter="url(#trade-info_svg__a)">
+										<path fill="url(#trade-info_svg__b)"
+											d="M5.25 9.256c0-1.015.823-1.838 1.838-1.838h10.798v14.014H7.088a1.84 1.84 0 0 1-1.838-1.838z"></path>
+										<path fill="url(#trade-info_svg__c)"
+											d="M21.332 9.256a1.84 1.84 0 0 0-1.838-1.838h-1.608v14.014h1.608a1.84 1.84 0 0 0 1.838-1.838z"></path>
+										<path fill="#DD9644" d="M9.695 7.454h3.436v2.607H9.695z"></path>
+										<rect width="2.857" height="4.856" x="12.107" y="11.707"
+											fill="#fff" rx="1.429"></rect>
+										<rect width="2.857" height="4.856" x="6.965" y="11.707"
+											fill="#fff" rx="1.429"></rect>
+										<rect width="1.714" height="3.035" x="12.107" y="12.316"
+											fill="#000" rx="0.857"></rect>
+										<rect width="1.714" height="3.035" x="6.965" y="12.316"
+											fill="#000" rx="0.857"></rect></g>
+										<defs>
+										<linearGradient id="trade-info_svg__b" x1="11.568" x2="11.568"
+											y1="7.418" y2="21.432" gradientUnits="userSpaceOnUse">
+										<stop stop-color="#FEC06F"></stop>
+										<stop offset="1" stop-color="#E4AC64"></stop></linearGradient>
+										<linearGradient id="trade-info_svg__c" x1="19.609" x2="19.609"
+											y1="7.418" y2="21.432" gradientUnits="userSpaceOnUse">
+										<stop stop-color="#B58051"></stop>
+										<stop offset="1" stop-color="#A3754E"></stop></linearGradient>
+										<filter id="trade-info_svg__a" width="18.839" height="16.88"
+											x="5.25" y="4.661" color-interpolation-filters="sRGB"
+											filterUnits="userSpaceOnUse">
+										<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+										<feColorMatrix in="SourceAlpha" result="hardAlpha"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix>
+										<feOffset dx="2.757" dy="-2.757"></feOffset>
+										<feComposite in2="hardAlpha" operator="out"></feComposite>
+										<feColorMatrix
+											values="0 0 0 0 0.228887 0 0 0 0 0.343189 0 0 0 0 0.457482 0 0 0 0.12 0"></feColorMatrix>
+										<feBlend in2="BackgroundImageFix"
+											result="effect1_dropShadow_3206_72103"></feBlend>
+										<feBlend in="SourceGraphic"
+											in2="effect1_dropShadow_3206_72103" result="shape"></feBlend></filter></defs></svg>
+									
+									<span class="text-inherit">거래방법</span>
+								</div>
+							</div>
+							<div
+								class="px-4 rounded-b-[4px] border-b border-gray-300 border-x text-sm">
+								<div class="py-4 border-b border-gray-300 flex flex-col gap-y-3">
+									<div>
+										<h3>택배거래</h3>
 									</div>
 								</div>
 								<div
-									class="px-4 rounded-b-[4px] border-b border-gray-300 border-x text-sm">
+									class="py-4 border-b border-gray-300 flex flex-col gap-y-3 border-none">
 									<div
-										class="py-4 border-b border-gray-300 flex flex-col gap-y-3 border-none">
-										<div
-											class="flex justify-between text-sm font-medium text-jnBlack">
-											<h3>직거래</h3>
-											<p></p>
+										class="flex justify-between text-sm font-medium text-jnBlack">
+										<h3>직거래</h3>
+										<p></p>
+									</div>
+									<dl class="flex flex-col gap-y-3">
+										<div class="flex justify-between items-center">
+											<dt class="whitespace-nowrap text-gray-500">만나서 직거래</dt>
+											<dd class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
+												<svg width="16" height="16" viewBox="0 0 10 10" fill="none"
+													xmlns="http://www.w3.org/2000/svg" class="text-jnGray-400">
+													<g id="ico_location">
+													<g id="Group 7574">
+													<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd"
+														d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
+														fill="currentColor"></path></g></g></svg>
+												<button class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
+													<p th:text="*{dealAddr}">직거래 지역</p>
+												</button>
+											</dd>
 										</div>
-										<dl class="flex flex-col gap-y-3">
-											<div class="flex justify-between items-center">
-												<dt class="whitespace-nowrap">만나서 직거래</dt>
-												<dd
-													class="flex flex-wrap gap-2 justify-end items-center font-medium text-jnBlack">
-													<svg width="16" height="16" viewBox="0 0 10 10" fill="none"
-														xmlns="http://www.w3.org/2000/svg" class="text-jnGray-400">
-														<g id="ico_location">
-														<g id="Group 7574">
-														<path id="Subtract" fill-rule="evenodd"
-															clip-rule="evenodd"
-															d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
-															fill="currentColor"></path></g></g></svg>
-													<button
-														class="inline-flex gap-1 items-center text-[13px] underline text-jnblack underline-offset-[3px]">
-														<p>영등포본동</p>
-													</button>
-												</dd>
-											</div>
-										</dl>
-									</div>
-								</div>
-								<section class="flex flex-col gap-5 my-5 sm:my-9 max-lg:mb-0">
-									<div class="flex detail-regular-12 items-start justify-start">
-										<span class="text-jnGray-700 min-w-[95px]">상품 상태</span>
-										<div class="text-jnGray-900">
-											<p>중고, 구성품 전체 포함</p>
-										</div>
-									</div>
-								</section>
-								<div
-									class="flex items-center space-s-4 pt-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white max-[479px]:px-4 max-[479px]:pb-4">
-									<div class="w-8 h-8">
-										<label for=":r1:" class="relative cursor-pointer"><svg
-												width="32" height="32" viewBox="0 0 32 32" fill="none"
-												xmlns="http://www.w3.org/2000/svg"
-												class="pointer-events-none w-8 h-8">
-												<path
-													d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-													stroke-width="1.5" stroke="#9CA3AF" fill="transparent"></path></svg></label><input
-											id=":r1:" type="checkbox" class="a11yHidden">
-									</div>
-									<button data-variant="slim"
-										class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 py-2 transform-none normal-case hover:shadow-cart ga4_product_detail_bottom w-full bg-white hover:bg-white/90 text-jnblack hover:text-jnblack border-[1px] border-jnblack">채팅하기</button>
-									<button data-variant="slim"
-										class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-jnblack hover:bg-jnblack/90">구매하기</button>
+									</dl>
 								</div>
 							</div>
-							<!-- <div class="max-w-[1024px] mx-auto bg-white">
-							<nav class="flex items-center text-sm mb-4">
-								<div class="flex text-gray-500 items-center">
-									<a href="/" class="hover:text-black">홈</a>
-									<svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor"
-										viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round"
-											stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-								</div>
-								<a th:href="@{'#'}" class="text-gray-900 hover:text-black"
-									th:text="*{category}"> 상품 카테고리 들어가는 곳 </a>
-							</nav>
-
-							<div class="mb-6">
-								<h1
-									class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight"
-									th:text="*{title}">
-									상품명 들어가는 곳</h1>
-								<div class="text-3xl font-extrabold text-black mb-1"
-									th:text="|*{#numbers.formatInteger(price,3,'COMMA')}원|">상품 가격 들어가는 곳</div>
-								<div class="text-xs text-gray-400">
-									<span th:text="${'20시간'}">현재 시간 - 끌올 시간(60분을 넘기지 않은다면 분 기준으로)</span>전 ·
-									조회 <span th:text="*{viewCnt}">조회 수 하는거</span> · 채팅 <span
-										th:text="*{chatCnt}">채팅 개수는 할 수 있으면</span> · 찜 <span
-										th:text="*{BookmarkCnt}">찜 개수</span>
-								</div>
-							</div>
-
-							<div class="border border-gray-200 rounded-lg overflow-hidden mb-8">
-								<div class="bg-gray-50 px-4 py-3 flex items-center gap-2 border-b border-gray-200">
-									<div class="flex items-center text-xs font-bold text-gray-800">
-										th:if로 무료배송이랑 직거래 선택햇는지 확인
-
-
-										<span class="mr-1">📦</span><span
-											class="mx-2 text-gray-300">|</span> 직거래
-									</div>
-								</div>
-								<div class="divide-y divide-gray-100 px-4">
-									<div class="py-4">
-										<h3 class="text-sm font-bold text-gray-900 mb-1">택배거래</h3>
-									</div>
-									<div
-										class="py-4 flex justify-between items-center border-t border-gray-100">
-										<div>
-											<h3 class="text-sm font-bold text-gray-900 mb-1">직거래</h3>
-											<p class="text-sm text-gray-600">만나서 직거래</p>
-										</div>
-										<div class="flex items-center text-gray-400">
-											<svg class="w-4 h-4 mr-1" fill="currentColor"
-												viewBox="0 0 20 20">
-												<path fill-rule="evenodd"
-													d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-													clip-rule="evenodd"></path></svg>
-											<span th:text="${'이화동'}"
-												class="text-sm text-black cursor-pointer"> 직거래 설정한
-												동을 넣기</span>
-										</div>
+							<div class="flex flex-col gap-5 my-5 sm:my-9 max-lg:mb-0">
+								<div class="flex detail-regular-12 items-start justify-start">
+									<span class="text-gray-600 min-w-[95px]">상품 상태</span>
+									<div class="text-gray-700">
+										<p th:if="*{productStatus eq 'Y'}">새 상품</p>
+										<p th:unless="*{productStatus eq 'Y'}">중고 상품</p>
 									</div>
 								</div>
 							</div>
-
-							<div class="flex gap-2">
-								<span class="text-sm text-gray-400 w-24 shrink-0">상품 상태</span>
-								<span th:if="*{productStatus eq 'Y'}" class="text-sm text-gray-600 font-medium">
-									새상품</span>
-								<span th:if="*{productStatus eq 'N'}" class="text-sm text-gray-600 font-medium">
-									중고상품</span>
+							<div class="flex items-center gap-4 space-s-4 pt-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white max-[479px]:px-4 max-[479px]:pb-4">
+								<div class="w-8 h-8">
+									<label for="heart-checkbox" class="relative cursor-pointer">
+										<input id="heart-checkbox" type="checkbox" class="peer hidden">
+										<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
+            								class="w-8 h-8 transition-all duration-200 ease-in-out text-gray-400 peer-checked:text-red-500 transform peer-checked:scale-110">
+            								<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
+                								stroke-width="1.5"
+                								stroke="currentColor"
+                								class="fill-transparent peer-checked:fill-current"></path>
+        								</svg>
+        							</label>
+								</div>
+								<button data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 py-2 transform-none normal-case hover:shadow-cart ga4_product_detail_bottom w-full bg-white hover:bg-white/90 text-jnblack hover:text-jnblack border-[1px] border-black">
+								채팅하기</button>
+								<button data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-black hover:bg-black/90">
+								구매하기</button>
 							</div>
-
-
 							판매자와 아이디가 같은 경우(결제가 되지 않은 상태)
 							<th:block th:if="${storeCheck}">
 								<div th:unless="*{sellStatusCode eq 3}"
@@ -538,17 +466,14 @@ function openFailForm() {
 							</div>
 
 
-						</div> -->
 						</div>
-					</th:block>
-
+						</div>
+					</div>
 					<div
 						class="block lg:flex lg:min-h-[591px] space-y-12 lg:space-y-0 lg:gap-[72px] lg:mb-12 max-lg:pt-7">
 						<div name="product-description"
 							class="flex flex-col w-full lg:w-[680px] max-lg:mb-[60px] flex-auto max-lg:px-5 lg:mr-0">
-							<h3
-								class="md:text-[22px] lg:pb-5 pb-3 w-full text-lg font-bold border-b border-gray-300 basis-[48px] text-jnblack">상품
-								정보</h3>
+							<h3 class="md:text-[22px] lg:pb-5 pb-3 w-full text-lg font-bold border-b border-gray-300 basis-[48px] text-jnblack">상품 정보</h3>
 							<div
 								class="flex flex-col flex-1 basis-[465px] lg:basis-[475px] overflow-visible max-lg:basis-0">
 								<div class="flex flex-col h-auto">
@@ -561,98 +486,71 @@ function openFailForm() {
 												style="color: transparent;">
 										</div>
 										<div
-											class="text-xs whitespace-pre-nowrap text-jnGray-900 leading-[18px] [&amp;_br]:hidden">
-											<span th:unless=${storeCheck}><font color="#009F1F"
-												style="font-weight: 600;">개인정보(거래정보)를 주고받는 행위는 사기에 노출</font>될
-												수 있으므로 즉시 <a href="#" target="_blank"
-												rel="noopener noreferrer"
+											class="text-xs whitespace-pre-wrap text-jnGray-900 leading-[18px] [&amp;_br]:hidden">
+											<font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를
+												주고받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <a
+												href="jnapps3://?applink=report&amp;targetType=&amp;reportedStore=1250491&amp;reportedProductSeq=224185769"
+												target="_blank" rel="noopener noreferrer"
 												style="color: rgb(20, 19, 19); font-weight: 600;"><u>중고나라로
-														신고</u></a>해 주세요</span> <span th:if=${storeCheck}>안전한 거래를 위해 <font
-												color="#009F1F" style="font-weight: 600;">계좌번호·연락처 등
-													개인정보 공유는 금지되며,</font> <b>위반 시 제재될 수 있습니다.</b></span>
+													신고</u></a>해 주세요
 										</div>
 									</div>
 									<article class="flex flex-col flex-1">
-										<p th:text="${ProductDetailDomain.content}"
-											class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
-											상품 설명 넣는 곳</p>
+										<p
+											class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">-파나소닉
+											s9루믹스 구성품 : SD카드,18-40mm렌즈,베터리2개,풀박스 동영상촬영만 10회미만으로 사용하였습니다
+
+											거의 사용안해서 기스조차 없습니다 직거래는 평택가능하고 원하시면 택배거래 가능합니다</p>
 									</article>
 								</div>
 							</div>
 						</div>
-
-						<!-- 판매자 아이디와 로그인한 아이디가 같을 경우 안보여줌 부분 -->
-						<th:block th:object="${SellerDomain}">
-							<div class="basis-[420px] max-lg:!mt-0 max-lg:pt-7">
-								<div name="product-store" class="w-full lg:w-[420px]">
-									<div class=" max-lg:px-5">
-										<a th:href="${'#'}"
-											class="flex items-center justify-between w-full pb-3 border-b border-gray-300 lg:pb-5">
-											<h3 class="md:text-[22px] font-bold text-jnBlack text-lg">가게
-												정보</h3>
-											<div class="text-gray-600">
-												<svg stroke="currentColor" fill="currentColor"
-													stroke-width="0" viewBox="0 0 512 512" height="24"
-													width="24" xmlns="http://www.w3.org/2000/svg">
-												<path
-														d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path></svg>
+						<hr class="bg-jnGray-200 w-full lg:hidden h-[6px] !mt-0">
+						<div class="basis-[420px] max-lg:!mt-0 max-lg:pt-7">
+							<div name="product-store" class="w-full lg:w-[420px]">
+								<div class=" max-lg:px-5">
+									<a
+										class="flex items-center justify-between w-full pb-3 border-b border-gray-300 lg:pb-5"
+										href="/store/1250491"><h3
+											class="md:text-[22px] font-bold text-jnBlack text-lg">가게
+											정보</h3>
+										<svg stroke="currentColor" fill="currentColor"
+											stroke-width="0" viewBox="0 0 512 512" height="24" width="24"
+											xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path></svg></a>
+								</div>
+								<div class="flex flex-col">
+									<div class="max-lg:px-5">
+										<a class="flex justify-between items-center mt-6 mb-8 w-full"
+											href="/store/1250491"><div class="flex flex-col gap-1">
+												<p class="text-lg font-semibold text-jnGray-900">인천과안산사이</p>
 											</div>
-										</a>
-									</div>
-									<div class="flex flex-col">
-										<div class="max-lg:px-5">
-											<a th:href="${'#'}"
-												class="flex justify-between items-center mt-6 mb-8 w-full">
-												<div class="flex flex-col gap-1">
-													<p th:text="${ProductDetailDomain.store}"
-														class="text-lg font-semibold text-jnGray-900">판매자 닉네임
-														넣어주기</p>
-												</div>
-												<div class="flex items-center translate-x-4">
-													<img alt="프로파일" loading="lazy" width="48" height="48"
-														decoding="async" data-nimg="1"
-														class="box-content max-w-none h-12 rounded-full border-4 border-white -translate-x-4"
-														src="https://img2.joongna.com/common/Profile/Default/profile_f.png"
-														style="color: transparent;">
-												</div>
-											</a>
-											<div class="text-sm break-all text-Gray-500"></div>
-											<ul
-												class="box-border flex text-center border border-gray-300 rounded items-center py-[18px] mt-5">
-												<li
-													class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center">
-													<span
-													class="text-xs font-normal text-jnGray-600 break-keep">판매상품</span>
-													<button th:text="*{productCnt}"
-														class="block text-sm font-semibold text-jnblack mt-1 ">
-														등록된 판매상품의 개수</button>
-												</li>
-												<li
-													class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center">
-													<span
-													class="text-xs font-normal text-jnGray-600 break-keep">거래후기</span>
-													<button th:text="*{reivewCnt}"
-														class="block text-sm font-semibold text-jnblack mt-1 underline underline-offset-[3px]">
-														등록된 거래 후기</button>
-												</li>
-											</ul>
-										</div>
-										<div class="2xl:pt-2 max-lg:pb-5 mt-5 lg:mt-4 max-lg:px-5">
-											<div class="carouselWrapper relative">
-												<div
-													class="swiper swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden"
-													dir="ltr">
-													<div
-														class="swiper-button-prev swiper-button-disabled swiper-button-lock"></div>
-													<div
-														class="swiper-button-next swiper-button-disabled swiper-button-lock"></div>
-												</div>
-											</div>
-										</div>
+											<div class="flex items-center translate-x-4">
+												<img alt="프로파일" loading="lazy" width="48" height="48"
+													decoding="async" data-nimg="1"
+													class="box-content max-w-none h-12 rounded-full border-4 border-white -translate-x-4"
+													src="https://img2.joongna.com/common/Profile/Default/profile_m.png"
+													style="color: transparent;">
+											</div></a>
+										<div class="text-sm break-all text-jnGray-500"></div>
+										<ul
+											class="box-border flex text-center border border-gray-300 rounded items-center py-[18px] mt-5">
+											<li
+												class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center"><span
+												class="text-xs font-normal text-jnGray-600 break-keep">판매상품</span>
+											<button disabled=""
+													class="block text-sm font-semibold text-jnblack mt-1 ">0</button></li>
+											<li
+												class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center"><span
+												class="text-xs font-normal text-jnGray-600 break-keep">거래후기</span>
+											<button
+													class="block text-sm font-semibold text-jnblack mt-1 underline underline-offset-[3px]">0</button></li>
+										</ul>
 									</div>
 								</div>
 							</div>
-						</th:block>
+						</div>
 					</div>
 				</div>
 			</main>
