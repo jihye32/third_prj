@@ -2,6 +2,7 @@ package kr.co.sist.admin.member;
 
 import java.sql.SQLException;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +61,20 @@ public class AdminMemberService {
 
         sb.append("</ul></nav>");
         return sb.toString();
+        
+        
     }
+    
+ // 기존 코드 아래에 추가
+    public AdminMemberDetailDomain getMemberDetail(String userId) {
+        AdminMemberDetailDomain detail = null;
+        try {
+            detail = mDAO.selectMemberDetail(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return detail;
+    }
+    
+  
 }
