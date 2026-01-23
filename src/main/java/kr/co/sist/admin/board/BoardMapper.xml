@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.sist.admin.board">
+
+    <select id="selectTotalCount"
+            parameterType="kr.co.sist.admin.board.BoardDTO"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM adminboard
+        WHERE board_type = #{boardType}
+          AND delete_flag = 'N'
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND title LIKE '%' || #{keyword} || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND content LIKE '%' || #{keyword} || '%'
+                </when>
+                <otherwise>
+                    AND (title LIKE '%' || #{keyword} || '%'
+                         OR content LIKE '%' || #{keyword} || '%')
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="selectBoardList"
+            parameterType="kr.co.sist.admin.board.BoardDTO"
+            resultType="kr.co.sist.admin.board.BoardDomain">
+        SELECT boardNum, boardType, title, content, writeDate, adminId, deleteFlag
+        FROM (
+            SELECT
+                context_num AS boardNum,
+                board_type  AS boardType,
+                title,
+                content,
+                write_date  AS writeDate,
+                admin_id    AS adminId,
+                delete_flag AS deleteFlag,
+                ROW_NUMBER() OVER(ORDER BY write_date DESC, context_num DESC) rn
+            FROM adminboard
+            WHERE board_type = #{boardType}
+              AND delete_flag = 'N'
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'title'">
+                        AND title LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'content'">
+                        AND content LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <otherwise>
+                        AND (title LIKE '%' || #{keyword} || '%'
+                             OR content LIKE '%' || #{keyword} || '%')
+                    </otherwise>
+                </choose>
+            </if>
+        )
+        WHERE rn BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="selectBoardDetail"
+            parameterType="int"
+            resultType="kr.co.sist.admin.board.BoardDomain">
+        SELECT
+            context_num AS boardNum,
+            board_type  AS boardType,
+            title,
+            content,
+            write_date  AS writeDate,
+            admin_id    AS adminId,
+            delete_flag AS deleteFlag
+        FROM adminboard
+        WHERE context_num = #{boardNum}
+          AND delete_flag='N'
+    </select>
+
+    <insert id="insertBoard"
+            parameterType="kr.co.sist.admin.board.BoardDTO">
+        INSERT INTO adminboard(
+            context_num, board_type, title, content, write_date, admin_id, delete_flag
+        ) VALUES (
+            seq_adminboard.NEXTVAL,
+            #{boardType},
+            #{title},
+            #{content},
+            SYSDATE,
+            #{adminId},
+            'N'
+        )
+    </insert>
+
+    <update id="updateBoard"
+            parameterType="kr.co.sist.admin.board.BoardDTO">
+        UPDATE adminboard
+        SET title = #{title},
+            content = #{content}
+        WHERE context_num = #{boardNum}
+          AND delete_flag='N'
+    </update>
+
+    <update id="updateDeleteFlag"
+            parameterType="int">
+        UPDATE adminboard
+        SET delete_flag='Y'
+        WHERE context_num = #{boardNum}
+          AND delete_flag='N'
+    </update>
+
+</mapper>

@@ -23,7 +23,10 @@
     </environment>
   </environments>
   <mappers>
+
     <mapper resource="kr/co/sist/admin/product/adminProductMapper.xml"/> 
     <mapper resource="kr/co/sist/admin/member/adminMemberMapper.xml"/> 
+    <mapper resource="kr/co/sist/admin/board/BoardMapper.xml"/>
+
   </mappers>
 </configuration>

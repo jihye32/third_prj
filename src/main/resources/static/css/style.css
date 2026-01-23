@@ -100,3 +100,43 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
     color: #0c193a !important; 
     font-weight: bold !important; 
 }
+/* -----------------------------------------------------------
+   [FAQ/공지 관리 버튼 스타일]
+   ----------------------------------------------------------- */
+.btn_group {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn_action {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 13px;
+    border: 1px solid #d0d5dd;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #344054;
+    text-decoration: none;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+.btn_action:hover {
+    background-color: #f8f9fa;
+}
+
+/* 수정 버튼 */
+.btn_edit {
+    border-color: #b9c2d0;
+}
+
+/* 삭제 버튼 */
+.btn_delete {
+    border-color: #e4a2a2;
+    color: #b42318;
+}
+
+.btn_delete:hover {
+    background-color: #fff5f5;
+}
