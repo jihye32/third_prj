@@ -11,8 +11,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ProductDetailDomain {
-	private String category,store,title,content,productStatus,thumbnail,dealAddr,sendFlag;
+	private String category,title,content,productStatus,thumbnail,dealAddr,sendFlag;
 	private int product_num,price,viewCnt,chatCnt,bookmarkCnt,sellStatusCode;
-	private List<String> tag,img,dealType;
+	private List<String> tag,img;
+	private List<Integer> dealType;
 	private Date upDate;
 }

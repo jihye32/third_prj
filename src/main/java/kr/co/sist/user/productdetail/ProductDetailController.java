@@ -40,21 +40,25 @@ public class ProductDetailController {
     	pdd.setChatCnt(0);
     	pdd.setContent("이것은 자바인가");
     	pdd.setDealAddr("양재동");
-    	List<String> list = new ArrayList<String>();
-    	list.add("택배거래");
-    	list.add("직거래");
+    	List<Integer> list = new ArrayList<Integer>();
+    	list.add(1);
+    	list.add(2);
     	pdd.setDealType(list);
-    	pdd.setImg(list);
+    	List<String> slist = new ArrayList<String>();
+    	slist.add("img_1");
+    	slist.add("img_2");
+    	pdd.setImg(slist);
     	pdd.setPrice(100000000);
     	pdd.setProduct_num(100);
     	pdd.setProductStatus("Y");
     	pdd.setSellStatusCode(2);//1: 판매중, 2: 예약중, 3: 판매완료
-    	pdd.setStore("자바");
     	pdd.setThumbnail("썸네일");
     	pdd.setTitle("책책책책책책책책책");
     	pdd.setViewCnt(123);
     	
     	SellerDomain sd = new SellerDomain();
+    	sd.setStoreName("자바");
+    	sd.setStoreNum(456);
     	sd.setProductCnt(1);
     	sd.setReivewCnt(10);
     	sd.setSellerProfile("프로필 이미지명!!");
@@ -63,7 +67,7 @@ public class ProductDetailController {
     	
     	HttpSession ss = request.getSession();
     	String store = (String)ss.getAttribute("storeName");
-    	boolean isMe = true;
+    	boolean isMe = false;
     	boolean sendFlag = false; //발송을 한 상태(발송버튼이 나오지 않음) 
 //    	if(pdd.getStore().equals(store)) { //로그인한 사람이 작성한 글인지 확인
         if(isMe) { //로그인한 사람이 작성한 글인지 확인

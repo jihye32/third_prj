@@ -68,10 +68,10 @@ public class ProductDetailDAO {
 		return cnt;
 	}//cntReview
 	
-	public String selectSellerProfile(String store) {
-		String profile = null;
+	public SellerDomain selectSellerInfo(String store) {
+		SellerDomain sd = null;
 		
-		return profile;
+		return sd;
 	}//selectSellerProfile
 	
 	

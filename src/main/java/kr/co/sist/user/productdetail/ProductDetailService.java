@@ -28,7 +28,7 @@ public class ProductDetailService {
 	//선택된 상품 번호로 조회된 상품 정보 조합
 	public SellerDomain searchSeller(String store) {
 		SellerDomain sd = new SellerDomain();
-		sd.setSellerProfile(pDAO.selectSellerProfile(store));
+		sd=pDAO.selectSellerInfo(store);
 		sd.setProductCnt(pDAO.cntSellProduct(store));
 		sd.setReivewCnt(pDAO.cntReview(store));
 		
