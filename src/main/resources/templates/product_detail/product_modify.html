@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>sample</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+<style>
+</style>
+<!-- JQuery CDN -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+function openReportForm() {
+    fetch('/report/form')
+        .then(res => res.text())
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('제목'); // 서랍 여는 공통 함수 실행
+        });
+}
+</script>
+</head>
+<body>
+	<div id="__next">
+		<div class="flex flex-col min-h-screen bg-white">
+			<div th:replace="~{template/header :: headerImgFragment}"></div>
+			<div th:replace="~{template/header :: headerFragment}"></div>
+
+			<main class="relative flex-grow border-b-1" style="min-height: 500px">
+
+				<!-- 메인 디자인 넣는 곳 -->
+				
+			</main>
+			<div th:replace="~{template/footer :: footerFragment}"></div>
+		</div>
+	</div>
+	<div th:replace="~{template/wrapper_frm :: drawerFrame}"></div>
+</body>
+</html>

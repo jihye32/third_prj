@@ -1,9 +1,5 @@
 package kr.co.sist.user.productdetail;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +19,7 @@ public class ProductDetailService {
 			pdd.setImg(pDAO.selectImg(pnum));
 			pdd.setBookmarkCnt(pDAO.cntBookmark(pnum));
 			pdd.setChatCnt(pDAO.cntChat(pnum));
+			pdd.setSendFlag(pDAO.selectSendFlag(pnum));
 		}
 		
 		return pdd;
@@ -31,12 +28,19 @@ public class ProductDetailService {
 	//선택된 상품 번호로 조회된 상품 정보 조합
 	public SellerDomain searchSeller(String store) {
 		SellerDomain sd = new SellerDomain();
+		sd.setSellerProfile(pDAO.selectSellerProfile(store));
 		sd.setProductCnt(pDAO.cntSellProduct(store));
 		sd.setReivewCnt(pDAO.cntReview(store));
 		
-		
 		return sd;
 	}//searchProduct
+	
+	//발송완료 확인
+	public boolean searchSendFlag(int pnum) {
+		boolean flag = false;
+		if("N".equals(pDAO.selectSendFlag(pnum))||"n".equals(pDAO.selectSendFlag(pnum))) flag = true;
+		return flag;
+	}//searchSendFlag
 	
 //////게시글 수정사항/////////////////////////////////////////////////////////////////////
 	//정상적인 확인을 위해서 boolean를 반환하지만 완성되고는 반환할 필요x
@@ -54,8 +58,8 @@ public class ProductDetailService {
 		return pDAO.updateUpDate(pnum)==1;
 	}//modifyUpDate
 	
-	public boolean modifyProductStatus(int pnum) {
-		return pDAO.updateProductStatus(pnum)==1;
+	public boolean modifyProductStatus(SellStatusDTO ssDTO) {
+		return pDAO.updateProductStatus(ssDTO)==1;
 	}//modifyProductStatus
 	
 	public boolean modifyProductDetail(ProductModifyDTO pmDTO) {
