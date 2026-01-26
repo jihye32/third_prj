@@ -15,8 +15,8 @@
 									class="outline-none flex flex-row justify-between items-center flex-nowrap">
 									<div
 										class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap">
-										<span
-											class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">일반 택배</span> <span class="whitespace-pre-line text-12">상품이 문 앞으로 도착해요.</span>
+										<span class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">일반 택배</span>
+										<span class="whitespace-pre-line text-12">상품이 문 앞으로 도착해요.</span>
 									</div>
 									<svg width="56" height="56" viewBox="0 0 56 56" fill="none"
 										xmlns="http://www.w3.org/2000/svg">
@@ -200,7 +200,8 @@
 				<div
 										class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap">
 										<span
-											class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">만나서 직거래</span> <span class="whitespace-pre-line text-12">상품을 직접 받을 수 있어요</span>
+											class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">만나서 직거래</span>
+											<span class="whitespace-pre-line text-12">상품을 직접 받을 수 있어요</span>
 									</div>
 				<svg width="56" height="56" viewBox="0 0 56 56" fill="none"
 										xmlns="http://www.w3.org/2000/svg">
@@ -277,7 +278,7 @@
 			<div class="h-[1px] w-auto" style="background-color: rgb(241, 244, 246);"></div>
 			<div class="flex items-center text-gray-400">
 				<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-				<span th:text="${'이화동'}" class="text-sm text-black cursor-pointer">
+				<span th:text="${ProductDetailDomain.dealAddr}" class="text-sm text-black cursor-pointer">
 				저장해둔 직거래 지역</span>
 			</div>
 		</div>
