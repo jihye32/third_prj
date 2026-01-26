@@ -28,11 +28,7 @@ public class ProductDetailController {
 	
 	//상품 상세 화면 생성 및 상품 정보 가져오기
     @GetMapping("/{pnum}")
-    public String searchProductDetail(@PathVariable int pnum, HttpServletRequest request , Model model) {
-    	//서비스에서 상세정보 가져옴(DB연결하면 테스트)
-//    	ProductDetailDomain pdd = ps.searchProduct(pnum);
-//    	if(pdd == null) return "product_detail/product_detail";//메인화면으로 이동시키기
-//    	SellerDomain sd = ps.searchSeller(pdd.getStore());
+    public String searchProductDetail(@PathVariable int pnum, HttpSession ss , Model model) {
     	
     	ProductDetailDomain pdd = new ProductDetailDomain();
     	pdd.setBookmarkCnt(10);
@@ -47,21 +43,15 @@ public class ProductDetailController {
     	List<String> slist = new ArrayList<String>();
     	slist.add("https://img2.joongna.com/media/original/2026/01/16/1768553238742cxo_wjZDC.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
     	slist.add("https://img2.joongna.com/media/original/2026/01/16/1768553238742BfR_PXEkb.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
-    	pdd.setImg(slist);
+//    	pdd.setImg(slist);
     	pdd.setPrice(100000000);
-    	pdd.setProduct_num(100);
-    	pdd.setProductStatus("Y");
+    	pdd.setProductNum(100);
+    	pdd.setProductStatusCode(1);
     	pdd.setSellStatusCode(1);//1: 판매중, 2: 예약중, 3: 판매완료
     	pdd.setThumbnail("https://img2.joongna.com/media/original/2026/01/16/176855323874331j_7cv0Z.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
     	pdd.setTitle("책책책책책책책책책");
     	pdd.setViewCnt(123);
     	
-    	List<String> imgList = new ArrayList<String>();
-    	imgList.add(pdd.getThumbnail());
-    	for(String img : pdd.getImg()) {
-    		imgList.add(img);
-    	}
-    	pdd.setImg(imgList);
     	
     	SellerDomain sd = new SellerDomain();
     	sd.setStoreName("자바");
@@ -72,22 +62,46 @@ public class ProductDetailController {
     	
     	
     	
-    	HttpSession ss = request.getSession();
-    	String store = (String)ss.getAttribute("storeName");
-    	boolean isMe = false;
-    	boolean sendFlag = false; //발송을 한 상태(발송버튼이 나오지 않음) 
-//    	if(pdd.getStore().equals(store)) { //로그인한 사람이 작성한 글인지 확인
-        if(isMe) { //로그인한 사람이 작성한 글인지 확인
-        	isMe = true;
-        	if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
-        		sendFlag = ps.searchSendFlag(pnum);
-        		model.addAttribute("sendFlag", sendFlag);
-        	}
-        }else {
-        	ps.modifyViewCnt(pnum);
-        	pdd.setViewCnt(pdd.getViewCnt()+1);
-        }
-        
+    	
+    	
+    	
+    	
+    	
+    	///////////////////////////////////////////////
+    	///
+    	//서비스에서 상세정보 가져옴(DB연결하면 테스트)
+//    	ProductDetailDomain pdd = ps.searchProduct(pnum);
+//    	if(pdd == null) return "product_detail/product_detail";//메인화면으로 이동시키기
+//    	SellerDomain sd = ps.searchSeller(pdd.getStoreCode());//판매자 상점 번호로 판매자 정보 가져오기
+    	
+    	List<String> imgList = new ArrayList<String>();
+    	imgList.add(pdd.getThumbnail());
+    	if(pdd.getImg()!=null) {
+    		for(String img : pdd.getImg()) {
+    			imgList.add(img);
+    		}
+    	}
+    	pdd.setImg(imgList);
+    	
+    	int snum = (ss.getAttribute("snum") != null) ? (int) ss.getAttribute("snum") : -1;//현재 로그인한 유저의 store number 가져오기
+    	boolean isMe = false; //본인확인
+    	boolean sendFlag = false;
+    	//세션에서 로그인을 햇는지 확인할 것.
+    	if(snum == pdd.getSellerCode()) {
+    		isMe = true;
+    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
+    			sendFlag = ps.searchSendFlag(pnum); //발송 완료 false, 발송 안함/null true
+    			model.addAttribute("sendFlag", sendFlag);
+    		}
+    	}else {
+    		ps.modifyViewCnt(pnum);
+    		pdd.setViewCnt(pdd.getViewCnt()+1);
+    		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
+    			boolean bookmark = (ps.searchBookmark(pnum, snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
+    			model.addAttribute("bookmarkFlag", bookmark);
+    		}
+    	}
+    	isMe = true;
         model.addAttribute("storeCheck", isMe);
         model.addAttribute("ProductDetailDomain", pdd);
         model.addAttribute("SellerDomain", sd);
@@ -95,6 +109,38 @@ public class ProductDetailController {
         return "product_detail/product_detail";
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	@PostMapping("/modifyUpDate")
 	@ResponseBody // 리턴값을 JSON으로 변환해줍니다.
 	public Map<String, Object> modifyUpDate(int pnum) {

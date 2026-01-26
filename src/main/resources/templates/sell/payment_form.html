@@ -3,268 +3,252 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<th:block th:replace="~{fragments/cdn::cdn}"></th:block>
 </head>
 <body>
-<th:block th:fragment="paymentFrm">
-<main role="main" aria-label="본문 영역" id="main-content" class="flex flex-col min-h-full relative">
-	<div class="flex-1 pt-6">
-		<div class="outline-none gap-4 flex flex-col mb-6 px-5">
-			<div class="flex flex-row justify-between items-center">
-				<h2 th:text="${'직거래로 구매'}" class="text-18 font-semibold text-gray-900">
-				선택한 거래 방식</h2>
-			</div>
-			<div class="flex flex-row gap-4 items-center">
-				<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
-					<img class="w-full h-full object-cover"
-					src="https://img2.joongna.com/media/original/2026/01/14/1768401290713p7h_nDmS5.jpg">
-				</div>
-				<div class="flex flex-col gap-1 flex-1">
-					<p th:text="${'RTX 4070 super FE판매합니다'}" class="text-16 font-semibold text-gray-700 line-clamp-2">
-					상품명</p>
-					<span th:text="${'590,000원'}" class="text-18 font-semibold text-gray-900"> 
-					가격</span>
-				</div>
-			</div>
-		</div>
-					
-		<!-- 택배 거래 선택 시 생성됨 -->
-		<form>
-		<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
-			<div class="outline-none gap-4 flex flex-col justify-start items-stretch flex-nowrap p-5 w-full">
-				<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
-					<div class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
-						<input aria-invalid="false" class="bg-transparent border-none outline-none text-sm leading-5 flex-1" placeholder="배송지명 (최대 10글자)" maxlength="10" type="text"
-						name="deliveryTitle">
-						<button type="button" class="p-1 hidden">
-							<svg fill="none" viewBox="0 0 20 20" width="20" height="20" color="#363738" aria-labelledby="CDS-IconXInCircleIcon">
-							<title id="CDS-IconXInCircleIcon">IconXInCircle</title><path fill="#9CA3AF" fill-rule="evenodd" d="M10.5 2.5a8 8 0 1 1 0 16 8 8 0 0 1 0-16" clip-rule="evenodd"></path>
-							<path fill="#fff" fill-rule="evenodd" d="M7.558 7.558a.625.625 0 0 1 .884 0L10.5 9.616l2.058-2.058a.625.625 0 1 1 .884.884L11.384 10.5l2.058 2.058a.625.625 0 1 1-.884.884L10.5 11.384l-2.058 2.058a.625.625 0 1 1-.884-.884L9.616 10.5 7.558 8.442a.625.625 0 0 1 0-.884" clip-rule="evenodd"></path></svg>
-						</button>
+	<th:block th:fragment="paymentFrm">
+		<main role="main" aria-label="본문 영역" id="main-content"
+			class="flex flex-col min-h-full relative">
+			<div class="flex-1 pt-6">
+				<div class="outline-none gap-4 flex flex-col mb-6 px-5">
+					<div class="flex flex-row justify-between items-center">
+						<h2 th:text="${'직거래로 구매'}"
+							class="text-18 font-semibold text-gray-900">선택한 거래 방식</h2>
 					</div>
-				</div>
-			<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
-				<div class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
-					<input aria-invalid="false" class="bg-transparent border-none outline-none text-sm leading-5 flex-1" placeholder="이름 (20자 이내로 입력)" type="text"
-					name="deliveryUserName">
-					<button type="button" class="p-1 hidden">
-						<svg fill="none" viewBox="0 0 20 20" width="20" height="20" color="#363738" aria-labelledby="CDS-IconXInCircleIcon">
-							<title id="CDS-IconXInCircleIcon">IconXInCircle</title><path fill="#9CA3AF" fill-rule="evenodd" d="M10.5 2.5a8 8 0 1 1 0 16 8 8 0 0 1 0-16" clip-rule="evenodd"></path>
-							<path fill="#fff" fill-rule="evenodd" d="M7.558 7.558a.625.625 0 0 1 .884 0L10.5 9.616l2.058-2.058a.625.625 0 1 1 .884.884L11.384 10.5l2.058 2.058a.625.625 0 1 1-.884.884L10.5 11.384l-2.058 2.058a.625.625 0 1 1-.884-.884L9.616 10.5 7.558 8.442a.625.625 0 0 1 0-.884" clip-rule="evenodd"></path></svg>
-					</button>
-				</div>
-			</div>
-			<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
-				<div class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
-					<input aria-invalid="false" class="bg-transparent border-none outline-none text-sm leading-5 flex-1" placeholder="휴대폰 번호 (- 없이 숫자만 입력)" type="text"
-					name="deliveryUserPhoneNo">
-					<button type="button" class="p-1 hidden">
-						<svg fill="none" viewBox="0 0 20 20" width="20" height="20" color="#363738" aria-labelledby="CDS-IconXInCircleIcon"><title id="CDS-IconXInCircleIcon">IconXInCircle</title>
-						<path fill="#9CA3AF" fill-rule="evenodd" d="M10.5 2.5a8 8 0 1 1 0 16 8 8 0 0 1 0-16" clip-rule="evenodd"></path>
-						<path fill="#fff" fill-rule="evenodd" d="M7.558 7.558a.625.625 0 0 1 .884 0L10.5 9.616l2.058-2.058a.625.625 0 1 1 .884.884L11.384 10.5l2.058 2.058a.625.625 0 1 1-.884.884L10.5 11.384l-2.058 2.058a.625.625 0 1 1-.884-.884L9.616 10.5 7.558 8.442a.625.625 0 0 1 0-.884" clip-rule="evenodd"></path></svg>
-					</button>
-				</div>
-			</div>
-			<button type="button" class="rounded inline-flex items-center gap-2 py-3 min-w-[75px] h-11 bg-white border text-gray-900 active:border-gray-900 px-3 border-gray-300 w-full justify-start" aria-placeholder="주소 검색">
-				<span class="whitespace-pre-line font-medium text-inherit text-14"><span class="whitespace-pre-line text-gray-500">주소 검색</span></span>
-			</button>
-			<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
-				<div class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
-					<input aria-invalid="false" class="bg-transparent border-none outline-none text-sm leading-5 flex-1" placeholder="상세주소 (예시: 101동 101호)" maxlength="50" type="text"
-					name="deliveryAddressDetail">
-				<button type="button" class="p-1 hidden">
-					<svg fill="none" viewBox="0 0 20 20" width="20" height="20" color="#363738" aria-labelledby="CDS-IconXInCircleIcon">
-						<title id="CDS-IconXInCircleIcon">IconXInCircle</title><path fill="#9CA3AF" fill-rule="evenodd" d="M10.5 2.5a8 8 0 1 1 0 16 8 8 0 0 1 0-16" clip-rule="evenodd"></path>
-							<path fill="#fff" fill-rule="evenodd" d="M7.558 7.558a.625.625 0 0 1 .884 0L10.5 9.616l2.058-2.058a.625.625 0 1 1 .884.884L11.384 10.5l2.058 2.058a.625.625 0 1 1-.884.884L10.5 11.384l-2.058 2.058a.625.625 0 1 1-.884-.884L9.616 10.5 7.558 8.442a.625.625 0 0 1 0-.884" clip-rule="evenodd"></path></svg>
-				</button>
-				</div>
-			</div>
-		</div>
-		</form>
-					
-					<div class="h-[6px] w-full"
-						style="background-color: rgb(241, 244, 246);"></div>
-					<div class="py-6  px-5">
-						<h2 class="text-18 font-semibold text-gray-900 mb-4">안심결제 선택</h2>
-						<div class="group gap-3"
-							style="display: grid; grid-auto-flow: row; grid-template-columns: repeat(2, 1fr);">
-							<div style="grid-column: span 2;">
-								<div class="z-auto rounded-none relative">
-									<button type="button"
-										class="rounded inline-flex justify-center items-center gap-2 px-4 py-3 min-w-[75px] h-11 bg-white border text-gray-900 active:border-gray-900 w-full border-gray-900"
-										aria-pressed="true" aria-label="네이버페이  결제 버튼 선택됨">
-										<span
-											class="whitespace-pre-line font-medium text-inherit text-14"><img
-											class="w-auto" alt="네이버페이 결제 버튼"
-											src="data:image/webp;base64,UklGRqYEAABXRUJQVlA4TJoEAAAvm8AOECfCqG0jQe7uu+VP9m5pBIO2jSQlJ83Hn+gh2CJq20Y+/p+DeBByCBqArdAKray1UNAStFAg2toC0RGINkq0BS20skIriCREKJAe5zEfSb5gh/H/8BywD74ukJeXhfze3Th2fKBua3ubxrJjGxNMisIwZrBBQSe06b2ll/u/qIO+93tlRvyO6L8DSZKiqBpiXDQmBtDBY1+QkLr9/fx+eeWi0NVq8/z7JulO189LF52WH6874f772kWq5e9wXrwT6DBtXK9c5FreBfDsDoC+0j437iBowzXegaQQ/1EdVFufVWVZDs6m8whLYG1MniLlQxtdCalNmeoq28jKPeaDAyyGKafIDthAvsLWPGWVT6MqP1CbA4zSEJmY+O9OsgaYNEwmxqbfuO6t2LZu5ySLtp62iz2Uax/gsUnDNdUodzpxC3OU7nQ0bPUWI3JNWbsm3+mVc5e5pxZzku80hQ41a/MOyKyC393REZ9GcET5azDllR8vnu50p4IwW8kw7UKlApdGoJsT+nS0fgjQDD1Gym7sxcpeWU8XgmM/jJ4Iow0mzUAx7KXCmdxDOxluk+QbOGklzlffp9KiKkmyU2P6mYh7oaXB3i4mBBz+uaQWPVT4gjzbVOWy0KCM3Br5kYtz5xxfNUXjR1GBFIPMULW643uwX8c1JGcE2Uw9eyzqR2HVmAyegAXuYKk7vv8DxozAnXBkBGMH1Ef9zj28bRy5wZenwdMx0fn7RTBPIaCJIm1VCiIH5WAOjvFtFeYy88Z3gT3rfHkvF3AK13CMEEzGKeU5YsRUQmVoSZNxGWTHBE9bmQMxqImiUtHWFXnhD/wMgKl8CJN7dkGwXkqvJK7H0FPRViA5TKWHI8bLOM0QnuFyCTrPYjOCPAzTBaoBnkOU69S+p4sOmCg/JBXT04F/C6WaRthuqUT0dThGOffkISPm+sx9NJP7R7ddIy+gcDLCUY/M47U/gvp5BzyH7Bgw5AsdvZ9EMitRIJl+o5kLoAGMySqX8YohPSc5JtbxObdWGvVGc8jcsptQu3nkc34lz77AnC866q8rIjaDZyMbyWdtCWVGJO/AWknhN4WtlVJHg7NqFxnO3hPZj/9j6sFHHcpYki/gHiOjSM8ZiuB72sIG39MqJszz33uQETnSKUEFoWtYMVRWsiz34DGlIcmsTkswKRBnynLcFIj+FKPdMJKsk0TucKWOCLiDZwHnxqUf8Skx8uO+vySeNm5e7jRmkvU44H3HrZNGe4aSidb4YUhaip1mzWxBP843M0tHJDyz3OJnzyrtQpWj2J+Gvg1623ENrtaiAwq7JwKtZfnV/buON+6fog7zvEwSxbiLDt4R7R3Kc4D1te3w3RrJv2lX4GvjVUfFMCPuaW8c+2+xeC9SP2Ga5p1lb1xM+pIgbeFVW5H0bVT1rfKdaolzCvXtoIns24HfBo5ZKhmvkm7kQhdf1Yui2cT0y7KsTmvrXIRVL/w3vigrU7YH4tvoQ0LqyyHgUyJ0gI5aXSdB+hX1xpX39ewwbay+PXTzn5nHGP8z8/k66U43vz5v17H812j59vPv24RTAg=="
-											style="height: 20px;"></span>
-									</button>
-								</div>
-							</div>
-							<div style="grid-column: span 1;">
-								<div class="z-auto rounded-none relative">
-									<button type="button"
-										class="rounded inline-flex justify-center items-center gap-2 px-4 py-3 min-w-[75px] h-11 bg-white border border-gray-400 text-gray-900 active:border-gray-900 w-full"
-										aria-pressed="false" aria-label="카드결제  결제 버튼 ">
-										<span
-											class="whitespace-pre-line font-medium text-inherit text-14"><span
-											class="whitespace-pre-line text-14 font-medium">카드결제</span></span>
-									</button>
-								</div>
-							</div>
-							<div style="grid-column: span 1;">
-								<div class="z-auto rounded-none relative">
-									<button type="button"
-										class="rounded inline-flex justify-center items-center gap-2 px-4 py-3 min-w-[75px] h-11 bg-white border border-gray-400 text-gray-900 active:border-gray-900 w-full"
-										aria-pressed="false" aria-label="토스페이 토스페이 2% 즉시할인 결제 버튼 ">
-										<span
-											class="whitespace-pre-line font-medium text-inherit text-14"><img
-											class="w-auto" alt="토스페이 결제 버튼"
-											src="data:image/webp;base64,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"
-											style="height: 12px;"></span>
-									</button>
-								</div>
-							</div>
-							<div style="grid-column: span 1;">
-								<div class="z-auto rounded-none relative">
-									<button type="button"
-										class="rounded inline-flex justify-center items-center gap-2 px-4 py-3 min-w-[75px] h-11 bg-white border border-gray-400 text-gray-900 active:border-gray-900 w-full"
-										aria-pressed="false" aria-label="페이코  페이코 포인트 1% 즉시할인 결제 버튼 ">
-										<span
-											class="whitespace-pre-line font-medium text-inherit text-14"><img
-											class="w-auto" alt="페이코 결제 버튼"
-											src="data:image/webp;base64,UklGRq4EAABXRUJQVlA4WAoAAAAQAAAAawAAFwAAQUxQSEICAAABkBDbdthGgiAIgmAIgiAGFYOWQcQgYqAw8DL4y8AQBEEQNFP99/7fRRARDty2cSRlF5m96pQpb6jUyhWoJVCTjoiiJDBdleuIdcy195K3Ifx6ydx7SksgZBs2K2OAln5oWha5tYykRq/FhEsiI3Go2aaNiExgHSVRx1ENTU3FMrdhP5rvbdjLxxagECWFOsOre+3tul6O3AHOhNxW1HFSxzSkuW2eCLc5BGT82i1QK0Wi8iLNoSnhwTz02u55+FDRa7SjRlsOvPxJK84sjsb6IYiWaPgKKcxaeAONomlRq4GyGIRLP5JETR3Oo8jYoZVVVKBabAoG5guZLeAMwlJpIDIH5CJT18Cn0zz4p5ZhFYh1PWndDMUFUXSa7fVD+jkUkGAiOgkEUC/Wg9UKD+pdujifzSwddLjZZvI5G1gncPKELAZW0kpLHhdh0CIlG6XmD2Bn55FjE0SQ50TiEtYA0Br/gcG5t9cqqWs6psONxGG//fvDQyAdwKDyq0eN4SZIL6zRPdmLAJlN4gxGKFZUvK8w74tGE1km3gguld2KpF96XfRY5s1l1WTfhO9Zfsla6heS+RryNx+7MC/NRTcw1T9Jv/qGXUtgAzO2tRl8q8B0saIDXmV5t3Yv3JAz1me0NrAVLx+ZbGm8y6sH7142k7MiLfgYfLayqe0kXPa1VKt9bD7BCawa9pIdOXzouh3DHjyQSV0dxWwUw9r0namSUDWZHfqy8Y6SgnOViStMVDCtfJ6117xb4mquLuoE2SGsAFZQOCBGAgAAEA4AnQEqbAAYAD6RRJtKpaOiIab1WjCwEglsAJ0yqoEPt3ygfIxUP7H+Dfxp3xOgPL04v/zv2q/RD0AeYB/e/4l5wH6Ae4DzAfsN6rH8z/zPWAfyz+6+kz7AHoAfw//J+l/+sfwSft3+5Hsyf+0ArSAQNEvPam3bAAD+5s7eHajlqrVwP/rdcd42gLUbtd8/ketNl8Dkr/whkLOp1jTAR0qGgJAeHDw+ZFdJIGogP7wuv8bqFULWWw0nFG1FlXSFF+5diuDu5FtBiKYsXh7Kpo9VKs0xKvpKnqdsjESOr0/tDf9J1huLCT3fZpqRBJ164Twrmmq+70i5wI6msGNTzAonWeBEMQGCKBRic6LGJ6C3jq7MUw6LmrOv6Zt7sut80rULy44kAj7MqOj5ce8WVbzO+h3s/oCP73PSxCkljAF9RGNjf6jGM0gn2M8fMWWg5UR72Xam2pQZp0H3QD83Bq3802GZKeH8f99IvYT+mKTURB5Aqja9icmN/AhDHFPM1N4u/+8OVMl0QPhGXxrMfmyGssa4IX7vDLJTeUfx7w6xjIs3ftY41yudH61Ttp4B6JHvFLXB4XdDx0Ie7boqeosc//vBMCClj/7cW59KgEd4OZtG4j4zgJgQjn4keByJ36cyuF+Fg0Zjq5eRuqPIkMH5aXgmhgouphsJCRABe3YSfz5SngE6DZaaf3nLW/UzgbgOY+/XmYV1ybhOHQxamTnlM9NjuV/iUdg52hRZQWIDdDilrxEegjsPwTnbxkaywF1NgAAA"
-											style="height: 12px;"></span>
-									</button>
-								</div>
-							</div>
-							<div style="grid-column: span 1;">
-								<div class="z-auto rounded-none relative">
-									<button type="button"
-										class="rounded inline-flex justify-center items-center gap-2 px-4 py-3 min-w-[75px] h-11 bg-white border border-gray-400 text-gray-900 active:border-gray-900 w-full"
-										aria-pressed="false" aria-label="카카오페이  결제 버튼 ">
-										<span
-											class="whitespace-pre-line font-medium text-inherit text-14"><img
-											class="w-auto" alt="카카오페이 결제 버튼"
-											src="data:image/webp;base64,UklGRiIEAABXRUJQVlA4TBYEAAAvj8AOEA/CoJEkRX3P718oMy2dCAJBiPw/ywLBELZtK+sS3PMIPgYhhZRRSkXw1KZtwDhl9h2AM3wgr5XklyRoFFoUGlU4+MVEEAEpQATktU9f706Cq/KOfYS54ucSiLk4YRmBm0fgEtMI6eZxA7PJlATQ27a/atvo50O8nCPXLG+PRnZVzzgO6VhhnmbA3/9j6Qf6yQ79O6L/E6CER9PZ3TzBu53op+vJSJ3v6A+NQdSz8XlMNAZUT+JNNAY2mcYZawzwwzjCtz8xyMmV2A0G+0ZmNMeAz8cC4wSDnoyDxgkGPhmFzDH481G/G/wG3vS6wm/h5x7j5Pfgedz1AHGzy4uyzPc2fXdSEeiOKYRteaKebrsKSne73S4FbNkQndy2X7ormxPRyW1XXaktGtejOLntKgwTLpHJGgquVgGGiOhl5aizWXd9P5you82ZlSM/7ToSETWbIM1MILlyJNlsBY4N9WzX3F8UmHtomZeOFbEmCBNPS2xPJFyEBTYpk4aQ9d6YQ0fGOIRrpdQYgluSryTaxrUc5QxciPPWTNtxYDIBjJSaCXynmEVQa5cAspY5cpbaYmOA9U+GDAA4jyzXMqnEF6V0WNpEIRvSgM0YMgwsOt+YrbdnCsaSX0FSqxHC3yhuI4SW2XI9DZN7KdMwBbMRwWgi0EQiK1QyeRD6wHlkvKNXQ3Z6HWYpdim0Z8qu9b4oS+dcL8u8AFiRXwldP4Xl0RqhrF92pP5c2noOQMZYoQcdVkajM6golEPhtSlw8GoIz5N3qCAp65EFWu9FKsF7kTMFgBX57U9rjDH90HgFLPlGSnIf7Sh0YDIAe2YNNuDNa1B4Dudro1VCDbMGUHoOIqlH5uhlZwQXy8hk5NfoKmXgvIJ8I5cI2EgVRL6fmKzHkctD9t7JqyCezAXgorRGwuQn8mvj7T2q1sbmJwpJW+rcyM3vJdI6xg+E9M/gW6Z/Dxw6ash/vZaAqeVeEeNv8C6G7agiXE9FYI5C7Q9EaF/Raeoe/9sQtNw6wnQkA/ysJZyBXFsY9DQV5zLg0DTNa5+COSLiSGkh2DBnEcg1dpfnO7tEoNnk+c5AsmKyCFqpa6msX3t4XSK4A+e9Ib9GxJlSI6mDV9u1tXa9hOhFrBomi/FRKaWFWiL6tUTMiziSXyOiVkqpiYwlqi3iXkJFrIkx9ZQWyenXEu9MWhH7NyIuFDsRySyiX8CR+Q8xrzilJc7x/IB/icgtYzyozo/PF5Hu/M1Z4R/6hZjPH7vU7CIuc42oM9X3cSji3qreo/nwfVCBo8XQLT6GqI+LYVt8VOEf50P24aMSfRyu209K+GoxTM8zJf/xfoj0RxV1uhgaPVHRJ3pI9ESd5ceZHgZ9/Umd76fJ9ZNO3q9kfnc9/aSEAQ=="
-											style="height: 20px;"></span>
-									</button>
-								</div>
-							</div>
-							<div style="grid-column: span 1;">
-								<div class="z-auto rounded-none relative">
-									<button type="button"
-										class="rounded inline-flex justify-center items-center gap-2 px-4 py-3 min-w-[75px] h-11 bg-white border border-gray-400 text-gray-900 active:border-gray-900 w-full"
-										aria-pressed="false" aria-label="무통장입금  결제 버튼 ">
-										<span
-											class="whitespace-pre-line font-medium text-inherit text-14"><span
-											class="whitespace-pre-line text-14 font-medium">무통장입금</span></span>
-									</button>
-								</div>
-							</div>
+					<div class="flex flex-row gap-4 items-center">
+						<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
+							<img class="w-full h-full object-cover"
+								src="https://img2.joongna.com/media/original/2026/01/14/1768401290713p7h_nDmS5.jpg">
+						</div>
+						<div class="flex flex-col gap-1 flex-1">
+							<p th:text="${'RTX 4070 super FE판매합니다'}"
+								class="text-16 font-semibold text-gray-700 line-clamp-2">
+								상품명</p>
+							<span th:text="${'590,000원'}"
+								class="text-18 font-semibold text-gray-900"> 가격</span>
 						</div>
 					</div>
+				</div>
+
+				<!-- 택배 거래 선택 시 생성됨 -->
+				<form>
 					<div class="h-[6px] w-full"
 						style="background-color: rgb(241, 244, 246);"></div>
 					<div
-						class="outline-none flex flex-row justify-between items-center flex-nowrap py-6 px-5">
-						<h2 class="text-18 font-semibold text-gray-900">최종 결제 금액</h2>
-						<p th:text="${'610,650원'}" class="text-18 font-semibold text-Green-700">
-						상품가격+수수료</p>
-					</div>
-					<div class="h-[1px] w-auto"
-						style="background-color: rgb(241, 244, 246);"></div>
-					<section
-						class="outline-none flex flex-row justify-start items-stretch flex-nowrap py-6 px-5">
-						<ul
-							class="outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap w-full">
-							<li
-								class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row">
-								<h3
-									class="text-14 font-regular text-gray-500 flex gap-[2px] items-center">
-									<span class="whitespace-pre-line text-gray-900">상품금액</span>
-								</h3> <span class="z-auto rounded-none relative text-right break-all"><span
-									class="whitespace-pre-line text-14 flex gap-1"
-									aria-hidden="true"> <span th:text="${'590,000원'}"
-										class="whitespace-pre-line font-semibold text-gray-900">
-											상품 가격</span></span> </span>
-							</li>
-							<li
-								class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row">
-								<h3
-									class="text-14 font-regular text-gray-500 flex gap-[2px] items-center">
-									<span class="whitespace-pre-line text-gray-900">안심결제 수수료</span>
-									<span th:text="${'3.5%'}"
-										class="whitespace-pre-line text-gray-900 none"> 설정해둔
-										수수료</span>
-								</h3> <span class="z-auto rounded-none relative text-right break-all"><span
-									class="whitespace-pre-line text-14 flex gap-1"
-									aria-hidden="true"> <span th:text="${'20,650원'}"
-										class="whitespace-pre-line font-semibold"
-										style="color: rgb(20, 19, 19);"> 계산된 수수료 값</span></span></span>
-							</li>
-							<li
-								class="outline-none gap-1 flex flex-row justify-start items-stretch flex-nowrap"
-								style="color: rgb(156, 163, 175);">
-								<div class="z-auto rounded-none relative top-[-3px]">
-									<svg width="12" height="12" fill="currentColor"
-										viewBox="0 0 7 10" aria-labelledby="CDS-IconLineCornerIcon"
-										aria-hidden="true">
-									<path d="M.728 9.316V.064h.6v8.652h4.848v.6z"></path></svg>
-								</div> <span class="whitespace-pre-line text-12 font-medium order-payment-description-text">안심결제 수수료는 구매자가 부담합니다</span>
-							</li>
-						</ul>
-					</section>
-				</div>
-
-				<footer
-					class="z-auto rounded-none static bg-gray-100 py-[20px] px-[24px] leading-[17px] tracking-[0.2px]">
-					<span
-						class="text-12 font-regular whitespace-pre-line text-left text-gray-600 leading-[16px] tracking-[0.2px]">
-						<span>“중고나라” 상점의 판매상품을 제외한 모든 상품들에 대하여</span> <strong class="whitespace-pre-line font-medium text-gray-900">(주)중고나라</strong><span>는 통신판매중개자로서 거래 당사자가 아니며 판매 회원과 구매 회원 간의 상품거래 정보 및 거래에 관여하지 않고 어떠한 의무와 책임도 부담하지 않습니다.</span>
-					</span>
-				</footer>
-
-				<div
-					class="sticky bottom-0 left-0 w-full bg-white py-4 px-5 z-50 mt-auto">
-					<div
-						class="outline-none flex flex-col justify-start items-stretch flex-nowrap bg-white">
-						<div class="z-auto rounded-none static h-[1px]"></div>
-						<div class="z-auto rounded-none static">
+						class="outline-none gap-4 flex flex-col justify-start items-stretch flex-nowrap p-5 w-full">
+						<div
+							class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
 							<div
-								class="outline-none gap-2 flex flex-row justify-between items-center flex-nowrap pb-4">
-								<div
-									class="outline-none gap-2 flex flex-row justify-between items-center flex-nowrap">
-									<label class="relative cursor-pointer bg-transparent w-6 h-6"><input
-										id="_r_0_" class="sr-only" type="checkbox"><span></span>
-										<svg width="24" height="24" fill="currentColor"
-											viewBox="0 0 24 24" color="#9CA3AF"
-											aria-labelledby="CDS-IconCheckCircleIcon">
-									<title id="CDS-IconCheckCircleIcon">IconCheckCircle</title><path
-												fill-rule="evenodd"
-												d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0m-4.47-2.47a.75.75 0 0 0-1.06-1.06l-4.97 4.97-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0z"
-												clip-rule="evenodd"></path></svg></label><label
-										class="whitespace-pre-line text-14" for="_r_0_">상품정보 및 결제 대행 서비스 이용약관 동의</label>
-								</div>
-								<button type="button" aria-expanded="false"
-									class="text-gray-500">
-									<svg width="24" height="24" fill="none" viewBox="0 0 20 20"
-										color="#141313" aria-labelledby="CDS-ChevronDownIcon"
-										class="w-5 h-5 text-inherit transition-transform duration-200">
-								<title id="CDS-ChevronDownIcon">IconChevronDown</title><path
-											fill="currentColor" fill-rule="evenodd"
-											d="M3.525 6.41a.616.616 0 0 1 .857.027L10 12.292l5.618-5.855a.616.616 0 0 1 .857-.027.583.583 0 0 1 .028.837l-6.06 6.316a.613.613 0 0 1-.885 0l-6.06-6.316a.583.583 0 0 1 .027-.837"
+								class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
+								<input aria-invalid="false"
+									class="bg-transparent border-none outline-none text-sm leading-5 flex-1"
+									placeholder="배송지명 (최대 10글자)" maxlength="10" type="text"
+									name="deliveryTitle">
+								<button type="button" class="p-1 hidden">
+									<svg fill="none" viewBox="0 0 20 20" width="20" height="20"
+										color="#363738" aria-labelledby="CDS-IconXInCircleIcon">
+							<title id="CDS-IconXInCircleIcon">IconXInCircle</title><path
+											fill="#9CA3AF" fill-rule="evenodd"
+											d="M10.5 2.5a8 8 0 1 1 0 16 8 8 0 0 1 0-16"
+											clip-rule="evenodd"></path>
+							<path fill="#fff" fill-rule="evenodd"
+											d="M7.558 7.558a.625.625 0 0 1 .884 0L10.5 9.616l2.058-2.058a.625.625 0 1 1 .884.884L11.384 10.5l2.058 2.058a.625.625 0 1 1-.884.884L10.5 11.384l-2.058 2.058a.625.625 0 1 1-.884-.884L9.616 10.5 7.558 8.442a.625.625 0 0 1 0-.884"
+											clip-rule="evenodd"></path></svg>
+								</button>
+							</div>
+						</div>
+						<div
+							class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
+							<div
+								class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
+								<input aria-invalid="false"
+									class="bg-transparent border-none outline-none text-sm leading-5 flex-1"
+									placeholder="이름 (20자 이내로 입력)" type="text"
+									name="deliveryUserName">
+								<button type="button" class="p-1 hidden">
+									<svg fill="none" viewBox="0 0 20 20" width="20" height="20"
+										color="#363738" aria-labelledby="CDS-IconXInCircleIcon">
+							<title id="CDS-IconXInCircleIcon">IconXInCircle</title><path
+											fill="#9CA3AF" fill-rule="evenodd"
+											d="M10.5 2.5a8 8 0 1 1 0 16 8 8 0 0 1 0-16"
+											clip-rule="evenodd"></path>
+							<path fill="#fff" fill-rule="evenodd"
+											d="M7.558 7.558a.625.625 0 0 1 .884 0L10.5 9.616l2.058-2.058a.625.625 0 1 1 .884.884L11.384 10.5l2.058 2.058a.625.625 0 1 1-.884.884L10.5 11.384l-2.058 2.058a.625.625 0 1 1-.884-.884L9.616 10.5 7.558 8.442a.625.625 0 0 1 0-.884"
+											clip-rule="evenodd"></path></svg>
+								</button>
+							</div>
+						</div>
+						<div
+							class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
+							<div
+								class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
+								<input aria-invalid="false"
+									class="bg-transparent border-none outline-none text-sm leading-5 flex-1"
+									placeholder="휴대폰 번호 (- 없이 숫자만 입력)" type="text"
+									name="deliveryUserPhoneNo">
+								<button type="button" class="p-1 hidden">
+									<svg fill="none" viewBox="0 0 20 20" width="20" height="20"
+										color="#363738" aria-labelledby="CDS-IconXInCircleIcon">
+										<title id="CDS-IconXInCircleIcon">IconXInCircle</title>
+						<path fill="#9CA3AF" fill-rule="evenodd"
+											d="M10.5 2.5a8 8 0 1 1 0 16 8 8 0 0 1 0-16"
+											clip-rule="evenodd"></path>
+						<path fill="#fff" fill-rule="evenodd"
+											d="M7.558 7.558a.625.625 0 0 1 .884 0L10.5 9.616l2.058-2.058a.625.625 0 1 1 .884.884L11.384 10.5l2.058 2.058a.625.625 0 1 1-.884.884L10.5 11.384l-2.058 2.058a.625.625 0 1 1-.884-.884L9.616 10.5 7.558 8.442a.625.625 0 0 1 0-.884"
+											clip-rule="evenodd"></path></svg>
+								</button>
+							</div>
+						</div>
+						<button type="button"
+							class="rounded inline-flex items-center gap-2 py-3 min-w-[75px] h-11 bg-white border text-gray-900 active:border-gray-900 px-3 border-gray-300 w-full justify-start"
+							aria-placeholder="주소 검색">
+							<span
+								class="whitespace-pre-line font-medium text-inherit text-14"><span
+								class="whitespace-pre-line text-gray-500">주소 검색</span></span>
+						</button>
+						<div
+							class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
+							<div
+								class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
+								<input aria-invalid="false"
+									class="bg-transparent border-none outline-none text-sm leading-5 flex-1"
+									placeholder="상세주소 (예시: 101동 101호)" maxlength="50" type="text"
+									name="deliveryAddressDetail">
+								<button type="button" class="p-1 hidden">
+									<svg fill="none" viewBox="0 0 20 20" width="20" height="20"
+										color="#363738" aria-labelledby="CDS-IconXInCircleIcon">
+						<title id="CDS-IconXInCircleIcon">IconXInCircle</title><path
+											fill="#9CA3AF" fill-rule="evenodd"
+											d="M10.5 2.5a8 8 0 1 1 0 16 8 8 0 0 1 0-16"
+											clip-rule="evenodd"></path>
+							<path fill="#fff" fill-rule="evenodd"
+											d="M7.558 7.558a.625.625 0 0 1 .884 0L10.5 9.616l2.058-2.058a.625.625 0 1 1 .884.884L11.384 10.5l2.058 2.058a.625.625 0 1 1-.884.884L10.5 11.384l-2.058 2.058a.625.625 0 1 1-.884-.884L9.616 10.5 7.558 8.442a.625.625 0 0 1 0-.884"
 											clip-rule="evenodd"></path></svg>
 								</button>
 							</div>
 						</div>
 					</div>
-					<button onclick="openSuccessForm()"
-						class="w-full h-14 bg-black text-white font-bold rounded-lg text-16 active:bg-gray-800">
-						<span th:text="${'610,650원 결제'}">결제하기</span>
-					</button>
+				</form>
+
+
+				<div class="h-[6px] w-full"
+					style="background-color: rgb(241, 244, 246);"></div>
+				<div class="py-6  px-5">
+					<h2 class="text-18 font-semibold text-gray-900 mb-4">안심결제 선택</h2>
+					<!-- 결제 UI -->
+					<div id="payment-method"></div>
 				</div>
-			</main>
-		</th:block>
+				<div class="h-[6px] w-full"
+					style="background-color: rgb(241, 244, 246);"></div>
+				<div
+					class="outline-none flex flex-row justify-between items-center flex-nowrap py-6 px-5">
+					<h2 class="text-18 font-semibold text-gray-900">최종 결제 금액</h2>
+					<p th:text="${'610,650원'}"
+						class="text-18 font-semibold text-Green-700">상품가격+수수료</p>
+				</div>
+				<div class="h-[1px] w-auto"
+					style="background-color: rgb(241, 244, 246);"></div>
+				<section
+					class="outline-none flex flex-row justify-start items-stretch flex-nowrap py-6 px-5">
+					<ul
+						class="outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap w-full">
+						<li
+							class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row">
+							<h3
+								class="text-14 font-regular text-gray-500 flex gap-[2px] items-center">
+								<span class="whitespace-pre-line text-gray-900">상품금액</span>
+							</h3> <span class="z-auto rounded-none relative text-right break-all"><span
+								class="whitespace-pre-line text-14 flex gap-1"
+								aria-hidden="true"> <span th:text="${'590,000원'}"
+									class="whitespace-pre-line font-semibold text-gray-900">
+										상품 가격</span></span> </span>
+						</li>
+						<li
+							class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row">
+							<h3
+								class="text-14 font-regular text-gray-500 flex gap-[2px] items-center">
+								<span class="whitespace-pre-line text-gray-900">안심결제 수수료</span>
+								<span th:text="${'3.5%'}"
+									class="whitespace-pre-line text-gray-900 none"> 설정해둔 수수료</span>
+							</h3> <span class="z-auto rounded-none relative text-right break-all"><span
+								class="whitespace-pre-line text-14 flex gap-1"
+								aria-hidden="true"> <span th:text="${'20,650원'}"
+									class="whitespace-pre-line font-semibold"
+									style="color: rgb(20, 19, 19);"> 계산된 수수료 값</span></span></span>
+						</li>
+						<li
+							class="outline-none gap-1 flex flex-row justify-start items-stretch flex-nowrap"
+							style="color: rgb(156, 163, 175);">
+							<div class="z-auto rounded-none relative top-[-3px]">
+								<svg width="12" height="12" fill="currentColor"
+									viewBox="0 0 7 10" aria-labelledby="CDS-IconLineCornerIcon"
+									aria-hidden="true">
+									<path d="M.728 9.316V.064h.6v8.652h4.848v.6z"></path></svg>
+							</div> <span
+							class="whitespace-pre-line text-12 font-medium order-payment-description-text">안심결제
+								수수료는 구매자가 부담합니다</span>
+						</li>
+					</ul>
+				</section>
+			</div>
+			<footer
+				class="z-auto rounded-none static bg-gray-100 py-[20px] px-[24px] leading-[17px] tracking-[0.2px]">
+				<span
+					class="text-12 font-regular whitespace-pre-line text-left text-gray-600 leading-[16px] tracking-[0.2px]">
+					<span>“중고나라” 상점의 판매상품을 제외한 모든 상품들에 대하여</span> <strong
+					class="whitespace-pre-line font-medium text-gray-900">(주)중고나라</strong><span>는
+						통신판매중개자로서 거래 당사자가 아니며 판매 회원과 구매 회원 간의 상품거래 정보 및 거래에 관여하지 않고 어떠한
+						의무와 책임도 부담하지 않습니다.</span>
+				</span>
+			</footer>
+			<div
+				class="sticky bottom-0 left-0 w-full bg-white py-4 px-5 z-50 mt-auto">
+				<!-- 이용약관 UI -->
+				<div id="agreement"></div>
+				<button
+					class="w-full h-14 bg-black text-white font-bold rounded-lg text-16 active:bg-gray-800"
+					id="payment-button">
+					<span th:text="${'610,650원 결제'}">결제하기</span>
+				</button>
+			</div>
+		</main>
+	<script>
+	// fragment 내부 script 부분
+	/* paymentFrm 프래그먼트 내부 스크립트 */
+window.initTossPayments = async function () { // main() 대신 전역 함수 선언
+    const button = document.getElementById("payment-button");
+    const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+    const tossPayments = TossPayments(clientKey);
+    const customerKey = "YoA3w8vRTZPoaV13MAQ3j";
+    
+    const widgets = tossPayments.widgets({ customerKey });
+
+    // 화면의 가격(610,650원)과 일치하도록 설정
+    await widgets.setAmount({
+        currency: "KRW",
+        value: 610650, 
+    });
+
+    await Promise.all([
+        widgets.renderPaymentMethods({
+            selector: "#payment-method",
+            variantKey: "DEFAULT",
+        }),
+        widgets.renderAgreement({ 
+            selector: "#agreement", 
+            variantKey: "AGREEMENT" 
+        }),
+    ]);
+
+    button.addEventListener("click", async function () {
+        await widgets.requestPayment({
+            orderId: "ORDER_" + new Date().getTime(),
+            orderName: "RTX 4070 super FE",
+            successUrl: window.location.origin + "/payment/success",
+            failUrl: window.location.origin + "/payment/fail",
+        });
+    });
+};
+    </script>
+	</th:block>
 </body>
 </html>

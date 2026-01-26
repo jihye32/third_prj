@@ -55,20 +55,20 @@ public class ProductDetailDAO {
 	
 //////seller domain에 들어갈 내용/////////////////////////////////////////////////////////////////////
 	//상점명으로 판매 등록한 모든 상품의 개수 가져옴
-	public int cntSellProduct(String store) {
+	public int cntSellProduct(int ssnum) {
 		int cnt =0;
 		
 		return cnt;
 	}//cntSellProduct
 	
 	//상점명으로 등록되어있는 리뷰의 개수 가져옴
-	public int cntReview(String store) {
+	public int cntReview(int ssnum) {
 		int cnt =0;
 		
 		return cnt;
 	}//cntReview
 	
-	public SellerDomain selectSellerInfo(String store) {
+	public SellerDomain selectSellerInfo(int ssnum) {
 		SellerDomain sd = null;
 		
 		return sd;
@@ -84,6 +84,24 @@ public class ProductDetailDAO {
 		return cnt;
 	}//updateViewCnt
 	
+	//찜하기 했는지 확인
+	public String selectBookmark(int pnum, int snum) {
+		String flag = "";
+		return flag;
+	}//selectBookmark
+	//끌올 버튼을 누를 경우 현재 날짜로 변경
+	public int insertBookmark(int pnum, int snum) {
+		int cnt =0;
+			
+		return cnt;
+	}//addBookmark
+	//끌올 버튼을 누를 경우 현재 날짜로 변경
+	public int deleteBookmark(int pnum, int snum) {
+		int cnt =0;
+			
+		return cnt;
+	}//deleteBookmark
+	
 	//마지막으로 끌올한 날 가져옴
 	public Date selectUpDate(int pnum) {
 		Date date = null;
@@ -91,11 +109,11 @@ public class ProductDetailDAO {
 		return date;
 	}//selectUpDate
 	//끌올 버튼을 누를 경우 현재 날짜로 변경
-	public int updateUpDate(int pnum) {
-		int cnt =0;
-		
-		return cnt;
-	}//updateUpDate
+		public int updateUpDate(int pnum) {
+			int cnt =0;
+			
+			return cnt;
+		}//updateUpDate
 	
 	//판매 상태 변경
 	public int updateProductStatus(SellStatusDTO ssDTO) {

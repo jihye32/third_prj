@@ -5,6 +5,7 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>sample</title>
+	<script src="https://js.tosspayments.com/v2/standard"></script>
 <link th:href="@{/css/output.css}" rel="stylesheet">
 <style>
 </style>
@@ -55,9 +56,81 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+////구매 페이지/////////////////////////////////////////////////
+function openSellForm() {
+    fetch('/sell/type')
+        .then(res => res.text())
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('거래 방법 선택'); // 서랍 여는 공통 함수 실행
+        });
+}
+//메인 화면의 구매하기 버튼 클릭 이벤트
+function openPaymentForm() {
+    fetch('/sell/payment') // 프래그먼트를 가져오는 API 경로
+        .then(response => response.text())
+        .then(html => {
+            const drawer = document.getElementById('drawerContent'); // 프래그먼트가 들어갈 곳
+            drawer.innerHTML = html;
+            drawer.scrollTop = 0;
+
+            // 핵심: HTML 삽입 후 토스 위젯 초기화 함수 실행
+            if (window.initTossPayments) {
+                window.initTossPayments();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+function openSuccessForm() {
+		fetch('/sell/success')
+	.then(res => res.text())
+	.then(html => {
+    	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+    	document.getElementById('drawerContent').innerHTML = html;
+    	document.getElementById('drawerContent').scrollTop = 0;
+	});
+}
+function openFailForm() {
+		fetch('/sell/fail')
+	.then(res => res.text())
+	.then(html => {
+    	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+    	document.getElementById('drawerContent').innerHTML = html;
+    	document.getElementById('drawerContent').scrollTop = 0;
+	});
+}
 
 
 
+
+
+function toggleDropdown() {
+    const menu = document.getElementById('dropdown-menu');
+    const arrow = document.getElementById('dropdown-arrow');
+    
+    // 메뉴 보임/숨김 토글
+    menu.classList.toggle('hidden');
+}
+
+// 메뉴 바깥 클릭 시 닫기 기능
+window.addEventListener('click', function(e) {
+    const container = document.getElementById('dropdown-container');
+    const menu = document.getElementById('dropdown-menu');
+    const arrow = document.getElementById('dropdown-arrow');
+    
+    if (!container.contains(e.target)) {
+        menu.classList.add('hidden');
+    }
+});
+
+// 옵션 선택 시 실행할 함수
+function selectOption(value) {
+    //console.log("선택된 값:", value);
+    //updateStatus(${param.pnum},value);
+    // 선택 후 메뉴 닫기
+    toggleDropdown();
+}
 
 $('#btnWrite').click(function(){
 	$.ajax({
@@ -102,51 +175,15 @@ function updateStatus(pnum, sellStatusCode) {
 
 
 
-////구매 페이지/////////////////////////////////////////////////
-function openSellForm() {
-    fetch('/sell/type')
-        .then(res => res.text())
-        .then(html => {
-            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
-            document.getElementById('drawerContent').innerHTML = html;
-            openDrawer('거래 방법 선택'); // 서랍 여는 공통 함수 실행
-        });
-}
-function openPaymentForm() {
-		fetch('/sell/payment')
-	.then(res => res.text())
-	.then(html => {
-    	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
-    	document.getElementById('drawerContent').innerHTML = html;
-    	document.getElementById('drawerContent').scrollTop = 0;
-	});
-}
-function openSuccessForm() {
-		fetch('/sell/success')
-	.then(res => res.text())
-	.then(html => {
-    	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
-    	document.getElementById('drawerContent').innerHTML = html;
-    	document.getElementById('drawerContent').scrollTop = 0;
-	});
-}
-function openFailForm() {
-		fetch('/sell/fail')
-	.then(res => res.text())
-	.then(html => {
-    	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
-    	document.getElementById('drawerContent').innerHTML = html;
-    	document.getElementById('drawerContent').scrollTop = 0;
-	});
-}
+
 
 </script>
 </head>
 <body>
+<div th:replace="~{template/header :: headerImgFragment}"></div>
+<div th:replace="~{template/header :: headerFragment}"></div>
 <div id="__next">
 	<div class="flex flex-col min-h-screen bg-white">
-		<div th:replace="~{template/header :: headerImgFragment}"></div>
-		<div th:replace="~{template/header :: headerFragment}"></div>
 		<main class="relative flex-grow border-b-2" style="min-height: -webkit-fill-available">
 			<div class="mx-auto md:px-8 2xl:px-16 box-content max-w-[1024px] min-[1600px]:max-w-[1280px] lg:min-h-[950px] px-0">
 				<div class="items-start block grid-cols-2 lg:grid gap-x-[72px] lg:pt-[72px] lg:pb-[52px] pt-0 max-lg:px-5">
@@ -158,8 +195,7 @@ function openFailForm() {
 								<div class="swiper swiper-initialized swiper-horizontal swiper-pointer-events" dir="ltr">
 									<!-- 이미지 들어가는 곳!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 									<div id="image-slider" class="flex transition-transform duration-500 ease-out" style="transform: translateX(0%);">
-								        <th:block th:each="img : *{img}">
-										<div class="swiper-slide w-full flex-shrink-0">
+										<div th:each="img : *{img}" class="swiper-slide w-full flex-shrink-0">
 											<div class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
 												<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--0"
 													referrerpolicy="no-referrer" fetchpriority="high"
@@ -176,10 +212,9 @@ function openFailForm() {
 												</div>
 											</div>
 										</div>
-										</th:block>
 									</div>
 								</div>
-								<th:block th:if="*{img != null}">
+								<th:block th:unless="*{img.size() eq 1}">
 								<button onclick="prevSlide()" class="w-7 h-7 text-black flex items-center justify-center absolute z-10 transition duration-250 transform -translate-y-1/2 top-1/2 focus:outline-none rounded-full text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl max-[1023px]:hidden left-4 bg-transparent shadow-transparent hover:bg-transparent hover:text-black !text-white !text-6xl swiper-button-disabled"
 										id="product-gallery-slider-prev" aria-label="prev-button" disabled="">
 									<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
@@ -234,7 +269,7 @@ function openFailForm() {
 								</button>
 								</th:block>
 							</div>
-							<th:block th:if="*{img != null}">
+							<th:block th:unless="*{img.size() eq 1}">
 							<div class="absolute z-10 px-2 py-1 text-sm text-white bg-black bg-opacity-50 rounded-full pointer-events-none top-6 right-6">
 								<span id="current-slide">1</span> / <span th:text="${#lists.size(ProductDetailDomain.img)}">전체 사진 개수</span>
 							</div>
@@ -370,10 +405,10 @@ function openFailForm() {
 									<h3>직거래</h3>
 									<p></p>
 								</div>
-								<dl class="flex flex-col gap-y-3">
+								<div class="flex flex-col gap-y-3">
 									<div class="flex justify-between items-center">
-										<dt class="whitespace-nowrap text-gray-500">만나서 직거래</dt>
-										<dd class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
+										<div class="whitespace-nowrap text-gray-500">만나서 직거래</div>
+										<div class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
 											<svg width="16" height="16" viewBox="0 0 10 10" fill="none"
 												xmlns="http://www.w3.org/2000/svg" class="text-jnGray-400">
 												<g id="ico_location">
@@ -381,12 +416,12 @@ function openFailForm() {
 												<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd"
 													d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
 													fill="currentColor"></path></g></g></svg>
-											<button class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
-												<p th:text="*{dealAddr}">직거래 지역</p>
-											</button>
-										</dd>
+											<span th:text="*{dealAddr}" class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
+												직거래 지역
+											</span>
+										</div>
 									</div>
-								</dl>
+								</div>
 							</div>
 						</th:block>
 						</div>
@@ -394,15 +429,15 @@ function openFailForm() {
 							<div class="flex detail-regular-12 items-start justify-start">
 								<span class="text-sm text-gray-600 min-w-[95px]">상품 상태</span>
 								<div class="text-sm text-gray-700">
-									<p th:if="*{productStatus eq 'Y'}">새 상품</p>
-									<p th:unless="*{productStatus eq 'Y'}">중고 상품</p>
+									<p th:if="*{productStatusCode eq 1}">새 상품</p>
+									<p th:if="*{productStatusCode eq 2}">중고 상품</p>
 								</div>
 							</div>
 						</div>
 						<div th:unless="${storeCheck}" class="flex items-center gap-4 space-s-4 pt-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white max-[479px]:px-4 max-[479px]:pb-4">
 							<div class="w-8 h-8">
 								<label for="heart-checkbox" class="relative cursor-pointer">
-									<input id="heart-checkbox" type="checkbox" class="peer hidden">
+									<input id="heart-checkbox" type="checkbox" class="peer hidden" th:checked="${bookmarkFlag}">
 									<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
 										class="w-8 h-8 transition-all duration-200 ease-in-out text-gray-400 peer-checked:text-red-500 transform peer-checked:scale-110">
 										<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
@@ -441,8 +476,8 @@ function openFailForm() {
 										<p class="mt-1 text-xs font-medium text-center">수정</p>
 									</button>
 								</li>
-								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button class="flex flex-col items-center py-[6px]">
+								<li id="dropdown-container" class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
+									<button onclick="toggleDropdown()" class="flex flex-col items-center py-[6px]">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path
 												d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
@@ -450,6 +485,15 @@ function openFailForm() {
 											<path d="M16 9L10.5 14.5L8 12" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 										<p class="mt-1 text-xs font-medium text-center">상태 변경</p>
 									</button>
+									<div id="dropdown-menu" class="hidden absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 transition-all duration-200">
+        								<div class="py-1" role="menu">
+           		 							<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none" 
+           		 							th:onclick="*{sellStatusCode eq 1}?'':'selectOption(1)'" th:disabled="*{sellStatusCode eq 1}">판매 중</button>
+            								<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none"
+											th:onclick="*{sellStatusCode eq 2}?'':'selectOption(2)'" th:disabled="*{sellStatusCode eq 2}">예약 중</button>
+            								<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" onclick="selectOption(3)">판매 완료</button>
+        								</div>
+    								</div>
 								</li>
 								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
 									<button class="flex flex-col items-center py-[6px]">
@@ -522,7 +566,7 @@ function openFailForm() {
 									<ul class="box-border flex text-center border border-gray-300 rounded items-center py-[18px] mt-5">
 										<li class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center">
 											<span class="text-xs font-normal text-gray-600 break-keep">판매상품</span>
-											<button th:text="*{productCnt}" class="block text-sm font-semibold text-jnblack mt-1 ">0</button></li>
+											<span th:text="*{productCnt}" class="block text-sm font-semibold text-black mt-1 ">0</span></li>
 										<li class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center">
 											<span class="text-xs font-normal text-jnGray-600 break-keep">거래후기</span>
 											<button th:text="*{reivewCnt}" class="block text-sm font-semibold text-jnblack mt-1 underline underline-offset-[3px]">0</button></li>
