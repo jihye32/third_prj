@@ -26,11 +26,11 @@ public class ProductDetailService {
 	}//searchProduct
 	
 	//선택된 상품 번호로 조회된 상품 정보 조합
-	public SellerDomain searchSeller(String store) {
+	public SellerDomain searchSeller(int ssnum) {
 		SellerDomain sd = new SellerDomain();
-		sd.setSellerProfile(pDAO.selectSellerProfile(store));
-		sd.setProductCnt(pDAO.cntSellProduct(store));
-		sd.setReivewCnt(pDAO.cntReview(store));
+		sd=pDAO.selectSellerInfo(ssnum);
+		sd.setProductCnt(pDAO.cntSellProduct(ssnum));
+		sd.setReivewCnt(pDAO.cntReview(ssnum));
 		
 		return sd;
 	}//searchProduct
@@ -69,4 +69,15 @@ public class ProductDetailService {
 	public boolean removeProduct(int pnum) {
 		return pDAO.deleteProduct(pnum)==1;
 	}//removeProduct
+	
+	//북마크 처리
+	public String searchBookmark(int pnum, int snum) {
+		return pDAO.selectBookmark(pnum, snum);
+	}//searchBookmark
+	public boolean addBookmark(int pnum, int snum) {
+		return pDAO.insertBookmark(pnum, snum)==1;
+	}//addBookmark
+	public boolean removeBookmark(int pnum, int snum) {
+		return pDAO.deleteBookmark(pnum, snum)==1;
+	}//removeBookmark
 }
