@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<th:block th:fragment="paymentFrm">
+<main role="main" aria-label="본문 영역" id="main-content" class="flex flex-col min-h-full relative">
+<th:block th:object="${BuyDomian}">
+<div class="flex-1 pt-6">
+	<div class="outline-none gap-4 flex flex-col mb-6 px-5">
+		<div class="flex flex-row justify-between items-center">
+			<h2 th:text="${type eq 1?'직거래로 구매':'택배거래로 구매'}" class="text-18 font-semibold text-gray-900">선택한 거래 방식</h2>
+		</div>
+		<div class="flex flex-row gap-4 items-center">
+			<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
+				<img class="w-full h-full object-cover" th:src="*{thumbnail}">
+			</div>
+			<div class="flex flex-col gap-1 flex-1">
+				<p th:text="*{title}"
+					class="text-16 font-semibold text-gray-700 line-clamp-2">
+					상품명</p>
+				<span th:text="|*{#numbers.formatInteger(price,3,'COMMA')}원|"
+					class="text-18 font-semibold text-gray-900"> 가격</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 택배 거래 선택 시 생성됨 -->
+	<form th:if="${type eq 2}">
+		<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
+		<div class="outline-none gap-4 flex flex-col justify-start items-stretch flex-nowrap p-5 w-full">
+			<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
+				<div class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
+					<input aria-invalid="false" class="bg-transparent border-none outline-none text-sm leading-5 flex-1" placeholder="이름 (20자 이내로 입력)" type="text" name="deliveryUserName">
+				</div>
+			</div>
+			<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
+				<div class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
+					<input aria-invalid="false" class="bg-transparent border-none outline-none text-sm leading-5 flex-1" placeholder="휴대폰 번호 (- 없이 숫자만 입력)" type="text" name="deliveryUserPhoneNo">
+				</div>
+			</div>
+			<button type="button" onclick="execDaumPostcode()" class="rounded inline-flex items-center gap-2 py-3 min-w-[75px] h-11 bg-white border text-gray-900 active:border-gray-900 px-3 border-gray-300 w-full justify-start" aria-placeholder="주소 검색">
+				<span class="whitespace-pre-line font-medium text-inherit text-14"><span class="whitespace-pre-line text-gray-500" id="roadAddr" th:text="${'주소검색'}"></span>
+				</span>
+			</button>
+			
+			<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
+				<div class="outline-none flex-row flex-nowrap py-3 pl-3 pr-2 h-11 flex justify-between items-center gap-2 border border-gray-300 rounded focus-within:border-gray-500 focus:border-gray-500 font-medium placeholder:text-gray-500 [&amp;&gt;input]:flex-1 [&amp;&gt;input]:w-0 [&amp;&gt;input]:placeholder:text-gray-500">
+					<input aria-invalid="false" class="bg-transparent border-none outline-none text-sm leading-5 flex-1" placeholder="상세주소 (예시: 101동 101호)" maxlength="50" type="text" name="deliveryAddressDetail">
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
+	<div id="payment-method"></div>
+	<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
+	<div class="outline-none flex flex-row justify-between items-center flex-nowrap py-6 px-5">
+		<h2 class="text-18 font-semibold text-gray-900">최종 결제 금액</h2>
+		<p th:text="|*{#numbers.formatInteger(price+price*charge/100,3,'COMMA')}원|" class="text-18 font-semibold text-Green-700">상품가격+수수료</p>
+	</div>
+	<div class="h-[1px] w-auto" style="background-color: rgb(241, 244, 246);"></div>
+	<section class="outline-none flex flex-row justify-start items-stretch flex-nowrap py-6 px-5">
+		<ul class="outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap w-full">
+			<li class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row">
+				<h3 class="text-14 font-regular text-gray-500 flex gap-[2px] items-center">
+					<span class="whitespace-pre-line text-gray-900">상품금액</span>
+				</h3> 
+				<span class="z-auto rounded-none relative text-right break-all">
+					<span class="whitespace-pre-line text-14 flex gap-1" aria-hidden="true">
+						<span th:text="|*{#numbers.formatInteger(price,3,'COMMA')}원|" class="whitespace-pre-line font-semibold text-gray-900">
+						상품 가격</span></span> </span>
+			</li>
+			<li class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row">
+				<h3 class="text-14 font-regular text-gray-500 flex gap-[2px] items-center">
+					<span class="whitespace-pre-line text-gray-900">안심결제 수수료</span>
+					<span th:text="|*{charge}%|" class="whitespace-pre-line text-gray-900 none"> 설정해둔 수수료</span>
+				</h3> 
+				<span class="z-auto rounded-none relative text-right break-all">
+					<span class="whitespace-pre-line text-14 flex gap-1" aria-hidden="true"> 
+						<span th:text="|*{#numbers.formatInteger(price*charge/100,3,'COMMA')}원|" class="whitespace-pre-line font-semibold" style="color: rgb(20, 19, 19);">
+						계산된 수수료 값</span></span></span>
+			</li>
+			<li class="outline-none gap-1 flex flex-row justify-start items-stretch flex-nowrap" style="color: rgb(156, 163, 175);">
+				<div class="z-auto rounded-none relative top-[-3px]">
+					<svg width="12" height="12" fill="currentColor"
+						viewBox="0 0 7 10" aria-labelledby="CDS-IconLineCornerIcon"
+						aria-hidden="true">
+						<path d="M.728 9.316V.064h.6v8.652h4.848v.6z"></path></svg>
+				</div> 
+				<span class="whitespace-pre-line text-12 font-medium order-payment-description-text">안심결제 수수료는 구매자가 부담합니다</span>
+			</li>
+		</ul>
+	</section>
+</div>
+<footer class="z-auto rounded-none static bg-gray-100 py-[20px] px-[24px] leading-[17px] tracking-[0.2px]">
+	<span class="text-12 font-regular whitespace-pre-line text-left text-gray-600 leading-[16px] tracking-[0.2px]">
+		<span>“중고나라” 상점의 판매상품을 제외한 모든 상품들에 대하여</span> <strong class="whitespace-pre-line font-medium text-gray-900">(주)중고나라</strong><span>는 통신판매중개자로서 거래 당사자가 아니며 판매 회원과 구매 회원 간의 상품거래 정보 및 거래에 관여하지 않고 어떠한 의무와 책임도 부담하지 않습니다.</span>
+	</span>
+</footer>
+<div class="sticky bottom-0 left-0 w-full bg-white py-4 px-5 z-50 mt-auto">
+	<!-- 이용약관 UI -->
+	<div id="agreement"></div>
+	<button class="w-full h-14 bg-black text-white font-bold rounded-lg text-16 active:bg-gray-800" id="payment-button" th:data-price="*{price+price*charge/100}" th:data-title="*{title}">
+		<span th:text="|*{#numbers.formatInteger(price+price*charge/100,3,'COMMA')}원 결제|">결제하기</span>
+	</button>
+</div>
+</th:block>
+</main>
+</th:block>
+</body>
+</html>

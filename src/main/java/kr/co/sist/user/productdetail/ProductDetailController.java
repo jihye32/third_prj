@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/product")
@@ -28,7 +27,7 @@ public class ProductDetailController {
 	
 	//상품 상세 화면 생성 및 상품 정보 가져오기
     @GetMapping("/{pnum}")
-    public String searchProductDetail(@PathVariable int pnum, HttpSession ss , Model model) {
+    public String searchProductDetail(@PathVariable String pnum, HttpSession ss , Model model) {
     	
     	ProductDetailDomain pdd = new ProductDetailDomain();
     	pdd.setBookmarkCnt(10);
@@ -46,7 +45,7 @@ public class ProductDetailController {
 //    	pdd.setImg(slist);
     	pdd.setPrice(100000000);
     	pdd.setProductNum(100);
-    	pdd.setProductStatusCode(1);
+    	pdd.setProductStatus("Y");
     	pdd.setSellStatusCode(1);//1: 판매중, 2: 예약중, 3: 판매완료
     	pdd.setThumbnail("https://img2.joongna.com/media/original/2026/01/16/176855323874331j_7cv0Z.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
     	pdd.setTitle("책책책책책책책책책");
@@ -90,21 +89,21 @@ public class ProductDetailController {
     	if(snum == pdd.getSellerCode()) {
     		isMe = true;
     		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
-    			sendFlag = ps.searchSendFlag(pnum); //발송 완료 false, 발송 안함/null true
+    			sendFlag = ps.searchSendFlag(Integer.parseInt(pnum)); //발송 완료 false, 발송 안함/null true
     			model.addAttribute("sendFlag", sendFlag);
     		}
     	}else {
-    		ps.modifyViewCnt(pnum);
+    		ps.modifyViewCnt(Integer.parseInt(pnum));
     		pdd.setViewCnt(pdd.getViewCnt()+1);
     		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
-    			boolean bookmark = (ps.searchBookmark(pnum, snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
+    			boolean bookmark = (ps.searchBookmark(Integer.parseInt(pnum), snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
     			model.addAttribute("bookmarkFlag", bookmark);
     		}
     	}
-    	isMe = true;
         model.addAttribute("storeCheck", isMe);
         model.addAttribute("ProductDetailDomain", pdd);
         model.addAttribute("SellerDomain", sd);
+        model.addAttribute("pnum", pnum);
         
         return "product_detail/product_detail";
     }
