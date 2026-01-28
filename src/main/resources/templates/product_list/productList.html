@@ -46,6 +46,13 @@ function openReportForm() {
 					class="mx-auto px-5 md:px-8 2xl:px-16 box-content pt-8 pb-16 bg-white lg:pt-[72px] lg:pb-20 max-w-[1024px] min-[1600px]:max-w-[1280px]">
 					<div class="w-full 2xl:-ms-9">
 						<div class="relative">
+							<div class="flex flex-col lg:flex-row lg:items-center gap-2 items-start mb-[10px]">
+							<th:block th:if="${param.keyword ne null}">
+								<h2 class="text-2xl lg:text-[28px] font-normal w-[calc(100%-30px)] lg:w-auto text-jnBlack">
+									<strong class="font-semibold">'<span th:text="${param.keyword}"></span>'</strong> 검색 결과</h2>
+								<p class="text-jnGray-700">총 12,472개</p>
+							</th:block>
+							</div>
 							<h1 class="a11yHidden">전체 카테고리 | 중고나라 - 안심되는 중고거래</h1>
 							<h2 class="text-[28px] font-normal mb-[10px]">검색 결과</h2>
 							<button class="absolute right-1 top-2 lg:hidden">
@@ -75,40 +82,72 @@ function openReportForm() {
 													<path stroke="#9CA3AF" stroke-linecap="round"
 														stroke-linejoin="round" stroke-width="1.2"
 														d="M8 2v12M2 8h12"></path></svg>
-											</button></td>
-										<td><div
-												class="flex items-center w-full chawkbazarBreadcrumb">
+											</button>
+										</td>
+										<td>
+											<div class="flex items-center w-full chawkbazarBreadcrumb">
 												<ol class="flex flex-wrap items-center w-full mt-0 lg:mt-0">
 													<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
 														<a class="text-base font-semibold text-jnBlack font-semibold text-base text-jnBlack"
-															href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD">전체</a>
+															th:href="@{/searchList(keyword=${param.keyword})}">전체</a>
 													</li>
+													<th:block th:if="${param.category ne null}">
+													<li class="pl-0 mx-2 mt-0 text-sm leading-5 text-jnGray-500 lg:mt-0">&gt;</li>
+													<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
+													<a th:text="${param.category}" class="text-base font-semibold text-jnBlack" th:href="@{/searchList(category=${param.category}, page=1)}">패션의류</a>
+													</li>
+													</th:block>
 												</ol>
-											</div></td>
+											</div>
+										</td>
 									</tr>
 									<tr>
 										<td>가격</td>
-										<td class="price-filter"><input type="text"
+										<td class="price-filter">
+											<input id="startPrice" type="text" th:value="${param.startPrice != null} ? ${param.startPrice} : ''"
 											class="w-[152px] border rounded border-jnGray-200 py-[10px] px-4 text-sm font-medium"
-											placeholder="최소 가격" data-idx="0"><span
-											class="mx-[6px]"><svg
+											placeholder="최소 가격" data-idx="0">
+											<span class="mx-[6px]">
+												<svg
 													xmlns="http://www.w3.org/2000/svg" width="10" height="4"
 													fill="none" class="inline">
 													<path fill="#5A616B"
-														d="M7.895.628 9.297.62q0 .651-.182 1.205-.182.545-.515.947-.326.401-.788.628-.454.22-1 .22-.636 0-1.129-.25-.484-.258-1.045-.773a3.5 3.5 0 0 0-.652-.507 1.25 1.25 0 0 0-.651-.182.94.94 0 0 0-.584.182 1.14 1.14 0 0 0-.378.5 2 2 0 0 0-.137.757H.796q0-.659.183-1.197.18-.545.507-.931.333-.395.788-.606a2.3 2.3 0 0 1 1-.213q.636 0 1.144.266.516.265 1.046.757.363.349.659.523.295.174.628.174a1 1 0 0 0 .599-.19q.257-.196.401-.537a1.95 1.95 0 0 0 .144-.765"></path></svg></span><input
-											type="text"
-											class="w-[152px] border rounded border-jnGray-200 py-[10px] px-4 text-sm font-medium"
+															d="M7.895.628 9.297.62q0 .651-.182 1.205-.182.545-.515.947-.326.401-.788.628-.454.22-1 .22-.636 0-1.129-.25-.484-.258-1.045-.773a3.5 3.5 0 0 0-.652-.507 1.25 1.25 0 0 0-.651-.182.94.94 0 0 0-.584.182 1.14 1.14 0 0 0-.378.5 2 2 0 0 0-.137.757H.796q0-.659.183-1.197.18-.545.507-.931.333-.395.788-.606a2.3 2.3 0 0 1 1-.213q.636 0 1.144.266.516.265 1.046.757.363.349.659.523.295.174.628.174a1 1 0 0 0 .599-.19q.257-.196.401-.537a1.95 1.95 0 0 0 .144-.765">
+													</path>
+												</svg>
+											</span>
+											<input id="endPrice" th:value="${param.endPrice != null} ? ${param.endPrice} : ''"
+											type="text" class="w-[152px] border rounded border-jnGray-200 py-[10px] px-4 text-sm font-medium"
 											placeholder="최대 가격" data-idx="1">
-										<button data-routerlink="true"
+										<button data-routerlink="true" id="submitBtn"
 												class="w-full mt-3 lg:mt-0 lg:w-auto bg-jnBlack py-[10px] px-4 m-0 lg:mx-2 rounded text-sm font-medium text-white">적용</button></td>
 									</tr>
+									<script type="text/javascript">
+									$('#submitBtn').click(function() {
+									    var url = new URL(window.location.href);  // 현재 URL
+									    var startPrice = $("#startPrice").val();
+									    var endPrice = $("#endPrice").val();
+									    // 유효성 검증 해야함
+									    
+									    
+									    // startPrice가 비어있지 않을 때만 URL에 추가
+									    if (startPrice !== null && startPrice !== '') {
+									        url.searchParams.set('startPrice', startPrice);
+									    }
+									
+									    // endPrice가 비어있지 않을 때만 URL에 추가
+									    if (endPrice !== null && endPrice !== '') {
+									        url.searchParams.set('endPrice', endPrice);
+									    }
+									    window.location.href = url.toString();    // 이동
+									});
+									</script>
 									<tr>
 										<td>선택한 필터</td>
 										<td><div
 												class="flex items-center justify-between w-full h-full border-none">
 												<div class="flex flex-wrap">
-													<div
-														class="flex items-center flex-shrink-0 py-2 pl-3 mb-2 mr-2 text-sm font-medium border rounded lg:m-0 lg:border-none lg:p-0 lg:text-base border-jnGray-300 text-jnBlack">
+													<div class="flex items-center flex-shrink-0 py-2 pl-3 mb-2 mr-2 text-sm font-medium border rounded lg:m-0 lg:border-none lg:p-0 lg:text-base border-jnGray-300 text-jnBlack">
 														<span class="truncate">전체</span>
 														<svg xmlns="http://www.w3.org/2000/svg" width="16"
 															height="16" fill="none" data-routerlink="true"

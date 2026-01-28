@@ -161,7 +161,7 @@
 							<ul id="myMenu" class="hidden border border-jnGray-300 z-10 text-xs text-center font-medium bg-white rounded-lg absolute flex flex-col justify-center top-[30px] right-[23px] w-[100px] [&amp;&gt;li]:mx-2 [&amp;&gt;li]:border-b [&amp;&gt;li]:border-jnGray-200 [&amp;&gt;li:last-of-type]:border-b-0">
 								<li class="pt-3 pb-2 ga4_main_top_menu">
 									<a href="/myPage/myPageFrm">
-										<p id="마이페이지">마이페이지</p>
+										<p>마이페이지</p>
 									</a>
 								</li>
 								<li class="pt-2 pb-3">
@@ -171,23 +171,21 @@
 						</li>
 					</ul>
 					<script th:inline="javascript">
-					    const userId = [[${loginFlag}]];
-					</script>
-					
-					<script>
-						document.getElementById("myBtn").addEventListener("click", function () {
+					$(function(){
+					    var userId = [[${session.uid}]];
+					    document.getElementById("myBtn").addEventListener("click", function () {
 					        const menu = document.getElementById("myMenu");
-
-					        if (userId) {
+					        if (userId !== null) {
 					            menu.classList.toggle("hidden");
 					            menu.classList.toggle("flex");
 					        } else {
 					            location.href = "/user/login/loginFrm";
-					        }
+					        }// end else
 					    });
-						function logout() {
-							location.href = "/logout"
-						}// logout
+					});
+					function logout() {
+						location.href = "/logout"
+					}// logout
 					</script>
 						
 					
