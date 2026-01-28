@@ -28,7 +28,6 @@ public class MainController {
 			for(int k = 1 ; k <= 6 ; k++) {
 				pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "많이 본 상품 제목"+eleCnt, "거래 지역", eleCnt, 1, 10000, null);
 				list.add(pd);
-				System.out.println(list);
 				eleCnt++;
 			}// end for
 			model.addAttribute("tempdata"+modelCnt,list);
@@ -50,7 +49,7 @@ public class MainController {
 			i++;
 		}// end for
 		
-//		session.setAttribute("uid", "!234");
+//		session.setAttribute("uid", "1234");
 		if(session.getAttribute("uid")!=null) {
 			model.addAttribute("loginFlag", true);
 		} else {
