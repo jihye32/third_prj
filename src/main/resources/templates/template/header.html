@@ -65,7 +65,7 @@
 	<div id="header_items_wrapper" class="px-4 md:px-8 lg:px-0 h-16 sm:h-20 lg:h-36 xl:h-40 w-full transition duration-200 ease-in-out border-b border-jnGray-300 fixed z-20 text-gray-700 bg-white innerSticky body-font">
 		<div class="h-full lg:h-20 xl:h-24 px-0 lg:px-8 2xl:px-16 max-w-[1024px] min-[1600px]:max-w-[1280px] flex items-center mx-auto box-content justify-between relative before:absolute before:w-screen before:bg-[#F1F1F1] before:bottom-0">
 			<div class="flex flex-1 lg:max-w-[200px]">
-				<a href="#" style="width: 200px; height: 30px"	class="ga4_main_top_logo max-[1023px]:!w-[97px] max-[1023px]:!h-[16px] lg:w-full lg:flex-1 inline-flex focus:outline-none relative">
+				<a href="/" style="width: 200px; height: 30px"	class="ga4_main_top_logo max-[1023px]:!w-[97px] max-[1023px]:!h-[16px] lg:w-full lg:flex-1 inline-flex focus:outline-none relative">
 					<img
 						src="https://web.joongna.com/main-web/assets/images/custom-logo.svg"
 						alt="Joonggonara"
@@ -75,7 +75,7 @@
 				</div>
 
 				<div class="hidden relative flex-1 ms-7 me-7 xl:ms-9 lg:block">
-					<form role="search" novalidate=""
+					<form role="search" id="searchFrm" action="/searchList"
 						class="w-full relative flex items-center h-10 overflow-hidden rounded-md bg-jnGray-200 px-3 py-[10px] lg:px-5 space-x-2">
 						<label for="search"
 							class="flex items-center py-0.5 flex-none w-4 h-4"> <svg
@@ -89,11 +89,18 @@
 							<path d="M21 21.8999L15.5 16.8999" stroke="currentColor"
 									stroke-width="1.5" stroke-linecap="round"
 									stroke-linejoin="round"></path></svg>
-						</label> <input id="search-box"
+						</label> <input id="search-box" name="keyword"
 							placeholder="어떤 상품을 찾으시나요? 카페상품, 앱상품 모두 검색"
 							class="flex-auto text-sm text-heading bg-transparent placeholder-[#9CA3AF] overflow-hidden text-ellipsis whitespace-nowrap outline-none" />
 					</form>
 				</div>
+				<script type="text/javascript">
+				$("#search-box").keyup(function(evt) {
+					if (evt.which == 13) {
+						$("#searchFrm").submit();
+					}// end if
+				});// keyup
+				</script>
 
 				<div class="hidden lg:flex relative w-[300px]">
 					<ul
@@ -143,7 +150,7 @@
 						</a>
 						</li>
 						<li class="relative flex flex-1 pl-3">
-							<button class="flex items-center justify-center [&>p]:ml-1">
+							<button id="myBtn" class="flex items-center justify-center [&>p]:ml-1">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 									fill="none">
 								<path stroke="#141313" stroke-linecap="round"
@@ -151,8 +158,39 @@
 										d="M16.775 7.716a3.619 3.619 0 1 1-7.238.005 3.619 3.619 0 0 1 7.238-.005M13.15 13.371c-4.026 0-7.298 3.184-7.4 7.145h14.8c-.102-3.961-3.374-7.145-7.4-7.145"></path></svg>
 								<p>마이</p>
 							</button>
+							<ul id="myMenu" class="hidden border border-jnGray-300 z-10 text-xs text-center font-medium bg-white rounded-lg absolute flex flex-col justify-center top-[30px] right-[23px] w-[100px] [&amp;&gt;li]:mx-2 [&amp;&gt;li]:border-b [&amp;&gt;li]:border-jnGray-200 [&amp;&gt;li:last-of-type]:border-b-0">
+								<li class="pt-3 pb-2 ga4_main_top_menu">
+									<a href="/myPage/myPageFrm">
+										<p id="마이페이지">마이페이지</p>
+									</a>
+								</li>
+								<li class="pt-2 pb-3">
+									<button onclick="logout()" class="cursor-pointer disabled:text-stone-400">로그아웃</button>
+								</li>
+							</ul>
 						</li>
 					</ul>
+					<script th:inline="javascript">
+					    const userId = [[${loginFlag}]];
+					</script>
+					
+					<script>
+						document.getElementById("myBtn").addEventListener("click", function () {
+					        const menu = document.getElementById("myMenu");
+
+					        if (userId) {
+					            menu.classList.toggle("hidden");
+					            menu.classList.toggle("flex");
+					        } else {
+					            location.href = "/user/login/loginFrm";
+					        }
+					    });
+						function logout() {
+							location.href = "/logout"
+						}// logout
+					</script>
+						
+					
 				</div>
 			</div>
 
@@ -181,37 +219,37 @@
 						<ul class="py-5 text-sm text-body max-h-[480px] overflow-y-scroll">
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=1">수입명품</a></li>
+								href="/searchList?category=1">수입명품</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=2">패션의류</a></li>
+								href="/searchList?category=2">패션의류</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=3">패션잡화</a></li>
+								href="/searchList?category=3">패션잡화</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=4">뷰티</a></li>
+								href="/searchList?category=4">뷰티</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=5">출산/유아동</a></li>
+								href="/searchList?category=5">출산/유아동</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=6">모바일/태블릿</a></li>
+								href="/searchList?category=6">모바일/태블릿</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=7">가전제품</a></li>
+								href="/searchList?category=7">가전제품</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=8">노트북/PC</a></li>
+								href="/searchList?category=8">노트북/PC</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=9">카메라/캠코더</a></li>
+								href="/searchList?category=9">카메라/캠코더</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=10">가구/인테리어</a></li>
+								href="/searchList?category=10">가구/인테리어</a></li>
 							<li class=""><a
 								class="flex items-center py-2 ps-5 xl:ps-7 pe-3 xl:pe-3.5 hover:text-heading hover:bg-gray-300"
-								href="/search?category=11">리빙/생활</a></li>
+								href="/searchList?category=11">리빙/생활</a></li>
 						</ul>
 					</div>
 				</div>
