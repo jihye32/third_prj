@@ -1,16 +1,16 @@
 package kr.co.sist.user;
-import kr.co.sist.admin.login.LoginController;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import jakarta.servlet.http.HttpSession;
-
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.servlet.http.HttpSession;
 
 
 ; 
@@ -18,11 +18,6 @@ import java.util.List;
 @Controller
 public class MainController {
 
-    private final LoginController loginController;
-
-    MainController(LoginController loginController) {
-        this.loginController = loginController;
-    }
 	@RequestMapping(value = "/", method = {GET, POST})
 	public String testIndex(Model model, HttpSession session) {
 		ProductDomain pd = null;
@@ -37,7 +32,6 @@ public class MainController {
 				eleCnt++;
 			}// end for
 			model.addAttribute("tempdata"+modelCnt,list);
-			System.out.println(list);
 			list= new ArrayList<ProductDomain>();
 			modelCnt++;
 		}// end for
@@ -56,8 +50,23 @@ public class MainController {
 			i++;
 		}// end for
 		
-		session.setAttribute("uid", "!234");
+//		session.setAttribute("uid", "!234");
+		if(session.getAttribute("uid")!=null) {
+			model.addAttribute("loginFlag", true);
+		} else {
+			model.addAttribute("loginFlag", false);
+		}// end else
 		
 		return "index";
 	}// testIndex
+	
+	
+	// 나중에 Security 사용하면 수정해야할 method
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("uid");
+		session.invalidate();
+		return "redirect:/";
+	}
+	
 }// class
