@@ -9,7 +9,7 @@
         FROM    product
         <where>
             <if test="keyword != null and keyword != ''">
-                AND productName LIKE '%' || #{keyword} || '%'
+                AND title LIKE '%' || #{keyword} || '%'
             </if>
         </where>
     </select>
@@ -18,18 +18,18 @@
         SELECT  *
         FROM    (SELECT rownum rnum, p.* FROM (
                    SELECT 
-                       productNo, productName, price, location, inputDate, sellState, thumbnail
+                       product_num, title, price, addr, input_date, product_status, thumbnail
                    FROM product
                    <where>
                        <if test="keyword != null and keyword != ''">
-                           AND productName LIKE '%' || #{keyword} || '%'
+                           AND title LIKE '%' || #{keyword} || '%'
                        </if>
                    </where>
                    ORDER BY 
                    <choose>
                        <when test="sortBy == 'lowPrice'"> price ASC </when>
                        <when test="sortBy == 'highPrice'"> price DESC </when>
-                       <otherwise> inputDate DESC </otherwise>
+                       <otherwise> input_date DESC </otherwise>
                    </choose>
                   ) p
         )
@@ -37,21 +37,32 @@
     </select>
 
     <select id="selectProductDetail" resultType="kr.co.sist.admin.product.AdminProductDomain" parameterType="int">
-        SELECT productNo, productName, price, description, sellState, inputDate, location, thumbnail
+        SELECT 
+            product_num, title, price, description, product_status, 
+            input_date, addr, thumbnail, status_code, delete_text, delete_flag
         FROM product
-        WHERE productNo = #{productNo}
+        WHERE product_num = #{product_num}
     </select>
 
     <update id="updateProductState" parameterType="kr.co.sist.admin.product.AdminProductDTO">
-        UPDATE product SET sellState = #{sellState} WHERE productNo = #{productNo}
+        UPDATE  product 
+        SET     product_status = #{sellState} 
+        WHERE   product_num = #{productNo}
     </update>
 
     <update id="deleteProduct" parameterType="kr.co.sist.admin.product.AdminProductDTO">
-        UPDATE product SET deleteFlag = 'Y', deleteReason = #{deleteReason}, deleteDate = SYSDATE WHERE productNo = #{productNo}
+        UPDATE  product 
+        SET     delete_flag = 1, 
+                delete_text = #{deleteReason}, 
+                input_date = SYSDATE 
+        WHERE   product_num = #{productNo}
     </update>
     
     <select id="selectProductImages" resultType="String" parameterType="int">
-        SELECT imageName FROM product_images WHERE productNo = #{productNo} ORDER BY imageOrder ASC
+        SELECT  imageName 
+        FROM    product_images 
+        WHERE   product_num = #{product_num} 
+        ORDER BY imageOrder ASC
     </select>
 
 </mapper>
