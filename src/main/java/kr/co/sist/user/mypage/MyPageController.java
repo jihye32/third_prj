@@ -21,7 +21,7 @@ public class MyPageController {
 		ProductDomain pd = null;
 		List<ProductDomain> list = new ArrayList<ProductDomain>();
 		for(int i =1; i<=6;i++) {
-			pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "판매 상품 제목", "거래 지역", 1, 1, 10000, null);
+			pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "판매 상품 제목", "거래 지역", null, null, 1, 1, 10000, null);
 			pd.setProductName(pd.getProductName()+i);
 			list.add(pd);
 		}
@@ -32,7 +32,7 @@ public class MyPageController {
 		
 		List<ProductDomain> list2 = new ArrayList<ProductDomain>();
 		for(int i =1; i<=6;i++) {
-			pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "찜 상품 제목", "거래 지역", 1, 1, 10000, null);
+			pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "찜 상품 제목", "거래 지역", null, null, 1, 1, 10000, null);
 			pd.setProductName(pd.getProductName()+i);
 			list2.add(pd);
 		}
