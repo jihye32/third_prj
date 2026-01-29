@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>sample</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+<link th:href="@{/css/test.css}" rel="stylesheet">
+<style>
+</style>
+<!-- JQuery CDN -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+function openPurchasedListForm() {
+    fetch('/myPage/myPageFrm/purchased')
+        .then(res => res.text())
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('구매내역'); // 서랍 여는 공통 함수 실행
+        });
+}
+$(function () {
+	
+    function resetTabs() {
+        $('.tab-item')
+            .removeClass('border-b-[2px] border-black text-black')
+            .addClass('text-[#9CA3AF]');
+    }// resetTabs
+
+    // 판매상품
+    $('#tab-sell').on('click', function () {
+        resetTabs();
+        $(this)
+            .addClass('border-b-[2px] border-black text-black')
+            .removeClass('text-[#9CA3AF]');
+
+        $('#sellList').show();
+        $('#likeList').hide();
+    });
+
+    // 찜
+    $('#tab-like').on('click', function () {
+        resetTabs();
+        $(this)
+            .addClass('border-b-[2px] border-black text-black')
+            .removeClass('text-[#9CA3AF]');
+        
+        $('#likeList').show();
+        $('#sellList').hide();
+    });
+	
+    // 구매 상품
+    $("#tab-buy").on('click', function () {
+    	openPurchasedListForm();
+	});// click
+});// ready
+</script>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<script
+	src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+
+</script>
+
+</head>
+<body>
+	<div id="__next">
+		<div class="flex flex-col min-h-screen bg-white">
+			<div th:replace="~{template/header :: headerImgFragment}"></div>
+			<div th:replace="~{template/header :: headerFragment}"></div>
+
+			<!-- 메인 디자인 넣는 곳 -->
+			<main class="relative flex-grow border-b-2" style="min-height: 0px !important; height: auto !important;">
+				<div>
+					<!-- <h1 class="a11yHidden">중고나라 내 가게 페이지</h1> -->
+					<div class="mx-auto md:px-8 2xl:px-16 box-content flex justify-between px-0 max-w-[1024px] min-[1600px]:max-w-[1280px] lg:gap-10">
+						<div class="mx-auto box-content max-w-[1024px] min-[1600px]:max-w-[1280px] basis-[calc(100%-180px)] flex-grow px-0 md:px-0 2xl:px-0">
+							<div class="block mt-8 lg:mt-[72px] mb-8 lg:mb-0">
+								<div class="relative col-span-2 w-full h-full text-black grid grid-cols-1 gap-x-0 gap-y-4 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5 lg:min-w-[800px]">
+									<div class="flex flex-col justify-start order-1 mx-5 sm:mx-0 row-span-2">
+										<div class="flex order-1 gap-3 items-center">
+											<div class="flex items-center translate-x-3">
+												<img alt="profile-image" width="60" height="60"
+													decoding="async" data-nimg="1"
+													class="rounded-full w-[48px] h-[48px] lg:w-[60px] lg:h-[60px] hidden"
+													style="color: transparent" src=""><img
+													alt="profile-image" loading="lazy" width="60" height="60"
+													decoding="async" data-nimg="1"
+													class="rounded-full w-[48px] h-[48px] lg:w-[60px] lg:h-[60px] box-content border-4 border-white -translate-x-3"
+													style="color: transparent"
+													src="https://img2.joongna.com/common/Profile/Default/profile_m.png">
+											</div>
+											<div class="flex-1">
+												<div
+													class="flex justify-between items-center mb-0 w-full sm:mb-2">
+													<h2 class="flex gap-1 items-center mr-3 font-semibold cursor-pointer text-[18px] lg:text-[24px] leading-[39px] lg:gap-2">
+													상점명
+													</h2>
+														<div id="deleteCountBtn" class="flex items-center justify-center gap-2
+											       px-3.5 xl:px-4 text-sm font-semibold
+											       text-white rounded-md cursor-pointer
+											       h-11 bg-red-300 hover:bg-red-500">회원 탈퇴
+													</div>
+												</div>
+												<div class="min-[480px]:relative flex space-x-[6px] text-[#787E89] text-[12px] mb-[1px] flex-auto"></div>
+											</div>
+										</div>
+										<div class="flex order-2 items-start mt-5 lg:mt-8 lg:order-3">
+												<input id="search-box" placeholder="소개글을 작성해주세요" class="flex-auto text-sm text-heading bg-transparent placeholder-[#9CA3AF] overflow-hidden text-ellipsis whitespace-nowrap outline-none">
+											<div id="deleteCountBtn" class="flex items-center justify-center gap-2
+											       px-3.5 xl:px-4 text-sm font-semibold
+											       text-white rounded-md cursor-pointer
+											       h-11 bg-gray-500/50 hover:bg-black">프로필 수정
+													</div>
+										</div>
+									</div>
+									
+									<div class=" flex relative justify-evenly py-4 rounded-lg border border-gray-300 pl-[8px] pr-[15px] lg:py-6 order-2 w-auto lg:order-3">
+										<dl class="flex justify-between items-center text-center text-jnGray-600 w-full m-0 [&amp;_div]:w-full [&amp;_div]:before:right-0 [&amp;_div]:before:top-1/2 [&amp;_div]:before:-translate-y-1/2 [&amp;_div]:before:absolute [&amp;_div]:before:w-[1px] [&amp;_div]:before:h-[40px] [&amp;_div]:before:bg-gray-300 [&amp;_div_dt]:text-[12px] [&amp;_div_dd]:text-[16px] lg:[&amp;_div_dt]:text-[14px] lg:[&amp;_div_dd]:text-[22px]">
+											<div class="relative">
+												<dt class="justify-center mt-0">판매 상품 수</dt>
+												<dd class="font-semibold text-jnblack">0</dd>
+											</div>
+											<div class="relative cursor-pointer">
+												<dt class="justify-center mt-0">거래후기</dt>
+												<dd class="font-semibold underline text-jnblack">0</dd>
+											</div>
+											<div class="relative">
+												<div id="infoChangeBtn" class="flex items-center justify-center gap-2
+											       px-3.5 xl:px-4 text-sm font-semibold
+											       text-white rounded-md cursor-pointer
+											       h-11 bg-black hover:bg-black">판매 등록
+													</div>
+											</div>
+											<div class="relative">
+												<div id="infoChangeBtn" class="flex items-center justify-center gap-2
+											       px-3.5 xl:px-4 text-sm font-semibold
+											       text-white rounded-md cursor-pointer
+											       h-11 bg-black hover:bg-black">개인 정보 변경
+													</div>
+											</div>
+										</dl>
+									</div>
+								</div>
+							</div>
+							
+							<div class="px-0 mt-8 lg:mt-[60px] mx-5 sm:mx-0">
+								<div class="flex flex-col mb-4 w-full lg:mb-5">
+									<h3 class="text-lg font-bold md:text-[22px] text-jnBlack">내
+										상품</h3>
+									<div class="mt-3 mr-0 mb-9 lg:mt-2">
+										<ul
+											class="colors flex flex-nowrap justify-between lg:justify-start -me-3 border-b border-[#DADEE5]">
+											<li id="tab-sell" class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-black border-b-[2px] border-black">판매상품</li>
+											<li id="tab-like" class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">찜</li>
+											<li id="tab-buy" class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">구매상품</li>
+										</ul>
+									</div>
+									<div class="flex flex-wrap justify-between items-center">
+										<div
+											class="flex-shrink-0 mb-1 text-sm text-body md:text-base pe-4 md:me-6 lg:block">
+											총
+											<!-- -->
+											0
+											<!-- -->
+											개
+										</div>
+										<ul class="flex space-x-3">
+											<li><button class="text-sm font-medium text-[#141313]">최신순</button></li>
+											<li><span
+												class="inline-block mb-0 w-[1px] h-[10px] border border-[#DADEE5]"></span></li>
+											<li><button class="text-sm font-medium text-[#787E89]">낮은가격순</button></li>
+											<li><span
+												class="inline-block mb-0 w-[1px] h-[10px] border border-[#DADEE5]"></span></li>
+											<li><button class="text-sm font-medium text-[#787E89]">높은가격순</button></li>
+										</ul>
+									</div>
+								</div>
+								
+								
+								
+								<div id="sellList">
+								<th:block th:if="${tempData eq null}">
+								<p class="py-12 text-center">선택된 조건에 해당하는 상품이 없습니다.</p>
+								</th:block>
+								<ul class="grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5 lg:gap-x-5 xl:gap-x-7 xl:gap-y-5 2xl:gap-y-8 search-results [&amp;_div]:ps-0">
+								<li th:each="temp : ${tempData}" th:object="${temp}" class="">
+									<a class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+								href="/product/224445272">
+										<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+										<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+										<img alt="아이폰 16 화이트 128기가 배터리96" referrerpolicy="no-referrer"
+											loading="lazy" decoding="async" data-nimg="fill"
+											class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+											src="https://img2.joongna.com/media/original/2026/01/23/1769150260008UR5_G085D.jpg?impolicy=thumb&amp;size=150"
+											style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+									</div>
+									<div class="w-full overflow-hidden p-2 px-0">
+										<h2 th:text="*{productName}" class="line-clamp-2 min-h-[2lh] text-sm md:text-base max-lg:!min-h-[20px]">상품명</h2>
+										<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
+											class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5 max-lg:mt-1">가격</div>
+										<div class="mt-1 mb-2 min-h-6 max-lg:mb-0 max-lg:mt-1.5">
+											<span th:text="*{tradingArea}" class="text-sm text-gray-400 max-lg:text-xs">강일동</span>
+											<span class="mx-1 text-sm text-gray-400">|</span>
+											<span class="text-sm text-gray-400 max-lg:text-xs">방금 전</span>
+										</div>
+										<div
+											class="flex lg:justify-between max-lg:flex-col max-lg:gap-2 max-lg:mt-3">
+											<div class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5 max-lg:hidden"></div>
+											<div class="text-xs text-gray-400 text-muted">찜 0 ∙ 채팅 0</div>
+										</div>
+									</div></a></li>
+								</ul>
+								</div>
+								
+								
+								<div id="likeList" style="display:none;">
+								<th:block th:if="${tempData2 == null or #lists.isEmpty(tempData2)}">
+      							  <p class="py-12 text-center">찜한 상품이 없습니다.</p>
+    							</th:block>
+								<ul class="grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5 lg:gap-x-5 xl:gap-x-7 xl:gap-y-5 2xl:gap-y-8 search-results [&amp;_div]:ps-0">
+								<li th:each="temp : ${tempData2}" th:object="${temp}" class="">
+									<a class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+								href="/product/224445272">
+										<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+										<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+										<img alt="아이폰 16 화이트 128기가 배터리96" referrerpolicy="no-referrer"
+											loading="lazy" decoding="async" data-nimg="fill"
+											class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+											src="https://img2.joongna.com/media/original/2026/01/23/1769150260008UR5_G085D.jpg?impolicy=thumb&amp;size=150"
+											style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+										
+										<div class="absolute bottom-2 z-20 right-2 w-6 h-6">
+											<label for=":rg:" class="relative cursor-pointer"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="pointer-events-none w-6 h-6">
+													<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z" stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input id=":rg:" type="checkbox" class="a11yHidden">
+										</div>
+
+									</div>
+									<div class="w-full overflow-hidden p-2 px-0">
+										<h2 th:text="*{productName}" class="line-clamp-2 min-h-[2lh] text-sm md:text-base max-lg:!min-h-[20px]">상품명</h2>
+										<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
+											class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5 max-lg:mt-1">가격</div>
+										<div class="mt-1 mb-2 min-h-6 max-lg:mb-0 max-lg:mt-1.5">
+											<span th:text="*{tradingArea}" class="text-sm text-gray-400 max-lg:text-xs">강일동</span>
+											<span class="mx-1 text-sm text-gray-400">|</span>
+											<span class="text-sm text-gray-400 max-lg:text-xs">방금 전</span>
+										</div>
+										<div
+											class="flex lg:justify-between max-lg:flex-col max-lg:gap-2 max-lg:mt-3">
+											<div class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5 max-lg:hidden"></div>
+											<div class="text-xs text-gray-400 text-muted">찜 0 ∙ 채팅 0</div>
+										</div>
+									</div></a></li>
+								</ul>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="Toastify"></div>
+			</main>
+
+			<div th:replace="~{template/footer :: footerFragment}"></div>
+		</div>
+	</div>
+	<div th:replace="~{template/wrapper_frm :: drawerFrame}"></div>
+</body>
+</html>
