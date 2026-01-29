@@ -1,4 +1,4 @@
-package kr.co.sist.user;
+package kr.co.sist.user.productlist;
 
 import lombok.Getter;
 import lombok.Setter;

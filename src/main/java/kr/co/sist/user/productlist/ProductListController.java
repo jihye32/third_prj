@@ -3,6 +3,7 @@ package kr.co.sist.user.productlist;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,9 @@ import kr.co.sist.user.ProductDomain;
 
 @Controller
 public class ProductListController {
+	
+	@Autowired(required = false) 
+	private ProductListService pls;
 	
 	@GetMapping("/searchList")
 	public String productList(Model model, ProductRangeDTO prDTO) {
@@ -22,8 +26,20 @@ public class ProductListController {
 			list.add(pd);
 		} 
 		model.addAttribute("tempData", list);
-
 		
+		
+		String selCategoryName = "";
+		int selCategoryNum =0;
+		selCategoryNum = prDTO.getCategoryNum();
+		List<CategoryDomain> categorylist = pls.searchCategory();
+		if(categorylist != null) {
+		for(CategoryDomain cd : categorylist) {
+			if(cd.getCategoryCode()==selCategoryNum) {
+				selCategoryName = cd.getCategoryText();
+			}// end if
+		}// end for
+		model.addAttribute("selCategoryName", selCategoryName);
+		}
 		return "/product_list/productList";
 	}// productList
 	

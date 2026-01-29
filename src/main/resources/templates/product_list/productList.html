@@ -94,7 +94,7 @@ function openReportForm() {
 													<th:block th:if="${param.category ne null}">
 													<li class="pl-0 mx-2 mt-0 text-sm leading-5 text-jnGray-500 lg:mt-0">&gt;</li>
 													<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
-													<a th:text="${param.category}" class="text-base font-semibold text-jnBlack" th:href="@{/searchList(category=${param.category}, page=1)}">패션의류</a>
+													<a th:text="${selCategoryName}" class="text-base font-semibold text-jnBlack" th:href="@{/searchList(category=${param.category}, page=1)}">패션의류</a>
 													</li>
 													</th:block>
 												</ol>
