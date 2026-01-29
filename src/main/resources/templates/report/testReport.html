@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>sample</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+<link th:href="@{/css/test3.css}" rel="stylesheet">
+<link th:href="@{/css/test4.css}" rel="stylesheet">
+<script th:src="@{/css/test5.js}"></script>
+<script th:src="@{/css/test6.js}"></script>
+<style>
+</style>
+<!-- JQuery CDN -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+function testtest() {
+    fetch('/test/testReport/wrapper')
+        .then(res => res.text())
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('신고하기'); // 서랍 여는 공통 함수 실행
+        });
+}
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+</script>
+
+</head>
+<body>
+	<div id="__next">
+		<div class="flex flex-col min-h-screen bg-white">
+			<div th:replace="~{template/header :: headerImgFragment}"></div>
+			<div th:replace="~{template/header :: headerFragment}"></div>
+			
+			<!-- 메인 디자인 넣는 곳 -->
+			<main class="relative flex-grow border-b-2"
+				style="min-height: 0px !important; height: auto !important;">
+				<div
+					class="mx-auto px-5 md:px-8 2xl:px-16 box-content max-w-[1024px] min-[1600px]:max-w-[1280px]"
+					style="height: auto !important;">
+					
+					<div onclick="testtest()">
+													<span style="display: contents; cursor: pointer;"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img
+																	alt="인텔 i5 12400F 메인보드, 삼성PC4-3200AA 8기가X2, 3060 8기가(Ti아님)"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/13/1768286887222lnK_fVez9.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">인텔
+																	i5 12400F 메인보드, 삼성PC4-3200AA 8기가X2, 3060 8기가(Ti아님)</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">150,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">8일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></span>
+												</div>
+					
+					
+					
+					
+					<!-- 많이 본 상품 -->
+					<section class="max-w-[1024px] min-[1600px]:max-w-[1280px] m-auto">
+						<div class="relative heightFull mb-10 xl:mb-20">
+							<div class="mt-2 mb-6 md:mb-6 lg:mb-6 2xl:mb-6 3xl:mb-6">
+								<div class="flex justify-between items-center">
+									<h3 class="text-lg md:text-xl lg:text-2xl 2xl:text-3xl xl:leading-10 font-bold text-heading">
+									많이 본 상품
+									</h3>
+								</div>
+							</div>
+							<div class="carouselWrapper relative jn-carousel recentView">
+								<div
+									class="swiper swiper-initialized swiper-horizontal swiper-pointer-events recentViewSwiper"
+									dir="ltr">
+									<div class="swiper-wrapper">
+										<div class="swiper-slide swiper-slide-active carouselItem">
+											<div class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div th:each="productDomain : ${tempdata}" th:object="${productDomain}">
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/223536554"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="고전문구" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	th:src="@{*{thumbnail}}"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2 th:text="*{productName}"
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">상품 제목</h2>
+																<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">가격</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+											</div>
+										</div>
+										
+										
+										<div class="swiper-slide swiper-slide-next carouselItem">
+											<div class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div th:each="productDomain : ${tempdata}" th:object="${productDomain}">
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/223536554"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="고전문구" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	th:src="@{*{thumbnail}}"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2 th:text="*{productName}"
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">상품 제목</h2>
+																<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">가격</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+											</div>
+										</div>
+										
+										
+										<div class="swiper-slide carouselItem">
+											<div class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div th:each="productDomain : ${tempdata}" th:object="${productDomain}">
+													<span style="display: contents; cursor: pointer;">
+														<a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/223536554">
+															<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="고전문구" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	th:src="@{*{thumbnail}}"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2 th:text="*{productName}"
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">상품 제목</h2>
+																<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">가격</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div>
+														</a>
+													</span>
+												</div>
+											</div>
+										</div>
+										
+										
+										<div class="swiper-slide carouselItem">
+											<div class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div th:each="productDomain : ${tempdata}" th:object="${productDomain}">
+													<span style="display: contents; cursor: pointer;">
+														<a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/223536554">
+															<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="고전문구" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	th:src="@{*{thumbnail}}"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2 th:text="*{productName}"
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">상품 제목</h2>
+																<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">가격</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div>
+														</a>
+													</span>
+												</div>
+											</div>
+										</div>
+										
+										
+										<div class="swiper-slide carouselItem">
+											<div class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div th:each="productDomain : ${tempdata}" th:object="${productDomain}">
+													<span style="display: contents; cursor: pointer;">
+														<a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/223536554">
+															<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="고전문구" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	th:src="@{*{thumbnail}}"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2 th:text="*{productName}"
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">상품 제목</h2>
+																<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">가격</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div>
+														</a>
+													</span>
+												</div>
+	
+											</div>
+										</div>
+									</div>
+									
+									<div
+										class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+										<span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span>
+										<span class="swiper-pagination-bullet"></span>
+										<span class="swiper-pagination-bullet"></span>
+										<span class="swiper-pagination-bullet"></span>
+										<span class="swiper-pagination-bullet"></span>
+									</div>
+								</div>
+								<button
+									class="w-7 h-7 text-black absolute transition duration-250 transform hover:bg-gray-900 hover:text-white focus:outline-none text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl left-0 bg-white/25 shadow-transparent !w-12 !h-12 rounded-none hidden lg:flex justify-center items-center z-10 top-[66px] min-[1600px]:top-[84px] translate-y-0 m-0 swiper-button-disabled"
+									id="recentView-prev" aria-label="prev-button" disabled="">
+									<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
+										xmlns="http://www.w3.org/2000/svg" class="rotate-0">
+										<g filter="url(#filter0_d_19461_8348)">
+										<path fill-rule="evenodd" clip-rule="evenodd"
+											d="M15.8122 5.34218C16.4517 6.0669 16.3825 7.17278 15.6578 7.81224L8.645 14L15.6578 20.1878C16.3825 20.8273 16.4517 21.9331 15.8122 22.6579C15.1727 23.3826 14.0669 23.4517 13.3421 22.8122L5.26706 15.6872C4.25192 14.7914 4.25192 13.2086 5.26706 12.3129L13.3421 5.1878C14.0669 4.54835 15.1727 4.61747 15.8122 5.34218Z"
+											fill="white"></path></g>
+										<defs>
+										<filter id="filter0_d_19461_8348" x="0.505707" y="0.75"
+											width="19.7443" height="26.5" filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB">
+										<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+										<feColorMatrix in="SourceAlpha" type="matrix"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+											result="hardAlpha"></feColorMatrix>
+										<feOffset></feOffset>
+										<feGaussianBlur stdDeviation="2"></feGaussianBlur>
+										<feComposite in2="hardAlpha" operator="out"></feComposite>
+										<feColorMatrix type="matrix"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"></feColorMatrix>
+										<feBlend mode="normal" in2="BackgroundImageFix"
+											result="effect1_dropShadow_19461_8348"></feBlend>
+										<feBlend mode="normal" in="SourceGraphic"
+											in2="effect1_dropShadow_19461_8348" result="shape"></feBlend></filter></defs></svg>
+								</button>
+								<button
+									class="w-7 h-7 text-black absolute transition duration-250 transform hover:bg-gray-900 hover:text-white focus:outline-none text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl right-0 bg-white/25 shadow-transparent !w-12 !h-12 rounded-none hidden lg:flex justify-center items-center z-10 top-[66px] min-[1600px]:top-[84px] translate-y-0 m-0"
+									id="recentView-next" aria-label="next-button">
+									<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
+										xmlns="http://www.w3.org/2000/svg" class="rotate-180">
+										<g filter="url(#filter0_d_19461_8348)">
+										<path fill-rule="evenodd" clip-rule="evenodd"
+											d="M15.8122 5.34218C16.4517 6.0669 16.3825 7.17278 15.6578 7.81224L8.645 14L15.6578 20.1878C16.3825 20.8273 16.4517 21.9331 15.8122 22.6579C15.1727 23.3826 14.0669 23.4517 13.3421 22.8122L5.26706 15.6872C4.25192 14.7914 4.25192 13.2086 5.26706 12.3129L13.3421 5.1878C14.0669 4.54835 15.1727 4.61747 15.8122 5.34218Z"
+											fill="white"></path></g>
+										<defs>
+										<filter id="filter0_d_19461_8348" x="0.505707" y="0.75"
+											width="19.7443" height="26.5" filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB">
+										<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+										<feColorMatrix in="SourceAlpha" type="matrix"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+											result="hardAlpha"></feColorMatrix>
+										<feOffset></feOffset>
+										<feGaussianBlur stdDeviation="2"></feGaussianBlur>
+										<feComposite in2="hardAlpha" operator="out"></feComposite>
+										<feColorMatrix type="matrix"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"></feColorMatrix>
+										<feBlend mode="normal" in2="BackgroundImageFix"
+											result="effect1_dropShadow_19461_8348"></feBlend>
+										<feBlend mode="normal" in="SourceGraphic"
+											in2="effect1_dropShadow_19461_8348" result="shape"></feBlend></filter></defs></svg>
+								</button>
+							</div>
+						</div>
+					</section>
+					
+					<!-- 찜이 많은 상품 -->
+					<section class="max-w-[1024px] min-[1600px]:max-w-[1280px] m-auto">
+						<div class="relative heightFull mb-10 xl:mb-20">
+							<div class="mt-2 mb-6 md:mb-6 lg:mb-6 2xl:mb-6 3xl:mb-6">
+								<div class="flex justify-between items-center">
+									<h3
+										class="text-lg md:text-xl lg:text-2xl 2xl:text-3xl xl:leading-10 font-bold text-heading">찜이
+										많은 상품</h3>
+								</div>
+							</div>
+							<div class="carouselWrapper relative jn-carousel wish">
+								<div class="swiper MostBookmarkSwiper" dir="ltr">
+									<div class="swiper-wrapper">
+										<div class="swiper-slide swiper-slide-active carouselItem">
+											<div
+												class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224321895"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="골든듀 18K 펄시피아쁘띠귀걸이 옐골"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/20/1768879796440sSf_3eKvx.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">골든듀
+																	18K 펄시피아쁘띠귀걸이 옐골</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">555,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224354346"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="2122 버튼 커스텀 X 커스텀엑스 스노우보드 데크 158cm"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/17689533687323WQ_XY3cb.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">2122
+																	버튼 커스텀 X 커스텀엑스 스노우보드 데크 158cm</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">300,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">신내1동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224387040"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="극희귀]그랜드세이코 하이비트 4520-8000 남성시계"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1769005548507Brn_406j5.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">극희귀]그랜드세이코
+																	하이비트 4520-8000 남성시계</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">1,990,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">양평제1동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">15시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224353600"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="amd 5600x + tuf gaming b550 plus"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768951354383wMd_Vafuo.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">amd
+																	5600x + tuf gaming b550 plus</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">250,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">마산동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224366145"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="MSI RTX 3080 GAMING Z TRIO 10GB LHR"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/17689732565379DM_YvpgO.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">MSI
+																	RTX 3080 GAMING Z TRIO 10GB LHR</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">410,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">가양제1동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">4시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224373050"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="레고 76300 배트맨 DC 아캄 어사일럼 미개봉 신제품"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768983353209UFy_VR9uG.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">레고
+																	76300 배트맨 DC 아캄 어사일럼 미개봉 신제품</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">354,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">송포동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">16시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+											</div>
+										</div>
+										<div class="swiper-slide swiper-slide-next carouselItem">
+											<div
+												class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224345993"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="기가바이트 RTX 5060 OC LP 그래픽카드"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/20/1768916056638fyx_XLivb.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">기가바이트
+																	RTX 5060 OC LP 그래픽카드</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">450,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">성내제2동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224366357"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="던스 블랙야채 배기 8692 (2회착)"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/176897355396921V_qJora.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">던스
+																	블랙야채 배기 8692 (2회착)</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">51,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">1시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224378895"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="노모스 클럽캠퍼스 38 국내스탬핑 팝니다"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768992717583nuL_aDwGq.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">노모스
+																	클럽캠퍼스 38 국내스탬핑 팝니다</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">1,200,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">둔촌제1동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">18시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224390343"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="게이밍 노트북 lenovo legion 5 15arh05h 부품용"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/22/1769016304044ofR_7YGsA.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">게이밍
+																	노트북 lenovo legion 5 15arh05h 부품용</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">200,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">창릉동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">12시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224023663"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="맥미니 m4 pro 기본형" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/12/1768199038714pi2_JdR2j.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">맥미니
+																	m4 pro 기본형</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">1,490,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">동백2동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224064185"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img
+																	alt="인텔 i5 12400F 메인보드, 삼성PC4-3200AA 8기가X2, 3060 8기가(Ti아님)"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/13/1768286887222lnK_fVez9.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">인텔
+																	i5 12400F 메인보드, 삼성PC4-3200AA 8기가X2, 3060 8기가(Ti아님)</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">150,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">8일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+											</div>
+										</div>
+										<div class="swiper-slide carouselItem">
+											<div
+												class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224181334"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="갤럭시탭 S11 울트라256 wifi [미개봉신품}"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/16/1768546634299snS_Lar7u.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">갤럭시탭
+																	S11 울트라256 wifi [미개봉신품}</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">1,250,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">가산동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224285548"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="반다이 SHF 아이언맨 마크 42 판매합니다"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/19/1768797182040TXZ_58995.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">반다이
+																	SHF 아이언맨 마크 42 판매합니다</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">40,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">3일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224355134"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="ccs 모쇼 각종 중제 합금 제품 판매 합니다"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768955628494wFG_xKOqj.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">ccs
+																	모쇼 각종 중제 합금 제품 판매 합니다</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">130,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">묵제2동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224364608"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="지존187 팬더샵 샤넬19백 가방 라지 은장(새상품)70-&gt;60내림"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768971048923p1r_QpWFT.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">지존187
+																	팬더샵 샤넬19백 가방 라지 은장(새상품)70-&gt;60내림</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">600,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">송도1동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">14시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224371348"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="베베드피노 상하100" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768980853799Lov_dfjin.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">베베드피노
+																	상하100</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">33,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">21시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224372124"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="레고 31120 크세성 판매합니다"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768981936161BZc_aOYzQ.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">레고
+																	31120 크세성 판매합니다</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">130,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">장항2동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">21시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+											</div>
+										</div>
+										<div class="swiper-slide carouselItem">
+											<div
+												class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224381008"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="새상품 프레젠트프로젝트 다이퍼백 핑크리본 M"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768996000908Bwf_50kg0.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">새상품
+																	프레젠트프로젝트 다이퍼백 핑크리본 M</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">145,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">7시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224382885"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="아이폰 16 Pro 화이트 티타늄 1TB 모델"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1768998759430y8a_2KXuw.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">아이폰
+																	16 Pro 화이트 티타늄 1TB 모델</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">900,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">6시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224387044"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="굿스마일 블루 아카이브 시로코 수영복 1/7 스케일 피규어"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/21/1769005411119mN2_NHsR0.JPG?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">굿스마일
+																	블루 아카이브 시로코 수영복 1/7 스케일 피규어</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">90,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">매탄1동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">15시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224392199"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="5070ti 미개봉 팝니다" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/22/1769035943498gEO_60YAN.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">5070ti
+																	미개봉 팝니다</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">1,050,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">39분 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/202437552"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="한섬 타임 리브블록 구스다운점퍼66 신상"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/cafe-article-data/live/2025/02/25/1097051268/1740463709359_000_n2Bvd_main.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">한섬
+																	타임 리브블록 구스다운점퍼66 신상</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">350,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">2일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/223997961"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="후지필름 X-M5" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/11/1768131627675M6o_92waG.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">후지필름
+																	X-M5</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">990,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">괘법동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">20시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+											</div>
+										</div>
+										<div class="swiper-slide carouselItem">
+											<div
+												class="grid gap-x-2 gap-y-2 bg-white grid-cols-3 md:grid-cols-6 sm:gap-x-4 sm:gap-y-4">
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224209456"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="레고 스타워즈 AT-TE 워커 75337"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/17/1768620912225xY2_u5zq6.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">레고
+																	스타워즈 AT-TE 워커 75337</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">120,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">구래동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">1시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224211035"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="캐논 eos r8 판매합니다" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/17/17686236181537Yk_xx8Lf.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">캐논
+																	eos r8 판매합니다</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">1,250,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">구의제3동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">3시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224232216"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="지샥 GW-5000U-1JF" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/17/1768657734858HfD_kdpNi.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">지샥
+																	GW-5000U-1JF</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">185,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">시전동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">19시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224256300"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="막스마라큐브여성롱패딩" referrerpolicy="no-referrer"
+																	loading="lazy" decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/18/1768724523110Vt1_j6Nl4.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">막스마라큐브여성롱패딩</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">250,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">2일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224267026"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="아이패드 미니 6세대 256G 퍼플 셀룰러 팝니다"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/18/17687411454318HZ_LcPMI.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">아이패드
+																	미니 6세대 256G 퍼플 셀룰러 팝니다</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">500,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">식사동</span><span
+																		class="mx-1 text-sm text-gray-400">|</span><span
+																		class="text-sm text-gray-400">21시간 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5">
+																	<span
+																		class="px-1 h-4 whitespace-nowrap rounded-sm border detail-medium-10 round text-jnSuccessBlue bg-jnGray-100 border-jnGray-200 undefined">셀프검수</span><span
+																		class="px-1 h-4 font-bold whitespace-nowrap rounded-sm border detail-medium-10 round text-jnGray-800 border-jnGray-200 bg-jnGray-100">무료배송</span>
+																</div>
+															</div></a></span>
+												</div>
+												<div>
+													<span style="display: contents; cursor: pointer;"><a
+														class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+														href="/product/224279978"><div
+																class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+																<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+																<img alt="랑방 울 블렌드 퍼널넥 하프 코트 76 사이즈 한섬 타임 더캐시미어"
+																	referrerpolicy="no-referrer" loading="lazy"
+																	decoding="async" data-nimg="fill"
+																	class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+																	src="https://img2.joongna.com/media/original/2026/01/19/1768788513289mDb_QVl7c.jpg?impolicy=thumb&amp;size=150"
+																	style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+															</div>
+															<div class="w-full overflow-hidden p-2 px-0">
+																<h2
+																	class="line-clamp-2 min-h-[2lh] text-sm md:text-base">랑방
+																	울 블렌드 퍼널넥 하프 코트 76 사이즈 한섬 타임 더캐시미어</h2>
+																<div
+																	class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">395,000원</div>
+																<div class="mt-1 mb-2 min-h-6">
+																	<span class="text-sm text-gray-400">1일 전</span>
+																</div>
+																<div
+																	class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5"></div>
+															</div></a></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+										<span
+											class="swiper-pagination-bullet swiper-pagination-bullet-active"></span><span
+											class="swiper-pagination-bullet"></span><span
+											class="swiper-pagination-bullet"></span><span
+											class="swiper-pagination-bullet"></span><span
+											class="swiper-pagination-bullet"></span>
+									</div>
+								</div>
+								<button
+									class="w-7 h-7 text-black absolute transition duration-250 transform hover:bg-gray-900 hover:text-white focus:outline-none text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl left-0 bg-white/25 shadow-transparent !w-12 !h-12 rounded-none hidden lg:flex justify-center items-center z-10 top-[66px] min-[1600px]:top-[84px] translate-y-0 m-0 swiper-button-disabled"
+									id="wish-prev" aria-label="prev-button" disabled="">
+									<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
+										xmlns="http://www.w3.org/2000/svg" class="rotate-0">
+										<g filter="url(#filter0_d_19461_8348)">
+										<path fill-rule="evenodd" clip-rule="evenodd"
+											d="M15.8122 5.34218C16.4517 6.0669 16.3825 7.17278 15.6578 7.81224L8.645 14L15.6578 20.1878C16.3825 20.8273 16.4517 21.9331 15.8122 22.6579C15.1727 23.3826 14.0669 23.4517 13.3421 22.8122L5.26706 15.6872C4.25192 14.7914 4.25192 13.2086 5.26706 12.3129L13.3421 5.1878C14.0669 4.54835 15.1727 4.61747 15.8122 5.34218Z"
+											fill="white"></path></g>
+										<defs>
+										<filter id="filter0_d_19461_8348" x="0.505707" y="0.75"
+											width="19.7443" height="26.5" filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB">
+										<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+										<feColorMatrix in="SourceAlpha" type="matrix"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+											result="hardAlpha"></feColorMatrix>
+										<feOffset></feOffset>
+										<feGaussianBlur stdDeviation="2"></feGaussianBlur>
+										<feComposite in2="hardAlpha" operator="out"></feComposite>
+										<feColorMatrix type="matrix"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"></feColorMatrix>
+										<feBlend mode="normal" in2="BackgroundImageFix"
+											result="effect1_dropShadow_19461_8348"></feBlend>
+										<feBlend mode="normal" in="SourceGraphic"
+											in2="effect1_dropShadow_19461_8348" result="shape"></feBlend></filter></defs></svg>
+								</button>
+								<button
+									class="w-7 h-7 text-black absolute transition duration-250 transform hover:bg-gray-900 hover:text-white focus:outline-none text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl right-0 bg-white/25 shadow-transparent !w-12 !h-12 rounded-none hidden lg:flex justify-center items-center z-10 top-[66px] min-[1600px]:top-[84px] translate-y-0 m-0"
+									id="wish-next" aria-label="next-button">
+									<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
+										xmlns="http://www.w3.org/2000/svg" class="rotate-180">
+										<g filter="url(#filter0_d_19461_8348)">
+										<path fill-rule="evenodd" clip-rule="evenodd"
+											d="M15.8122 5.34218C16.4517 6.0669 16.3825 7.17278 15.6578 7.81224L8.645 14L15.6578 20.1878C16.3825 20.8273 16.4517 21.9331 15.8122 22.6579C15.1727 23.3826 14.0669 23.4517 13.3421 22.8122L5.26706 15.6872C4.25192 14.7914 4.25192 13.2086 5.26706 12.3129L13.3421 5.1878C14.0669 4.54835 15.1727 4.61747 15.8122 5.34218Z"
+											fill="white"></path></g>
+										<defs>
+										<filter id="filter0_d_19461_8348" x="0.505707" y="0.75"
+											width="19.7443" height="26.5" filterUnits="userSpaceOnUse"
+											color-interpolation-filters="sRGB">
+										<feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+										<feColorMatrix in="SourceAlpha" type="matrix"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+											result="hardAlpha"></feColorMatrix>
+										<feOffset></feOffset>
+										<feGaussianBlur stdDeviation="2"></feGaussianBlur>
+										<feComposite in2="hardAlpha" operator="out"></feComposite>
+										<feColorMatrix type="matrix"
+											values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"></feColorMatrix>
+										<feBlend mode="normal" in2="BackgroundImageFix"
+											result="effect1_dropShadow_19461_8348"></feBlend>
+										<feBlend mode="normal" in="SourceGraphic"
+											in2="effect1_dropShadow_19461_8348" result="shape"></feBlend></filter></defs></svg>
+								</button>
+							</div>
+						</div>
+					</section>
+				</div>
+				
+				<div
+					class="fixed z-20 hidden sm:block right-4 md:right-8 bottom-10 none"
+					style="opacity: 1;">
+					<div class="absolute w-full overflow-y-hidden bottom-8">
+						<div class="w-fit h-fit" style="transform: none;">
+							<svg xmlns="http://www.w3.org/2000/svg"
+								xmlns:xlink="http://www.w3.org/1999/xlink" width="160"
+								height="235" fill="none">
+								<g clip-path="url(#cta-qr-box_svg__a)">
+								<path fill="#fff"
+									d="M20 1h120c10.493 0 19 8.507 19 19v189H1V20C1 9.507 9.507 1 20 1"></path>
+								<path stroke="#DADEE5" stroke-width="2"
+									d="M20 1h120c10.493 0 19 8.507 19 19v189H1V20C1 9.507 9.507 1 20 1Z"></path>
+								<path fill="url(#cta-qr-box_svg__b)" d="M0 0h160v57H0z"
+									transform="translate(0 178)"></path>
+								<rect width="41" height="6" x="59.5" y="18" fill="#DADEE5"
+									rx="3"></rect>
+								<path fill="url(#cta-qr-box_svg__c)" d="M38 36h84v84H38z"></path>
+								<path fill="#141313"
+									d="M43.254 143.258v.952h-5.376v1.392c2.461.102 3.912.908 3.926 2.285-.014 1.45-1.684 2.27-4.482 2.27-2.827 0-4.497-.82-4.497-2.27 0-1.377 1.443-2.183 3.925-2.285v-1.392h-5.36v-.952zm-5.932 3.222c-2.095.015-3.34.528-3.325 1.407-.015.864 1.23 1.377 3.325 1.377 2.065 0 3.325-.513 3.325-1.377 0-.879-1.26-1.392-3.325-1.407m4.878-8.701v.938h-4.131c.073 1.465 2.226 2.6 4.526 2.842l-.425.908c-2.13-.257-4.13-1.209-4.848-2.666-.71 1.457-2.703 2.409-4.849 2.666l-.41-.908c2.256-.242 4.424-1.377 4.512-2.842h-4.102v-.938zm12.597.703v1.304c-.014 1.597-.014 3.384-.483 6.006l-1.172-.132c.498-2.49.498-4.321.498-5.874v-.351h-8.027v-.953zm1.421 8.907v.952H44.353v-.952h4.658v-4.659h1.128v4.659zm13.286-5.025v.967h-2.109v6.856h-1.143v-13.023h1.143v5.2zm-10.503-3.911v7.456c1.905-.007 3.846-.154 5.992-.6l.146.981c-2.241.454-4.262.586-6.24.586h-1.04v-8.423zm21.358-1.289v5.186h2.183v.966h-2.183v6.9h-1.143v-13.052zm-3.648 1.216v4.658h-4.746v3.047c2.417 0 4.102-.081 6.08-.454l.117.952c-2.051.381-3.794.469-6.3.483h-1.04v-4.98h4.747v-2.754h-4.776v-.952zm13.418-.484c1.744-.014 2.989 1.202 2.989 2.945s-1.245 2.944-2.989 2.944c-1.757 0-2.988-1.201-2.973-2.944-.015-1.743 1.216-2.959 2.973-2.945m0 .938c-1.113 0-1.948.835-1.933 2.007-.015 1.157.82 1.992 1.933 1.992 1.114 0 1.92-.835 1.934-1.992-.015-1.172-.82-2.007-1.934-2.007m7.94-1.655v7.09H96.97v-3.135h-1.728v3.032h-1.084v-6.738h1.084v2.739h1.728v-2.988zm-7.442 7.675v1.553h6.314v-1.553h1.128v5.157h-8.584v-5.157zm0 4.219h6.314v-1.714h-6.314zm20.508-11.909v13.023h-1.113v-13.023zm-2.622.278v12.085h-1.098v-6.328h-1.67c-.125 2.534-1.202 4.116-2.813 4.116-1.699 0-2.798-1.757-2.798-4.526 0-2.768 1.099-4.526 2.798-4.526 1.582 0 2.651 1.53 2.798 3.984h1.685v-4.805zm-5.581 1.905c-1.055 0-1.728 1.318-1.714 3.442-.014 2.109.659 3.442 1.714 3.428 1.055.014 1.729-1.319 1.729-3.428 0-2.124-.674-3.442-1.729-3.442m14.59 1.318c0 2.358 1.509 4.731 3.398 5.596l-.688.937c-1.48-.761-2.703-2.322-3.281-4.175-.579 1.949-1.802 3.619-3.282 4.41l-.747-.923c1.905-.938 3.428-3.443 3.428-5.845v-2.373h1.172zm6.211-3.501v13.052h-1.143v-7.661h-3.09v-.938h3.09v-4.453zm-89.97 23v13.023H32.62v-6.827h-3.106v-.952h3.106v-5.244zm-4.22 1.421c0 3.691-1.567 6.973-5.917 9.126l-.63-.923c3.53-1.706 5.163-4.211 5.39-7.266h-4.82v-.937zm11.72 0v4.556h-3.765v2.959c1.494-.008 2.907-.074 4.6-.352l.102.938c-1.846.322-3.326.38-4.966.38h-.85v-4.878h3.765v-2.636h-3.794v-.967zm5.815-1.421v13.023h-1.099v-6.915H44.06v6.241h-1.055v-12.056h1.055v4.863h1.919v-5.156zm11.909 0v5.376h2.182v.952h-2.182v6.695h-1.143v-13.023zm-2.403 2.095v.952h-7.749v-.952h3.355v-1.934h1.143v1.934zm-3.808 2.036c1.846 0 3.179 1.23 3.193 2.988-.014 1.758-1.347 2.988-3.193 2.988-1.86 0-3.208-1.23-3.193-2.988-.015-1.758 1.333-2.988 3.193-2.988m0 .967c-1.216 0-2.11.849-2.095 2.021-.014 1.187.88 2.022 2.095 2.007 1.201.015 2.08-.82 2.095-2.007-.015-1.172-.894-2.021-2.095-2.021m15.688-3.955v1.157h3.047v-2.285h1.157v9.507h-1.157v-3.472h-3.047v1.172h-5.976v-6.079zm-4.834.952v4.204h3.706v-4.204zm9.331 9.682v.967h-8.715v-4.072h1.157v3.105zm-4.497-6.679h3.047v-1.831h-3.047zm16.773-3.853v.967h-4.82v6.636c2.344 0 3.897-.081 5.699-.425l.146.952c-1.919.366-3.5.454-6.006.454h-.996v-8.584zm4.175-1.245v13.052h-1.158v-7.354H84.46v-.952h3.794v-4.746zm16.421 0v2.871h1.655v.967h-1.655v3.061h-1.114v-6.899zm-9.156.645v1.831h1.538v-1.831h.967v5.537H95.71v-5.537zm0 4.629h1.538v-1.89h-1.538zm4.322-4.629v1.831h1.538v-1.831h.966v5.537h-3.486v-5.537zm0 4.629h1.538v-1.89h-1.538zm4.834 2.182v3.047h-7.369v1.436h7.852v.937h-8.98v-3.237h7.383v-1.26h-7.426v-.923zm12.539-7.456v5.186h2.182v.966h-2.182v6.9h-1.143v-13.052zm-3.648 1.216v4.658h-4.746v3.047c2.417 0 4.102-.081 6.079-.454l.117.952c-2.05.381-3.794.469-6.299.483h-1.04v-4.98h4.747v-2.754h-4.776v-.952zm18.457 9.17v.967h-11.924v-.967h2.959v-3.516c-1.113-.578-1.787-1.516-1.787-2.695 0-2.022 1.978-3.34 4.761-3.355 2.783.015 4.761 1.333 4.761 3.355 0 1.157-.652 2.087-1.729 2.666v3.545zm-5.991-8.613c-2.139-.015-3.648.952-3.648 2.402s1.509 2.432 3.648 2.432c2.124 0 3.647-.982 3.647-2.432s-1.523-2.417-3.647-2.402m-1.846 8.613h3.721v-3.106a7.1 7.1 0 0 1-1.875.235 7.3 7.3 0 0 1-1.846-.22zm10.987-9.155-.103 7.617h-1.23l-.103-7.617zm-.718 10.693a.94.94 0 0 1-.938-.952c-.014-.513.425-.938.938-.938a.944.944 0 0 1 0 1.89"></path></g>
+								<defs>
+								<linearGradient id="cta-qr-box_svg__b" x1="80" x2="80"
+									y1="-6.604" y2="57" gradientUnits="userSpaceOnUse">
+								<stop offset="0.201" stop-color="#fff" stop-opacity="0"></stop>
+								<stop offset="0.391" stop-color="#fff"></stop>
+								<stop offset="0.839" stop-color="#fff"></stop>
+								<stop offset="1" stop-color="#fff" stop-opacity="0"></stop></linearGradient>
+								<clipPath id="cta-qr-box_svg__a">
+								<path fill="#fff" d="M0 0h160v235H0z"></path></clipPath>
+								<pattern id="cta-qr-box_svg__c" width="1" height="1"
+									patternContentUnits="objectBoundingBox">
+								<use xlink:href="#cta-qr-box_svg__d"
+									transform="translate(-.057 -.041)scale(.00521)"></use></pattern>
+								<image
+									xlink:href="data:image/png;base64,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"
+									id="cta-qr-box_svg__d" width="217" height="211"
+									preserveAspectRatio="none"></image></defs></svg>
+						</div>
+					</div>
+				</div>
+			</main>
+			<div th:replace="~{template/footer :: footerFragment}"></div>
+		</div>
+	</div>
+	<div th:replace="~{template/wrapper_frm :: drawerFrame}"></div>
+</body>
+</html>
