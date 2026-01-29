@@ -57,14 +57,14 @@
 	<mapper resource="kr/co/sist/user/findAccount/findAccountMapper.xml"/>
 	<mapper resource="kr/co/sist/user/info/infoMapper.xml"/>
 	<mapper resource="kr/co/sist/user/join/joinMapper.xml"/>
-	<mapper resource="kr/co/sist/user/login/joinMapper.xml"/>
+	<mapper resource="kr/co/sist/user/login/loginMapper.xml"/>
 	<mapper resource="kr/co/sist/user/mypage/myPageMapper.xml"/>
 	<mapper resource="kr/co/sist/user/notice/noticeMapper.xml"/>
 	<mapper resource="kr/co/sist/user/productdetail/productDetailMapper.xml"/>
 	<mapper resource="kr/co/sist/user/productlist/productListMapper.xml"/>
 	<mapper resource="kr/co/sist/user/qna/qnaMapper.xml"/>
 	<mapper resource="kr/co/sist/user/report/reportMapper.xml"/>
-	<mapper resource="kr/co/sist/user/scacm/scamMapper.xml"/>
+	<mapper resource="kr/co/sist/user/scam/scamMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sell/sellMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sellerpage/sellerReviewMapper.xml"/>
 	
