@@ -9,9 +9,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AdminMemberDomain {
-    private int memberNo;      // 회원 번호
-    private String userId;     // 회원 아이디
+    private int member_num;      // 회원 번호
+    private String user_id;     // 회원 아이디
     private String name;       // 회원 이름
     private String email;      // 이메일
-    private Date inputDate;    // 계정 생성일
+    private Date input_date;    // 계정 생성일
 }
