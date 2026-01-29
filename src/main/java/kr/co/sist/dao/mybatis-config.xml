@@ -5,7 +5,7 @@
 <configuration>
 <properties resource="properties/database.properties"/>
 <typeAliases>
-
+    <!-- 지혜님 typeAlias -->
 	<typeAlias type="kr.co.sist.user.productdetail.ProductDetailDomain" alias="productDetailDomain"/>
 	<typeAlias type="kr.co.sist.user.productdetail.ProductModifyDTO" alias="productModifyDTO"/>
 	<typeAlias type="kr.co.sist.user.productdetail.SellerDomain" alias="sellerDomain"/>
@@ -15,7 +15,14 @@
 	<typeAlias type="kr.co.sist.user.chat.ChatContentDTO" alias="chatContentDTO"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatDTO" alias="chatDTO"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatListDomain" alias="chatListDomain"/>
-
+    <!-- 자빈님 typeAlias -->
+    <typeAlias type="kr.co.sist.admin.product.AdminProductDomain" alias="AdminProductDomain"/>
+    <typeAlias type="kr.co.sist.admin.product.AdminProductDTO" alias="AdminProductDTO"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberDTO" alias="AdminMemberDTO"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberDomain" alias="AdminMemberDomain"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberDetailDomain" alias="AdminMemberDetailDomain"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberProductDomain" alias="AdminMemberProductDomain"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberPrdvDomain" alias="AdminMemberPrdvDomain"/>
 
 </typeAliases>
   <environments default="development">
@@ -50,14 +57,14 @@
 	<mapper resource="kr/co/sist/user/findAccount/findAccountMapper.xml"/>
 	<mapper resource="kr/co/sist/user/info/infoMapper.xml"/>
 	<mapper resource="kr/co/sist/user/join/joinMapper.xml"/>
-	<mapper resource="kr/co/sist/user/login/joinMapper.xml"/>
+	<mapper resource="kr/co/sist/user/login/loginMapper.xml"/>
 	<mapper resource="kr/co/sist/user/mypage/myPageMapper.xml"/>
 	<mapper resource="kr/co/sist/user/notice/noticeMapper.xml"/>
 	<mapper resource="kr/co/sist/user/productdetail/productDetailMapper.xml"/>
 	<mapper resource="kr/co/sist/user/productlist/productListMapper.xml"/>
 	<mapper resource="kr/co/sist/user/qna/qnaMapper.xml"/>
 	<mapper resource="kr/co/sist/user/report/reportMapper.xml"/>
-	<mapper resource="kr/co/sist/user/scacm/scamMapper.xml"/>
+	<mapper resource="kr/co/sist/user/scam/scamMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sell/sellMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sellerpage/sellerReviewMapper.xml"/>
 	
