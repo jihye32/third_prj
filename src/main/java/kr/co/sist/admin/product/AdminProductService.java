@@ -39,7 +39,7 @@ public class AdminProductService {
         String queryParams = "";
         if (pDTO.getKeyword() != null && !pDTO.getKeyword().isEmpty()) queryParams += "&keyword=" + pDTO.getKeyword();
         if (pDTO.getSortBy() != null) queryParams += "&sort=" + pDTO.getSortBy();
-        if (pDTO.getCategory() != 0) queryParams += "&category=" + pDTO.getCategory();
+        if (pDTO.getCategory_code() != 0) queryParams += "&category=" + pDTO.getCategory_code();
 
         int startPage = ((currentPage - 1) / pageBlock) * pageBlock + 1;
         int endPage = startPage + pageBlock - 1;
@@ -90,4 +90,5 @@ public class AdminProductService {
         // 기존 Board 프로젝트의 pagination2 로직을 이식하여 리턴
         return "페이지네이션 태그 문자열";
     }
+    
 }

@@ -1,6 +1,7 @@
 package kr.co.sist.admin.member;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired; // 추가됨
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,18 +34,24 @@ public class AdminMemberController {
         return "manage/member/member_main"; 
     }
     
-    @GetMapping("/manage/member/member_detail") 
-    public String memberDetailPage(Model model) {
-        model.addAttribute("menu", "member"); 
-        model.addAttribute("subMenu", "list");
-        return "manage/member/member_detail"; 
+
+    @GetMapping("/manage/member/member_detail")
+    public String memberDetailPage(@RequestParam String userId, Model model) {
+        System.out.println("넘어온 userId: " + userId); // 1. 파라미터가 잘 넘어오는지 확인
+        
+        AdminMemberDetailDomain md = ms.getMemberDetail(userId);
+        System.out.println("조회된 결과: " + md); // 2. 여기서 null이 찍히면 DB/Mapper 문제!
+        
+        model.addAttribute("member", md);
+        return "manage/member/member_detail";
     }
-    
-    @GetMapping("/manage/member/member_prdv") 
-    public String memberPrdvPage(Model model) {
-        model.addAttribute("menu", "member"); 
-        model.addAttribute("subMenu", "list");
-        return "manage/member/member_prdv"; 
+
+    // 2. 버튼 클릭 시 -> 다른 관리 페이지 (member_prdv)
+    @GetMapping("/manage/member/member_prdv")
+    public String memberPrdvPage(@RequestParam String userId, Model model) {
+        // 필요한 데이터 조회 로직 (현재는 userId만 넘김)
+        model.addAttribute("userId", userId);
+        return "manage/member/member_prdv";
     }
     
     @GetMapping("/manage/member/member_product") 
