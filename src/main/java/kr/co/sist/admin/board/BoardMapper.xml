@@ -75,7 +75,8 @@
             admin_id    AS adminId,
             delete_flag AS deleteFlag
         FROM adminboard
-        WHERE context_num = #{boardNum}
+        WHERE context_num = #{value}
+
           AND delete_flag='N'
     </select>
 
@@ -107,7 +108,8 @@
             parameterType="int">
         UPDATE adminboard
         SET delete_flag='Y'
-        WHERE context_num = #{boardNum}
+        WHERE context_num = #{value}
+
           AND delete_flag='N'
     </update>
 
