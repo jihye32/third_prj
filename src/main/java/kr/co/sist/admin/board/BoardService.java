@@ -30,17 +30,20 @@ public class BoardService {
         }
     }
 
-    public BoardDomain getBoardDetail(BoardDTO dto) {
+    public BoardDomain getBoardDetail(int boardNum) {
         try {
-            return bDAO.selectBoardDetail(dto.getBoardNum());
+            return bDAO.selectBoardDetail(boardNum);
         } catch (SQLException e) {
             throw new RuntimeException("게시글 상세 조회 중 오류", e);
         }
     }
 
     public void addBoard(BoardDTO dto) {
-        // insertBoard는 PersistenceException이라 체크예외 아님(따로 throws 필요 없음)
-        bDAO.insertBoard(dto);
+        try {
+            bDAO.insertBoard(dto);
+        } catch (Exception e) {
+            throw new RuntimeException("게시글 등록 중 오류", e);
+        }
     }
 
     public int modifyBoard(BoardDTO dto) {
