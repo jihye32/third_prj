@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class ProductDomain {
-	private String thumbnail, sellState, productName, tradingArea; 
+	private String thumbnail, sellState, productName, tradingArea, bookmarkFlag, receiveFlag; 
 	private int productNum, sellStateCode, price;
 	private Date lastModify;
 

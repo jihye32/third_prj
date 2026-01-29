@@ -26,7 +26,7 @@ public class MainController {
 		int eleCnt = 1;
 		for(int j = 0 ; j < 30 ; j+=6) {
 			for(int k = 1 ; k <= 6 ; k++) {
-				pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "많이 본 상품 제목"+eleCnt, "거래 지역", eleCnt, 1, 10000, null);
+				pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "많이 본 상품 제목"+eleCnt, "거래 지역", null, null, eleCnt, 1, 10000, null);
 				list.add(pd);
 				eleCnt++;
 			}// end for
@@ -40,7 +40,7 @@ public class MainController {
 		int cnt = 31;
 		for(int j = 0 ; j < 30 ; j+=6) {
 			for(int k = 1 ; k <= 6 ; k++) {
-				pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "찜 많은 상품 제목"+cnt, "거래 지역", cnt, 1, 10000, null);
+				pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "찜 많은 상품 제목"+cnt, "거래 지역", null, null, cnt, 1, 10000, null);
 				list2.add(pd);
 				cnt++;
 			}// end for
