@@ -7,25 +7,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/sell")
 @Controller("UserSellController")
 public class SellController {
-	@GetMapping("/type")
-	public String openSellType() {
-		return "sell/delivery_type :: deliveryType";
-	}
-	@GetMapping("/payment")
-	public String openSellFrm() {
-		return "sell/payment_form :: paymentFrm";
-	}
-	@GetMapping("/success")
-	public String openSuccessFrm() {
-		return "sell/sell_success :: sellSuccessFrm";
-	}
-	@GetMapping("/fail")
-	public String openFailFrm() {
-		return "sell/sell_fail :: sellFailFrm";
-	}
-	@GetMapping("/test")
-	public String opentestFrm() {
-		return "/sell/test_frm";
-	}
-	
+
 }

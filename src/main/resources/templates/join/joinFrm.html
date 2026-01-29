@@ -1,121 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko" dir="ltr">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
 <meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>회원가입</title>
 <link th:href="@{/css/output.css}" rel="stylesheet">
-<meta name="robots" content="index,follow">
-<meta name="description" content="안심결제부터 보상제도까지. 중고나라는 이제 안심할 수 있는 중고거래 플랫폼입니다.">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:site" content="@https://web.joongna.com">
-<meta name="twitter:creator" content="@중고나라">
-<meta property="og:title" content="중고나라 - 안심되는 중고거래">
-<meta property="og:description" content="안심결제부터 보상제도까지. 중고나라는 이제 안심할 수 있는 중고거래 플랫폼입니다.">
-<meta property="og:url" content="https://web.joongna.com">
-<meta property="og:type" content="website">
-<meta property="og:image" content="/assets/images/og_joongna.png">
-<meta property="og:image:alt" content="중고나라">
-<meta property="og:image:width" content="800">
-<meta property="og:image:height" content="600">
-<meta property="og:locale" content="ko_KR">
-<meta property="og:site_name" content="중고나라">
-<link rel="canonical" href="https://web.joongna.com">
-<meta name="application-name" content="중고나라">
-<meta property="dc:creator" content="중고나라">
-<meta property="x-ua-compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#ffffff">
-<link rel="icon" href="/favicon.ico">
-<link rel="shortcut icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="/favorit_icon_ios.png" sizes="76x76">
-<link rel="manifest" href="/manifest.json">
-<meta name="next-head-count" content="28">
-<script id="OrganizationStructuredData" type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://web.joongna.com",
-  "name": "중고나라",
-  "url": "https://web.joongna.com",
-  "logo": "https://img2.joongna.com/common/new_logo_black.png",
-  "legalName": "주식회사 중고나라",
-  "foundingDate": "2013",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "301 Seocho-daero",
-    "addressLocality": "Seocho-gu",
-    "addressRegion": "Seoul",
-    "postalCode": "06606",
-    "addressCountry": "KR"
-  },
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "customer support",
-    "telephone": "+82-070-5066-2278",
-    "email": "joongna@joonggonara.co.kr"
-  },
-  "sameAs": [
-    "https://apps.apple.com/kr/app/id896515652",
-    "https://play.google.com/store/apps/details?id=com.elz.secondhandstore"
-  ]
-}</script>
-<script id="WebsiteStructuredData" type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "url": "https://web.joongna.com/",
-  "name": "중고나라",
-  "sameAs": [
-    "https://apps.apple.com/kr/app/id896515652",
-    "https://play.google.com/store/apps/details?id=com.elz.secondhandstore"
-  ],
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://web.joongna.com/search/{search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}</script>
-<link data-next-font="" rel="preconnect" href="/" crossorigin="anonymous">
-<link rel="preload" href="https://web.joongna.com/main-web/_next/static/css/9d2b0939952400cb.css" as="style">
-<link rel="stylesheet" href="https://web.joongna.com/main-web/_next/static/css/9d2b0939952400cb.css" data-n-g="">
-<link rel="preload" href="https://web.joongna.com/main-web/_next/static/css/c4423ffcc1b3e878.css" as="style">
-<link rel="preload" href="https://web.joongna.com/main-web/_next/static/css/a4ef56fda630c4e5.css" as="style">
-<link rel="stylesheet" href="https://web.joongna.com/main-web/_next/static/css/a4ef56fda630c4e5.css">
-<noscript data-n-css=""></noscript>
-<script defer="" nomodule="" src="https://web.joongna.com/main-web/_next/static/chunks/polyfills-42372ed130431b0a.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/b35451b5-54c433ed4a7636c5.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/3940.dd8c80177a462882.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/8583-6164e074989603a9.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/4507.9cb3385cbd1b2abc.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/3099.d36447176cb24fc1.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/791.26bf0c5729f10f8d.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/7922-769ca3dfbdeb0aa9.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/1397.b28c7da72d0fe23c.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/6590.1c83f34a07a44761.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/5579.4893f6cacec7eb47.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/Footer.c222d704367c8a40.js"></script>
-<script defer="" src="https://web.joongna.com/main-web/_next/static/chunks/MobileBottomGNB.91e55c7169266b75.js"></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/webpack-853529a01f6430de.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/framework-c770b9ec503a35d5.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/main-20b0e8feb973d512.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/pages/_app-1d26e0c18c96a654.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/6368-27ecf43eec574c2f.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/2-9600724bba87747f.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/1184-806b484d4476e1de.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/9845-097e6aa46302b62e.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/8970-52af8eb7036dd912.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/4949-f22d38b815fa9315.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/6118-6fa1c88cb27c05e4.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/1214-aa00abf5c3c942bf.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/8803-682f5d3ff483417e.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/4917-07e03eabdad4f389.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/1423-a541c556e7a47b49.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/chunks/pages/index-a691722fb97ee461.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/h8b-nIpsIQJwjPhswj_XN/_buildManifest.js" defer=""></script>
-<script src="https://web.joongna.com/main-web/_next/static/h8b-nIpsIQJwjPhswj_XN/_ssgManifest.js" defer=""></script>
-<link rel="stylesheet" type="text/css" href="https://web.joongna.com/main-web/_next/static/css/e0fe293533e11850.css">
-<link rel="stylesheet" type="text/css" href="https://web.joongna.com/main-web/_next/static/css/9808ee4030aef597.css">
+<link th:href="@{/css/test.css}" rel="stylesheet">
+<!-- JQuery CDN -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
-<body style="">
+<body>
 	<div id="__next" style="height: auto !important;">
 		<div class="md:px-8 2xl:px-16 flex flex-col gap-8 justify-center items-center px-0 mx-auto min-h-[100vh] sm:w-full sm:my-auto w-full max-w-full box-border [&amp;&gt;*]:z-[1]">
 			<a class="inline-flex focus:outline-none relative" href="/" style="width: 200px; height: 30px; margin-top: 100px;">
@@ -221,7 +117,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="Toastify"></div>
 	</div>
 </body>
 </html>
