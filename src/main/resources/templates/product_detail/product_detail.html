@@ -15,32 +15,50 @@ window.initTossPayments = async function (price, title) { // main() 대신 전�
     const tossPayments = TossPayments(clientKey);
     const customerKey = "YoA3w8vRTZPoaV13MAQ3j";
     
-    const widgets = tossPayments.widgets({ customerKey });
-    // 화면의 가격과 일치하도록 설정
-    await widgets.setAmount({
-        currency: "KRW",
-        value: price, 
-    });
-
-    await Promise.all([
-        widgets.renderPaymentMethods({
-            selector: "#payment-method",
-            variantKey: "DEFAULT",
-        }),
-        widgets.renderAgreement({ 
-            selector: "#agreement", 
-            variantKey: "AGREEMENT" 
-        }),
-    ]);
-
     button.addEventListener("click", async function () {
+    	const response = await fetch("/orders/prepare", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: title,
+                price: price,
+                name: document.getElementById("name").value,
+                address: document.getElementById("address").value
+            })
+        });
+    	
+    	const data = await response.json();
+    	const orderId = data.orderId;
+    	const amount = data.amount;
+    	const widgets = tossPayments.widgets({ customerKey });
+    	    // 화면의 가격과 일치하도록 설정
+    	    await widgets.setAmount({
+    	        currency: "KRW",
+    	        value: amount, 
+    	    });
+
+    	    await Promise.all([
+    	        widgets.renderPaymentMethods({
+    	            selector: "#payment-method",
+    	            variantKey: "DEFAULT",
+    	        }),
+    	        widgets.renderAgreement({ 
+    	            selector: "#agreement", 
+    	            variantKey: "AGREEMENT" 
+    	        }),
+    	    ]);
+    	    
         await widgets.requestPayment({
-            orderId: "ORDER_" + new Date().getTime(),
+            orderId: orderId,
             orderName: title,
             successUrl: window.location.origin + "/buy/toss",
             failUrl: window.location.origin + "/buy/fail",
         });
     });
+    
+   
 };
 </script>
 <link th:href="@{/css/output.css}" rel="stylesheet">
