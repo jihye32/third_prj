@@ -8,6 +8,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SellerDomain {
-	private int productCnt, reivewCnt;
-	private String sellerProfile;
+	private int storeNum,productCnt, reivewCnt;
+	private String storeName,sellerProfile;
 }

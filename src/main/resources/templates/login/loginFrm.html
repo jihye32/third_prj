@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>로그인</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+<link th:href="@{/css/test.css}" rel="stylesheet">
+<!-- JQuery CDN -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="__next" style="height: auto !important;">
+		<div
+			class="md:px-8 2xl:px-16 flex flex-col gap-8 justify-center items-center px-0 mx-auto min-h-[100vh] sm:w-full sm:my-auto w-full max-w-full box-border [&amp;&gt;*]:z-[1]">
+			<a class="inline-flex focus:outline-none relative" href="/"
+				style="width: 200px; height: 30px;"><img alt="Joonggonara"
+				loading="eager" decoding="async" data-nimg="fill"
+				src="https://web.joongna.com/main-web/assets/images/custom-logo.svg"
+				style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></a>
+			<div>
+				<div type="default">
+					<div
+						class="relative mx-auto w-screen bg-white sm:w-[450px] sm:border sm:border-gray-300 sm:overflow-hidden sm:rounded-lg px-5 sm:px-8">
+						<div
+							class="body-regular-14 py-3 w-full bg-jnGray-100 rounded-lg text-center hidden">
+							<span class="text-green-700">로그인하면 바로 상품등록</span>을 할 수 있어요.
+						</div>
+						<div>
+							<div class="flex flex-col justify-between min-h-[500px]">
+								<div tabindex="0" class="flex-1 mt-8 text-center">
+									<div
+										class="flex flex-col items-center justify-center h-full gap-2 sm:gap-7">
+										<h2 class="headline-semibold-20 sm:headline-semibold-24">
+											로그인<br>
+										</h2>
+										<img alt="hang-out-box" loading="lazy" width="160"
+											height="160" decoding="async" data-nimg="1"
+											src="https://web.joongna.com/main-web/_next/static/media/hang-over-box.35c81335.png"
+											style="color: transparent;">
+									</div>
+								</div>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="auto-login"
+											class="flex justify-start items-center"><span
+											class="inline-block text-sm font-semibold">아이디</span></label><input
+											id="auto-login" type="checkbox" class="a11yHidden" checked="">
+									</div>
+									<input type="text" name="id"
+										class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+										style="background-color: white !important; border: 1px solid black !important; margin-bottom: -0.5rem !important; color: black !important; cursor: text !important;">
+									<div class="mt-6">
+										<label for="auto-login"
+											class="flex justify-start items-center"><span
+											class="inline-block text-sm font-semibold">비밀번호</span></label><input
+											id="auto-login" type="checkbox" class="a11yHidden" checked="">
+									</div>
+									<input type="password" name="pass"
+										class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+										style="background-color: white !important; border: 1px solid black !important; color: black !important; cursor: text !important;">
+									<button data-variant="flat"
+										class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-gray-600 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-white text-black border-solid border border-black justify-between"
+										style="background-color: black !important; margin-top: 1rem !important">
+										<svg stroke="currentColor" fill="currentColor"
+											stroke-width="0" viewBox="0 0 16 16"
+											class="text-sm sm:text-base me-1.5" height="1em" width="1em"
+											xmlns="http://www.w3.org/2000/svg"></svg>
+										<span class="flex-1 mr-[22px]" style="color: white !important">로그인</span>
+									</button>
+									<div class="flex justify-center items-center h-12 mt-2.5"
+										style="margin-top: 1rem !important">
+										<span style="display: contents; cursor: pointer;"><a
+											href="/"><button type="button"
+													class="inline-flex p-0.5 rounded relative justify-start items-center gap-0.5 text-jnGray-900 hover:bg-jnGray-900/5 active:bg-jnGray-900/10">
+													<span
+														class="text-center justify-start font-regular text-sm h-5 text-jnGray-900">아이디
+														/ 비밀번호 찾기</span>
+													<div
+														class="h-px w-[calc(100%-4px)] absolute left-[2px] bottom-0.5 bg-jnGray-900"
+														aria-hidden="true"></div>
+												</button></a></span>
+									</div>
+									<div class="flex justify-center items-center h-12 mt-2.5"
+										style="margin-bottom: 1rem !important; margin-top: 0rem !important; height: 2rem !important">
+										<span style="display: contents; cursor: pointer;"><a
+											href="/"><button type="button"
+													class="inline-flex p-0.5 rounded relative justify-start items-center gap-0.5 text-jnGray-900 hover:bg-jnGray-900/5 active:bg-jnGray-900/10">
+													<span
+														class="text-center justify-start font-regular text-sm h-5 text-jnGray-900">회원가입</span>
+													<div
+														class="h-px w-[calc(100%-4px)] absolute left-[2px] bottom-0.5 bg-jnGray-900"
+														aria-hidden="true"></div>
+												</button></a></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

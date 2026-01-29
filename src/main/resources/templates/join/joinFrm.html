@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>회원가입</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+<link th:href="@{/css/test.css}" rel="stylesheet">
+<!-- JQuery CDN -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="__next" style="height: auto !important;">
+		<div class="md:px-8 2xl:px-16 flex flex-col gap-8 justify-center items-center px-0 mx-auto min-h-[100vh] sm:w-full sm:my-auto w-full max-w-full box-border [&amp;&gt;*]:z-[1]">
+			<a class="inline-flex focus:outline-none relative" href="/" style="width: 200px; height: 30px; margin-top: 100px;">
+				<img alt="Joonggonara" loading="eager" decoding="async" data-nimg="fill" src="https://web.joongna.com/main-web/assets/images/custom-logo.svg" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+			</a>
+			<div>
+				<div type="default" style="margin-bottom: 100px; text-align: center">
+					<div class="relative mx-auto w-screen bg-white sm:w-[450px] sm:border sm:border-gray-300 sm:overflow-hidden sm:rounded-lg px-5 sm:px-8">
+						<div class="body-regular-14 py-3 w-full bg-jnGray-100 rounded-lg text-center hidden">
+							<span class="text-green-700">로그인하면 바로 상품등록</span>을 할 수 있어요.
+						</div>
+						<div>
+							<div class="flex flex-col justify-between min-h-[500px]">
+							<h2 class="headline-semibold-20 sm:headline-semibold-24" style="text-align:center; margin-top:32px">회원가입</h2>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="user-id" class="flex justify-start items-center">
+											<span class="inline-block text-sm font-semibold">아이디</span>
+										</label>
+									</div>
+									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="id" style="background-color: white; border: 1px solid black;">
+									<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black;">
+										<span class="flex-1 mr-[22px]" style="color: white; text-align: left; margin-left: 10px;">아이디 중복확인</span>
+									</button>
+								</div>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="user-pass" class="flex justify-start items-center">
+											<span class="inline-block text-sm font-semibold">비밀번호</span>
+										</label>
+									</div>
+									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="password" name="pass" style="background-color: white; border: 1px solid black;">
+								</div>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="user-pass-check" class="flex justify-start items-center">
+											<span class="inline-block text-sm font-semibold">비밀번호 확인</span>
+										</label>
+									</div>
+									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="password" name="passChk" style="background-color: white; border: 1px solid black;">
+								</div>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="user-name" class="flex justify-start items-center">
+											<span class="inline-block text-sm font-semibold">이름</span>
+										</label>
+									</div>
+									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="user_name" style="background-color: white; border: 1px solid black;">
+								</div>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="store-name" class="flex justify-start items-center">
+											<span class="inline-block text-sm font-semibold">가게명</span>
+										</label>
+									</div>
+									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="store_name" style="background-color: white; border: 1px solid black;">
+									<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black;">
+										<span class="flex-1 mr-[22px]" style="color: white; text-align: left; margin-left: 10px;">가게명 중복확인</span>
+									</button>
+								</div>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="user-birth" class="flex justify-start items-center">
+											<span class="inline-block text-sm font-semibold">생년월일</span>
+										</label>
+									</div>
+									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="birth" style="background-color: white; border: 1px solid black;">
+								</div>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="user-email" class="flex justify-start items-center">
+											<span class="inline-block text-sm font-semibold">이메일</span>
+										</label>
+									</div>
+									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="email" style="background-color: white; border: 1px solid black;">
+									<select data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" name="email_domain" style="background-color: white; border: 1px solid black; padding: 10px; cursor: pointer">
+										<option value="@naver.com">@naver.com</option>
+										<option value="@gmail.com">@gmail.com</option>
+										<option value="@daum.net">@daum.net</option>
+									</select>
+									<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black;">
+										<span class="flex-1 mr-[22px]" style="color: white; text-align: left; margin-left: 10px;">이메일 인증</span>
+									</button>
+								</div>
+								<div class="mt-atuo">
+									<div class="mt-6">
+										<label for="verify-code" class="flex justify-start items-center">
+											<span class="inline-block text-sm font-semibold">인증코드</span>
+										</label>
+									</div>
+									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="verify_code" style="background-color: white; border: 1px solid black;">
+									<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black;">
+										<span class="flex-1 mr-[22px]" style="color: white; text-align: left; margin-left: 10px;">인증하기</span>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="w-full font-semibold text-center text-black text-sm my-5 hidden sm:block"></div>
+					</div>
+					<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black; width: 383px; margin-top: 30px">
+						<span class="flex-1 mr-[22px]" style="color: white;">회원가입</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

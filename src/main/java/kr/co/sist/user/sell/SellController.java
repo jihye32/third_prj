@@ -23,4 +23,9 @@ public class SellController {
 	public String openFailFrm() {
 		return "sell/sell_fail :: sellFailFrm";
 	}
+	@GetMapping("/test")
+	public String opentestFrm() {
+		return "/sell/test_frm";
+	}
+	
 }
