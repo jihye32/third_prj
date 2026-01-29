@@ -13,6 +13,6 @@ public class SampleController {
 	
 	@GetMapping("/test")
 	public String sampleTest() {
-		return "sample/wrapper_sample :: fragmentSample";
+		return "samplefragment/wrapper_sample :: Sample";
 	}
 }
