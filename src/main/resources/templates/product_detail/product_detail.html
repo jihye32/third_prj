@@ -37,7 +37,7 @@ window.initTossPayments = async function (price, title) { // main() 대신 전�
         await widgets.requestPayment({
             orderId: "ORDER_" + new Date().getTime(),
             orderName: title,
-            successUrl: window.location.origin + "/buy/successProcess",
+            successUrl: window.location.origin + "/buy/toss",
             failUrl: window.location.origin + "/buy/fail",
         });
     });
@@ -140,44 +140,6 @@ function openPaymentForm(pnum, type) {
         } 
 	}); 
 }
-
-function openSuccessForm() { 
-	loadDrawerContent('/buy/success',()=>{
-		const urlParams = new URLSearchParams(window.location.search);
-	    const paymentKey = urlParams.get("paymentKey");
-	    const orderId = urlParams.get("orderId");
-		const amount = urlParams.get("amount");
-
-	      async function confirm() {
-	        const requestData = {
-	          paymentKey: paymentKey,
-	          orderId: orderId,
-	          amount: amount,
-	        };
-
-	        const response = await fetch("/confirm", {
-	          method: "POST",
-	          headers: {
-	            "Content-Type": "application/json",
-	          },
-	          body: JSON.stringify(requestData),
-	        });
-
-	        const json = await response.json();
-
-	        if (!response.ok) {
-	          // 결제 실패 비즈니스 로직을 구현하세요.
-	          console.log(json);
-	          window.location.href = `/fail?message=${json.message}&code=${json.code}`;
-	        }
-
-	        // 결제 성공 비즈니스 로직을 구현하세요.
-	        console.log(json);
-	      }
-	      confirm();
-	}); 
-}
-function openFailForm() { loadDrawerContent('/buy/fail'); }
 
 /**
  * 3. 상품 상태 변경 (판매자용)

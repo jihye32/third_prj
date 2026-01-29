@@ -3,6 +3,8 @@ package kr.co.sist.user.buy;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,14 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 @RequestMapping("/buy")
 @Controller("UserBuyController")
 public class BuyController {
 	
 	@Autowired
 	BuyService bs;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@GetMapping("/{pnum}")
 	public String openBuyType(@PathVariable int pnum, Model model) {
@@ -60,26 +62,6 @@ public class BuyController {
 		model.addAttribute("type", type);
 		model.addAttribute("BuyDomian", bd);
 		return "/buy/payment_form :: paymentFrm";
-	}
-	@GetMapping("/successProcess")
-	public String openSuccessProcess(HttpServletRequest request) {
-		System.out.println(request.getParameter("paymentType"));//브랜드 페이 제외 Normal
-		System.out.println(request.getParameter("orderId"));
-		System.out.println(request.getParameter("paymentKey"));//
-		System.out.println(request.getParameter("amount"));//결제 가격
-		return "redirect:/buy/success";
-	}
-	@GetMapping("/success")
-	public String openSuccessFrm() {
-		return "/buy/sell_success :: sellSuccessFrm";
-	}
-	@GetMapping("/fail")
-	public String openFailFrm() {
-		return "/buy/sell_fail :: sellFailFrm";
-	}
-	@GetMapping("/test")
-	public String opentestFrm() {
-		return "/buy/sample";
 	}
 	
 }

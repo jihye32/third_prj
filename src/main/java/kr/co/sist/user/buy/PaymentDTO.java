@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaymentDTO {
-	private int snum, pnum, charge;
-	private String payment;
+	private int amount;
+	private String paymentTyp,orderId,paymentKey;
 }
