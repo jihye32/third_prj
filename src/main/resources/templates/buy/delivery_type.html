@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<th:block th:fragment="deliveryType">
+<main role="main" aria-label="본문 영역" id="main-content"class="h-[calc(100%-var(--top-navigation-height))] overflow-auto relative p-4">
+	<div class="outline-none gap-5 flex flex-col justify-start items-stretch flex-nowrap">
+		<div th:each="type : ${BuyDomain.dealType}" th:data-type="${type}" th:onclick="|selectDealType(this)|" class="deal-option outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap p-4 w-full border rounded-lg px-5 text-gray-700 cursor-pointer border-gray-200">
+			<div th:if="${type eq 2}" class="outline-none flex flex-row justify-between items-center flex-nowrap">
+				<div class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap">
+					<span class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">일반 택배</span><span class="whitespace-pre-line text-12">상품이 문 앞으로 도착해요.</span>
+				</div>
+				<svg width="56" height="56" viewBox="0 0 56 56" fill="none"
+					xmlns="http://www.w3.org/2000/svg">
+									<path
+						d="M11.42 40.2842C9.7911 40.2842 8.4707 38.8426 8.4707 37.0642C8.4707 35.2858 9.7911 33.8442 11.42 33.8442H12.9306V40.2841H11.42V40.2842Z"
+						fill="url(#paint0_linear_2605_240240)"></path>
+									<path
+						d="M12.9298 40.2842C14.5586 40.2842 15.8791 38.8426 15.8791 37.0642C15.8791 35.2859 14.5586 33.8442 12.9298 33.8442C11.3009 33.8442 9.98047 35.2859 9.98047 37.0642C9.98047 38.8426 11.3009 40.2842 12.9298 40.2842Z"
+						fill="url(#paint1_linear_2605_240240)"></path>
+									<path opacity="0.8"
+						d="M12.9311 38.3203C13.5661 38.3203 14.0809 37.7583 14.0809 37.0649C14.0809 36.3716 13.5661 35.8096 12.9311 35.8096C12.296 35.8096 11.7812 36.3716 11.7812 37.0649C11.7812 37.7583 12.296 38.3203 12.9311 38.3203Z"
+						fill="#263852"></path>
+									<path
+						d="M34.0538 40.2842C32.4249 40.2842 31.1045 38.8426 31.1045 37.0642C31.1045 35.2858 32.4249 33.8442 34.0538 33.8442H35.5644V40.2841H34.0538V40.2842Z"
+						fill="url(#paint2_linear_2605_240240)"></path>
+									<path
+						d="M35.5645 40.2842C37.1934 40.2842 38.5138 38.8426 38.5138 37.0642C38.5138 35.2859 37.1934 33.8442 35.5645 33.8442C33.9357 33.8442 32.6152 35.2859 32.6152 37.0642C32.6152 38.8426 33.9357 40.2842 35.5645 40.2842Z"
+						fill="url(#paint3_linear_2605_240240)"></path>
+									<path opacity="0.8"
+						d="M35.5639 38.3203C36.1989 38.3203 36.7137 37.7583 36.7137 37.0649C36.7137 36.3716 36.1989 35.8096 35.5639 35.8096C34.9289 35.8096 34.4141 36.3716 34.4141 37.0649C34.4141 37.7583 34.9289 38.3203 35.5639 38.3203Z"
+						fill="#2C3F59"></path>
+									<path
+						d="M30.5738 31.9873H18.5807C17.5815 31.9873 16.7715 31.2761 16.7715 30.3987V16.4763C16.7715 15.5989 17.5815 14.8877 18.5807 14.8877H30.2823L29.4942 16.2776L30.5738 30.8668V31.9873Z"
+						fill="url(#paint4_linear_2605_240240)"></path>
+									<path
+						d="M46.9571 14.8877H30.2524C29.3698 14.8877 28.6543 15.5989 28.6543 16.4761V30.3971C28.6543 31.2744 29.3698 31.9855 30.2524 31.9855H46.9571C47.8397 31.9855 48.5552 31.2744 48.5552 30.3971V16.4761C48.5552 15.5989 47.8397 14.8877 46.9571 14.8877Z"
+						fill="url(#paint5_linear_2605_240240)"></path>
+									<path
+						d="M6.25195 36.5639V27.1756C6.25195 27.0064 6.28081 26.8383 6.33716 26.6786C6.33716 26.6786 8.4013 21.9839 8.62595 21.3474C8.8506 20.7108 9.45535 20.2847 10.134 20.2847H22.8836L19.0016 26.9197V36.5638L6.25195 36.5639Z"
+						fill="url(#paint6_linear_2605_240240)"></path>
+									<path
+						d="M20.4875 36.5792H6.79645C6.14858 36.5792 5.72949 36.1053 5.72949 35.521C5.72949 34.9366 6.14858 34.4629 6.79645 34.4629H18.6115L20.4875 36.5792Z"
+						fill="#DEDDDF"></path>
+									<path
+						d="M19.6918 36.5584H47.5024C48.385 36.5584 49.1005 35.8472 49.1005 34.97V33.5745C49.1005 32.6973 48.385 31.9861 47.5024 31.9861H27.9826C27.1 31.9861 26.3845 31.2749 26.3845 30.3977V21.8677C26.3845 20.9905 25.669 20.2793 24.7864 20.2793H21.9757C21.2969 20.2793 20.6923 20.7055 20.4677 21.342L18.1789 26.6732C18.1225 26.833 18.0937 27.001 18.0937 27.1702V34.97C18.0937 35.8472 18.8092 36.5584 19.6918 36.5584Z"
+						fill="#CDCDCD"></path>
+									<path
+						d="M25.3631 26.3716V21.6846C25.3631 21.4214 25.1484 21.208 24.8836 21.208L22.0804 21.208C21.8768 21.208 21.6955 21.3358 21.6279 21.5268L19.6915 26.2138C19.5821 26.5237 19.8136 26.848 20.144 26.848H24.8836C25.1484 26.848 25.3631 26.6348 25.3631 26.3716Z"
+						fill="url(#paint7_linear_2605_240240)"></path>
+									<path
+						d="M7.66805 26.2411L9.55324 21.5268C9.62062 21.3358 9.80206 21.208 10.0057 21.208L18.7614 21.208C19.0918 21.208 19.3233 21.5324 19.2139 21.8423L17.0273 26.5566C16.9599 26.7476 16.7785 26.8754 16.5748 26.8754H8.12052C7.79012 26.8754 7.55867 26.551 7.66805 26.2411Z"
+						fill="url(#paint8_linear_2605_240240)"></path>
+									<path
+						d="M41.8516 40.2842C40.2227 40.2842 38.9023 38.8426 38.9023 37.0642C38.9023 35.2858 40.2227 33.8442 41.8516 33.8442H43.3622V40.2841H41.8516V40.2842Z"
+						fill="url(#paint9_linear_2605_240240)"></path>
+									<path
+						d="M43.3614 40.2842C44.9902 40.2842 46.3107 38.8426 46.3107 37.0642C46.3107 35.2859 44.9902 33.8442 43.3614 33.8442C41.7326 33.8442 40.4121 35.2859 40.4121 37.0642C40.4121 38.8426 41.7326 40.2842 43.3614 40.2842Z"
+						fill="url(#paint10_linear_2605_240240)"></path>
+									<path opacity="0.8"
+						d="M43.3617 38.3203C43.9968 38.3203 44.5116 37.7583 44.5116 37.0649C44.5116 36.3716 43.9968 35.8096 43.3617 35.8096C42.7267 35.8096 42.2119 36.3716 42.2119 37.0649C42.2119 37.7583 42.7267 38.3203 43.3617 38.3203Z"
+						fill="white"></path>
+									<path
+						d="M21.8145 35.3379C21.8145 34.8546 21.4227 34.4629 20.9395 34.4629H18.0984V36.5792H20.9395C21.4227 36.5792 21.8145 36.1874 21.8145 35.7042V35.3379Z"
+						fill="url(#paint11_linear_2605_240240)"></path>
+									<path
+						d="M9.09766 31.3369C9.09766 30.8588 8.71005 30.4712 8.2319 30.4712H6.53697C6.05883 30.4712 5.67122 30.8588 5.67122 31.3369C5.67122 31.8151 6.05883 32.2027 6.53697 32.2027H8.2319C8.71005 32.2027 9.09766 31.8151 9.09766 31.3369Z"
+						fill="url(#paint12_linear_2605_240240)"></path>
+									<path
+						d="M22.835 40.2832C21.2061 40.2832 19.8857 38.8417 19.8857 37.0633C19.8857 35.2849 21.2061 33.8433 22.835 33.8433H24.3456V40.2831H22.835V40.2832Z"
+						fill="url(#paint13_linear_2605_240240)"></path>
+									<path
+						d="M24.3458 40.2832C25.9746 40.2832 27.2951 38.8416 27.2951 37.0633C27.2951 35.2849 25.9746 33.8433 24.3458 33.8433C22.7169 33.8433 21.3965 35.2849 21.3965 37.0633C21.3965 38.8416 22.7169 40.2832 24.3458 40.2832Z"
+						fill="url(#paint14_linear_2605_240240)"></path>
+									<path opacity="0.8"
+						d="M24.3451 38.3193C24.9802 38.3193 25.495 37.7573 25.495 37.064C25.495 36.3706 24.9802 35.8086 24.3451 35.8086C23.7101 35.8086 23.1953 36.3706 23.1953 37.064C23.1953 37.7573 23.7101 38.3193 24.3451 38.3193Z"
+						fill="white"></path>
+									<path
+						d="M13.7695 31.3365C13.7695 30.8583 14.1571 30.4707 14.6353 30.4707H18.3542V32.2022H14.6353C14.1571 32.2022 13.7695 31.8146 13.7695 31.3365Z"
+						fill="url(#paint15_linear_2605_240240)"></path>
+									<path
+						d="M19.8311 31.3365C19.8311 30.8583 19.4434 30.4707 18.9653 30.4707H18.0937V32.2022H18.9653C19.4434 32.2022 19.8311 31.8146 19.8311 31.3365Z"
+						fill="url(#paint16_linear_2605_240240)"></path>
+									<path
+						d="M31.1045 27.7466C31.1045 26.7801 31.888 25.9966 32.8545 25.9966H45.363V40.2815H32.8545C31.888 40.2815 31.1045 39.498 31.1045 38.5315V27.7466Z"
+						fill="url(#paint17_linear_2605_240240)"></path>
+									<path
+						d="M44.7383 25.9966H49.1828C50.6325 25.9966 51.8078 27.1718 51.8078 28.6216V37.6565C51.8078 39.1063 50.6325 40.2815 49.1828 40.2815H44.7383V25.9966Z"
+						fill="url(#paint18_linear_2605_240240)"></path>
+									<rect x="35.6172" y="25.9966" width="4.23903"
+						height="5.18504" fill="#DD9644"></rect>
+									<defs>
+									<linearGradient id="paint0_linear_2605_240240" x1="8.93092"
+						y1="35.2415" x2="12.9192" y2="40.2932"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#677D99"></stop>
+									<stop offset="1" stop-color="#405674"></stop></linearGradient>
+									<linearGradient id="paint1_linear_2605_240240" x1="12.0616"
+						y1="34.633" x2="15.5766" y2="39.3322"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#566B89"></stop>
+									<stop offset="1" stop-color="#32445C"></stop></linearGradient>
+									<linearGradient id="paint2_linear_2605_240240" x1="31.5647"
+						y1="35.2415" x2="35.553" y2="40.2932"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#677D99"></stop>
+									<stop offset="1" stop-color="#405674"></stop></linearGradient>
+									<linearGradient id="paint3_linear_2605_240240" x1="34.6963"
+						y1="34.633" x2="38.2113" y2="39.3322"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#566B89"></stop>
+									<stop offset="1" stop-color="#32445C"></stop></linearGradient>
+									<linearGradient id="paint4_linear_2605_240240" x1="17.2474"
+						y1="15.9304" x2="34.3685" y2="20.1691"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#25EE90"></stop>
+									<stop offset="1" stop-color="#03D875"></stop></linearGradient>
+									<linearGradient id="paint5_linear_2605_240240" x1="32.0477"
+						y1="8.36324" x2="54.1026" y2="17.9577"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#10BE6D"></stop>
+									<stop offset="1" stop-color="#1FE16E"></stop></linearGradient>
+									<linearGradient id="paint6_linear_2605_240240" x1="8.92034"
+						y1="23.8167" x2="17.8518" y2="39.4405"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#EFEFEF"></stop>
+									<stop offset="1" stop-color="white"></stop></linearGradient>
+									<linearGradient id="paint7_linear_2605_240240" x1="19.1257"
+						y1="21.0361" x2="25.7278" y2="23.1054"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#98999D"></stop>
+									<stop offset="1" stop-color="#B1B4BD"></stop></linearGradient>
+									<linearGradient id="paint8_linear_2605_240240" x1="9.01933"
+						y1="25.5655" x2="18.8641" y2="24.9845"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#E4E5E5"></stop>
+									<stop offset="1" stop-color="#D3D3D3"></stop></linearGradient>
+									<linearGradient id="paint9_linear_2605_240240" x1="39.3626"
+						y1="35.2415" x2="43.3509" y2="40.2932"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#677D99"></stop>
+									<stop offset="1" stop-color="#405674"></stop></linearGradient>
+									<linearGradient id="paint10_linear_2605_240240" x1="42.4932"
+						y1="34.633" x2="46.0082" y2="39.3322"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#566B89"></stop>
+									<stop offset="1" stop-color="#32445C"></stop></linearGradient>
+									<linearGradient id="paint11_linear_2605_240240" x1="21.8145"
+						y1="34.3984" x2="18.3522" y2="36.1213"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#B1B4BD"></stop>
+									<stop offset="1" stop-color="#98999D"></stop></linearGradient>
+									<linearGradient id="paint12_linear_2605_240240" x1="9.52867"
+						y1="30.5768" x2="6.5107" y2="32.1248"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#6FF29B"></stop>
+									<stop offset="1" stop-color="#03D875"></stop></linearGradient>
+									<linearGradient id="paint13_linear_2605_240240" x1="20.346"
+						y1="35.2405" x2="24.3343" y2="40.2922"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#677D99"></stop>
+									<stop offset="1" stop-color="#405674"></stop></linearGradient>
+									<linearGradient id="paint14_linear_2605_240240" x1="23.4776"
+						y1="34.632" x2="26.9926" y2="39.3312"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#566B89"></stop>
+									<stop offset="1" stop-color="#32445C"></stop></linearGradient>
+									<linearGradient id="paint15_linear_2605_240240" x1="14.4402"
+						y1="30.5763" x2="17.9612" y2="33.1048"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#6FF29B"></stop>
+									<stop offset="1" stop-color="#03D875"></stop></linearGradient>
+									<linearGradient id="paint16_linear_2605_240240" x1="19.8311"
+						y1="30.4179" x2="17.9626" y2="30.9492"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#0DD779"></stop>
+									<stop offset="1" stop-color="#10BA6B"></stop></linearGradient>
+									<linearGradient id="paint17_linear_2605_240240" x1="38.2338"
+						y1="25.9966" x2="38.2338" y2="40.2815"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#FFC070"></stop>
+									<stop offset="1" stop-color="#E4B06D"></stop></linearGradient>
+									<linearGradient id="paint18_linear_2605_240240" x1="48.273"
+						y1="25.9966" x2="48.273" y2="40.2815"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#B98351"></stop>
+									<stop offset="1" stop-color="#A2744E"></stop></linearGradient></defs></svg>
+			</div>
+			<th:block th:if="${type eq 1}">
+			<div class="outline-none flex flex-row justify-between items-center flex-nowrap">
+				<div class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap">
+					<span class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">만나서 직거래</span><span class="whitespace-pre-line text-12">상품을 직접 받을 수 있어요</span>
+				</div>
+				<svg width="56" height="56" viewBox="0 0 56 56" fill="none"
+					xmlns="http://www.w3.org/2000/svg">
+									<path
+						d="M19.3867 35.4596C19.3867 31.4006 21.8017 27.7308 25.5296 26.1249L27.1221 25.4389C27.9752 25.0714 28.9419 25.0703 29.7958 25.4359L33.662 27.0909C36.1305 28.1477 37.9518 30.3125 38.5706 32.9254L41.1494 43.814C41.6534 45.9419 40.0394 47.9828 37.8526 47.9828H22.7747C20.9036 47.9828 19.3867 46.466 19.3867 44.5948V35.4596Z"
+						fill="url(#paint0_linear_2605_240364)"></path>
+									<path
+						d="M30.0858 33.9384C30.4164 31.6447 31.2961 30.1284 32.2431 29.3698C34.3611 27.6731 36.2911 28.5249 37.3996 30.1284C37.9953 30.9901 37.7861 32.0154 37.8138 33.0491C37.8474 34.3027 36.7305 37.1927 36.7305 37.1927C33.718 44.4674 26.0395 40.9604 23.3482 39.7615L26.1714 36.9672C29.2993 37.6518 29.9704 35.55 30.0858 33.9384Z"
+						fill="url(#paint1_linear_2605_240364)"></path>
+									<path
+						d="M7.2469 31.1949L6.3866 32.571L6.09984 31.1949L4.66602 30.3692L6.09984 30.0939L6.96013 28.7178L7.2469 30.0939L8.68072 30.9196L7.2469 31.1949Z"
+						fill="#0DCC5A"></path>
+									<path
+						d="M47.7761 20.0001L46.3423 22.2937L45.8643 20.0001L43.4746 18.6239L45.8643 18.1652L47.2981 15.8716L47.7761 18.1652L50.1658 19.5414L47.7761 20.0001Z"
+						fill="#0DCC5A"></path>
+									<rect x="18.2695" y="10.7764" width="19.6527"
+						height="18.8624" rx="9.43118"
+						fill="url(#paint2_radial_2605_240364)"></rect>
+									<rect width="5.98695" height="4.39928" rx="2.19964"
+						transform="matrix(0.874328 0.485335 -0.516123 0.856514 19.0312 13.6768)"
+						fill="#FFDBB1"></rect>
+									<rect width="5.98695" height="4.39928" rx="2.19964"
+						transform="matrix(0.874328 0.485335 -0.516123 0.856514 34.1484 20.9312)"
+						fill="#F7D0A2"></rect>
+									<path
+						d="M19.2637 13.7439C22.3951 16.7494 30.6666 16.289 34.8995 12.2263C31.7896 5.92947 22.8919 7.35976 19.2637 13.7439Z"
+						fill="#645950"></path>
+									<path
+						d="M33.3884 11.4989C32.5665 13.726 33.2074 20.81 38.0534 23.36C39.8223 20.7446 39.9323 12.54 33.3884 11.4989Z"
+						fill="#645950"></path>
+									<rect x="21.2949" y="16.5811" width="1.51174"
+						height="1.44975" rx="0.724877" fill="#4D4D4D"></rect>
+									<rect x="28.8535" y="18.0327" width="1.51174"
+						height="1.44975" rx="0.724877" fill="#4D4D4D"></rect>
+									<rect x="7.3418" y="36.4238" width="5.01035" height="4.80887"
+						rx="2.40443" fill="#FFDBB1"></rect>
+									<path
+						d="M9.84766 33.3596C9.84766 31.5044 11.3767 30.0005 13.2629 30.0005L24.0819 30.0005L24.0819 43.7338L13.2629 43.7338C11.3767 43.7338 9.84766 42.2299 9.84766 40.3747L9.84766 33.3596Z"
+						fill="url(#paint3_linear_2605_240364)"></path>
+									<path
+						d="M23.457 30.0005C25.4808 30.0005 27.1214 31.6141 27.1214 33.6046L27.1214 40.1297C27.1214 42.1202 25.4808 43.7338 23.457 43.7338L23.457 30.0005Z"
+						fill="url(#paint4_linear_2605_240364)"></path>
+									<rect x="14.3535" y="30" width="4.23181" height="4.98483"
+						fill="#DD9644"></rect>
+									<rect x="24.7402" y="36.4238" width="5.01035"
+						height="4.80887" rx="2.40443" fill="#FFDBB1"></rect>
+									<defs>
+									<linearGradient id="paint0_linear_2605_240364" x1="30.7617"
+						y1="28.7711" x2="30.7617" y2="51.6132"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#84F3B1"></stop>
+									<stop offset="1" stop-color="#0DCC5A"></stop></linearGradient>
+									<linearGradient id="paint1_linear_2605_240364" x1="33.3849"
+						y1="28.844" x2="33.5439" y2="40.7918"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#56F395"></stop>
+									<stop offset="1" stop-color="#3FCF79"></stop></linearGradient>
+									<radialGradient id="paint2_radial_2605_240364" cx="0" cy="0"
+						r="1" gradientUnits="userSpaceOnUse"
+						gradientTransform="translate(23.4003 16.5155) rotate(49.0339) scale(15.309 15.4101)">
+									<stop stop-color="#FFDBB1"></stop>
+									<stop offset="1" stop-color="#F7CFA1"></stop></radialGradient>
+									<linearGradient id="paint3_linear_2605_240364" x1="16.9648"
+						y1="30.0005" x2="16.9648" y2="43.7338"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#FFC070"></stop>
+									<stop offset="1" stop-color="#E4B06D"></stop></linearGradient>
+									<linearGradient id="paint4_linear_2605_240364" x1="25.2892"
+						y1="30.0005" x2="25.2892" y2="43.7338"
+						gradientUnits="userSpaceOnUse">
+									<stop stop-color="#B98351"></stop>
+									<stop offset="1" stop-color="#A2744E"></stop></linearGradient></defs></svg>
+			</div>
+			<div class="h-[1px] w-auto" style="background-color: rgb(241, 244, 246);"></div>
+			<div class="flex items-center text-gray-400">
+				<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+					<path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+				<span th:text="${BuyDomain.dealAddr}" class="text-sm text-black cursor-pointer"> 저장해둔 직거래 지역</span>
+			</div>
+		</th:block>
+		</div>
+	</div>
+</main>
+<div th:object="${BuyDomain}" class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-xl bg-white flex flex-col overflow-hidden">
+	<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
+	<div class="flex justify-center items-center h-14 border-b border-gray-100">
+		<header class="text-lg font-semibold text-gray-900">구매 금액</header>
+	</div>
+
+	<section class="flex flex-col gap-4 px-5 py-6 text-sm">
+		<div class="flex justify-between items-center">
+			<span class="text-gray-600">상품 금액</span>
+			<span th:text="|*{#numbers.formatInteger(price,3,'COMMA')}원|" class="font-bold text-gray-900 text-base">판매자가 등록한 상품 금액</span>
+		</div>
+		<div class="flex justify-between items-center">
+			<div class="flex flex-col">
+				<span class="text-gray-600">안심결제 수수료
+				<span th:text="|*{charge}%|" class="text-gray-400 ml-1"> 관리자가 정한 수수료</span></span>
+			</div>
+			<div class="flex items-center gap-1">
+				<span th:text="|*{#numbers.formatInteger(price*charge/100,3,'COMMA')}원|" class="text-jnGreen-700 font-bold text-base">무조건 수수료 있음 </span>
+			</div>
+		</div>
+	</section>
+	<div class="flex items-center gap-3 py-3 px-5 bg-gray-50 border-t border-gray-100">
+		<img loading="lazy" class="w-10 h-10 rounded-md object-cover"
+			th:src="*{thumbnail}">
+		<div class="flex flex-col flex-1 min-w-0">
+			<span th:text="*{title}" class="text-xs text-gray-500 truncate"> 상품명 </span>
+			<div class="flex items-center gap-1.5 mt-0.5">
+				<span class="text-sm font-bold text-gray-900">예상금액</span> 
+				<span th:text="|*{#numbers.formatInteger(price+price*charge/100,3,'COMMA')}원|" class="text-base font-bold text-jnGreen-700"> 
+				상품 금액이랑 수수료랑 합한 값 </span>
+			</div>
+		</div>
+	</div>
+	<div class="p-5 bg-white">
+		<button class="w-full h-14 bg-gray-900 text-white rounded-lg font-bold text-lg active:bg-gray-800 transition-colors" th:onclick="|submitPayment([[${BuyDomain.pnum}]])|">구매하기</button>
+	</div>
+</div>
+</th:block>
+</body>
+</html>

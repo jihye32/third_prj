@@ -32,4 +32,16 @@ public class AdminMemberDAO {
         }
         return list;
     }
+    
+    public AdminMemberDetailDomain selectMemberDetail(String userId) throws SQLException {
+        AdminMemberDetailDomain detail = null;
+        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+        try {
+            // 매퍼 ID는 kr.co.sist.admin.member.selectMemberDetail로 설정할 예정입니다.
+            detail = ss.selectOne("kr.co.sist.admin.member.selectMemberDetail", userId);
+        } finally {
+            if (ss != null) ss.close();
+        }
+        return detail;
+    }
 }
