@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AdminProductDTO {
-    private int category;
+    private int category_code;
     private int startNum;
     private int endNum;
     private int currentPage = 1;
@@ -18,7 +18,7 @@ public class AdminProductDTO {
     
     private String keyword;     
     private String sortBy = "latest"; 
-    private int productNo;
+    private int product_num;
 
     public void setNumbers() {
         this.startNum = (this.currentPage - 1) * this.pageScale + 1;
