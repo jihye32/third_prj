@@ -16,32 +16,35 @@
 
     <select id="selectProductList" resultType="kr.co.sist.admin.product.AdminProductDomain" parameterType="kr.co.sist.admin.product.AdminProductDTO">
         SELECT  *
-        FROM    (SELECT rownum rnum, p.* FROM (
+        FROM    (SELECT rownum rnum, p_sub.* FROM (
                    SELECT 
-                       product_num, title, price, addr, input_date, product_status, thumbnail
-                   FROM product
+                       p.product_num, p.title, p.price, s.addr, 
+                       p.input_date, p.product_status, p.thumbnail
+                   FROM product p
+                   LEFT OUTER JOIN sell_place s ON p.product_num = s.product_num
                    <where>
                        <if test="keyword != null and keyword != ''">
-                           AND title LIKE '%' || #{keyword} || '%'
+                           AND p.title LIKE '%' || #{keyword} || '%'
                        </if>
                    </where>
                    ORDER BY 
                    <choose>
-                       <when test="sortBy == 'lowPrice'"> price ASC </when>
-                       <when test="sortBy == 'highPrice'"> price DESC </when>
-                       <otherwise> input_date DESC </otherwise>
+                       <when test="sortBy == 'lowPrice'"> p.price ASC </when>
+                       <when test="sortBy == 'highPrice'"> p.price DESC </when>
+                       <otherwise> p.input_date DESC </otherwise>
                    </choose>
-                  ) p
+                  ) p_sub
         )
         WHERE rnum BETWEEN #{startNum} AND #{endNum}
     </select>
 
     <select id="selectProductDetail" resultType="kr.co.sist.admin.product.AdminProductDomain" parameterType="int">
         SELECT 
-            product_num, title, price, description, product_status, 
-            input_date, addr, thumbnail, status_code, delete_text, delete_flag
-        FROM product
-        WHERE product_num = #{product_num}
+            p.product_num, p.title, p.price, p.description, 
+            p.product_status, p.input_date, s.addr, p.thumbnail
+        FROM product p
+        LEFT OUTER JOIN sell_place s ON p.product_num = s.product_num
+        WHERE p.product_num = #{product_num}
     </select>
 
     <update id="updateProductState" parameterType="kr.co.sist.admin.product.AdminProductDTO">
