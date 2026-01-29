@@ -5,6 +5,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 
-
-; 
-
 @Controller
 public class MainController {
+	
+	@Autowired
+	private MainService ms;
 
 	@RequestMapping(value = "/", method = {GET, POST})
 	public String testIndex(Model model, HttpSession session) {
@@ -55,6 +56,8 @@ public class MainController {
 		} else {
 			model.addAttribute("loginFlag", false);
 		}// end else
+		
+		
 		
 		return "index";
 	}// testIndex
