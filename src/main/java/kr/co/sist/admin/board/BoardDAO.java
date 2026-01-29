@@ -14,64 +14,79 @@ public class BoardDAO {
 
     // 페이징용 전체 개수
     public int selectTotalCount(BoardDTO dto) throws SQLException {
-        int totalCnt = 0;
-
-        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-        totalCnt = ss.selectOne("kr.co.sist.admin.board.selectTotalCount", dto);
-
-        if (ss != null) ss.close();
-        return totalCnt;
+        SqlSession ss = null;
+        try {
+            ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+            return ss.selectOne(
+                "kr.co.sist.admin.board.selectTotalCount", dto
+            );
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     // 목록 조회
     public List<BoardDomain> selectBoardList(BoardDTO dto) throws SQLException {
-        List<BoardDomain> list = null;
-
-        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-        list = ss.selectList("kr.co.sist.admin.board.selectBoardList", dto);
-
-        if (ss != null) ss.close();
-        return list;
+        SqlSession ss = null;
+        try {
+            ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+            return ss.selectList(
+                "kr.co.sist.admin.board.selectBoardList", dto
+            );
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     // 상세 조회
     public BoardDomain selectBoardDetail(int boardNum) throws SQLException {
-        BoardDomain detail = null;
-
-        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-        detail = ss.selectOne("kr.co.sist.admin.board.selectBoardDetail", boardNum);
-
-        if (ss != null) ss.close();
-        return detail;
+        SqlSession ss = null;
+        try {
+            ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+            return ss.selectOne(
+                "kr.co.sist.admin.board.selectBoardDetail", boardNum
+            );
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     // 등록
     public void insertBoard(BoardDTO dto) throws PersistenceException {
-        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-        ss.insert("kr.co.sist.admin.board.insertBoard", dto);
-
-        if (ss != null) ss.close();
+        SqlSession ss = null;
+        try {
+            ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+            ss.insert(
+                "kr.co.sist.admin.board.insertBoard", dto
+            );
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     // 수정
     public int updateBoard(BoardDTO dto) throws SQLException {
-        int cnt = 0;
-
-        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-        cnt = ss.update("kr.co.sist.admin.board.updateBoard", dto);
-
-        if (ss != null) ss.close();
-        return cnt;
+        SqlSession ss = null;
+        try {
+            ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+            return ss.update(
+                "kr.co.sist.admin.board.updateBoard", dto
+            );
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     // 삭제(논리삭제)
     public int updateDeleteFlag(int boardNum) throws SQLException {
-        int cnt = 0;
-
-        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-        cnt = ss.update("kr.co.sist.admin.board.updateDeleteFlag", boardNum);
-
-        if (ss != null) ss.close();
-        return cnt;
+        SqlSession ss = null;
+        try {
+            ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+            return ss.update(
+                "kr.co.sist.admin.board.updateDeleteFlag", boardNum
+            );
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 }

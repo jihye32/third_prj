@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 관리</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header th:replace="manage/common_layout :: header"></header>
+
+<div class="wrapper">
+    
+    <aside th:replace="manage/common_layout :: sidebar"></aside>
+
+   
+    <div id="main-container">
+
+        <h2>공지사항 관리</h2>
+
+       
+        <div style="margin:20px 0; display:flex; justify-content:space-between; align-items:center;">
+
+         
+            <form th:action="@{/manage/notice/notice}" method="get" style="display:flex; gap:8px;">
+
+                <select name="searchType">
+                    <option value="all"
+                        th:selected="${dto == null or dto.searchType == 'all'}">전체</option>
+                    <option value="title"
+                        th:selected="${dto != null and dto.searchType == 'title'}">제목</option>
+                    <option value="content"
+                        th:selected="${dto != null and dto.searchType == 'content'}">내용</option>
+                </select>
+
+                <input type="text"
+                       name="keyword"
+                       placeholder="검색어"
+                       th:value="${dto != null ? dto.keyword : ''}"/>
+
+                <button type="submit">검색</button>
+            </form>
+
+            
+            <a th:href="@{/manage/notice/writeFrm(type='NOTICE')}"
+               style="padding:8px 14px; border:1px solid #ccc; text-decoration:none;">
+                글쓰기
+            </a>
+        </div>
+
+        
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr style="border-bottom:1px solid #ddd;">
+                    <th style="padding:10px; text-align:left;">제목</th>
+                    <th style="width:180px; padding:10px;">작성일</th>
+                    <th style="width:150px; padding:10px;">관리</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                
+                <tr th:each="row : ${list}" style="border-bottom:1px solid #eee;">
+                    <td style="padding:10px;" th:text="${row.title}"></td>
+
+                    <td style="padding:10px;"
+                        th:text="${#dates.format(row.writeDate,'yyyy-MM-dd HH:mm')}"></td>
+
+                   <td style="padding:10px;">
+    <div class="btn_group">
+
+       
+        <a class="btn_action btn_edit"
+           th:href="@{/manage/notice/modifyFrm(boardNum=${row.boardNum}, type='NOTICE')}">
+            수정
+        </a>
+
+        
+        <form th:action="@{/manage/notice/deleteProcess}"
+              method="post"
+              style="display:inline;">
+            <input type="hidden" name="boardNum" th:value="${row.boardNum}">
+            <input type="hidden" name="type" value="FAQ">
+            <button type="submit"
+                    class="btn_action btn_delete"
+                    onclick="return confirm('삭제하시겠습니까?')">
+                삭제
+            </button>
+        </form>
+
+    </div>
+</td>
+                </tr>
+
+                <!-- 데이터 없을 때 -->
+                <tr th:if="${list == null or #lists.isEmpty(list)}">
+                    <td colspan="3"
+                        style="padding:20px; text-align:center; color:#999;">
+                        등록된 공지사항이 없습니다.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!--  페이징 (추후 연결) -->
+        <div th:utext="${pagination}" style="margin-top:20px;"></div>
+
+    </div>
+</div>
+
+</body>
+</html>
