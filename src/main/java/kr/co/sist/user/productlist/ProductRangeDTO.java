@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class ProductRangeDTO {
 	private String keyword, url, sortBy, userId;
-	private int startNum, endNum, currentPage, totalPage, startPrice, endPrice, categoryNum;
+	private int startNum, endNum, currentPage, totalPage, startPrice, endPrice, category;
 }//class

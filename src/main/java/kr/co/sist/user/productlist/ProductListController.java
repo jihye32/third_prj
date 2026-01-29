@@ -30,16 +30,15 @@ public class ProductListController {
 		
 		String selCategoryName = "";
 		int selCategoryNum =0;
-		selCategoryNum = prDTO.getCategoryNum();
+		selCategoryNum = prDTO.getCategory();
 		List<CategoryDomain> categorylist = pls.searchCategory();
-		if(categorylist != null) {
 		for(CategoryDomain cd : categorylist) {
 			if(cd.getCategoryCode()==selCategoryNum) {
 				selCategoryName = cd.getCategoryText();
 			}// end if
 		}// end for
 		model.addAttribute("selCategoryName", selCategoryName);
-		}
+		
 		return "/product_list/productList";
 	}// productList
 	
