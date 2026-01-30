@@ -9,56 +9,58 @@
 <script>
 // fragment 내부 script 부분
 /* paymentFrm 프래그먼트 내부 스크립트 */
-window.initTossPayments = async function (price, title) { // main() 대신 전역 함수 선언
-    const button = document.getElementById("payment-button");
-    const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-    const tossPayments = TossPayments(clientKey);
-    const customerKey = "YoA3w8vRTZPoaV13MAQ3j";
-    
-    button.addEventListener("click", async function () {
-    	const response = await fetch("/orders/prepare", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title: title,
-                price: price,
-                name: document.getElementById("name").value,
-                address: document.getElementById("address").value
-            })
-        });
-    	
-    	const data = await response.json();
-    	const orderId = data.orderId;
-    	const amount = data.amount;
-    	const widgets = tossPayments.widgets({ customerKey });
-    	    // 화면의 가격과 일치하도록 설정
-    	    await widgets.setAmount({
-    	        currency: "KRW",
-    	        value: amount, 
-    	    });
+window.initTossPayments = async function (pnum, title) {
+  const button = document.getElementById("payment-button");
+  const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+  const tossPayments = TossPayments(clientKey);
+  const customerKey = "YoA3w8vRTZPoaV13MAQ3j";
 
-    	    await Promise.all([
-    	        widgets.renderPaymentMethods({
-    	            selector: "#payment-method",
-    	            variantKey: "DEFAULT",
-    	        }),
-    	        widgets.renderAgreement({ 
-    	            selector: "#agreement", 
-    	            variantKey: "AGREEMENT" 
-    	        }),
-    	    ]);
-    	    
-        await widgets.requestPayment({
-            orderId: orderId,
-            orderName: title,
-            successUrl: window.location.origin + "/buy/toss",
-            failUrl: window.location.origin + "/buy/fail",
-        });
-    });
-    
-   
+  const widgets = tossPayments.widgets({ customerKey });
+
+  // ✅ 렌더는 "열릴 때 1번만"
+  await Promise.all([
+    widgets.renderPaymentMethods({
+      selector: "#payment-method",
+      variantKey: "DEFAULT",
+    }),
+    widgets.renderAgreement({
+      selector: "#agreement",
+      variantKey: "AGREEMENT",
+    }),
+  ]);
+
+  // ✅ 이벤트 누적 방지: addEventListener 대신 onclick으로 덮어쓰기
+  button.onclick = async () => {
+    // (선택) 중복 클릭 방지
+    button.disabled = true;
+
+    try {
+      const response = await fetch("/orders/prepare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pnum: pnum }),
+      });
+
+      if (!response.ok) throw new Error("prepare failed");
+
+      const data = await response.json();
+      const orderId = data.orderId;
+      const amount = data.amount;
+
+      // ✅ 결제 직전에 amount 맞추기
+      await widgets.setAmount({ currency: "KRW", value: amount });
+
+      await widgets.requestPayment({
+        orderId: orderId,
+        orderName: title,
+        successUrl: window.location.origin + "/buy/toss",
+        failUrl: window.location.origin + "/buy/fail",
+      });
+
+    } finally {
+      button.disabled = false;
+    }
+  };
 };
 </script>
 <link th:href="@{/css/output.css}" rel="stylesheet">
@@ -149,11 +151,10 @@ function openPaymentForm(pnum, type) {
             
             if (paymentBtn) {
                 // 2. data- 속성에 심어둔 값을 읽어옵니다.
-                const amount = Number(paymentBtn.getAttribute("data-price"));
                 const title = paymentBtn.getAttribute("data-title");
                 
                 // 3. 읽어온 값을 인자로 넘기며 초기화 함수를 실행합니다.
-                window.initTossPayments(amount, title);
+                window.initTossPayments(pnum,title);
             }
         } 
 	}); 

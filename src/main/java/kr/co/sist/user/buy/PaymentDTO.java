@@ -1,5 +1,7 @@
 package kr.co.sist.user.buy;
 
+import java.sql.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,5 +9,6 @@ import lombok.Setter;
 @Setter
 public class PaymentDTO {
 	private int amount;
-	private String paymentTyp,orderId,paymentKey;
+	private String paymentTyp,orderId,paymentKey, paymentStatus;
+	private Date approvedDate;
 }

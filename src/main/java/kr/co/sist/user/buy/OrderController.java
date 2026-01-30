@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-@Controller("UserTossController")
-public class TossController {
+@Controller("UserOrderController")
+public class OrderController {
 
 	   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
