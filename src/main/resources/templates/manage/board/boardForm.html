@@ -35,17 +35,14 @@
 <div class="wrap">
   <div class="card">
 
-    <!-- action: FAQ/공지 + create/edit에 따라 분기 -->
     <form method="post"
           th:action="${dto.type=='FAQ'}
                       ? (${mode=='edit'} ? @{/manage/faq/modifyProcess} : @{/manage/faq/writeProcess})
                       : (${mode=='edit'} ? @{/manage/notice/modifyProcess} : @{/manage/notice/writeProcess})"
           onsubmit="return validateForm();">
 
-      <!-- 수정일 때만 boardNum 필요 -->
       <input type="hidden" name="boardNum" th:if="${mode=='edit'}" th:value="${dto.boardNum}"/>
 
-      <!-- 서버에서 kind로 고정해도 되지만, 전달값 유지 -->
       <input type="hidden" name="boardType" th:value="${dto.boardType}"/>
       <input type="hidden" name="type" th:value="${dto.type}"/>
 
@@ -64,7 +61,7 @@
       <div class="row" style="align-items:flex-start;">
         <div class="left" style="padding-top:8px;">내용</div>
         <div style="flex:1;">
-          <!-- Summernote는 textarea에 붙임 -->
+
           <textarea id="content" name="content" th:text="${dto.content}"></textarea>
         </div>
       </div>

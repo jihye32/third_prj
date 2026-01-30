@@ -3,7 +3,89 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.co.sist.admin.board">
+<mapper namespace="kr.co.sist.admin.ask">
 
-  
+    <!-- 전체 건수 -->
+    <select id="selectTotalCount"
+            parameterType="kr.co.sist.admin.ask.AskDTO"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM ask
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    WHERE ask_title LIKE '%' || #{keyword} || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    WHERE ask_text LIKE '%' || #{keyword} || '%'
+                </when>
+                <otherwise>
+                    WHERE ask_title LIKE '%' || #{keyword} || '%'
+                       OR ask_text LIKE '%' || #{keyword} || '%'
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!-- 목록 -->
+    <select id="selectAskList"
+            parameterType="kr.co.sist.admin.ask.AskDTO"
+            resultType="kr.co.sist.admin.ask.AskDomain">
+        SELECT *
+        FROM (
+            SELECT
+                ask_num     AS askNum,
+                ask_code    AS askCode,
+                ask_title   AS askTitle,
+                ask_text    AS askText,
+                ask_date    AS askDate,
+                user_id     AS userId,
+                answer_text AS answerText,
+                answer_date AS answerDate,
+                ROW_NUMBER() OVER(ORDER BY ask_date DESC) rn
+            FROM ask
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'title'">
+                        WHERE ask_title LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'content'">
+                        WHERE ask_text LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <otherwise>
+                        WHERE ask_title LIKE '%' || #{keyword} || '%'
+                           OR ask_text LIKE '%' || #{keyword} || '%'
+                    </otherwise>
+                </choose>
+            </if>
+        )
+        WHERE rn BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <!-- 상세 -->
+    <select id="selectAskDetail"
+            parameterType="int"
+            resultType="kr.co.sist.admin.ask.AskDomain">
+        SELECT
+            ask_num     AS askNum,
+            ask_code    AS askCode,
+            ask_title   AS askTitle,
+            ask_text    AS askText,
+            ask_date    AS askDate,
+            user_id     AS userId,
+            answer_text AS answerText,
+            answer_date AS answerDate
+        FROM ask
+        WHERE ask_num = #{value}
+    </select>
+
+    <!-- 답변 등록 -->
+    <update id="updateAnswer"
+            parameterType="kr.co.sist.admin.ask.AskDTO">
+        UPDATE ask
+        SET answer_text = #{answerText},
+            answer_date = SYSDATE
+        WHERE ask_num = #{askNum}
+    </update>
+
 </mapper>

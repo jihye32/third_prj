@@ -140,3 +140,100 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
 .btn_delete:hover {
     background-color: #fff5f5;
 }
+
+/* ===== 페이지네이션: 하단 고정 영역 ===== */
+
+/* main-container가 너무 짧아도 pagebar가 아래에 깔리도록 */
+#main-container{
+  position: relative;
+  min-height: calc(100vh - 120px); /* 헤더 높이에 맞춰 대충 잡기 */
+  padding-bottom: 90px;            /* pagebar 자리 확보 */
+}
+
+/* 실제 pagebar 영역(컨텐츠 하단에 붙음) */
+.pagebar-area{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20px;                    /* 아래 여백 */
+  display: flex;
+  justify-content: center;
+}
+
+/* pagebar 박스 */
+.pagebar{
+  display: inline-flex;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #e6e8ef;
+  border-radius: 999px;            /* 완전 둥글 */
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+
+/* buildPageBar가 만든 a / strong 스타일 */
+.pagebar a,
+.pagebar strong{
+  min-width: 36px;
+  height: 36px;
+  padding: 0 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;            /* 버튼 둥글 */
+  font-size: 14px;
+  text-decoration: none;
+
+  border: 1px solid transparent;
+  transition: all .15s ease;
+}
+
+/* 기본 링크 */
+.pagebar a{
+  color: #1f2937;
+  background: #f3f5f9;
+}
+.pagebar a:hover{
+  background: #e9edf7;
+  transform: translateY(-1px);
+}
+
+/* 현재 페이지(strong) */
+.pagebar strong{
+  color: #fff;
+  background: #2f3e9e;
+  font-weight: 700;
+}
+
+/* 공통 배지 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 72px;
+    padding: 6px 14px;
+
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 999px;   /* 둥글둥글 */
+    line-height: 1;
+    letter-spacing: -0.2px;
+}
+
+/* 답변예정 */
+.badge.wait {
+    background-color: #f3f5f9;
+    color: #475467;
+    border: 1px solid #d0d5dd;
+}
+
+/* 답변완료 */
+.badge.done {
+    background-color: #e8f1ff;
+    color: #1d4ed8;
+    border: 1px solid #b6ccfe;
+}
+

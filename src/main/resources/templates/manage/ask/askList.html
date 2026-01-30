@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>1:1 문의 관리</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header th:replace="~{manage/common_layout :: header}"></header>
+
+<div class="wrapper">
+    <aside th:replace="~{manage/common_layout :: sidebar}"></aside>
+
+    <div id="main-container">
+
+        <h2>1:1 문의 관리</h2>
+
+        <!-- 검색 -->
+        <div style="margin:20px 0; display:flex; justify-content:space-between; align-items:center;">
+            <form th:action="@{/manage/ask/list}" method="get" style="display:flex; gap:8px;">
+                <select name="searchType">
+                    <option value="all">전체</option>
+                    <option value="title">제목</option>
+                    <option value="user">사용자</option>
+                </select>
+
+                <input type="text" name="keyword" placeholder="검색어"
+                       th:value="${dto.keyword}">
+                <button type="submit">검색</button>
+            </form>
+        </div>
+
+        <!-- 리스트 -->
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th style="width:150px;">사용자</th>
+                    <th style="width:180px;">문의일</th>
+                    <th style="width:120px;">상태</th>
+                    <th style="width:120px;">관리</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="row : ${list}">
+                    <td th:text="${row.askTitle}"></td>
+                    <td th:text="${row.userId}"></td>
+                    <td th:text="${#dates.format(row.askDate,'yyyy-MM-dd HH:mm')}"></td>
+
+                    <td>
+                        <span th:if="${row.answerText == null}"
+                              class="badge wait">답변예정</span>
+                        <span th:if="${row.answerText != null}"
+                              class="badge done">답변완료</span>
+                    </td>
+
+                    <td>
+                        <a th:href="@{/manage/ask/detail(askNum=${row.askNum})}"
+                           class="btn_action btn_edit">상세</a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(list)}">
+                    <td colspan="5" style="text-align:center; padding:20px;">
+                        문의 내역이 없습니다.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션 -->
+        <div class="pagebar-area">
+            <div class="pagebar" th:utext="${pagination}"></div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

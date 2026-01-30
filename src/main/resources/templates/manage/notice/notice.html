@@ -101,10 +101,13 @@
                     </td>
                 </tr>
             </tbody>
-        </table>
+       <!-- 리스트(테이블) 영역 끝 -->
+</table>
 
-        <!--  페이징 (추후 연결) -->
-        <div th:utext="${pagination}" style="margin-top:20px;"></div>
+<!-- 하단 페이징 바 (리스트랑 분리) -->
+<div class="pagebar-area">
+  <div class="pagebar" th:utext="${pagination}"></div>
+</div>
 
     </div>
 </div>
