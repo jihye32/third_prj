@@ -15,11 +15,12 @@
 	<result column="view_count" property="viewCnt"/>
 	<result column="store_num" property="sellerId"/>
 	<result column="status_code" property="sellStatusCode"/>
+	<result column="delete_flag" property="deleteFlag"/>
 	<result column="code_text" property="category"/>
 	<result column="addr" property="dealAddress"/>
 </resultMap>
 <select id="selectProduct" parameterType="int" resultMap="productDomain">
-select p.product_num, p.title, p.price, p.product_status, p.thumbnail, p.content,  p.up_date, p.view_count, p.store_num, p.status_code, c.code_text, s.addr
+select p.product_num, p.title, p.price, p.product_status, p.thumbnail, p.content,  p.up_date, p.view_count, p.store_num, p.status_code, p.delete_flag, c.code_text, s.addr
 from product p, category c, sell_place s
 where p.category_code = c.category_code and p.product_num = s.product_num and p.product_num = #{productNum}
 </select>
@@ -78,4 +79,31 @@ select count(r.product_num)
 from review r, product p
 where r.product_num = p.product_num and p.store_num = #{productnum}
 </select>
+
+
+<!-- 상품 정보 수정 -->
+
+<!-- 상품 조회수 업데이트 -->
+<update id="updateViewCnt" parameterType="int">
+update product set view_count = view_count+1
+where product_num = #{productnum}
+</update>
+
+<!-- 끌올 날짜 확인 -->
+<select id="selectBumpDate" parameterType="int" resultType="java.time.LocalDateTime">
+select up_date 
+from product
+where product_num = #{productnum}
+</select>
+<!-- 끌올 날짜 수정 -->
+<update id="updateBumpDate" parameterType="int">
+update product set up_date = sysdate
+where product_num = #{productnum}
+</update>
+
+<!-- 상품 삭제 -->
+<update id="updateDeleteFlag" parameterType="int">
+update product set delete_flag = 'Y'
+where product_num = #{productnum}
+</update>
 </mapper>
