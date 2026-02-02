@@ -234,7 +234,7 @@ function execDaumPostcode() {
 						<!-- 이미지!!!!!!!!!!!!!!!!!!! -->
 					<div class="flex flex-col">
 						<div class="relative overflow-hidden rounded-2xl">
-						<th:block th:object="${ProductDetailDomain}">
+						<th:block th:object="${Product}">
 							<div class="carouselWrapper relative product-gallery swiperThumbnail product-gallery-slider lg:sticky lg:top-56 overflow-hidden rounded-2xl">
 								<div class="swiper swiper-initialized swiper-horizontal swiper-pointer-events" dir="ltr">
 									<!-- 이미지 들어가는 곳!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
@@ -315,13 +315,13 @@ function execDaumPostcode() {
 							</div>
 							<th:block th:unless="*{img.size() eq 1}">
 							<div class="absolute z-10 px-2 py-1 text-sm text-white bg-black bg-opacity-50 rounded-full pointer-events-none top-6 right-6">
-								<span id="current-slide">1</span> / <span th:text="${#lists.size(ProductDetailDomain.img)}">전체 사진 개수</span>
+								<span id="current-slide">1</span> / <span th:text="${#lists.size(Product.img)}">전체 사진 개수</span>
 							</div>
 							</th:block>
 						</div>
 					</div>
 					<!-- 오른쪽 상품 내용 들어가는 곳 -->
-					<div th:object="${ProductDetailDomain}">
+					<div th:object="${Product}">
 						<div class="flex items-center w-full chawkbazarBreadcrumb mt-5 mb-4 sm:mb-2 sm:mt-0">
 							<ol class="flex flex-wrap items-center w-full mt-0 lg:mt-0">
 								<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
@@ -551,10 +551,10 @@ function execDaumPostcode() {
 								</li>
 							</ul>
 						</div>
-						<div th:if="*{sendFlag eq 'N'}" class="flex items-center mt-4">
-							<!-- 판매자와 아이디가 같은 경우(결제가 된 상태) -->
+						<!-- 판매자와 아이디가 같은 경우(결제가 된 상태) -->
+					<!-- 	<div th:if="*{sendFlag eq 'N'}" class="flex items-center mt-4">
 							<button class="flex-1 h-12 border border-black font-bold text-black rounded-md hover:bg-gray-50 transition">발송완료</button>
-						</div>
+						</div> -->
 						</th:block>
 					</div>
 				</div>
@@ -573,7 +573,7 @@ function execDaumPostcode() {
 									th:unless=${storeCheck}><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <a href="jnapps3://?applink=report&amp;targetType=&amp;reportedStore=1250491&amp;reportedProductSeq=224185769" target="_blank" rel="noopener noreferrer" style="color: rgb(20, 19, 19); font-weight: 600;">중고나라로 신고</a>해 주세요</span></div>
 								</div>
 								<article class="flex flex-col flex-1">
-									<p th:text="${ProductDetailDomain.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
+									<p th:text="${Product.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
 									상품설명</p>
 								</article>
 							</div>
@@ -589,7 +589,7 @@ function execDaumPostcode() {
 										xmlns="http://www.w3.org/2000/svg">
 										<path d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path></svg></a>
 							</div>
-							<th:block th:object="${SellerDomain}">
+							<th:block th:object="${SellerInfo}">
 							<div class="flex flex-col">
 								<div class="max-lg:px-5">
 									<a class="flex justify-between items-center mt-6 mb-8 w-full" href="/store/1250491">
@@ -600,7 +600,7 @@ function execDaumPostcode() {
 											<img alt="프로파일" loading="lazy" width="48" height="48"
 												decoding="async" data-nimg="1"
 												class="box-content max-w-none h-12 rounded-full border-4 border-white -translate-x-4"
-												src="https://img2.joongna.com/common/Profile/Default/profile_m.png"
+												th:src="@{/상위경로/{profile}(profile=*{sellerProfile})}"
 												style="color: transparent;">
 										</div>
 									</a>

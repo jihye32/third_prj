@@ -1,7 +1,12 @@
 package kr.co.sist.user.productdetail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import kr.co.sist.user.productdetail.enums.DealType;
 
 @Service("UserProductService")
 public class ProductDetailService {
@@ -17,20 +22,26 @@ public class ProductDetailService {
 		if(pdd != null) {
 			pdd.setTag(pDAO.selectTag(pnum));
 			pdd.setImg(pDAO.selectImg(pnum));
+			List<DealType> type = new ArrayList<DealType>();
+			List<Integer> typeCode = pDAO.selectDealType(pnum);
+			for(int code : typeCode) {
+				type.add(DealType.fromCode(code));
+			}
+			pdd.setDealType(type);
 			pdd.setBookmarkCnt(pDAO.cntBookmark(pnum));
 			pdd.setChatCnt(pDAO.cntChat(pnum));
-			pdd.setSendFlag(pDAO.selectSendFlag(pnum));
+//			pdd.setSendFlag(pDAO.selectSendFlag(pnum));
 		}
 		
 		return pdd;
 	}//searchProduct
 	
-	//선택된 상품 번호로 조회된 상품 정보 조합
-	public SellerDomain searchSeller(int ssnum) {
-		SellerDomain sd = new SellerDomain();
-		sd=pDAO.selectSellerInfo(ssnum);
-		sd.setProductCnt(pDAO.cntSellProduct(ssnum));
-		sd.setReivewCnt(pDAO.cntReview(ssnum));
+	//판매자 정보 조합
+	public SellerInfoDomain searchSeller(int sid) {
+		SellerInfoDomain sd = new SellerInfoDomain();
+		sd=pDAO.selectSellerInfo(sid);
+		sd.setProductCnt(pDAO.cntSellProduct(sid));
+		sd.setReivewCnt(pDAO.cntReview(sid));
 		
 		return sd;
 	}//searchProduct
@@ -41,6 +52,7 @@ public class ProductDetailService {
 		if("N".equals(pDAO.selectSendFlag(pnum))||"n".equals(pDAO.selectSendFlag(pnum))) flag = true;
 		return flag;
 	}//searchSendFlag
+	
 	
 //////게시글 수정사항/////////////////////////////////////////////////////////////////////
 	//정상적인 확인을 위해서 boolean를 반환하지만 완성되고는 반환할 필요x

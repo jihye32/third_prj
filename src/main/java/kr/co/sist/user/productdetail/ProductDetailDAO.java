@@ -4,7 +4,10 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+
+import kr.co.sist.dao.MyBatisHandler;
 
 @Repository("UserProductDetailDAO")
 public class ProductDetailDAO {
@@ -13,6 +16,11 @@ public class ProductDetailDAO {
 	public ProductDetailDomain selectProduct(int pnum) {
 		ProductDetailDomain pdd = null;
 		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		pdd=ss.selectOne("kr.co.sist.user.product.detail.selectProduct", pnum);
+		
+		if( ss != null) { ss.close(); }//end if
 		
 		return pdd;
 	}//selectProduct
@@ -20,6 +28,10 @@ public class ProductDetailDAO {
 	//선택된 상품 번호에 등록한 태그들 가져옴
 	public List<String> selectTag(int pnum){
 		List<String> list = new ArrayList<String>();
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		list=ss.selectList("kr.co.sist.user.product.detail.selectProductTag", pnum);
+		if( ss != null) { ss.close(); }//end if
 		
 		return list;
 	}//selectTag
@@ -28,22 +40,48 @@ public class ProductDetailDAO {
 	public List<String> selectImg(int pnum){
 		List<String> list = new ArrayList<String>();
 		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		list=ss.selectList("kr.co.sist.user.product.detail.selectProductImg", pnum);
+		if( ss != null) { ss.close(); }//end if
 		return list;
 	}//selectImg
+	
+	//선택된 상품 번호에 등록한 거래방법들 가져옴
+	public List<Integer> selectDealType(int pnum){
+		List<Integer> list = new ArrayList<Integer>();
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		list=ss.selectList("kr.co.sist.user.product.detail.selectProductSellCode", pnum);
+		
+		if( ss != null) { ss.close(); }//end if
+		return list;
+	}//selectDealType
 	
 	//상점명으로 판매 등록한 모든 상품의 개수 가져옴
 	public int cntBookmark(int pnum) {
 		int cnt =0;
 		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		cnt=ss.selectOne("kr.co.sist.user.product.detail.selectProductBookmark", pnum);
+		if( ss != null) { ss.close(); }//end if
+		
 		return cnt;
-	}//cntSellProduct
+	}//cntBookmark
 	
 	//상점명으로 판매 등록한 모든 상품의 개수 가져옴
 	public int cntChat(int pnum) {
 		int cnt =0;
 		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		cnt=ss.selectOne("kr.co.sist.user.product.detail.selectProductChat", pnum);
+		if( ss != null) { ss.close(); }//end if
+		
 		return cnt;
-	}//cntSellProduct
+	}//cntChat
 	
 	//발송완료 확인
 	public String selectSendFlag(int pnum) {
@@ -54,26 +92,38 @@ public class ProductDetailDAO {
 
 	
 //////seller domain에 들어갈 내용/////////////////////////////////////////////////////////////////////
+	public SellerInfoDomain selectSellerInfo(int ssId) {
+		SellerInfoDomain sd = null;
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		sd=ss.selectOne("kr.co.sist.user.product.detail.sellerInfo", ssId);
+		if( ss != null) { ss.close(); }//end if
+		
+		return sd;
+	}//selectSellerInfo
 	//상점명으로 판매 등록한 모든 상품의 개수 가져옴
-	public int cntSellProduct(int ssnum) {
+	public int cntSellProduct(int ssId) {
 		int cnt =0;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		cnt=ss.selectOne("kr.co.sist.user.product.detail.sellerProductCnt", ssId);
+		if( ss != null) { ss.close(); }//end if
 		
 		return cnt;
 	}//cntSellProduct
 	
 	//상점명으로 등록되어있는 리뷰의 개수 가져옴
-	public int cntReview(int ssnum) {
+	public int cntReview(int ssId) {
 		int cnt =0;
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		cnt=ss.selectOne("kr.co.sist.user.product.detail.sellerReviewCnt", ssId);
+		if( ss != null) { ss.close(); }//end if
 		
 		return cnt;
 	}//cntReview
-	
-	public SellerDomain selectSellerInfo(int ssnum) {
-		SellerDomain sd = null;
-		
-		return sd;
-	}//selectSellerProfile
-	
 	
 //////게시글 수정사항/////////////////////////////////////////////////////////////////////
 	//정상적인 확인을 위해서 boolean를 반환하지만 완성되고는 반환할 필요x
