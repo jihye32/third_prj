@@ -22,6 +22,13 @@ function openReportForm() {
             openDrawer('제목'); // 서랍 여는 공통 함수 실행
         });
 }
+function searchCategory(categorycode){
+	if(categorycode != null){
+		var url = new URL(window.location.href);  // 현재 URL
+	    url.searchParams.set('category', categorycode);
+	    window.location.href = url.toString();    // 이동
+	}// end if
+}// searchCategory
 </script>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -74,14 +81,18 @@ function openReportForm() {
 							<table class="hidden w-full lg:table filterTable">
 								<tbody
 									class="[&amp;&gt;tr]:border-b [&amp;&gt;tr]:border-jnGray-300">
+									
 									<tr>
 										<td class="flex items-center justify-between"><p>카테고리</p>
-											<button>
-												<svg xmlns="http://www.w3.org/2000/svg" width="16"
-													height="16" fill="none">
-													<path stroke="#9CA3AF" stroke-linecap="round"
-														stroke-linejoin="round" stroke-width="1.2"
-														d="M8 2v12M2 8h12"></path></svg>
+											<button class="category-toggle-btn">
+												<!-- 기본: + 모양 -->
+											    <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+											        <path stroke="#9CA3AF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M8 2v12M2 8h12"></path>
+											    </svg>
+											    <!-- 펼쳤을 때: − 모양 -->
+											    <svg class="icon-minus" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" style="display:none;">
+											        <path stroke="#9CA3AF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M2 8h12"></path>
+											    </svg>
 											</button>
 										</td>
 										<td>
@@ -101,6 +112,40 @@ function openReportForm() {
 											</div>
 										</td>
 									</tr>
+									
+									<tr class="category-toggle-tr">
+										<td class="no-border"></td>
+										<td class="!py-2">
+											<ul class="grid grid-cols-6 text-sm">
+												<li class="flex justify-start items-center !mt-0 p-2 pl-0 w" th:each="category : ${categorylist}" th:object="${category}"> 
+												<!-- <a th:href="@{/searchList(category=*{categoryCode})}" th:text="*{categoryText}">카테고리</a> </li> -->
+												<button th:onclick="searchCategory([[*{categoryCode}]])" >
+												<div th:text="*{categoryText}">카테고리</div> </li>
+												</button>
+												<!-- <div th:onclick="searchCategory([[*{categoryCode}]])" th:value="*{categoryCode}" th:text="*{categoryText}">카테고리</div> </li> -->
+											</ul>
+										</td>
+									</tr>
+									
+									<script>
+									$(document).ready(function () {
+									    // 처음엔 아래 tr 숨김
+									    $('.category-toggle-tr').hide();
+
+									    $('.category-toggle-btn').on('click', function () {
+									        // + / - 아이콘 토글
+									        $(this).find('.icon-plus').toggle();
+									        $(this).find('.icon-minus').toggle();
+
+									        // 아래 tr 토글
+									        $('.category-toggle-tr').stop().slideToggle(200);
+									    });// on
+									    
+									});// ready
+									
+									
+									</script>
+									
 									<tr>
 										<td>가격</td>
 										<td class="price-filter">
