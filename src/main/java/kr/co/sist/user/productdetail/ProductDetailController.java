@@ -1,6 +1,5 @@
 package kr.co.sist.user.productdetail;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,57 +21,18 @@ import jakarta.servlet.http.HttpSession;
 @Controller("UserProductDetailController")
 public class ProductDetailController {
 
+
 	@Autowired
 	ProductDetailService ps;
-	
+
 	//상품 상세 화면 생성 및 상품 정보 가져오기
     @GetMapping("/{pnum}")
-    public String searchProductDetail(@PathVariable String pnum, HttpSession ss , Model model) {
+    public String searchProductDetail(@PathVariable int pnum, HttpSession ss , Model model) {
+    	//서비스에서 상세정보 가져옴
+    	ProductDetailDomain pdd = ps.searchProduct(pnum);
+    	if(pdd == null) return "/index";//메인화면으로 이동시키기
     	
-    	ProductDetailDomain pdd = new ProductDetailDomain();
-    	pdd.setBookmarkCnt(10);
-    	pdd.setCategory("카테고리");
-    	pdd.setChatCnt(0);
-    	pdd.setContent("이것은 자바인가");
-    	pdd.setDealAddr("양재동");
-    	List<Integer> list = new ArrayList<Integer>();
-    	list.add(1);
-    	list.add(2);
-    	pdd.setDealType(list);
-    	List<String> slist = new ArrayList<String>();
-    	slist.add("https://img2.joongna.com/media/original/2026/01/16/1768553238742cxo_wjZDC.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
-    	slist.add("https://img2.joongna.com/media/original/2026/01/16/1768553238742BfR_PXEkb.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
-//    	pdd.setImg(slist);
-    	pdd.setPrice(100000000);
-    	pdd.setProductNum(100);
-    	pdd.setProductStatus("Y");
-    	pdd.setSellStatusCode(1);//1: 판매중, 2: 예약중, 3: 판매완료
-    	pdd.setThumbnail("https://img2.joongna.com/media/original/2026/01/16/176855323874331j_7cv0Z.jpg?impolicy=resizeWatermark3&amp;ftext=%EC%9D%B8%EC%B2%9C%EA%B3%BC%EC%95%88%EC%82%B0%EC%82%AC%EC%9D%B4");
-    	pdd.setTitle("책책책책책책책책책");
-    	pdd.setViewCnt(123);
-    	
-    	
-    	SellerDomain sd = new SellerDomain();
-    	sd.setStoreName("자바");
-    	sd.setStoreNum(456);
-    	sd.setProductCnt(1);
-    	sd.setReivewCnt(10);
-    	sd.setSellerProfile("프로필 이미지명!!");
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	///////////////////////////////////////////////
-    	///
-    	//서비스에서 상세정보 가져옴(DB연결하면 테스트)
-//    	ProductDetailDomain pdd = ps.searchProduct(pnum);
-//    	if(pdd == null) return "product_detail/product_detail";//메인화면으로 이동시키기
-//    	SellerDomain sd = ps.searchSeller(pdd.getStoreCode());//판매자 상점 번호로 판매자 정보 가져오기
-    	
+    	SellerInfoDomain sid = ps.searchSeller(pdd.getSellerId());//판매자 상점 번호로 판매자 정보 가져오기
     	List<String> imgList = new ArrayList<String>();
     	imgList.add(pdd.getThumbnail());
     	if(pdd.getImg()!=null) {
@@ -85,27 +45,27 @@ public class ProductDetailController {
     	int snum = (ss.getAttribute("snum") != null) ? (int) ss.getAttribute("snum") : -1;//현재 로그인한 유저의 store number 가져오기
     	boolean isMe = false; //본인확인
     	boolean sendFlag = false;
-    	//세션에서 로그인을 햇는지 확인할 것.
-    	if(snum == pdd.getSellerCode()) {
-    		isMe = true;
-    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
-    			sendFlag = ps.searchSendFlag(Integer.parseInt(pnum)); //발송 완료 false, 발송 안함/null true
-    			model.addAttribute("sendFlag", sendFlag);
-    		}
-    	}else {
-    		ps.modifyViewCnt(Integer.parseInt(pnum));
-    		pdd.setViewCnt(pdd.getViewCnt()+1);
-    		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
-    			boolean bookmark = (ps.searchBookmark(Integer.parseInt(pnum), snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
-    			model.addAttribute("bookmarkFlag", bookmark);
-    		}
-    	}
+//    	//세션에서 로그인을 햇는지 확인할 것.
+//    	if(snum == pdd.getSellerCode()) {
+//    		isMe = true;
+//    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
+//    			sendFlag = ps.searchSendFlag(Integer.parseInt(pnum)); //발송 완료 false, 발송 안함/null true
+//    			model.addAttribute("sendFlag", sendFlag);
+//    		}
+//    	}else {
+//    		ps.modifyViewCnt(Integer.parseInt(pnum));
+//    		pdd.setViewCnt(pdd.getViewCnt()+1);
+//    		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
+//    			boolean bookmark = (ps.searchBookmark(Integer.parseInt(pnum), snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
+//    			model.addAttribute("bookmarkFlag", bookmark);
+//    		}
+//    	}
         model.addAttribute("storeCheck", isMe);
-        model.addAttribute("ProductDetailDomain", pdd);
-        model.addAttribute("SellerDomain", sd);
+        model.addAttribute("Product", pdd);
+        model.addAttribute("SellerInfo", sid);
         model.addAttribute("pnum", pnum);
         
-        return "product_detail/product_detail";
+        return "product_detail/test";
     }
 
     
