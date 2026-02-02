@@ -19,12 +19,12 @@ public class AdminProductDomain {
     private String thumbnail; // 썸네일 이미지명
     private int status_code, delete_text, delete_flag; //판매상태코드, 삭제사유, 삭제플래그
     private String description; // 상세페이지용
-    private String col; // 상점명
+    private String store_name; // 상점명
     public int getProductNo() { return product_num; }
     public int getPrice() { return price; }
     public String getProductName() { return title; }
     public String getLocation() { return addr; }
     public Date getInputDate() { return input_date; }
     public String getSellState() { return product_status; }
-    public String getStore_name() { return col; }
+    public String getStore_name() { return store_name; }
 }

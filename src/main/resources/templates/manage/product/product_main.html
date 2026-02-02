@@ -134,10 +134,10 @@
 										th:if="${p.status_code == 3}">판매완료</span>
 								</div>
 
-								<img
-									th:src="${p.thumbnail != null and p.thumbnail != '' ? '/upload/' + p.thumbnail : '/images/placeholder.png'}"
+								<img th:src="${'/upload/' + p.thumbnail}"> <img
+									th:src="${p.thumbnail != null ? '/images/product_detail/' + p.thumbnail : '/images/product_detail/default.jpg'}"
 									class="card-img-top"
-									onerror="this.onerror=null; this.src='/images/placeholder.png';">
+									onerror="this.src='/images/product_detail/default.jpg';">
 							</div>
 
 							<div class="card-body">

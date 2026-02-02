@@ -60,7 +60,7 @@
 		TO_CHAR(p.input_date, 'YYYY-MM-DD') AS input_date,
 		s_p.addr,
 		p.thumbnail,
-		st.col FROM product p
+		st.store_name FROM product p
 		LEFT OUTER JOIN sell_place s_p ON p.product_num = s_p.product_num
 		LEFT OUTER JOIN sell_status ss ON p.status_code = ss.status_code
 		LEFT OUTER JOIN store st ON p.store_num = st.store_num
