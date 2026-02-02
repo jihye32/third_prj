@@ -29,7 +29,6 @@ public class MainAspect {
 			pd.setTradingArea(cutArea( pd.getTradingArea() ));
 			pd.setTimeString(formatDate(pd.getTimDif(), pd.getLastModify()));
 		}// end for
-		System.out.println("=============");
 	}// afterReturning2
 	
 	/**
@@ -44,8 +43,6 @@ public class MainAspect {
 	}// cutArea
 	 
 	public static String formatDate(double timeDifference, Date lastModify) {
-		System.out.println(timeDifference);
-		
 		// 1일 = 86400초
         long totalSeconds = Math.round(timeDifference * 86400);
         
@@ -58,7 +55,6 @@ public class MainAspect {
         
         long m = totalSeconds / 60;    // 분
         long s = totalSeconds % 60;    // 초
-        System.out.println("d : " + d + "/ h : " + h);
         // 출력 형식
         if (d > 30) {
         	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

@@ -12,6 +12,11 @@ import kr.co.sist.user.ProductDomain;
 @Repository
 public class ProductListDAO {
 	
+	/**
+	 * 카테고리 전체 조회
+	 * @return
+	 * @throws PersistenceException
+	 */
 	public List<CategoryDomain> selectCategory() throws PersistenceException{
 		List<CategoryDomain> list = null;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -20,7 +25,7 @@ public class ProductListDAO {
 		return list;
 	}// selectCategory
 	
-	public List<ProductDomain> selectProductList() throws PersistenceException{
+	public List<ProductDomain> selectProductList(ProductRangeDTO prDTO) throws PersistenceException{
 		List<ProductDomain> list = null;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
 		list = ss.selectList("kr.co.sist.user.productlist.selectProdcutList");
@@ -31,7 +36,7 @@ public class ProductListDAO {
 	public int selectProductTotalCnt(ProductRangeDTO prDTO) {
 		int cnt = 0;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		cnt = ss.selectOne("kr.co.sist.user.productlist.selectProdcutCnt");
+		cnt = ss.selectOne("kr.co.sist.user.productlist.selectProdcutCnt",prDTO);
 		if(ss != null) {ss.close();}// end if
 		return cnt;
 	}// selectProductTotalCnt
