@@ -16,7 +16,7 @@ public enum DealType {
     }
 
     public static DealType fromCode(int code) {
-    	if (code == 0) return DIRECT;
+    	if (code == 0) return DELIVERY;
         for (DealType d : values()) {
             if (d.code == code) {
                 return d;
