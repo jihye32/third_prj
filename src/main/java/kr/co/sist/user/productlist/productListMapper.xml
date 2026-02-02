@@ -9,4 +9,37 @@ select category_code categoryCode, code_text categoryText
 from category
 </select>
 
+<select id="selectProdcutList" resultType="kr.co.sist.user.ProductDomain">
+SELECT
+			p.PRODUCT_NUM productNum,
+			p.TITLE productName,
+			p.PRICE price,
+			p.THUMBNAIL thumbnail,
+			sysdate-UP_DATE timDif,
+			p.STATUS_CODE sellStateCode,
+			sp.ADDR tradingArea,
+			p.UP_DATE lastModify,
+			ROW_NUMBER() OVER (ORDER BY p.VIEW_COUNT DESC) AS rn,
+			'' receiveFlag,
+			'' bookmarkFlag,
+			'' sellState
+FROM PRODUCT p, SELL_PLACE sp
+WHERE p.DELETE_FLAG='N' AND p.STATUS_CODE=1 and p.PRODUCT_NUM=sp.PRODUCT_NUM
+</select>
+
+<select id="selectProdcutCnt" 
+		parameterType="kr.co.sist.user.productlist.ProductRangeDTO" 
+		resultType="int">
+select count(*) cnt from product
+	<where>
+	DELETE_FLAG='N' AND STATUS_CODE=1
+		<if test="keyword neq null and keyword neq ''">
+		and instr( title, #{keyword} ) != 0
+		</if>
+		<if test="category != 0">
+		and category_code = #{category}
+		</if>
+	</where>
+</select>
+
 </mapper>

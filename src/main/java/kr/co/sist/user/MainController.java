@@ -22,7 +22,7 @@ public class MainController {
 	@RequestMapping(value = "/", method = {GET, POST})
 	public String testIndex(Model model, HttpSession session) {
 		int modelCnt = 1;
-		List<ProductDomain> list = ms.searchMostViewProdcut();
+		List<ProductDomain> list = ms.searchMostViewProdcut(1);
 		List<ProductDomain> temp = null;
 		for (int i = 0; i < list.size(); i += 6) {
 		    int end = Math.min(i + 6, list.size()); // 안전장치
@@ -32,7 +32,8 @@ public class MainController {
 		    modelCnt++;
 		}// end for
 		modelCnt=1;
-		List<ProductDomain> list2 = ms.searchMostLikeProdcut();
+//		List<ProductDomain> list2 = ms.searchMostLikeProdcut();
+		List<ProductDomain> list2 = ms.searchMostViewProdcut(2);
 		for (int i = 0; i < list2.size(); i += 6) {
 			int end = Math.min(i + 6, list2.size()); // 안전장치
 			temp = list2.subList(i, end);
