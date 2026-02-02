@@ -336,41 +336,34 @@ body {
 	padding-left: 40px !important;
 }
 
-/* 상품 이미지 컨테이너 (오버레이 기준점) */
-.card-img-wrap {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    background-color: #f8f9fa;
-}
+.shop-header { border-bottom: 1px solid #eee; padding-bottom: 25px; margin-bottom: 30px; }
+        .shop-profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 1px solid #dee2e6; }
+        .shop-info-text { color: #666; font-size: 0.95rem; margin-top: 10px; }
+        .shop-badges { font-size: 0.9rem; color: #888; }
+        .shop-badges i { color: #ffc107; margin-right: 5px; }
 
-/* 이미지 기본 스타일 (기존 card-img-top 수정) */
-.card-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s;
-}
+        /* 탭 스타일 */
+        .nav-tabs { border-bottom: 2px solid #333; }
+        .nav-link { color: #666; font-weight: bold; padding: 15px 40px; border: none !important; background: none !important; }
+        .nav-link.active { color: #000 !important; border-bottom: 3px solid #000 !important; }
+        .nav-link:hover { color: #333; }
 
-/* 어두운 배경 및 글자 오버레이 */
-.status-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 이미지 어둡게 처리 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-}
+        /* 탭 콘텐츠 */
+        .tab-content { padding-top: 30px; }
 
-.status-overlay span {
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* 글자 가독성 향상 */
-}
+        /* 상품 테이블 스타일 */
+        .table-custom thead th { border-top: 1px solid #eee; color: #888; font-weight: normal; padding: 15px 0; }
+        .table-custom tbody td { vertical-align: middle; padding: 15px 0; color: #333; }
+        .status-badge { padding: 5px 10px; background-color: #f8f9fa; border-radius: 20px; font-size: 0.85rem; color: #666; }
+
+        /* 페이지네이션 */
+        .pagination .page-link { color: #333; border: 1px solid #eee; margin: 0 5px; border-radius: 5px; }
+        .pagination .page-item.active .page-link { background-color: #333; border-color: #333; color: #fff; }
+
+        /* 후기 리스트 스타일 */
+        .review-item { border-bottom: 1px solid #eee; padding: 25px 0; }
+        .review-writer-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+        .star-rating { color: #ffc107; font-size: 0.9rem; margin: 5px 0; }
+        .review-content { color: #555; margin-top: 15px; }
+        .review-date { color: #aaa; font-size: 0.9rem; }
+        .btn-hide { border-color: #ddd; color: #666; font-size: 0.9rem; }

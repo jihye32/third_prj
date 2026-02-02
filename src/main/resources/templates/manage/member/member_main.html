@@ -59,8 +59,7 @@ tr[style*="cursor: pointer"]:hover {
 					<table class="table table-hover align-middle text-center">
 						<thead class="table-light">
 							<tr>
-								<th>회원 번호</th>
-								<th>회원 아이디</th>
+								<th>번호</th> <th>회원 아이디</th>
 								<th>회원 E-mail</th>
 								<th>계정 생성일</th>
 								<th>계정 삭제</th>
@@ -69,14 +68,15 @@ tr[style*="cursor: pointer"]:hover {
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="m : ${memberList}"
-								th:onclick="|location.href='@{/manage/member/member_detail(userId=${m.userId})}'|"
+							<tr th:each="m, mStat : ${memberList}"
+								th:onclick="|location.href='@{/manage/member/member_detail(userId=${m.user_id})}'|"
 								style="cursor: pointer">
 
-								<td th:text="${m.memberNo}"></td>
-								<td th:text="${m.userId}"></td>
+								<td th:text="${mStat.count}"></td>
+								
+								<td th:text="${m.user_id}"></td>
 								<td th:text="${m.email}"></td>
-								<td th:text="${#dates.format(m.inputDate, 'yyyy-MM-dd')}"></td>
+								<td th:text="${#dates.format(m.input_date, 'yyyy-MM-dd')}"></td>
 								
 								<td onclick="event.stopPropagation();">
 									<button class="btn btn-sm btn-danger btn-custom">삭제하기</button>
@@ -84,13 +84,13 @@ tr[style*="cursor: pointer"]:hover {
 
 								<td onclick="event.stopPropagation();">
 									<button class="btn btn-sm btn-navy btn-custom"
-										th:onclick="|location.href='@{/manage/member/member_prdv(userId=${m.userId})}'|">
+										th:onclick="|location.href='@{/manage/member/member_prdv(userId=${m.user_id})}'|">
 										상세페이지 확인</button>
 								</td>
 
 								<td onclick="event.stopPropagation();">
 									<button class="btn btn-sm btn-navy btn-custom"
-										th:onclick="|location.href='@{/manage/member/member_product(userId=${m.userId})}'|">
+										th:onclick="|location.href='@{/manage/member/member_product(userId=${m.user_id})}'|">
 										구매/판매내역 확인</button>
 								</td>
 							</tr>

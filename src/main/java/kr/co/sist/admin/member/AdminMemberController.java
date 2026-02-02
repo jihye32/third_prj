@@ -37,10 +37,8 @@ public class AdminMemberController {
 
     @GetMapping("/manage/member/member_detail")
     public String memberDetailPage(@RequestParam String userId, Model model) {
-        System.out.println("넘어온 userId: " + userId); // 1. 파라미터가 잘 넘어오는지 확인
         
         AdminMemberDetailDomain md = ms.getMemberDetail(userId);
-        System.out.println("조회된 결과: " + md); // 2. 여기서 null이 찍히면 DB/Mapper 문제!
         
         model.addAttribute("member", md);
         return "manage/member/member_detail";

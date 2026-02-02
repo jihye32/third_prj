@@ -2,47 +2,76 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.admin.member">
 
-    <select id="selectTotalCount" resultType="int"
-        parameterType="kr.co.sist.admin.member.AdminMemberDTO">
-        SELECT COUNT(*) FROM member
-        <where>
-            <if test="keyword != null and keyword != ''">
-                AND user_id LIKE '%' || #{keyword} || '%'
-            </if>
-        </where>
-    </select>
+	<select id="selectTotalCount" resultType="int"
+		parameterType="kr.co.sist.admin.member.AdminMemberDTO">
+		SELECT COUNT(*) FROM member
+		<where>
+			<if test="keyword != null and keyword != ''">
+				AND user_id LIKE '%' || #{keyword} || '%'
+			</if>
+		</where>
+	</select>
 
-    <select id="selectMemberList"
-        resultType="kr.co.sist.admin.member.AdminMemberDomain"
-        parameterType="kr.co.sist.admin.member.AdminMemberDTO">
-        SELECT *
-        FROM (
-            SELECT rownum rnum, m.* FROM (
-                SELECT
-                    member_num, user_id, email, input_date
-                FROM member
-                <where>
-                    <if test="keyword != null and keyword != ''">
-                        AND user_id LIKE '%' || #{keyword} || '%'
-                    </if>
-                </where>
-                ORDER BY input_date DESC
-            ) m
-        )
-        WHERE rnum BETWEEN #{startNum} AND #{endNum}
-    </select>
+	<select id="selectMemberList"
+		resultType="kr.co.sist.admin.member.AdminMemberDomain"
+		parameterType="kr.co.sist.admin.member.AdminMemberDTO">
+		SELECT *
+		FROM (
+		SELECT rownum rnum, m.* FROM (
+		SELECT
+		user_id, email,
+		input_date FROM member
+		<where>
+			<if test="keyword != null and keyword != ''">
+				AND user_id LIKE '%' || #{keyword} || '%'
+			</if>
+		</where>
+		ORDER BY input_date DESC
+		) m
+		)
+		WHERE rnum BETWEEN #{startNum} AND
+		#{endNum}
+	</select>
 
-    <select id="selectMemberDetail" 
-        resultType="kr.co.sist.admin.member.AdminMemberDetailDomain" 
-        parameterType="String">
-        SELECT  
-            user_id, 
-            nickname, 
-            name, 
-            birthdate, 
-            email
-        FROM    member
-        WHERE   user_id = #{userId}
-    </select>
+	<select id="selectMemberDetail"
+		resultType="kr.co.sist.admin.member.AdminMemberDetailDomain"
+		parameterType="String">
+		SELECT
+		m.user_id,
+		s.col,
+		m.name,
+		/* TO_CHAR를 사용하여 년도를
+		4자리(YYYY)로 강제 지정합니다 */
+		TO_CHAR(m.birthday, 'YYYY/MM/DD') AS birthday,
+		m.email
+		FROM member m
+		LEFT OUTER JOIN store s ON m.user_id = s.user_id
+		WHERE m.user_id = #{userId}
+	</select>
+
+	<select id="selectMemberStoreInfo"
+		resultType="kr.co.sist.admin.member.AdminMemberProductDomain"
+		parameterType="String">
+		SELECT
+		user_id, col, profile_img, introduce,
+		TO_CHAR(input_date, 'YYYY-MM-DD') as input_date,
+		TRUNC(SYSDATE - input_date) as open_days
+		FROM store
+		WHERE user_id = #{id}
+	</select>
+
+	<select id="selectMemberHistoryList"
+		resultType="kr.co.sist.admin.member.AdminMemberProductDomain"
+		parameterType="java.util.Map">
+		SELECT
+		p.product_num, p.title, p.price,
+		TO_CHAR(p.input_date, 'YYYY.MM.DD') as trade_date,
+		<if test="type == 'purchase'"> s.col as target_id </if>
+		<if test="type == 'sale'"> m.user_id as target_id </if>
+		FROM product p
+		WHERE
+		<if test="type == 'purchase'"> p.buyer_id = #{id} </if>
+		<if test="type == 'sale'"> p.user_id = #{id} </if>
+	</select>
 
 </mapper>

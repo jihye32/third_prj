@@ -76,5 +76,6 @@ public class AdminMemberService {
         return detail;
     }
     
+    
   
 }
