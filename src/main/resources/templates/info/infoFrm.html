@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>내 정보</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+<link th:href="@{/css/test.css}" rel="stylesheet">
+<style type="text/css">
+.chkBtn {
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+	background-color: #0DCC5A;
+	color: white;
+	margin-left: 10px;
+	font-weight: bold;
+	position: absolute;
+	right: 0;
+}
+</style>
+<!-- JQuery CDN -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+
+	});
+</script>
+</head>
+<body>
+	<div id="__next">
+		<div class="flex flex-col min-h-screen bg-white">
+			<div th:replace="~{template/header :: headerImgFragment}"></div>
+			<div th:replace="~{template/header :: headerFragment}"></div>
+
+			<main class="relative flex-grow border-b-2"
+				style="min-height: 0px !important; height: auto !important; padding-bottom: 100px">
+				<div
+					class="mx-auto max-w-[1280px] md:px-8 2xl:px-16 box-content max-lg:overflow-x-hidden px-0">
+					<div></div>
+					<form
+						class="pt-6 mx-auto w-full max-w-[1020px] lg:pt-[72px] max-lg:overflow-x-hidden">
+						<section class="px-5">
+							<div
+								class="relative pb-2 mb-3 text-lg font-semibold lg:pb-2.5 lg:mb-5 lg:text-2xl before:content-[''] before:absolute before:left-0 before:bottom-0 before:w-full before:h-[1px] before:bg-jnGray-900 !text-jnGray-900"
+								style="margin-bottom: 50px">
+								<h1>내 정보</h1>
+							</div>
+							<div
+								class="flex flex-col space-y-4 lg:space-y-8 mb-[76px] lg:mb-[72px]">
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">아이디</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input id="productTitle" name="productTitle" type="text"
+													placeholder=""
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+												<button class="absolute right-2 h-11 hidden">
+													<svg width="20px" height="20px" viewBox="0 0 20 20"
+														fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd" clip-rule="evenodd"
+															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
+															fill="#9CA3AF"></path></svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새
+										비밀번호</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input id="productTitle" name="productTitle" type="text"
+													placeholder=""
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+												<button class="absolute right-2 h-11 hidden">
+													<svg width="20px" height="20px" viewBox="0 0 20 20"
+														fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd" clip-rule="evenodd"
+															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
+															fill="#9CA3AF"></path></svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새
+										비밀번호 확인</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input id="productTitle" name="productTitle" type="text"
+													placeholder=""
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+												<button class="absolute right-2 h-11 hidden">
+													<svg width="20px" height="20px" viewBox="0 0 20 20"
+														fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd" clip-rule="evenodd"
+															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
+															fill="#9CA3AF"></path></svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">이름</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input id="productTitle" name="productTitle" type="text"
+													placeholder=""
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+												<button class="absolute right-2 h-11 hidden">
+													<svg width="20px" height="20px" viewBox="0 0 20 20"
+														fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd" clip-rule="evenodd"
+															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
+															fill="#9CA3AF"></path></svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새 가게명</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input style="width: 600px;" id="productTitle" name="productTitle" type="text"
+													placeholder=""
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+									        	<input type="button" value="중복확인" class="chkBtn">
+												<button class="absolute right-2 h-11 hidden">
+													<svg width="20px" height="20px" viewBox="0 0 20 20"
+														fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd" clip-rule="evenodd"
+															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
+															fill="#9CA3AF"></path></svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">생년월일</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input id="productTitle" name="productTitle" type="text"
+													placeholder=""
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+												<button class="absolute right-2 h-11 hidden">
+													<svg width="20px" height="20px" viewBox="0 0 20 20"
+														fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd" clip-rule="evenodd"
+															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
+															fill="#9CA3AF"></path></svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새 이메일</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input style="width: 345px;" id="productTitle" name="productTitle" type="text"
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+												<select style="width: 250px;" id="productTitle" name="productTitle"
+													class="py-2 px-4 md:px-5 w-full border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded">
+												<option value="@naver.com">@naver.com</option>
+												<option value="@gmail.com">@gmail.com</option>
+												<option value="@daum.net">@daum.net</option>
+												</select>
+												<input type="button" value="인증번호 전송" class="chkBtn">
+												<button class="absolute right-2 h-11 hidden">
+													<svg width="20px" height="20px" viewBox="0 0 20 20"
+														fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd" clip-rule="evenodd"
+															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
+															fill="#9CA3AF"></path></svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">인증번호</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input style="width: 600px;" id="productTitle" name="productTitle" type="text"
+													placeholder=""
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+									        	<input type="button" value="인증하기" class="chkBtn">
+												<button class="absolute right-2 h-11 hidden">
+													<svg width="20px" height="20px" viewBox="0 0 20 20"
+														fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd" clip-rule="evenodd"
+															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
+															fill="#9CA3AF"></path></svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</section>
+							</div>
+						</section>
+						<div
+							class="flex fixed bottom-0 left-0 z-10 flex-col items-center w-full bg-white lg:relative">
+							<div class="w-full px-5 py-3 max-w-[1020px]">
+								<button data-variant="flat"
+									class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md bg-heading text-white px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-gray-600 hover:shadow-cart w-full break-keep"
+									type="submit">수정하기</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="Toastify"></div>
+			</main>
+
+			<div th:replace="~{template/footer :: footerFragment}"></div>
+		</div>
+	</div>
+</body>
+</html>

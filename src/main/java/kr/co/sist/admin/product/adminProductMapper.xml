@@ -4,68 +4,94 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.admin.product">
 
-    <select id="selectTotalCount" resultType="int" parameterType="kr.co.sist.admin.product.AdminProductDTO">
-        SELECT  COUNT(*) 
-        FROM    product
-        <where>
-            <if test="keyword != null and keyword != ''">
-                AND title LIKE '%' || #{keyword} || '%'
-            </if>
-        </where>
-    </select>
+	<select id="selectTotalCount" resultType="int"
+		parameterType="kr.co.sist.admin.product.AdminProductDTO">
+		SELECT COUNT(*)
+		FROM product
+		<where>
+			<if test="keyword != null and keyword != ''">
+				AND title LIKE '%' || #{keyword} || '%'
+			</if>
+		</where>
+	</select>
 
-    <select id="selectProductList" resultType="kr.co.sist.admin.product.AdminProductDomain" parameterType="kr.co.sist.admin.product.AdminProductDTO">
-        SELECT  *
-        FROM    (SELECT rownum rnum, p_sub.* FROM (
-                   SELECT 
-                       p.product_num, p.title, p.price, s.addr, 
-                       p.input_date, p.product_status, p.thumbnail
-                   FROM product p
-                   LEFT OUTER JOIN sell_place s ON p.product_num = s.product_num
-                   <where>
-                       <if test="keyword != null and keyword != ''">
-                           AND p.title LIKE '%' || #{keyword} || '%'
-                       </if>
-                   </where>
-                   ORDER BY 
-                   <choose>
-                       <when test="sortBy == 'lowPrice'"> p.price ASC </when>
-                       <when test="sortBy == 'highPrice'"> p.price DESC </when>
-                       <otherwise> p.input_date DESC </otherwise>
-                   </choose>
-                  ) p_sub
-        )
-        WHERE rnum BETWEEN #{startNum} AND #{endNum}
-    </select>
+	<select id="selectProductList"
+		resultType="kr.co.sist.admin.product.AdminProductDomain"
+		parameterType="kr.co.sist.admin.product.AdminProductDTO">
+		SELECT *
+		FROM (
+		SELECT rownum rnum, p_sub.* FROM (
+		SELECT
+		p.product_num,
+		p.title,
+		p.price,
+		s_p.addr,
+		TO_CHAR(p.input_date, 'YYYY-MM-DD') AS input_date, /* 4자리 년도 포맷 */
+		ss.status_text AS product_status, /* CHAR(1) 코드 대신 텍스트 가져오기 */
+		p.thumbnail
+		FROM product p
+		LEFT OUTER JOIN sell_place s_p ON p.product_num = s_p.product_num
+		LEFT OUTER JOIN sell_status ss ON p.status_code = ss.status_code
+		<where>
+			<if test="keyword != null and keyword != ''">
+				AND p.title LIKE '%' || #{keyword} || '%'
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="sortBy == 'lowPrice'"> p.price ASC </when>
+			<when test="sortBy == 'highPrice'"> p.price DESC </when>
+			<otherwise> p.input_date DESC </otherwise>
+		</choose>
+		) p_sub
+		)
+		WHERE rnum BETWEEN #{startNum} AND #{endNum}
+	</select>
 
-    <select id="selectProductDetail" resultType="kr.co.sist.admin.product.AdminProductDomain" parameterType="int">
-        SELECT 
-            p.product_num, p.title, p.price, p.description, 
-            p.product_status, p.input_date, s.addr, p.thumbnail
-        FROM product p
-        LEFT OUTER JOIN sell_place s ON p.product_num = s.product_num
-        WHERE p.product_num = #{product_num}
-    </select>
+	<select id="selectProductDetail"
+		resultType="kr.co.sist.admin.product.AdminProductDomain"
+		parameterType="int">
+		SELECT
+		p.product_num,
+		p.title,
+		p.price,
+		p.content AS description,
+		ss.status_text AS product_status,
+		TO_CHAR(p.input_date, 'YYYY-MM-DD') AS input_date,
+		s_p.addr,
+		p.thumbnail,
+		st.store_name FROM product p
+		LEFT OUTER JOIN sell_place s_p ON p.product_num = s_p.product_num
+		LEFT OUTER JOIN sell_status ss ON p.status_code = ss.status_code
+		LEFT OUTER JOIN store st ON p.store_num = st.store_num
+		WHERE p.product_num = #{product_num}
+	</select>
 
-    <update id="updateProductState" parameterType="kr.co.sist.admin.product.AdminProductDTO">
-        UPDATE  product 
-        SET     product_status = #{sellState} 
-        WHERE   product_num = #{productNo}
-    </update>
+	<update id="updateProductState"
+		parameterType="kr.co.sist.admin.product.AdminProductDTO">
+		UPDATE product
+		SET status_code = #{statusCode} /*
+		product_status 대신 status_code(NUMBER) 수정 권장 */
+		WHERE product_num =
+		#{productNo}
+	</update>
 
-    <update id="deleteProduct" parameterType="kr.co.sist.admin.product.AdminProductDTO">
-        UPDATE  product 
-        SET     delete_flag = 1, 
-                delete_text = #{deleteReason}, 
-                input_date = SYSDATE 
-        WHERE   product_num = #{productNo}
-    </update>
-    
-    <select id="selectProductImages" resultType="String" parameterType="int">
-        SELECT  imageName 
-        FROM    product_images 
-        WHERE   product_num = #{product_num} 
-        ORDER BY imageOrder ASC
-    </select>
+	<update id="deleteProduct"
+		parameterType="kr.co.sist.admin.product.AdminProductDTO">
+		UPDATE product
+		SET delete_flag = '1', /* CHAR(1)이므로 문자열
+		처리 */
+		delete_text = #{deleteReason},
+		modify_date = SYSDATE /* input_date 대신 수정일(modify_date) 변경 권장 */
+		WHERE product_num
+		= #{productNo}
+	</update>
+
+	<select id="selectProductImages" resultType="String"
+		parameterType="int">
+		SELECT product_img
+		FROM product_img
+		WHERE product_num = #{product_num}
+	</select>
 
 </mapper>
