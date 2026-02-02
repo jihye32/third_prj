@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.sist.user.productdetail.enums.DealType;
+import kr.co.sist.user.productdetail.enums.ProductStatus;
+import kr.co.sist.user.productdetail.enums.SellStatus;
 
 @RequestMapping("/product")
 @Controller("UserProductDetailController")
@@ -35,37 +38,44 @@ public class ProductDetailController {
     	SellerInfoDomain sid = ps.searchSeller(pdd.getSellerId());//판매자 상점 번호로 판매자 정보 가져오기
     	List<String> imgList = new ArrayList<String>();
     	imgList.add(pdd.getThumbnail());
-    	if(pdd.getImg()!=null) {
-    		for(String img : pdd.getImg()) {
+    	if(pdd.getImages()!=null) {
+    		for(String img : pdd.getImages()) {
     			imgList.add(img);
     		}
     	}
-    	pdd.setImg(imgList);
-    	
-    	int snum = (ss.getAttribute("snum") != null) ? (int) ss.getAttribute("snum") : -1;//현재 로그인한 유저의 store number 가져오기
+    	pdd.setImages(imgList);
+//    	int snum = (ss.getAttribute("snum") != null) ? (int) ss.getAttribute("snum") : -1;//현재 로그인한 유저의 store number 가져오기
+    	int snum = 1;//현재 로그인한 유저의 store number 가져오기
     	boolean isMe = false; //본인확인
     	boolean sendFlag = false;
-//    	//세션에서 로그인을 햇는지 확인할 것.
-//    	if(snum == pdd.getSellerCode()) {
-//    		isMe = true;
-//    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
-//    			sendFlag = ps.searchSendFlag(Integer.parseInt(pnum)); //발송 완료 false, 발송 안함/null true
-//    			model.addAttribute("sendFlag", sendFlag);
-//    		}
-//    	}else {
-//    		ps.modifyViewCnt(Integer.parseInt(pnum));
-//    		pdd.setViewCnt(pdd.getViewCnt()+1);
-//    		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
-//    			boolean bookmark = (ps.searchBookmark(Integer.parseInt(pnum), snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
-//    			model.addAttribute("bookmarkFlag", bookmark);
-//    		}
-//    	}
+    	
+    	//세션에서 로그인을 햇는지 확인할 것.
+    	if(snum == pdd.getSellerId()) {
+    		isMe = true;
+    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
+    			sendFlag = ps.searchSendFlag(pnum); //발송 완료 false, 발송 안함/null true
+    			model.addAttribute("sendFlag", sendFlag);
+    		}
+    	}else {
+    		ps.modifyViewCnt(pnum);
+    		pdd.setViewCnt(pdd.getViewCnt()+1);
+    		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
+    			boolean bookmark = (ps.searchBookmark(pnum, snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
+    			model.addAttribute("bookmarkFlag", bookmark);
+    		}
+    	}
+    	
         model.addAttribute("storeCheck", isMe);
         model.addAttribute("Product", pdd);
         model.addAttribute("SellerInfo", sid);
         model.addAttribute("pnum", pnum);
         
-        return "product_detail/test";
+        //enum 사용 시 필요한 부분
+        model.addAttribute("ProductStatus", ProductStatus.class);
+        model.addAttribute("SellStatus", SellStatus.class);
+        model.addAttribute("DealType", DealType.class);
+        
+        return "product_detail/product_detail";
     }
 
     

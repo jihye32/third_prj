@@ -21,7 +21,7 @@ public class ProductDetailService {
 		pdd = pDAO.selectProduct(pnum);
 		if(pdd != null) {
 			pdd.setTag(pDAO.selectTag(pnum));
-			pdd.setImg(pDAO.selectImg(pnum));
+			pdd.setImages(pDAO.selectImg(pnum));
 			List<DealType> type = new ArrayList<DealType>();
 			List<Integer> typeCode = pDAO.selectDealType(pnum);
 			for(int code : typeCode) {

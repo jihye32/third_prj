@@ -240,18 +240,18 @@ function execDaumPostcode() {
 								<div class="swiper swiper-initialized swiper-horizontal swiper-pointer-events" dir="ltr">
 									<!-- 이미지 들어가는 곳!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 									<div id="image-slider" class="flex transition-transform duration-500 ease-out" style="transform: translateX(0%);">
-										<div th:each="img : *{img}" class="swiper-slide w-full flex-shrink-0">
+										<div th:each="img : *{images}" class="swiper-slide w-full flex-shrink-0">
 											<div class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
 												<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--0"
 													referrerpolicy="no-referrer" fetchpriority="high"
 													decoding="async" data-nimg="fill"
 													class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
-													th:src="${img}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-												<div th:unless="*{sellStatusCode eq 1}" class="absolute top-0 left-0 bg-black/[0.5] w-full h-full z-[1] rounded-lg">
-													<div th:if="*{sellStatusCode eq 2}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
+													th:src="@{/assets/images/{file}(file=${img})}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+												<div th:unless="*{sellStatus == SellStatus.ON_SALE}" class="absolute top-0 left-0 bg-black/[0.5] w-full h-full z-[1] rounded-lg">
+													<div th:if="*{sellStatus == SellStatus.RESERVED}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
 														<img alt="예약 중" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" src="/assets/images/minus-circle-white.svg">예약 중
 													</div>
-													<div th:if="*{sellStatusCode eq 3}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
+													<div th:if="*{sellStatus == SellStatus.SOLD_OUT}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
 														<img alt="판매 완료" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" src="/assets/images/minus-circle-white.svg">판매 완료
 													</div>
 												</div>
@@ -259,7 +259,7 @@ function execDaumPostcode() {
 										</div>
 									</div>
 								</div>
-								<th:block th:unless="*{img.size() eq 1}">
+								<th:block th:unless="*{images.size() eq 1}">
 								<button onclick="prevSlide()" class="w-7 h-7 text-black flex items-center justify-center absolute z-10 transition duration-250 transform -translate-y-1/2 top-1/2 focus:outline-none rounded-full text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl max-[1023px]:hidden left-4 bg-transparent shadow-transparent hover:bg-transparent hover:text-black !text-white !text-6xl swiper-button-disabled"
 										id="product-gallery-slider-prev" aria-label="prev-button" disabled="">
 									<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
@@ -314,9 +314,9 @@ function execDaumPostcode() {
 								</button>
 								</th:block>
 							</div>
-							<th:block th:unless="*{img.size() eq 1}">
+							<th:block th:unless="*{images.size() eq 1}">
 							<div class="absolute z-10 px-2 py-1 text-sm text-white bg-black bg-opacity-50 rounded-full pointer-events-none top-6 right-6">
-								<span id="current-slide">1</span> / <span th:text="${#lists.size(Product.img)}">전체 사진 개수</span>
+								<span id="current-slide">1</span> / <span th:text="*{#lists.size(images)}">전체 사진 개수</span>
 							</div>
 							</th:block>
 						</div>
@@ -354,8 +354,8 @@ function execDaumPostcode() {
 								제품가격</div>
 							</div>
 							<div class="flex items-center justify-between mb-4 text-xs font-normal text-gray-400">
-								<span class="text-jnGray-500 leading-[15px]">
-								<span th:text="*{viewCnt}"></span> 전 ·
+								<span class="text-gray-500 leading-[15px]">
+								<span th:text="*{timeAgo}"></span> 전 ·
 								조회 <span th:text="*{viewCnt}"></span> ·
 								채팅 <span th:text="*{chatCnt}"></span> ·
 								찜 <span th:text="*{bookmarkCnt}"></span>
@@ -431,7 +431,7 @@ function execDaumPostcode() {
 													d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
 													fill="currentColor"></path></g></g></svg>
 											<button class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
-												<p th:text="*{dealAddr}">직거래 지역</p>
+												<p th:text="*{dealAddress}">직거래 지역</p>
 											</button>
 										</dd>
 									</div>
@@ -439,12 +439,12 @@ function execDaumPostcode() {
 							</div>
 						</th:block>
 						<th:block th:case="1">
-							<div th:if="*{dealType[0] == 2}" class="py-4 flex flex-col gap-y-3">
+							<div th:if="*{dealType[0] == DealType.DELIVERY}" class="py-4 flex flex-col gap-y-3">
 								<div>
 									<h3>택배거래</h3>
 								</div>
 							</div>
-							<div th:if="*{dealType[0] == 1}" class="py-4 flex flex-col gap-y-3 border-none">
+							<div th:if="*{dealType[0] == DealType.DIRECT}" class="py-4 flex flex-col gap-y-3 border-none">
 								<div class="flex justify-between text-sm font-medium text-jnBlack">
 									<h3>직거래</h3>
 									<p></p>
@@ -460,7 +460,7 @@ function execDaumPostcode() {
 												<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd"
 													d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
 													fill="currentColor"></path></g></g></svg>
-											<span th:text="*{dealAddr}" class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
+											<span th:text="*{dealAddress}" class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
 												직거래 지역
 											</span>
 										</div>
@@ -473,7 +473,7 @@ function execDaumPostcode() {
 							<div class="flex detail-regular-12 items-start justify-start">
 								<span class="text-sm text-gray-600 min-w-[95px]">상품 상태</span>
 								<div class="text-sm text-gray-700">
-									<p th:text="*{productStatus == 'Y' ? '새 상품' : '중고 상품'}">새 상품</p>
+									<p th:text="*{productStatus == ProductStatus.USED ? '중고 상품' : '새 상품'}">새 상품</p>
 								</div>
 							</div>
 						</div>
@@ -531,9 +531,9 @@ function execDaumPostcode() {
 									<div id="dropdown-menu" class="hidden absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 transition-all duration-200">
         								<div class="py-1" role="menu">
            		 							<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none" 
-           		 							th:onclick="*{sellStatusCode eq 1}?'':'selectOption(1)'" th:disabled="*{sellStatusCode eq 1}">판매 중</button>
+           		 							th:onclick="*{sellStatus == SellStatus.ON_SALE?'':'selectOption(1)'}" th:disabled="*{sellStatus == SellStatus.ON_SALE}">판매 중</button>
             								<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none"
-											th:onclick="*{sellStatusCode eq 2}?'':'selectOption(2)'" th:disabled="*{sellStatusCode eq 2}">예약 중</button>
+											th:onclick="*{sellStatus == SellStatus.RESERVED?'':'selectOption(2)'}" th:disabled="*{sellStatus == SellStatus.RESERVED">예약 중</button>
             								<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" onclick="selectOption(3)">판매 완료</button>
         								</div>
     								</div>

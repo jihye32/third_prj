@@ -135,9 +135,15 @@ public class ProductDetailDAO {
 	}//updateViewCnt
 	
 	//찜하기 했는지 확인
-	public String selectBookmark(int pnum, int snum) {
-		String flag = "";
-		return flag;
+	public String selectBookmark(int pnum, int ssId) {
+		String bookmark = "";
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		bookmark=ss.selectOne("kr.co.sist.user.product.detail.sellerReviewCnt", ssId);
+		if( ss != null) { ss.close(); }//end if
+		
+		return bookmark;
 	}//selectBookmark
 	//끌올 버튼을 누를 경우 현재 날짜로 변경
 	public int insertBookmark(int pnum, int snum) {

@@ -1,6 +1,6 @@
 package kr.co.sist.user.productdetail;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import kr.co.sist.user.productdetail.enums.DealType;
@@ -15,8 +15,9 @@ import lombok.Setter;
 public class ProductDetailDomain {
 	private int productNum, sellerId, price, viewCnt, chatCnt, bookmarkCnt;
 	private String category, title, content, thumbnail, dealAddress;
-	private List<String> tag, img;
-	private Date bumpDate;
+	private List<String> tag, images;
+	private LocalDateTime bumpDate;
+	private String timeAgo;
 	
 	// DB에서 받는 코드값
 	private String productStatusCode;
