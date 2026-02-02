@@ -21,33 +21,24 @@ public class MainController {
 
 	@RequestMapping(value = "/", method = {GET, POST})
 	public String testIndex(Model model, HttpSession session) {
-		ProductDomain pd = null;
 		int modelCnt = 1;
-		List<ProductDomain> list = new ArrayList<ProductDomain>();
-		int eleCnt = 1;
-		for(int j = 0 ; j < 30 ; j+=6) {
-			for(int k = 1 ; k <= 6 ; k++) {
-				pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "많이 본 상품 제목"+eleCnt, "거래 지역", null, null, eleCnt, 1, 10000, null);
-				list.add(pd);
-				eleCnt++;
-			}// end for
-			model.addAttribute("tempdata"+modelCnt,list);
-			list= new ArrayList<ProductDomain>();
-			modelCnt++;
+		List<ProductDomain> list = ms.searchMostViewProdcut();
+		List<ProductDomain> temp = null;
+		for (int i = 0; i < list.size(); i += 6) {
+		    int end = Math.min(i + 6, list.size()); // 안전장치
+		    temp = list.subList(i, end);
+
+		    model.addAttribute("MostView" + modelCnt, temp);
+		    modelCnt++;
 		}// end for
-		
-		int i = 1;
-		List<ProductDomain> list2= new ArrayList<ProductDomain>();
-		int cnt = 31;
-		for(int j = 0 ; j < 30 ; j+=6) {
-			for(int k = 1 ; k <= 6 ; k++) {
-				pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "찜 많은 상품 제목"+cnt, "거래 지역", null, null, cnt, 1, 10000, null);
-				list2.add(pd);
-				cnt++;
-			}// end for
-			model.addAttribute("temp2data"+i,list2);
-			list2= new ArrayList<ProductDomain>();
-			i++;
+		modelCnt=1;
+		List<ProductDomain> list2 = ms.searchMostLikeProdcut();
+		for (int i = 0; i < list2.size(); i += 6) {
+			int end = Math.min(i + 6, list2.size()); // 안전장치
+			temp = list2.subList(i, end);
+			
+			model.addAttribute("MostLike" + modelCnt, temp);
+			modelCnt++;
 		}// end for
 		
 //		session.setAttribute("uid", "1234");
@@ -56,8 +47,6 @@ public class MainController {
 		} else {
 			model.addAttribute("loginFlag", false);
 		}// end else
-		
-		
 		
 		return "index";
 	}// testIndex
