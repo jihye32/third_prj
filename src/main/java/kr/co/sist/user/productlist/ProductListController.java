@@ -18,15 +18,16 @@ public class ProductListController {
 	
 	@GetMapping("/searchList")
 	public String productList(Model model, ProductRangeDTO prDTO) {
+//		System.out.println(prDTO);
 		ProductDomain pd = null;
 		List<ProductDomain> list = new ArrayList<ProductDomain>();
 		for(int i =1; i<=10;i++) {
-			pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "상품 제목", "거래 지역", null, null, 1, 1, 10000, null);
+//			pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "상품 제목", "거래 지역", null, null, 1, 1, 10000, i, null);
 			pd.setProductName(pd.getProductName()+i);
 			list.add(pd);
 		} 
 		model.addAttribute("tempData", list);
-		
+		 
 		
 		String selCategoryName = "";
 		int selCategoryNum =0;
@@ -38,6 +39,7 @@ public class ProductListController {
 			}// end if
 		}// end for
 		model.addAttribute("selCategoryName", selCategoryName);
+		model.addAttribute("categorylist", categorylist);
 		
 		return "/product_list/productList";
 	}// productList
