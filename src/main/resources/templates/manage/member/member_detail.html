@@ -1,88 +1,95 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>쌍용장터 관리자센터 - 회원 상세정보</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/manager_member.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/manager_member_detail.css}">
+<meta charset="UTF-8">
+<title>쌍용장터 관리자센터 - 회원 상세정보</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/manager_member.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/manager_member_detail.css}">
 </head>
 <body>
 
-    <header id="kakaoHead">
-        <div class="tit_logo">쌍용장터 관리자센터</div>
-        <div class="util_menu">
-            <a th:href="@{/logout}" class="btn_logout">로그아웃</a>
-        </div>
-    </header>
+	<header id="kakaoHead">
+		<div class="tit_logo">쌍용장터 관리자센터</div>
+		<div class="util_menu">
+			<a th:href="@{/logout}" class="btn_logout">로그아웃</a>
+		</div>
+	</header>
 
-    <div class="wrapper">
-        <aside class="menu_side">
-            <div class="menu_group">관리자 메뉴</div>
-            <ul class="list_menu">
-                <li>대시보드</li>
-                <li><a th:href="@{/manage/product/product_main}" style="text-decoration: none; color: inherit;">물품관리</a></li>
-                <li class="active">회원관리</li>
-                <li>고객센터관리</li>
-                <li>신고관리</li>
-                <li>매출관리</li>
-                <li>이벤트관리</li>
-            </ul>
-        </aside>
+	<div class="wrapper">
+		<aside class="menu_side">
+			<div class="menu_group">관리자 메뉴</div>
+			<ul class="list_menu">
+				<li>대시보드</li>
+				<li><a th:href="@{/manage/product/product_main}"
+					style="text-decoration: none; color: inherit;">물품관리</a></li>
+				<li class="active">회원관리</li>
+				<li>고객센터관리</li>
+				<li>신고관리</li>
+				<li>매출관리</li>
+				<li>이벤트관리</li>
+			</ul>
+		</aside>
 
-        <main id="main-container">
-            <div class="container-fluid">
-                <div class="detail_card">
-                    <div class="detail_title">회원 정보</div>
+		<main id="main-container">
+			<div class="container-fluid">
+				<div class="detail_card">
+					<div class="detail_title">회원 정보</div>
 
-                    <div class="row px-4">
-                        <div class="col-12 mb-3">
-                            <p class="info_label">아이디</p>
-                            <div class="info_value" th:text="${member.userId}">Hong1234</div>
-                        </div>
+					<div class="row px-4">
+						<div class="col-12 mb-3">
+							<p class="info_label">아이디</p>
+							<div class="info_value" th:text="${member?.user_id}"></div>
+						</div>
 
-                        <div class="col-12 mb-3">
-                            <div style="width: 150px;"> <p class="info_label">닉네임</p>
-                            </div>
-                            <div class="info_value" th:text="${member.nickname}">Hongbaksa!</div>
-                        </div>
+						<div class="col-12 mb-3">
+							<div style="width: 150px;">
+								<p class="info_label">상점명</p>
+							</div>
+							<div class="info_value" th:text="${member?.store_name}">기본 상점명</div>
+						</div>
 
-                        <div class="col-12 mb-3">
-                            <p class="info_label">이름</p>
-                            <div class="info_value" th:text="${member.name}">홍길동</div>
-                        </div>
+						<div class="col-12 mb-3">
+							<p class="info_label">이름</p>
+							<div class="info_value" th:text="${member?.name}"></div>
+						</div>
 
-                        <div class="col-12 mb-3">
-                            <p class="info_label">생년월일</p>
-                            <div class="info_value" th:text="${member.birthdate}">2000.01.01</div>
-                        </div>
+						<div class="col-12 mb-3">
+							<p class="info_label">생년월일</p>
+							<div class="info_value" th:text="${member?.birthday}"></div>
+						</div>
 
-                        <div class="col-12 mb-4">
-                            <p class="info_label">이메일</p>
-                            <div class="info_value" th:text="${member.email}">hong@naver.com</div>
-                        </div>
-                    </div>
+						<div class="col-12 mb-4">
+							<p class="info_label">이메일</p>
+							<div class="info_value" th:text="${member?.email}"></div>
+						</div>
+					</div>
 
-                    <div class="btn_group_bottom mb-4">
-                        <button class="btn btn-navy btn-custom px-4">상점정보 확인</button>
-                        <button class="btn btn-navy btn-custom px-4" 
-                                th:onclick="|location.href='@{/manage/member/member_product(userId=${member.userId})}'|">
-                            구매/판매내역 확인
-                        </button>
-                        <button class="btn btn-red btn-custom px-4">활동 정지</button>
-                    </div>
+					<div class="btn_group_bottom mb-4">
+						<button class="btn btn-navy btn-custom px-4"
+							th:onclick="|location.href='@{/manage/member/member_prdv(userId=${member?.user_id})}'|">
+							상점정보 확인</button>
+						<button class="btn btn-navy btn-custom px-4"
+							th:onclick="|location.href='@{/manage/member/member_product(userId=${member?.user_id})}'|">
+							구매/판매내역 확인</button>
+						<button class="btn btn-red btn-custom px-4">활동 정지</button>
+					</div>
 
-                    <div class="btn-list">
-                        <button class="btn btn-navy btn-custom px-4" 
-                                th:onclick="|location.href='@{/manage/member/member_main}'|">
-                            목록으로
-                        </button>
-                    </div>
-                </div> 
-            </div>
-        </main>
-    </div>
+					<div class="btn-list">
+						<button class="btn btn-navy btn-custom px-4"
+							th:onclick="|location.href='@{/manage/member/member_main}'|">
+							목록으로</button>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
