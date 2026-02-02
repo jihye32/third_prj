@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,7 +25,6 @@ import kr.co.sist.user.productdetail.enums.SellStatus;
 @Controller("UserProductDetailController")
 public class ProductDetailController {
 
-
 	@Autowired
 	ProductDetailService ps;
 
@@ -33,9 +33,9 @@ public class ProductDetailController {
     public String searchProductDetail(@PathVariable int pnum, HttpSession ss , Model model) {
     	//서비스에서 상세정보 가져옴
     	ProductDetailDomain pdd = ps.searchProduct(pnum);
-    	if(pdd == null) return "/index";//메인화면으로 이동시키기
+    	if(pdd == null) return "redirect:/";//메인화면으로 이동시키기
+    	if("Y".equals(pdd.getDeleteFlag())) return "redirect:/";
     	
-    	SellerInfoDomain sid = ps.searchSeller(pdd.getSellerId());//판매자 상점 번호로 판매자 정보 가져오기
     	List<String> imgList = new ArrayList<String>();
     	imgList.add(pdd.getThumbnail());
     	if(pdd.getImages()!=null) {
@@ -44,27 +44,30 @@ public class ProductDetailController {
     		}
     	}
     	pdd.setImages(imgList);
-//    	int snum = (ss.getAttribute("snum") != null) ? (int) ss.getAttribute("snum") : -1;//현재 로그인한 유저의 store number 가져오기
-    	int snum = 1;//현재 로그인한 유저의 store number 가져오기
+    	
+    	SellerInfoDomain sid = ps.searchSeller(pdd.getSellerId());//판매자 상점 번호로 판매자 정보 가져오기
+    	System.out.println(pdd.getDealType().toString());
+    	System.out.println(pdd.getSellStatus().toString());
+    	
+    	//    	int snum = (ss.getAttribute("snum") != null) ? (int) ss.getAttribute("snum") : -1;//현재 로그인한 유저의 store number 가져오기
+    	int snum = 2;//현재 로그인한 유저의 store number 가져오기
     	boolean isMe = false; //본인확인
     	boolean sendFlag = false;
     	
     	//세션에서 로그인을 햇는지 확인할 것.
     	if(snum == pdd.getSellerId()) {
     		isMe = true;
-    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
-    			sendFlag = ps.searchSendFlag(pnum); //발송 완료 false, 발송 안함/null true
-    			model.addAttribute("sendFlag", sendFlag);
-    		}
+//    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
+//    			sendFlag = ps.searchSendFlag(pnum); //발송 완료 false, 발송 안함/null true
+//    			model.addAttribute("sendFlag", sendFlag);
+//    		}
     	}else {
     		ps.modifyViewCnt(pnum);
-    		pdd.setViewCnt(pdd.getViewCnt()+1);
     		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
-    			boolean bookmark = (ps.searchBookmark(pnum, snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
-    			model.addAttribute("bookmarkFlag", bookmark);
+    			//boolean bookmark = (ps.searchBookmark(pnum, snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
+    			//model.addAttribute("bookmarkFlag", bookmark);
     		}
     	}
-    	
         model.addAttribute("storeCheck", isMe);
         model.addAttribute("Product", pdd);
         model.addAttribute("SellerInfo", sid);
@@ -79,45 +82,29 @@ public class ProductDetailController {
     }
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+	//상품 삭제
+	@PostMapping("/deleteProduct")
+	@ResponseBody // 리턴값을 JSON으로 변환해줍니다.
+	public Map<String, Object> removeProduct(@RequestBody int pnum) {
+		Map<String, Object> response = new HashMap<>();
+		boolean flag = ps.modifyDeleteFlag(pnum);
+		
+    	String resultMsg = flag ? "삭제됨" : "삭제안됨";
+	    
+	    response.put("msg", resultMsg);
+	    response.put("flag", flag);
+		//삭제이 완료되면 마이페이지로, 아니면 화면 유지
+		return response;
+	}
     
 	@PostMapping("/modifyUpDate")
 	@ResponseBody // 리턴값을 JSON으로 변환해줍니다.
-	public Map<String, Object> modifyUpDate(int pnum) {
+	public Map<String, Object> modifyUpDate(@RequestBody int pnum) {
 		Map<String, Object> response = new HashMap<>();
 
 		boolean flag = false;
-    	int date = ps.searchUpDate(pnum);
-    	if(date > 14) {
+    	boolean check = ps.searchUpDate(pnum);
+    	if(check) {
     		flag = true;
     		ps.modifyUpDate(pnum);
     	}
@@ -128,6 +115,34 @@ public class ProductDetailController {
 	   
 	    return response; // 이제 HTML 파일명이 아닌 데이터가 전송됩니다.
 	}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+	
 	
 	//게시글 수정으로 이동
 	@GetMapping("/modify/{pnum}")
@@ -178,20 +193,7 @@ public class ProductDetailController {
 //        return "redirect:/products/" + productId;
 //    }
 	
-	//상품 삭제
-	@PostMapping("/deleteProduct")
-	@ResponseBody // 리턴값을 JSON으로 변환해줍니다.
-	public Map<String, Object> removeProduct(int pnum) {
-		Map<String, Object> response = new HashMap<>();
-		boolean flag = ps.removeProduct(pnum);
-		
-    	String resultMsg = flag ? "삭제됨" : "삭제안됨";
-	    
-	    response.put("msg", resultMsg);
-	    response.put("flag", flag);
-		//삭제이 완료되면 마이페이지로, 아니면 화면 유지
-		return response;
-	}
+
 	
 	@GetMapping("/sellerPage")
 	public String moveSellerPage(String sellerStore) {

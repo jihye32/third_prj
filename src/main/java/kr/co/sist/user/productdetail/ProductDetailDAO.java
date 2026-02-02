@@ -1,6 +1,7 @@
 package kr.co.sist.user.productdetail;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,6 +131,10 @@ public class ProductDetailDAO {
 	//같은 아이디가 아닐 경우 조회수 증가
 	public int updateViewCnt(int pnum) {
 		int cnt =0;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.update("kr.co.sist.user.product.detail.updateViewCnt", pnum);
+		if( ss != null) { ss.close(); }//end if
 		
 		return cnt;
 	}//updateViewCnt
@@ -138,20 +143,21 @@ public class ProductDetailDAO {
 	public String selectBookmark(int pnum, int ssId) {
 		String bookmark = "";
 		
-		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
-		
-		bookmark=ss.selectOne("kr.co.sist.user.product.detail.sellerReviewCnt", ssId);
-		if( ss != null) { ss.close(); }//end if
+//		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+//		
+//		bookmark=ss.selectOne("kr.co.sist.user.product.detail.sellerReviewCnt", ssId);
+//		if( ss != null) { ss.close(); }//end if
 		
 		return bookmark;
 	}//selectBookmark
-	//끌올 버튼을 누를 경우 현재 날짜로 변경
+	
+	//찜하기 누르면 추가
 	public int insertBookmark(int pnum, int snum) {
 		int cnt =0;
 			
 		return cnt;
-	}//addBookmark
-	//끌올 버튼을 누를 경우 현재 날짜로 변경
+	}//insertBookmark
+	//찜하기 다시 누르면 삭제
 	public int deleteBookmark(int pnum, int snum) {
 		int cnt =0;
 			
@@ -159,14 +165,22 @@ public class ProductDetailDAO {
 	}//deleteBookmark
 	
 	//마지막으로 끌올한 날 가져옴
-	public Date selectUpDate(int pnum) {
-		Date date = null;
+	public LocalDateTime selectUpDate(int pnum) {
+		LocalDateTime date = null;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		date=ss.selectOne("kr.co.sist.user.product.detail.selectBumpDate", pnum);
+		if( ss != null) { ss.close(); }//end if
 		
 		return date;
 	}//selectUpDate
 	//끌올 버튼을 누를 경우 현재 날짜로 변경
 		public int updateUpDate(int pnum) {
 			int cnt =0;
+			SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+			
+			cnt=ss.update("kr.co.sist.user.product.detail.updateBumpDate", pnum);
+			if( ss != null) { ss.close(); }//end if
 			
 			return cnt;
 		}//updateUpDate
@@ -186,8 +200,12 @@ public class ProductDetailDAO {
 	}//updateProductDetail
 	
 	//게시글 삭제
-	public int deleteProduct(int pnum) {
+	public int updateDeleteFlag(int pnum) {
 		int cnt =0;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.update("kr.co.sist.user.product.detail.updateDeleteFlag", pnum);
+		if( ss != null) { ss.close(); }//end if
 		
 		return cnt;
 	}//deleteProduct

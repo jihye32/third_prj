@@ -68,7 +68,7 @@ window.initTossPayments = async function (pnum, title) {
 </style>
 <!-- JQuery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 /////이미지 캐러셀/////////////////
 // HTML이 모두 로드된 후 코드가 실행되도록 감쌉니다.
 document.addEventListener('DOMContentLoaded', function() {
@@ -222,6 +222,50 @@ function execDaumPostcode() {
         }
     }).open();
 }
+</script> -->
+
+<script th:inline="javascript">
+window.PageContext = Object.freeze({
+	pnum: /*[[${pnum}]]*/ null
+});
+</script>
+
+
+<script>
+function removeProduct() {
+	if (!confirm("상품을 삭제하시겠습니까?")) {
+	    return;
+	}
+	fetch('/product/deleteProduct', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(PageContext.pnum )
+    }).then(res => res.json())
+    .then(data => {
+    	alert(data.msg); 
+		if(data.flag){
+			alert("마이페이지로 이동");
+		}else{
+			alert("현재 페이지 유지");
+		}
+    });
+}
+function bumpDate() {
+	fetch('/product/modifyUpDate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(PageContext.pnum )
+    }).then(res => res.json())
+    .then(data => {
+    	alert(data.msg); 
+		if(data.flag){
+			alert("현재 페이지 수정");
+			$("#timeAgo").text("방금");
+		}else{
+			alert("현재 페이지 유지");
+		}
+    });
+}
 </script>
 </head>
 <body>
@@ -355,7 +399,7 @@ function execDaumPostcode() {
 							</div>
 							<div class="flex items-center justify-between mb-4 text-xs font-normal text-gray-400">
 								<span class="text-gray-500 leading-[15px]">
-								<span th:text="*{timeAgo}"></span> 전 ·
+								<span id="timeAgo" th:text="*{timeAgo}"></span> 전 ·
 								조회 <span th:text="*{viewCnt}"></span> ·
 								채팅 <span th:text="*{chatCnt}"></span> ·
 								찜 <span th:text="*{bookmarkCnt}"></span>
@@ -439,12 +483,12 @@ function execDaumPostcode() {
 							</div>
 						</th:block>
 						<th:block th:case="1">
-							<div th:if="*{dealType[0] == DealType.DELIVERY}" class="py-4 flex flex-col gap-y-3">
+							<div th:if="*{dealType != null and dealType.contains(DealType.DELIVERY)}" class="py-4 flex flex-col gap-y-3">
 								<div>
 									<h3>택배거래</h3>
 								</div>
 							</div>
-							<div th:if="*{dealType[0] == DealType.DIRECT}" class="py-4 flex flex-col gap-y-3 border-none">
+							<div th:if="*{dealType != null and dealType.contains(DealType.DIRECT)}" class="py-4 flex flex-col gap-y-3 border-none">
 								<div class="flex justify-between text-sm font-medium text-jnBlack">
 									<h3>직거래</h3>
 									<p></p>
@@ -497,10 +541,10 @@ function execDaumPostcode() {
 						</div>	
 						<th:block th:if="${storeCheck}">
 						<!--판매자와 아이디가 같은 경우(결제가 되지 않은 상태) -->
-						<div th:unless="*{sellStatusCode eq 3}" class="flex border border-gray-300 items-center space-s-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white">
+						<div th:unless="*{sellStatus == SellStatus.SOLD_OUT}" class="flex border border-gray-300 items-center space-s-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white">
 							<ul class="flex w-full rounded bg-gray-100">
 								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-black min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button class="flex flex-col items-center py-[6px]">
+									<button class="flex flex-col items-center py-[6px]" onclick="bumpDate()">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M5 8.99995V13.9656C5 17.8505 7.91015 21 11.5 21C15.0899 21 18 17.8505 18 13.9656V5" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 											<rect x="4.25" y="4" width="1.5" height="1" rx="0.5" fill="#141313"></rect>
@@ -529,17 +573,14 @@ function execDaumPostcode() {
 										<p class="mt-1 text-xs font-medium text-center">상태 변경</p>
 									</button>
 									<div id="dropdown-menu" class="hidden absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 transition-all duration-200">
-        								<div class="py-1" role="menu">
+        								<div th:each="status : ${SellStatus.values()}" class="py-1" role="menu">
            		 							<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none" 
-           		 							th:onclick="*{sellStatus == SellStatus.ON_SALE?'':'selectOption(1)'}" th:disabled="*{sellStatus == SellStatus.ON_SALE}">판매 중</button>
-            								<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none"
-											th:onclick="*{sellStatus == SellStatus.RESERVED?'':'selectOption(2)'}" th:disabled="*{sellStatus == SellStatus.RESERVED">예약 중</button>
-            								<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" onclick="selectOption(3)">판매 완료</button>
+           		 							th:data-option="${status.code}" onclick="selectOption(this)" th:disabled="${Product.sellStatus == status}" th:text="${status.label}">판매 중</button>
         								</div>
     								</div>
 								</li>
 								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button class="flex flex-col items-center py-[6px]">
+									<button class="flex flex-col items-center py-[6px]" onclick="removeProduct()">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 										<path d="M3 6H5H21" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 										<path

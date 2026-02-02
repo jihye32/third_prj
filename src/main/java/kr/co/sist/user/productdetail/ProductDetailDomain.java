@@ -14,7 +14,7 @@ import lombok.Setter;
 //선택된 상품 정보 가져오는 Domain
 public class ProductDetailDomain {
 	private int productNum, sellerId, price, viewCnt, chatCnt, bookmarkCnt;
-	private String category, title, content, thumbnail, dealAddress;
+	private String category, title, content, thumbnail, dealAddress, deleteFlag;
 	private List<String> tag, images;
 	private LocalDateTime bumpDate;
 	private String timeAgo;

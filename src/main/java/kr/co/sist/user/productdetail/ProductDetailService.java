@@ -1,5 +1,8 @@
 package kr.co.sist.user.productdetail;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,10 +64,17 @@ public class ProductDetailService {
 		return pDAO.updateViewCnt(pnum)==1;
 	}//updateViewCnt
 	
-	public int searchUpDate(int num) {
-		int cnt =0;
+	public boolean searchUpDate(int num) {
+		boolean check =false;
 		//현재 날짜와 select으로 받은 날짜의 차이를 구해 반환
-		return cnt;
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime bumpAt = pDAO.selectUpDate(num);
+
+		Period p = Period.between(bumpAt.toLocalDate(), now.toLocalDate());
+        
+        if(p.getDays() > 14) check = true;
+        
+		return check;
 	}//searchUpDate
 	public boolean modifyUpDate(int pnum) {
 		return pDAO.updateUpDate(pnum)==1;
@@ -78,8 +88,8 @@ public class ProductDetailService {
 		return pDAO.updateProductDetail(pmDTO)==1;
 	}//modifyUpDate
 	
-	public boolean removeProduct(int pnum) {
-		return pDAO.deleteProduct(pnum)==1;
+	public boolean modifyDeleteFlag(int pnum) {
+		return pDAO.updateDeleteFlag(pnum)==1;
 	}//removeProduct
 	
 	//북마크 처리
