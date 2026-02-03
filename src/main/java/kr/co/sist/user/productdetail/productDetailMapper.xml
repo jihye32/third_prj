@@ -55,6 +55,18 @@ from chat
 where product_num = #{productnum}
 </select>
 
+<!-- 배송 완료 확인 쿼리문 -->
+<resultMap type="kr.co.sist.user.productdetail.OrderDomain" id="orderDomain">
+	<result column="ORDER_ID" property="orderId"/>
+	<result column="DELIVERED_date" property="deliveredDate"/>
+</resultMap>
+<select id="selectOrderInfo" parameterType="int" resultMap="orderDomain">
+select order_id, delivered_date
+from product_order
+where product_num = #{pnum}
+</select>
+
+
 
 <!-- 판매자 정보 받는 쿼리문 -->
 <resultMap type="sellerInfoDomain" id="sellerDomain">
@@ -82,6 +94,21 @@ where r.product_num = p.product_num and p.store_num = #{productnum}
 
 
 <!-- 상품 정보 수정 -->
+<!-- 찜하기 확인 -->
+<select id="selectBookmark" parameterType="kr.co.sist.user.productdetail.BookmarkDTO" resultType="String">
+select product_num
+from bookmark
+where product_num = #{pnum} and store_num=#{snum}
+</select>
+<!-- 찜 추가 -->
+<insert id="insertBookmark" parameterType="kr.co.sist.user.productdetail.BookmarkDTO">
+insert into bookmark(product_num, store_num,input_date) values(#{pnum},#{snum},sysdate)
+</insert>
+<!-- 찜 삭제 -->
+<delete id="deleteBookmark" parameterType="kr.co.sist.user.productdetail.BookmarkDTO">
+delete from bookmark
+where product_num = #{pnum} and store_num=#{snum}
+</delete>
 
 <!-- 상품 조회수 업데이트 -->
 <update id="updateViewCnt" parameterType="int">
@@ -99,6 +126,22 @@ where product_num = #{productnum}
 <update id="updateBumpDate" parameterType="int">
 update product set up_date = sysdate
 where product_num = #{productnum}
+</update>
+
+<!-- 상품 상태 변경 -->
+<update id="updateSellStatus" parameterType="kr.co.sist.user.productdetail.SellStatusDTO">
+update product set status_code = #{sellStatusCode}
+where product_num=#{pnum}
+</update>
+<!-- 상품 판매 완료 -->
+<update id="updateOverSell" parameterType="int">
+update product set over_selling_date = sysdate
+where product_num=#{pnum}
+</update>
+<!-- 상품 발송 완료 -->
+<update id="updateDeliveryDate" parameterType="int">
+update product_order set delivered_date=sysdate
+where product_num = #{pnum}
 </update>
 
 <!-- 상품 삭제 -->

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import kr.co.sist.user.productdetail.ProductDetailDAO;
-import kr.co.sist.user.productdetail.ProductDetailService;
 
 @SpringBootTest
 class ThirdPrjApplicationTests {

@@ -1,10 +1,8 @@
 package kr.co.sist.user.productdetail;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -85,10 +83,14 @@ public class ProductDetailDAO {
 	}//cntChat
 	
 	//발송완료 확인
-	public String selectSendFlag(int pnum) {
-		String flag = null;
+	public OrderDomain selectSendFlag(int pnum) {
+		OrderDomain od = null;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
 		
-		return flag;
+		od=ss.selectOne("kr.co.sist.user.product.detail.selectOrderInfo", pnum);
+		if( ss != null) { ss.close(); }//end if
+		
+		return od;
 	}//selectSendFlag
 
 	
@@ -140,27 +142,37 @@ public class ProductDetailDAO {
 	}//updateViewCnt
 	
 	//찜하기 했는지 확인
-	public String selectBookmark(int pnum, int ssId) {
+	public String selectBookmark(BookmarkDTO bDTO) {
 		String bookmark = "";
 		
-//		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
-//		
-//		bookmark=ss.selectOne("kr.co.sist.user.product.detail.sellerReviewCnt", ssId);
-//		if( ss != null) { ss.close(); }//end if
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		bookmark=ss.selectOne("kr.co.sist.user.product.detail.selectBookmark", bDTO);
+		if( ss != null) { ss.close(); }//end if
 		
 		return bookmark;
 	}//selectBookmark
 	
 	//찜하기 누르면 추가
-	public int insertBookmark(int pnum, int snum) {
+	public int insertBookmark(BookmarkDTO bDTO) {
 		int cnt =0;
-			
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.insert("kr.co.sist.user.product.detail.insertBookmark", bDTO);
+		if( ss != null) { ss.close(); }//end if
+		
 		return cnt;
 	}//insertBookmark
 	//찜하기 다시 누르면 삭제
-	public int deleteBookmark(int pnum, int snum) {
+	public int deleteBookmark(BookmarkDTO bDTO) {
 		int cnt =0;
-			
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.delete("kr.co.sist.user.product.detail.deleteBookmark", bDTO);
+		if( ss != null) { ss.close(); }//end if
+		
 		return cnt;
 	}//deleteBookmark
 	
@@ -188,9 +200,30 @@ public class ProductDetailDAO {
 	//판매 상태 변경
 	public int updateProductStatus(SellStatusDTO ssDTO) {
 		int cnt =0;
-		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		cnt=ss.update("kr.co.sist.user.product.detail.updateSellStatus", ssDTO);
+		if( ss != null) { ss.close(); }//end if
 		return cnt;
 	}//updateProductStatus
+	//판매완료
+	public int updateProductOver(int pnum) {
+		int cnt =0;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.update("kr.co.sist.user.product.detail.updateOverSell", pnum);
+		if( ss != null) { ss.close(); }//end if
+		return cnt;
+	}//updateProductStatus
+	
+	//발송완료
+	public int updateProductSend(int pnum) {
+		int cnt =0;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.update("kr.co.sist.user.product.detail.updateDeliveryDate", pnum);
+		if( ss != null) { ss.close(); }//end if
+		return cnt;
+	}//updateProductSend
 	
 	//게시글 수정
 	public int updateProductDetail(ProductModifyDTO pmDTO) {

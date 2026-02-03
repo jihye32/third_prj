@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,26 +47,26 @@ public class ProductDetailController {
     	pdd.setImages(imgList);
     	
     	SellerInfoDomain sid = ps.searchSeller(pdd.getSellerId());//판매자 상점 번호로 판매자 정보 가져오기
-    	System.out.println(pdd.getDealType().toString());
-    	System.out.println(pdd.getSellStatus().toString());
     	
     	//    	int snum = (ss.getAttribute("snum") != null) ? (int) ss.getAttribute("snum") : -1;//현재 로그인한 유저의 store number 가져오기
-    	int snum = 2;//현재 로그인한 유저의 store number 가져오기
+    	int snum = 3;//현재 로그인한 유저의 store number 가져오기
     	boolean isMe = false; //본인확인
-    	boolean sendFlag = false;
     	
     	//세션에서 로그인을 햇는지 확인할 것.
     	if(snum == pdd.getSellerId()) {
     		isMe = true;
-//    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
-//    			sendFlag = ps.searchSendFlag(pnum); //발송 완료 false, 발송 안함/null true
-//    			model.addAttribute("sendFlag", sendFlag);
-//    		}
+    		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
+    			boolean sendFlag = ps.searchSendFlag(pnum); //발송 완료/null false, 발송 안함 true
+    			model.addAttribute("sendFlag", sendFlag);
+    		}
     	}else {
     		ps.modifyViewCnt(pnum);
     		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
-    			//boolean bookmark = (ps.searchBookmark(pnum, snum)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
-    			//model.addAttribute("bookmarkFlag", bookmark);
+    			BookmarkDTO bDTO = new BookmarkDTO();
+    			bDTO.setPnum(pnum);
+    			bDTO.setSnum(snum);
+    			boolean bookmark = (ps.searchBookmark(bDTO)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
+    			model.addAttribute("bookmarkFlag", bookmark);
     		}
     	}
         model.addAttribute("storeCheck", isMe);
@@ -80,23 +81,24 @@ public class ProductDetailController {
         
         return "product_detail/product_detail";
     }
+    
 
-    
-	//상품 삭제
-	@PostMapping("/deleteProduct")
-	@ResponseBody // 리턴값을 JSON으로 변환해줍니다.
-	public Map<String, Object> removeProduct(@RequestBody int pnum) {
-		Map<String, Object> response = new HashMap<>();
-		boolean flag = ps.modifyDeleteFlag(pnum);
-		
-    	String resultMsg = flag ? "삭제됨" : "삭제안됨";
-	    
-	    response.put("msg", resultMsg);
-	    response.put("flag", flag);
-		//삭제이 완료되면 마이페이지로, 아니면 화면 유지
-		return response;
+	@PostMapping("/bookmark")
+	@ResponseBody
+    public void addBookmark(@RequestBody BookmarkDTO bDTO, HttpSession session) {
+		//int snum = (int)session.getAttribute("snum");
+		bDTO.setSnum(1);
+		ps.addBookmark(bDTO);
 	}
-    
+	@DeleteMapping("/bookmark")
+	@ResponseBody
+	public void removeBookmark(@RequestBody BookmarkDTO bDTO, HttpSession session) {
+		//int snum = (int)session.getAttribute("snum");
+		bDTO.setSnum(1);
+		ps.removeBookmark(bDTO);
+	}
+
+	
 	@PostMapping("/modifyUpDate")
 	@ResponseBody // 리턴값을 JSON으로 변환해줍니다.
 	public Map<String, Object> modifyUpDate(@RequestBody int pnum) {
@@ -116,14 +118,56 @@ public class ProductDetailController {
 	    return response; // 이제 HTML 파일명이 아닌 데이터가 전송됩니다.
 	}
     
+	
+	
     
-    
-    
-    
-    
-    
-    
-    
+	//판매 상태 변경
+	@PostMapping("/status")
+	@ResponseBody
+    public Map<String, Object> updateStatus(@RequestBody SellStatusDTO ssDTO) {
+		Map<String, Object> response = new HashMap<>();
+		System.out.println(ssDTO.getPnum());
+		System.out.println(ssDTO.getSellStatusCode());
+		boolean flag = false;
+		flag = ps.modifyProductStatus(ssDTO);
+		if(flag && ssDTO.getSellStatusCode()==3) {
+			ps.modifyProductOver(ssDTO.getPnum());
+		}
+		String resultMsg = flag ? "상태 변경됨" : "상태 변경 안됨";
+		response.put("msg", resultMsg);
+	    response.put("flag", flag);
+	   
+	    return response; // 이제 HTML 파일명이 아닌 데이터가 전송됩니다.
+    }
+
+	//상품 삭제
+	@PostMapping("/deleteProduct")
+	@ResponseBody // 리턴값을 JSON으로 변환해줍니다.
+	public Map<String, Object> removeProduct(@RequestBody int pnum) {
+		Map<String, Object> response = new HashMap<>();
+		boolean flag = ps.modifyDeleteFlag(pnum);
+		
+    	String resultMsg = flag ? "삭제됨" : "삭제안됨";
+	    
+	    response.put("msg", resultMsg);
+	    response.put("flag", flag);
+		//삭제이 완료되면 마이페이지로, 아니면 화면 유지
+		return response;
+	}
+	
+	 // 3. 배송 완료 처리 (보라색 버튼)
+    @PostMapping("/send")
+    @ResponseBody
+    public Map<String, Object> completeShipping(@RequestBody int pnum) {
+    	Map<String, Object> response = new HashMap<>();
+		boolean flag = ps.modifyProductSend(pnum);
+		
+    	String resultMsg = flag ? "완료됨" : "완료안됨";
+	    
+	    response.put("msg", resultMsg);
+	    response.put("flag", flag);
+		return response;
+    }
     
     
     
@@ -166,32 +210,8 @@ public class ProductDetailController {
 		return response;
 	}
 	
-	//판매 상태 변경
-	@PostMapping("/status")
-	@ResponseBody
-    public ResponseEntity<String> updateStatus(SellStatusDTO ssDTO) {
-        
-        try {
-            // 1. 서비스 레이어를 통해 DB 상태를 업데이트하는 로직이 들어갑니다.
-            ps.modifyProductStatus(ssDTO);
-            
-            System.out.println("상품 ID: " + ssDTO.getPnum());
-            System.out.println("변경할 상태: " + ssDTO.getSellStatusCode());
-
-            // 2. 처리가 성공하면 성공 메시지(200 OK)를 보냅니다.
-            return ResponseEntity.ok("상태 변경 성공");
-            
-        } catch (Exception e) {
-            // 실패 시 에러 메시지(500 Internal Server Error 등)를 보냅니다.
-            return ResponseEntity.status(500).body("서버 오류 발생");
-        }
-    }
-//    // 3. 배송 완료 처리 (보라색 버튼)
-//    @PostMapping("/{productId}/complete-shipping")
-//    public String completeShipping(@PathVariable Long productId) {
-//        productService.markAsShipped(productId);
-//        return "redirect:/products/" + productId;
-//    }
+	
+   
 	
 
 	

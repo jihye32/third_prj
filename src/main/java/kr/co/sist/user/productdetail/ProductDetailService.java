@@ -52,7 +52,9 @@ public class ProductDetailService {
 	//발송완료 확인
 	public boolean searchSendFlag(int pnum) {
 		boolean flag = false;
-		if("N".equals(pDAO.selectSendFlag(pnum))||"n".equals(pDAO.selectSendFlag(pnum))) flag = true;
+		OrderDomain od = pDAO.selectSendFlag(pnum);
+		if(od == null) return false;
+		if(od.getDeliveredDate() == null) flag= true;
 		return flag;
 	}//searchSendFlag
 	
@@ -83,6 +85,12 @@ public class ProductDetailService {
 	public boolean modifyProductStatus(SellStatusDTO ssDTO) {
 		return pDAO.updateProductStatus(ssDTO)==1;
 	}//modifyProductStatus
+	public boolean modifyProductOver(int pnum) {
+		return pDAO.updateProductOver(pnum)==1;
+	}//modifyProductOver
+	public boolean modifyProductSend(int pnum) {
+		return pDAO.updateProductSend(pnum)==1;
+	}//modifyProductOver
 	
 	public boolean modifyProductDetail(ProductModifyDTO pmDTO) {
 		return pDAO.updateProductDetail(pmDTO)==1;
@@ -93,13 +101,13 @@ public class ProductDetailService {
 	}//removeProduct
 	
 	//북마크 처리
-	public String searchBookmark(int pnum, int snum) {
-		return pDAO.selectBookmark(pnum, snum);
+	public String searchBookmark(BookmarkDTO bDTO) {
+		return pDAO.selectBookmark(bDTO);
 	}//searchBookmark
-	public boolean addBookmark(int pnum, int snum) {
-		return pDAO.insertBookmark(pnum, snum)==1;
+	public boolean addBookmark(BookmarkDTO bDTO) {
+		return pDAO.insertBookmark(bDTO)==1;
 	}//addBookmark
-	public boolean removeBookmark(int pnum, int snum) {
-		return pDAO.deleteBookmark(pnum, snum)==1;
+	public boolean removeBookmark(BookmarkDTO bDTO) {
+		return pDAO.deleteBookmark(bDTO)==1;
 	}//removeBookmark
 }
