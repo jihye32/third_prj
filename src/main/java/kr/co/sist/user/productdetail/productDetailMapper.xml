@@ -56,11 +56,11 @@ where product_num = #{productnum}
 </select>
 
 <!-- 배송 완료 확인 쿼리문 -->
-<resultMap type="kr.co.sist.user.productdetail.OrderDomain" id="orderDomain">
+<resultMap type="orderDomain" id="odDomain">
 	<result column="ORDER_ID" property="orderId"/>
 	<result column="DELIVERED_date" property="deliveredDate"/>
 </resultMap>
-<select id="selectOrderInfo" parameterType="int" resultMap="orderDomain">
+<select id="selectOrderInfo" parameterType="int" resultMap="odDomain">
 select order_id, delivered_date
 from product_order
 where product_num = #{pnum}
