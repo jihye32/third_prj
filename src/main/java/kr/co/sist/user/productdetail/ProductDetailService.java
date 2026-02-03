@@ -1,7 +1,15 @@
 package kr.co.sist.user.productdetail;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import kr.co.sist.user.productdetail.enums.DealType;
 
 @Service("UserProductService")
 public class ProductDetailService {
@@ -16,21 +24,27 @@ public class ProductDetailService {
 		pdd = pDAO.selectProduct(pnum);
 		if(pdd != null) {
 			pdd.setTag(pDAO.selectTag(pnum));
-			pdd.setImg(pDAO.selectImg(pnum));
+			pdd.setImages(pDAO.selectImg(pnum));
+			List<DealType> type = new ArrayList<DealType>();
+			List<Integer> typeCode = pDAO.selectDealType(pnum);
+			for(int code : typeCode) {
+				type.add(DealType.fromCode(code));
+			}
+			pdd.setDealType(type);
 			pdd.setBookmarkCnt(pDAO.cntBookmark(pnum));
 			pdd.setChatCnt(pDAO.cntChat(pnum));
-			pdd.setSendFlag(pDAO.selectSendFlag(pnum));
+//			pdd.setSendFlag(pDAO.selectSendFlag(pnum));
 		}
 		
 		return pdd;
 	}//searchProduct
 	
-	//선택된 상품 번호로 조회된 상품 정보 조합
-	public SellerDomain searchSeller(int ssnum) {
-		SellerDomain sd = new SellerDomain();
-		sd=pDAO.selectSellerInfo(ssnum);
-		sd.setProductCnt(pDAO.cntSellProduct(ssnum));
-		sd.setReivewCnt(pDAO.cntReview(ssnum));
+	//판매자 정보 조합
+	public SellerInfoDomain searchSeller(int sid) {
+		SellerInfoDomain sd = new SellerInfoDomain();
+		sd=pDAO.selectSellerInfo(sid);
+		sd.setProductCnt(pDAO.cntSellProduct(sid));
+		sd.setReivewCnt(pDAO.cntReview(sid));
 		
 		return sd;
 	}//searchProduct
@@ -38,9 +52,12 @@ public class ProductDetailService {
 	//발송완료 확인
 	public boolean searchSendFlag(int pnum) {
 		boolean flag = false;
-		if("N".equals(pDAO.selectSendFlag(pnum))||"n".equals(pDAO.selectSendFlag(pnum))) flag = true;
+		OrderDomain od = pDAO.selectSendFlag(pnum);
+		if(od == null) return false;
+		if(od.getDeliveredDate() == null) flag= true;
 		return flag;
 	}//searchSendFlag
+	
 	
 //////게시글 수정사항/////////////////////////////////////////////////////////////////////
 	//정상적인 확인을 위해서 boolean를 반환하지만 완성되고는 반환할 필요x
@@ -49,10 +66,17 @@ public class ProductDetailService {
 		return pDAO.updateViewCnt(pnum)==1;
 	}//updateViewCnt
 	
-	public int searchUpDate(int num) {
-		int cnt =0;
+	public boolean searchUpDate(int num) {
+		boolean check =false;
 		//현재 날짜와 select으로 받은 날짜의 차이를 구해 반환
-		return cnt;
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime bumpAt = pDAO.selectUpDate(num);
+
+		Period p = Period.between(bumpAt.toLocalDate(), now.toLocalDate());
+        
+        if(p.getDays() > 14) check = true;
+        
+		return check;
 	}//searchUpDate
 	public boolean modifyUpDate(int pnum) {
 		return pDAO.updateUpDate(pnum)==1;
@@ -61,23 +85,29 @@ public class ProductDetailService {
 	public boolean modifyProductStatus(SellStatusDTO ssDTO) {
 		return pDAO.updateProductStatus(ssDTO)==1;
 	}//modifyProductStatus
+	public boolean modifyProductOver(int pnum) {
+		return pDAO.updateProductOver(pnum)==1;
+	}//modifyProductOver
+	public boolean modifyProductSend(int pnum) {
+		return pDAO.updateProductSend(pnum)==1;
+	}//modifyProductOver
 	
 	public boolean modifyProductDetail(ProductModifyDTO pmDTO) {
 		return pDAO.updateProductDetail(pmDTO)==1;
 	}//modifyUpDate
 	
-	public boolean removeProduct(int pnum) {
-		return pDAO.deleteProduct(pnum)==1;
+	public boolean modifyDeleteFlag(int pnum) {
+		return pDAO.updateDeleteFlag(pnum)==1;
 	}//removeProduct
 	
 	//북마크 처리
-	public String searchBookmark(int pnum, int snum) {
-		return pDAO.selectBookmark(pnum, snum);
+	public String searchBookmark(BookmarkDTO bDTO) {
+		return pDAO.selectBookmark(bDTO);
 	}//searchBookmark
-	public boolean addBookmark(int pnum, int snum) {
-		return pDAO.insertBookmark(pnum, snum)==1;
+	public boolean addBookmark(BookmarkDTO bDTO) {
+		return pDAO.insertBookmark(bDTO)==1;
 	}//addBookmark
-	public boolean removeBookmark(int pnum, int snum) {
-		return pDAO.deleteBookmark(pnum, snum)==1;
+	public boolean removeBookmark(BookmarkDTO bDTO) {
+		return pDAO.deleteBookmark(bDTO)==1;
 	}//removeBookmark
 }

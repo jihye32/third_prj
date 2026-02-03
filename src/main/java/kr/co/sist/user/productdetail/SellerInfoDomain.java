@@ -2,12 +2,10 @@ package kr.co.sist.user.productdetail;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
-public class SellerDomain {
-	private int storeNum,productCnt, reivewCnt;
+public class SellerInfoDomain {
+	private int sellerId, productCnt, reivewCnt;
 	private String storeName,sellerProfile;
 }
