@@ -3,7 +3,176 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.co.sist.admin.board">
+<mapper namespace="kr.co.sist.admin.report">
 
-    
+    <!-- 신고 유형 드롭다운 -->
+
+  <select id="selectReportTypes" resultType="kr.co.sist.admin.report.ReportDomain">
+    SELECT
+      report_code AS reportCode,
+      report_text AS reportText
+    FROM report_value
+    ORDER BY report_code
+  </select>
+
+  <select id="selectReportStates" resultType="kr.co.sist.admin.report.ReportDomain">
+    SELECT
+      report_state_code AS reportStateCode,
+      report_state_text AS reportStateText
+    FROM report_state
+    ORDER BY report_state_code
+  </select>
+
+    <!-- 총 건수 -->
+    <select id="selectTotalCount"
+            parameterType="kr.co.sist.admin.report.ReportDTO"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM report r
+        <where>
+            r.report_deleteflag = 'N'
+
+            <if test="reportCode != null">
+                AND r.report_code = #{reportCode}
+            </if>
+
+            <if test="reportStateCode != null">
+                AND r.report_state_code = #{reportStateCode}
+            </if>
+
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'reporter'">
+                        AND r.reporter_id LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'reportee'">
+                        AND r.reportee_id LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'content'">
+                        AND r.report_content LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <otherwise>
+                        AND (
+                            r.reporter_id LIKE '%' || #{keyword} || '%'
+                            OR r.reportee_id LIKE '%' || #{keyword} || '%'
+                            OR r.report_content LIKE '%' || #{keyword} || '%'
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <!-- 목록 (ROW_NUMBER 페이징 + 조인으로 텍스트 가져오기) -->
+    <select id="selectReportList"
+            parameterType="kr.co.sist.admin.report.ReportDTO"
+            resultType="kr.co.sist.admin.report.ReportDomain">
+        SELECT *
+        FROM (
+            SELECT
+                r.report_num AS reportNum,
+                r.report_code AS reportCode,
+                rv.report_text AS reportText,
+                r.report_content AS reportContent,
+                r.report_date AS reportDate,
+                r.reporter_id AS reporterId,
+                r.reportee_id AS reporteeId,
+                r.answer AS answer,
+                r.answer_date AS answerDate,
+                r.report_state_code AS reportStateCode,
+                rs.report_state_text AS reportStateText,
+                r.report_deleteflag AS reportDeleteflag,
+                ROW_NUMBER() OVER (ORDER BY r.report_date DESC, r.report_num DESC) rnum
+            FROM report r
+            LEFT JOIN report_value rv ON r.report_code = rv.report_code
+            LEFT JOIN report_state rs ON r.report_state_code = rs.report_state_code
+            <where>
+                r.report_deleteflag = 'N'
+
+                <if test="reportCode != null">
+                    AND r.report_code = #{reportCode}
+                </if>
+
+                <if test="reportStateCode != null">
+                    AND r.report_state_code = #{reportStateCode}
+                </if>
+
+                <if test="keyword != null and keyword != ''">
+                    <choose>
+                        <when test="searchType == 'reporter'">
+                            AND r.reporter_id LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <when test="searchType == 'reportee'">
+                            AND r.reportee_id LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <when test="searchType == 'content'">
+                            AND r.report_content LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <otherwise>
+                            AND (
+                                r.reporter_id LIKE '%' || #{keyword} || '%'
+                                OR r.reportee_id LIKE '%' || #{keyword} || '%'
+                                OR r.report_content LIKE '%' || #{keyword} || '%'
+                            )
+                        </otherwise>
+                    </choose>
+                </if>
+            </where>
+        )
+        WHERE rnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <!-- 상세 (parameterType=int -> #{value}) -->
+    <select id="selectReportDetail"
+            parameterType="int"
+            resultType="kr.co.sist.admin.report.ReportDomain">
+        SELECT
+            r.report_num AS reportNum,
+            r.report_code AS reportCode,
+            rv.report_text AS reportText,
+            r.report_content AS reportContent,
+            r.report_date AS reportDate,
+            r.reporter_id AS reporterId,
+            r.reportee_id AS reporteeId,
+            r.answer AS answer,
+            r.answer_date AS answerDate,
+            r.report_state_code AS reportStateCode,
+            rs.report_state_text AS reportStateText,
+            r.report_deleteflag AS reportDeleteflag
+        FROM report r
+        LEFT JOIN report_value rv ON r.report_code = rv.report_code
+        LEFT JOIN report_state rs ON r.report_state_code = rs.report_state_code
+        WHERE r.report_num = #{value}
+    </select>
+
+    <!-- 이미지 목록 -->
+    <select id="selectReportImages"
+            parameterType="int"
+            resultType="string">
+        SELECT report_img
+        FROM report_img
+        WHERE report_num = #{value}
+        ORDER BY report_img
+    </select>
+
+    <!-- 처리 저장: "처리완료(3)"일 때만 answer/answer_date 저장 -->
+    <update id="updateReportProcess"
+            parameterType="kr.co.sist.admin.report.ReportDTO">
+        UPDATE report
+        <set>
+            report_state_code = #{reportStateCode},
+            <choose>
+                <when test="reportStateCode == 3">
+                    answer = #{answer},
+                    answer_date = SYSDATE
+                </when>
+                <otherwise>
+                    answer = NULL,
+                    answer_date = NULL
+                </otherwise>
+            </choose>
+        </set>
+        WHERE report_num = #{reportNum}
+    </update>
+
 </mapper>

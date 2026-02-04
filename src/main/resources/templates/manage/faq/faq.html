@@ -43,9 +43,9 @@
 
             
             <a th:href="@{/manage/faq/writeFrm(type='FAQ')}"
-               style="padding:8px 14px; border:1px solid #ccc; text-decoration:none;">
-                글쓰기
-            </a>
+               class="btn-write">
+							    글쓰기
+							</a>
         </div>
 
         
@@ -100,11 +100,12 @@
                     </td>
                 </tr>
             </tbody>
-        </table>
+</table>
 
-        <!--  페이징 (추후 연결) -->
-        <div th:utext="${pagination}" style="margin-top:20px;"></div>
-
+<!-- 하단 페이징 바 (리스트랑 분리) -->
+<div class="pagebar-area">
+  <div class="pagebar" th:utext="${pagination}"></div>
+</div>
     </div>
 </div>
 
