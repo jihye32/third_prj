@@ -58,6 +58,10 @@ document.addEventListener("click", (e) => {
 		case "send-product": //상품 발송
 	      	sendProduct(pnum);
 	      	return;
+			
+		case "buy-product": //상품 구매
+	      	openBuyForm(pnum);
+	      	return;
 	  }
   }
   
@@ -141,4 +145,8 @@ function sendProduct(pnum){
 			alert("현재 페이지 유지");
 		}
     });
+}
+
+function openBuyForm(pnum) { 
+	loadDrawerContent(`/buy/${pnum}`, () => openDrawer('거래 방법 선택')); 
 }

@@ -96,24 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-/**
- * 2. 구매/결제 드로워(Drawer) 로직
- */
-const loadDrawerContent = (url, callback) => {
-    fetch(url)
-        .then(res => res.text())
-        .then(html => {
-            const drawer = document.getElementById('drawerContent');
-            drawer.innerHTML = html;
-            drawer.scrollTop = 0;
-            if (callback) callback();
-        })
-        .catch(err => console.error('Drawer Load Error:', err));
-};
 
-function openBuyForm(pnum) { 
-	loadDrawerContent(`/buy/${pnum}`, () => openDrawer('거래 방법 선택')); 
-}
 
 //선택된 거래 방식을 저장할 전역 변수
 let selectedType = null;
@@ -204,7 +187,12 @@ window.PageContext = Object.freeze({
 	pnum: /*[[${pnum}]]*/ null
 });
 </script>
+<script th:src="@{/js/drawer-load.js}"></script>
 <script th:src="@{/js/product-detail.js}" defer></script>
+<script th:src="@{/js/product-buy.js}" defer></script>
+<script>
+
+</script>
 </head>
 <body>
 <div th:replace="~{template/header :: headerImgFragment}"></div>
@@ -472,6 +460,7 @@ window.PageContext = Object.freeze({
 						  <!-- dealType이 0(null 포함)일 때 -->
 						  <th:block th:case="0">
 						    <!-- 아무것도 표시 안 하거나 안내 문구 -->
+						    판매자가 등록을 하지 않았습니다.
 						  </th:block>
 						
 						</div>
@@ -499,7 +488,7 @@ window.PageContext = Object.freeze({
 							</div>
 							<button data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 py-2 transform-none normal-case hover:shadow-cart ga4_product_detail_bottom w-full bg-white hover:bg-white/90 text-jnblack hover:text-jnblack border-[1px] border-black">
 							채팅하기</button>
-							<button th:onclick="openBuyForm([[${pnum}]])" data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-black hover:bg-black/90">
+							<button data-action="buy-product" data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-black hover:bg-black/90">
 							구매하기</button>
 						</div>	
 						<th:block th:if="${storeCheck}">

@@ -3,4 +3,33 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="kr.co.sist.user.buy">
- </mapper>
+ <!-- 상품 정보 받는 쿼리문 -->
+<resultMap type="buyDomain" id="bDomain">
+	<result column="product_num" property="pnum"/>
+	<result column="title" property="title"/>
+	<result column="price" property="price"/>
+	<result column="thumbnail" property="thumbnail"/>
+	<result column="addr" property="dealAddress"/>
+</resultMap>
+<select id="selectProduct" parameterType="int" resultMap="bDomain">
+select p.product_num, p.title, p.price,p.thumbnail, s.addr
+from product p, sell_place s
+where p.product_num = s.product_num and p.product_num = #{productNum}
+</select>
+
+<!-- 수수료 정보 받는 쿼리문 -->
+<select id="selectCharge" resultType="BigDecimal">
+select charge
+from (
+select charge from charge order by update_date desc
+)
+where rownum =1
+</select>
+
+<!-- 거래 방법 코드 받는 쿼리문 -->
+<select id="selectProductSellCode" parameterType="int" resultType="int">
+select sell_code
+from sell_option
+where product_num = #{productnum}
+</select>
+</mapper>
