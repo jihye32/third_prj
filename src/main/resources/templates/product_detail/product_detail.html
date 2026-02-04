@@ -5,64 +5,7 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>sample</title>
-<script src="https://js.tosspayments.com/v2/standard"></script>
-<script>
-// fragment 내부 script 부분
-/* paymentFrm 프래그먼트 내부 스크립트 */
-window.initTossPayments = async function (pnum, title) {
-  const button = document.getElementById("payment-button");
-  const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-  const tossPayments = TossPayments(clientKey);
-  const customerKey = "YoA3w8vRTZPoaV13MAQ3j";
 
-  const widgets = tossPayments.widgets({ customerKey });
-
-  // ✅ 렌더는 "열릴 때 1번만"
-  await Promise.all([
-    widgets.renderPaymentMethods({
-      selector: "#payment-method",
-      variantKey: "DEFAULT",
-    }),
-    widgets.renderAgreement({
-      selector: "#agreement",
-      variantKey: "AGREEMENT",
-    }),
-  ]);
-
-  // ✅ 이벤트 누적 방지: addEventListener 대신 onclick으로 덮어쓰기
-  button.onclick = async () => {
-    // (선택) 중복 클릭 방지
-    button.disabled = true;
-
-    try {
-      const response = await fetch("/orders/prepare", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pnum: pnum }),
-      });
-
-      if (!response.ok) throw new Error("prepare failed");
-
-      const data = await response.json();
-      const orderId = data.orderId;
-      const amount = data.amount;
-
-      // ✅ 결제 직전에 amount 맞추기
-      await widgets.setAmount({ currency: "KRW", value: amount });
-
-      await widgets.requestPayment({
-        orderId: orderId,
-        orderName: title,
-        successUrl: window.location.origin + "/buy/toss",
-        failUrl: window.location.origin + "/buy/fail",
-      });
-
-    } finally {
-      button.disabled = false;
-    }
-  };
-};
-</script>
 <link th:href="@{/css/output.css}" rel="stylesheet">
 <style>
 </style>
@@ -96,24 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-/**
- * 2. 구매/결제 드로워(Drawer) 로직
- */
-const loadDrawerContent = (url, callback) => {
-    fetch(url)
-        .then(res => res.text())
-        .then(html => {
-            const drawer = document.getElementById('drawerContent');
-            drawer.innerHTML = html;
-            drawer.scrollTop = 0;
-            if (callback) callback();
-        })
-        .catch(err => console.error('Drawer Load Error:', err));
-};
 
-function openBuyForm(pnum) { 
-	loadDrawerContent(`/buy/${pnum}`, () => openDrawer('거래 방법 선택')); 
-}
 
 //선택된 거래 방식을 저장할 전역 변수
 let selectedType = null;
@@ -204,7 +130,14 @@ window.PageContext = Object.freeze({
 	pnum: /*[[${pnum}]]*/ null
 });
 </script>
+<script src="https://js.tosspayments.com/v2/standard"></script>
+<script th:src="@{/js/drawer-load.js}"></script>
 <script th:src="@{/js/product-detail.js}" defer></script>
+<script th:src="@{/js/product-buy.js}" defer></script>
+<script th:src="@{/js/toss-api.js}" defer></script>
+<script>
+
+</script>
 </head>
 <body>
 <div th:replace="~{template/header :: headerImgFragment}"></div>
@@ -472,6 +405,7 @@ window.PageContext = Object.freeze({
 						  <!-- dealType이 0(null 포함)일 때 -->
 						  <th:block th:case="0">
 						    <!-- 아무것도 표시 안 하거나 안내 문구 -->
+						    판매자가 등록을 하지 않았습니다.
 						  </th:block>
 						
 						</div>
@@ -499,7 +433,7 @@ window.PageContext = Object.freeze({
 							</div>
 							<button data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 py-2 transform-none normal-case hover:shadow-cart ga4_product_detail_bottom w-full bg-white hover:bg-white/90 text-jnblack hover:text-jnblack border-[1px] border-black">
 							채팅하기</button>
-							<button th:onclick="openBuyForm([[${pnum}]])" data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-black hover:bg-black/90">
+							<button data-action="buy-product" data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-black hover:bg-black/90">
 							구매하기</button>
 						</div>	
 						<th:block th:if="${storeCheck}">
