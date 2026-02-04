@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class BuyDomain {
 	private int pnum,price;
-	private double charge;
+	private double chargeRate;
 	private String thumbnail, title, dealAddr;
 	private List<Integer> dealType;
 }

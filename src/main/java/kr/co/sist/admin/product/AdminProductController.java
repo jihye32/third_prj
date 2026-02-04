@@ -37,13 +37,13 @@ public class AdminProductController {
 	 * 상품 상세 관리 페이지 (정보 및 이미지 분리 조회)
 	 */
 	@GetMapping("/manage/product/product_detail")
-	public String memberDetailPage(@RequestParam(defaultValue = "0") int ProductNo, Model model) {
-		AdminProductDomain productDetail = ps.getProductDetail(ProductNo);
-		List<String> productImages = ps.getProductImages(ProductNo);
+	public String memberDetailPage(@RequestParam(value = "product_num", defaultValue = "0") int ProductNo, Model model) {
+	    AdminProductDomain product = ps.getProductDetail(ProductNo);
+	    List<String> productImages = ps.getProductImages(ProductNo);
 
-		model.addAttribute("productDetail", productDetail);
-		model.addAttribute("productImages", productImages);
+	    model.addAttribute("product", product); 
+	    model.addAttribute("productImages", productImages);
 
-		return "manage/product/product_detail";
+	    return "manage/product/product_detail";
 	}
 }

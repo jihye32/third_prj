@@ -8,8 +8,10 @@
     <!-- 지혜님 typeAlias -->
 	<typeAlias type="kr.co.sist.user.productdetail.ProductDetailDomain" alias="productDetailDomain"/>
 	<typeAlias type="kr.co.sist.user.productdetail.ProductModifyDTO" alias="productModifyDTO"/>
-	<typeAlias type="kr.co.sist.user.productdetail.SellerDomain" alias="sellerDomain"/>
-	<typeAlias type="kr.co.sist.user.buy.AddrDTO" alias="addrDTO"/>
+	<typeAlias type="kr.co.sist.user.productdetail.SellerInfoDomain" alias="sellerInfoDomain"/>
+	<typeAlias type="kr.co.sist.user.productdetail.OrderDomain" alias="orderDomain"/>
+	<typeAlias type="kr.co.sist.user.productdetail.BookmarkDTO" alias="bookmarkDTO"/>
+	<typeAlias type="kr.co.sist.user.productdetail.SellStatusDTO" alias="sellStatusDTO"/>
 	<typeAlias type="kr.co.sist.user.buy.BuyDomain" alias="buyDomain"/>
 	<typeAlias type="kr.co.sist.user.buy.PaymentDTO" alias="paymentDTO"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatContentDTO" alias="chatContentDTO"/>
