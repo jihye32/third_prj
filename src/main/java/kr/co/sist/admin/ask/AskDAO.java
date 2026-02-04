@@ -1,8 +1,10 @@
 package kr.co.sist.admin.ask;
 
 import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+
 import kr.co.sist.dao.MyBatisHandler;
 
 @Repository
@@ -26,9 +28,15 @@ public class AskDAO {
         }
     }
 
-    public void updateAnswer(AskDTO dto) {
+    public int updateAnswer(AskDTO dto) {
         try (SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true)) {
-            ss.update("kr.co.sist.admin.ask.updateAnswer", dto);
+            return ss.update("kr.co.sist.admin.ask.updateAnswer", dto);
+        }
+    }
+    
+    public List<String> selectAskImages(int askNum) {
+        try (SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false)) {
+            return ss.selectList("kr.co.sist.admin.ask.selectAskImages", askNum);
         }
     }
 }

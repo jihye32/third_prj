@@ -1,6 +1,7 @@
 package kr.co.sist.admin.ask;
 
 import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/manage/ask")
 public class AskController {
 
-    private final AskService service;
+    private final AskService as;
 
-    public AskController(AskService service) {
-        this.service = service;
+    public AskController(AskService as) {
+        this.as = as;
     }
 
     // 문의 목록
@@ -28,60 +29,109 @@ public class AskController {
         dto.setKeyword(keyword);
         dto.setSearchType(searchType == null ? "all" : searchType);
 
+        return askListCommon(dto, model, "manage/ask/askList");
+    }
+
+    // 공통 목록 처리(페이지바 포함)
+    private String askListCommon(AskDTO dto, Model model, String viewName) {
+
         int pageSize = 10;
         int blockSize = 5;
 
-        dto.setStartRow((currentPage - 1) * pageSize + 1);
-        dto.setEndRow(currentPage * pageSize);
+        dto.setStartRow((dto.getCurrentPage() - 1) * pageSize + 1);
+        dto.setEndRow(dto.getCurrentPage() * pageSize);
 
-        int totalCount = service.getTotalCount(dto);
-        List<AskDomain> list = service.getAskList(dto);
+        int totalCount = as.getTotalCount(dto);
+        List<AskDomain> list = as.getAskList(dto);
 
-        String pagination = buildPageBar("/manage/ask/list", dto, totalCount, pageSize, blockSize);
+        // 답변여부 문자열 세팅(선택)
+        if (list != null) {
+            for (AskDomain d : list) {
+                d.setAnswerStatus(d.getAnswerText() == null || d.getAnswerText().isBlank() ? "미답변" : "답변완료");
+            }
+        }
 
+        String baseUrl = "/manage/ask/list";
+        String pagination = buildPageBar(baseUrl, dto, totalCount, pageSize, blockSize);
+
+        model.addAttribute("pagination", pagination);
         model.addAttribute("list", list);
         model.addAttribute("dto", dto);
-        model.addAttribute("pagination", pagination);
+        model.addAttribute("totalCount", totalCount);
+
         model.addAttribute("menu", "customer");
         model.addAttribute("subMenu", "ask");
 
-        return "manage/ask/askList";
+        return viewName;
     }
 
-    // 문의 상세 + 답변
+    // 상세
     @GetMapping("/detail")
     public String askDetail(@RequestParam int askNum, Model model) {
-        model.addAttribute("detail", service.getAskDetail(askNum));
+
+        AskDomain ask = as.getAskDetail(askNum);
+        List<String> imgList = as.getAskImages(askNum);
+
+        model.addAttribute("ask", ask);
+        model.addAttribute("imgList", imgList);
+
+        model.addAttribute("menu", "customer");
+        model.addAttribute("subMenu", "ask");
+
         return "manage/ask/askDetail";
     }
 
+
     // 답변 처리
-    @PostMapping("/answer")
-    public String answer(AskDTO dto) {
-        service.answerAsk(dto);
+    @PostMapping("/answerProcess")
+    public String answerProcess(AskDTO dto) {
+
+        as.answerAsk(dto);
         return "redirect:/manage/ask/detail?askNum=" + dto.getAskNum();
     }
 
-    // 페이지바 (Board랑 동일)
+    // 페이지바 (BoardController 로직 거의 동일)
     private String buildPageBar(String baseUrl, AskDTO dto, int totalCount, int pageSize, int blockSize) {
 
-        int totalPage = (int)Math.ceil((double)totalCount / pageSize);
-        int currentPage = dto.getCurrentPage();
+        int totalPage = (int) Math.ceil((double) totalCount / pageSize);
+        if (totalPage == 0) totalPage = 1;
 
+        int currentPage = dto.getCurrentPage();
         int startPage = ((currentPage - 1) / blockSize) * blockSize + 1;
         int endPage = Math.min(startPage + blockSize - 1, totalPage);
 
+        String searchType = dto.getSearchType();
+        String keyword = dto.getKeyword();
+
+        String extra = "";
+        if (keyword != null && !keyword.isBlank()) {
+            extra = "&searchType=" + searchType + "&keyword=" + keyword;
+        }
+
         StringBuilder sb = new StringBuilder();
 
-        for (int i = startPage; i <= endPage; i++) {
-            if (i == currentPage) {
-                sb.append("<strong>").append(i).append("</strong> ");
+        if (startPage > 1) {
+            sb.append("<a href='").append(baseUrl)
+              .append("?currentPage=").append(startPage - 1)
+              .append(extra).append("'>이전</a> ");
+        }
+
+        for (int p = startPage; p <= endPage; p++) {
+            if (p == currentPage) {
+                sb.append("<strong>").append(p).append("</strong> ");
             } else {
                 sb.append("<a href='").append(baseUrl)
-                  .append("?currentPage=").append(i).append("'>")
-                  .append(i).append("</a> ");
+                  .append("?currentPage=").append(p)
+                  .append(extra).append("'>").append(p).append("</a> ");
             }
         }
+
+        if (endPage < totalPage) {
+            sb.append("<a href='").append(baseUrl)
+              .append("?currentPage=").append(endPage + 1)
+              .append(extra).append("'>다음</a>");
+        }
+
         return sb.toString();
     }
 }

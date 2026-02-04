@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>신고 관리</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header th:replace="manage/common_layout :: header"></header>
+
+<div class="wrapper">
+    <aside th:replace="manage/common_layout :: sidebar"></aside>
+
+    <div id="main-container">
+
+        <h2>신고 관리</h2>
+
+        <div style="margin:20px 0; display:flex; justify-content:space-between; align-items:center;">
+
+            <form th:action="@{/manage/report/reportlist}" method="get" style="display:flex; gap:8px;">
+
+                <!-- ✅ 신고 종류 -->
+                <select name="reportCode">
+                    <option value="">신고 종류</option>
+                    <option th:each="t : ${typeList}"
+                            th:value="${t.reportCode}"
+                            th:text="${t.reportText}"
+                            th:selected="${dto != null and dto.reportCode != null and dto.reportCode == t.reportCode}">
+                    </option>
+                </select>
+
+                <!-- ✅ 처리 상태 -->
+                <select name="reportStateCode">
+                    <option value="">처리 상태</option>
+                    <option th:each="s : ${stateList}"
+                            th:value="${s.reportStateCode}"
+                            th:text="${s.reportStateText}"
+                            th:selected="${dto != null and dto.reportStateCode != null and dto.reportStateCode == s.reportStateCode}">
+                    </option>
+                </select>
+
+                <!-- ✅ 검색 타입 -->
+                <select name="searchType">
+                    <option value="all" th:selected="${dto == null or dto.searchType == 'all'}">전체</option>
+                    <option value="reporter" th:selected="${dto != null and dto.searchType == 'reporter'}">신고자</option>
+                    <option value="reportee" th:selected="${dto != null and dto.searchType == 'reportee'}">피신고자</option>
+                    <option value="content" th:selected="${dto != null and dto.searchType == 'content'}">내용</option>
+                </select>
+
+                <input type="text"
+                       name="keyword"
+                       placeholder="검색어"
+                       th:value="${dto != null ? dto.keyword : ''}"/>
+
+                <button type="submit">검색</button>
+            </form>
+
+            <!-- 우측 버튼 자리(Ask 화면처럼 숨김 유지 가능) -->
+            <a href="#"
+               style="padding:8px 14px; border:1px solid #ccc; text-decoration:none; visibility:hidden;">
+                글쓰기
+            </a>
+
+        </div>
+
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+            <tr style="border-bottom:1px solid #ddd;">
+                <th style="padding:10px; text-align:center; width:10%;">번호</th>
+                <th style="padding:10px; width:20%; text-align:center;">신고자</th>
+                <th style="padding:10px; width:20%; text-align:center;">피신고자</th>
+                <th style="padding:10px; text-align:left; width:30%;">신고 사유</th>
+                <th style="padding:10px; width:10%; text-align:center;">신고일</th>
+                <th style="padding:10px; width:10%; text-align:center;">상태</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="row : ${list}" style="border-bottom:1px solid #eee;">
+                <td style="padding:10px; text-align:center;"
+                    th:text="${row.reportNum}"></td>
+
+                <td style="padding:10px; text-align:center;"
+                    th:text="${row.reporterId}"></td>
+
+                <td style="padding:10px; text-align:center;"
+                    th:text="${row.reporteeId}"></td>
+
+                <td style="padding:10px; text-align:left;">
+                    <a th:href="@{/manage/report/detail(reportNum=${row.reportNum})}"
+                       th:text="${row.reportText}"
+                       style="text-decoration:none; color:#4682b4;"></a>
+                </td>
+
+                <td style="padding:10px; text-align:center;"
+                    th:text="${#dates.format(row.reportDate,'yyyy-MM-dd')}"></td>
+
+                <!-- ✅ 상태 배지(너 style.css의 badge 규칙을 재사용한다고 가정) -->
+                <td style="padding:10px; text-align:center;">
+                    <span th:if="${row.reportStateCode == 1}" class="badge badge_pending">처리예정</span>
+                    <span th:if="${row.reportStateCode == 2}" class="badge badge_ing">처리중</span>
+                    <span th:if="${row.reportStateCode == 3}" class="badge badge_done">처리완료</span>
+                </td>
+            </tr>
+
+            <tr th:if="${list == null or #lists.isEmpty(list)}">
+                <td colspan="6"
+                    style="padding:20px; text-align:center; color:#999;">
+                    등록된 신고가 없습니다.
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        <div class="pagebar-area">
+            <div class="pagebar" th:utext="${pagination}"></div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

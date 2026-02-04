@@ -2,10 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>문의 답변</title>
+    <title>문의 상세</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-
 <body>
 
 <header th:replace="~{manage/common_layout :: header}"></header>
@@ -15,57 +14,140 @@
 
     <div id="main-container">
 
-        <h2>1:1 문의 상세</h2>
+        <h2 style="margin-bottom:20px;">문의 상세</h2>
 
-        <!-- 문의 정보 -->
-        <table class="detail-table">
-            <tr>
-                <th>제목</th>
-                <td th:text="${detail.askTitle}"></td>
-            </tr>
-            <tr>
-                <th>사용자</th>
-                <td th:text="${detail.userId}"></td>
-            </tr>
-            <tr>
-                <th>문의일</th>
-                <td th:text="${#dates.format(detail.askDate,'yyyy-MM-dd HH:mm')}"></td>
-            </tr>
-            <tr>
-                <th>문의내용</th>
-                <td>
-                    <pre th:text="${detail.askText}"></pre>
-                </td>
-            </tr>
-        </table>
+        <!-- ================= 문의 카드 ================= -->
+        <div class="ask-card">
 
-        <hr>
+            <!-- 상단 -->
+            <div class="ask-header">
+                <div>
+                    <h3 class="ask-title" th:text="${ask.askTitle}"></h3>
+                    <div class="ask-meta">
+                        <span th:text="${ask.userId}"></span>
+                        <span th:text="${#dates.format(ask.askDate,'yyyy-MM-dd HH:mm')}"></span>
+                    </div>
+                </div>
 
-        <!-- 답변 -->
-        <form th:action="@{/manage/ask/answer}" method="post">
-            <input type="hidden" name="askNum" th:value="${detail.askNum}">
+                <div class="ask-tags">
+                    <span class="tag tag-type" th:text="${ask.askTypeText}"></span>
 
-            <h3>관리자 답변</h3>
-
-            <textarea name="answerText"
-                      rows="6"
-                      th:readonly="${detail.answerText != null}"
-                      th:text="${detail.answerText}"
-                      placeholder="답변을 입력하세요"></textarea>
-
-            <div style="margin-top:15px;">
-                <button type="submit"
-                        th:if="${detail.answerText == null}"
-                        class="btn_action btn_save">
-                    답변 등록
-                </button>
-
-                <a th:href="@{/manage/ask/list}"
-                   class="btn_action btn_cancel">
-                    목록으로
-                </a>
+                    <span th:if="${ask.answerText == null}"
+                          class="tag tag-pending">답변예정</span>
+                    <span th:if="${ask.answerText != null}"
+                          class="tag tag-done">답변완료</span>
+                </div>
             </div>
-        </form>
+
+            <!-- 본문 -->
+            <div class="ask-content" th:text="${ask.askText}"></div>
+
+            <!-- 이미지 -->
+            <div class="ask-images"
+                 th:if="${imgList != null and !#lists.isEmpty(imgList)}">
+                <img th:each="img : ${imgList}"
+                     th:src="@{/images/ask/{file}(file=${img})}">
+            </div>
+
+            <!-- 이미지 없을 때 -->
+            <div class="ask-images empty"
+                 th:if="${imgList == null or #lists.isEmpty(imgList)}">
+                첨부된 이미지가 없습니다.
+            </div>
+        </div>
+
+       <!-- ================= 관리자 답변 ================= -->
+			<div class="answer-card">
+			
+			  <h3>관리자 답변</h3>
+			
+			  <form th:action="@{/manage/ask/answerProcess}" method="post" id="answerForm">
+			    <input type="hidden" name="askNum" th:value="${ask.askNum}"/>
+			
+			    <!-- 답변 완료면 readonly -->
+			    <textarea name="answerText"
+			              id="answerText"
+			              placeholder="답변 내용을 입력하세요"
+			              th:text="${ask.answerText}"
+			              th:attr="readonly=${ask.answerText != null} ? 'readonly' : null"></textarea>
+			
+			    <div class="answer-actions">
+			      <!-- 답변이 없을 때: 등록 -->
+			      <button type="submit"
+			              class="btn-primary"
+			              id="btnSubmit"
+			              th:if="${ask.answerText == null}">
+			        답변 등록
+			      </button>
+			
+			      <!-- 답변이 있을 때: 수정(토글) / 저장 / 취소 -->
+			      <button type="button"
+			              class="btn-outline"
+			              id="btnEdit"
+			              th:if="${ask.answerText != null}">
+			        수정
+			      </button>
+			
+			      <button type="submit"
+			              class="btn-primary"
+			              id="btnSave"
+			              style="display:none;"
+			              th:if="${ask.answerText != null}">
+			        저장
+			      </button>
+			
+			      <button type="button"
+			              class="btn-outline"
+			              id="btnCancel"
+			              style="display:none;"
+			              th:if="${ask.answerText != null}">
+			        취소
+			      </button>
+			
+			      <a th:href="@{/manage/ask/list}" class="btn-outline">목록</a>
+			    </div>
+			
+			    <div class="answer-date" th:if="${ask.answerDate != null}">
+			      답변일 :
+			      <span th:text="${#dates.format(ask.answerDate,'yyyy-MM-dd HH:mm')}"></span>
+			    </div>
+			  </form>
+			
+			</div>
+			
+			<script th:inline="javascript">
+			  (function(){
+			    const hasAnswer = /*[[${ask.answerText != null}]]*/ false;
+			    if(!hasAnswer) return;
+			
+			    const ta = document.getElementById('answerText');
+			    const btnEdit = document.getElementById('btnEdit');
+			    const btnSave = document.getElementById('btnSave');
+			    const btnCancel = document.getElementById('btnCancel');
+			
+			    // 원본 답변 저장(취소 시 복구)
+			    const original = ta.value;
+			
+			    btnEdit.addEventListener('click', function(){
+			      ta.removeAttribute('readonly');
+			      ta.focus();
+			
+			      btnEdit.style.display = 'none';
+			      btnSave.style.display = 'inline-block';
+			      btnCancel.style.display = 'inline-block';
+			    });
+			
+			    btnCancel.addEventListener('click', function(){
+			      ta.value = original;
+			      ta.setAttribute('readonly', 'readonly');
+			
+			      btnEdit.style.display = 'inline-block';
+			      btnSave.style.display = 'none';
+			      btnCancel.style.display = 'none';
+			    });
+			  })();
+			</script>
+			
 
     </div>
 </div>

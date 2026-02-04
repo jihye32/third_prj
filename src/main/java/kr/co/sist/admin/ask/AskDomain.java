@@ -1,11 +1,14 @@
 package kr.co.sist.admin.ask;
 
 import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class AskDomain {
 
     private int askNum;
@@ -18,8 +21,9 @@ public class AskDomain {
     private String answerText;
     private Date answerDate;
 
-    // 화면용 (답변 상태)
-    public String getAnswerStatus() {
-        return answerText == null ? "답변예정" : "답변완료";
-    }
+    // 리스트 화면용 (선택)
+    private String answerStatus; // "미답변" / "답변완료"
+    
+    private String askTypeText;  // ask_value.ask_text (결제/환불, 계정/보안, 기타)
+
 }

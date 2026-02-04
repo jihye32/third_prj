@@ -2,22 +2,20 @@ package kr.co.sist.admin.ask;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class AskDTO {
 
+    // detail/answerProcess 용
     private int askNum;
-    private String askCode;
-    private String askTitle;
-    private String askText;
-    private String userId;
-
     private String answerText;
 
     // 검색
+    private String searchType; // all | title | user | content
     private String keyword;
-    private String searchType;
 
     // 페이징
     private int currentPage;
