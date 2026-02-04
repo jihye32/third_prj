@@ -4,43 +4,71 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.user.productlist">
 
+<!-- 카테고리 전체 조회 -->
 <select id="selectCategory" resultType="kr.co.sist.user.productlist.CategoryDomain">
 select category_code categoryCode, code_text categoryText
 from category
 </select>
 
+
+<!-- 판매중인 물품 검색 -->
 <select id="selectProdcutList" 
 		resultType="kr.co.sist.user.ProductDomain"
 		parameterType="kr.co.sist.user.productlist.ProductRangeDTO" >
-SELECT productName,productNum, price, thumbnail, timDif, sellStateCode, tradingArea, lastModify, receiveFlag, bookmarkFlag, sellState
-FROM (
-	SELECT
-			p.PRODUCT_NUM productNum,
-			p.TITLE productName,
-			p.PRICE price,
-			p.THUMBNAIL thumbnail,
-			sysdate-UP_DATE timDif,
-			p.STATUS_CODE sellStateCode,
-			sp.ADDR tradingArea,
-			p.UP_DATE lastModify,
-			ROW_NUMBER() OVER (ORDER BY up_date DESC) rnum ,
-			'' receiveFlag,
-			'' bookmarkFlag,
-			'' sellState
-	FROM PRODUCT p, SELL_PLACE sp
-	WHERE p.DELETE_FLAG='N' AND p.STATUS_CODE=1 and p.PRODUCT_NUM=sp.PRODUCT_NUM
+select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY, bookmarkFlag
+from
+	(select
+		pv.productNum productNum,
+		pv.productName productName,
+		pv.PRICE price,
+		pv.THUMBNAIL thumbnail,
+		pv.timDif timDif,
+		pv.sellStateCode sellStateCode,
+		pv.tradingArea tradingArea,
+		pv.sellState sellState,
+		pv.lastModify lastModify,
+		pv.timeString timeString,
+		pv.VIEW_COUNT VIEW_COUNT,
+		pv.category category,
+			CASE
+	        WHEN b.PRODUCT_NUM IS NOT NULL THEN 'Y'
+	        ELSE 'N'
+	    	END AS bookmarkFlag,
+	    rownum r
+	from product_view pv
+	LEFT OUTER JOIN bookmark b
+	    ON pv.productNum = b.product_num
+	    <if test="userId neq null and userId neq '' ">
+	   	AND b.store_num = #{userId}
+		</if>
+		<if test="userId eq null or userId eq ''">
+		AND b.store_num = 0
+		</if>
+		<where>
+			<if test="keyword neq null and keyword neq ''">
+			and instr( productName, #{keyword} ) != 0
+			</if>
+			<if test="category != 0">
+			and category = #{category}
+			</if>
+			<if test="startPrice != 0 and endPrice != 0">
+			and price between #{startPrice} and #{endPrice}
+			</if>
+		</where>
+		<choose>
+		    <when test="sortBy eq 'asc'">order by pv.PRICE ASC </when>
+		    <when test="sortBy eq 'desc'">order by pv.PRICE DESC </when>
+		    <otherwise>order by pv.lastModify DESC </otherwise>
+		  </choose>
 	)
-	<where>
-	rnum between #{startNum} and #{endNum}	
-	<if test="keyword neq null and keyword neq ''">
-		and instr( title, #{keyword} ) != 0
-		</if>
-		<if test="category != 0">
-		and category_code = #{category}
-		</if>
-	</where>
+<where>
+r between #{startNum} and #{endNum}
+</where>
+
 </select>
 
+
+<!-- 판매중인 물품 수 검색 -->
 <select id="selectProdcutCnt" 
 		parameterType="kr.co.sist.user.productlist.ProductRangeDTO" 
 		resultType="int">

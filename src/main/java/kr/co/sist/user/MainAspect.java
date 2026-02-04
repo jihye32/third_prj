@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 public class MainAspect {
 
 	@AfterReturning(
-			pointcut = "execution(* kr.co.sist.user.MainService.searchMostViewProdcut(..) )",
+			pointcut = 
+	        "execution(* kr.co.sist.user.MainService.searchMostViewProdcut(..)) || " +
+	                "execution(* kr.co.sist.user.productlist.ProductListService.searchProductList(..))",
 			returning = "result")
 	public void afterReturning2(JoinPoint jp, Object result) {
 		List<ProductDomain> list = (List<ProductDomain>) result;

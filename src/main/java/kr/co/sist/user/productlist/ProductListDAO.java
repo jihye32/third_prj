@@ -19,7 +19,7 @@ public class ProductListDAO {
 	 */
 	public List<CategoryDomain> selectCategory() throws PersistenceException{
 		List<CategoryDomain> list = null;
-		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
 		list = ss.selectList("kr.co.sist.user.productlist.selectCategory");
 		if(ss != null) {ss.close();}// end if
 		return list;
@@ -27,15 +27,15 @@ public class ProductListDAO {
 	
 	public List<ProductDomain> selectProductList(ProductRangeDTO prDTO) throws PersistenceException{
 		List<ProductDomain> list = null;
-		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		list = ss.selectList("kr.co.sist.user.productlist.selectProdcutList");
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		list = ss.selectList("kr.co.sist.user.productlist.selectProdcutList", prDTO);
 		if(ss != null) {ss.close();}// end if
 		return list;
 	}// selectCategory
 	
 	public int selectProductTotalCnt(ProductRangeDTO prDTO) {
 		int cnt = 0;
-		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
 		cnt = ss.selectOne("kr.co.sist.user.productlist.selectProdcutCnt",prDTO);
 		if(ss != null) {ss.close();}// end if
 		return cnt;

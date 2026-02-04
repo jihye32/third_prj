@@ -13,6 +13,45 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
+$(document).ready(function() {
+    // 모든 숨겨진 찜 버튼에 클릭 이벤트
+    $('input.a11yHidden[type="button"]').on('click', function(event) {
+        // <a>로 이벤트 버블링 방지
+        event.stopPropagation();
+
+        // productNum 추출 (id에서)
+        var productNum = $(this).attr('id').replace('btn_', '');
+
+        // UI 및 서버 처리
+        toggleBookmark(productNum, $(this));
+    });
+
+    function toggleBookmark(productNum, $input) {
+        console.log("찜 클릭됨:", productNum);
+	
+        // label 내부 svg path 선택
+        var $svgPath = $input.prev('label').find('path');
+
+        // 찜 상태 토글
+        if ($svgPath.attr('fill') === '#dc2626') {
+            // 비활성화
+            $svgPath.attr('fill', '#9ca3afb4');
+            $svgPath.attr('stroke', 'white');
+        } else {
+            // 활성화
+            $svgPath.attr('fill', '#dc2626');
+            $svgPath.attr('stroke', '#dc2626');
+        }
+
+        // 서버로 AJAX 요청 예시
+        /*
+        $.post('/bookmark/toggle', { productNum: productNum }, function(response){
+            console.log('서버 응답:', response);
+        });
+        */
+    }
+});
+
 function openReportForm() {
     fetch('/report/form')
         .then(res => res.text())
@@ -29,6 +68,10 @@ function searchCategory(categorycode){
 	    window.location.href = url.toString();    // 이동
 	}// end if
 }// searchCategory
+
+function bookmark(productNum){
+	alert(productNum);
+}
 </script>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -233,14 +276,14 @@ function searchCategory(categorycode){
 						<ul
 							class="inline-flex sticky z-10 w-full justify-end bg-white lg:top-[204px] xl:top-[220px] pt-7 pb-5 text-end">
 							<li
-								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-semibold text-jnGray-900"><button
-									class="px-2">최신순</button></li>
+								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-semibold text-jnGray-900">
+								<button class="px-2">최신순</button></li>
 							<li
-								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-medium text-jnGray-600"><button
-									class="px-2">낮은가격순</button></li>
+								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-medium text-jnGray-600">
+								<button class="px-2">낮은가격순</button></li>
 							<li
-								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-medium text-jnGray-600"><button
-									class="px-2">높은가격순</button></li>
+								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-medium text-jnGray-600">
+								<button class="px-2">높은가격순</button></li>
 						</ul>
 						<ul class="grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5 lg:gap-x-5 xl:gap-x-7 xl:gap-y-5 2xl:gap-y-8 search-results [&amp;_div]:ps-0">
 							
@@ -248,19 +291,43 @@ function searchCategory(categorycode){
 							<th:block th:if="${tempData ne null}">
 								<li th:each="temp : ${tempData}" th:object="${temp}" class="">
 									<a class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-								href="/product/224445272">
+										th:href="@{/product/{productNum}(productNum=*{productNum})}">
 										<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
 										<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
-										<img alt="아이폰 16 화이트 128기가 배터리96" referrerpolicy="no-referrer"
+										<img th:alt-title="*{productName}" referrerpolicy="no-referrer"
 											loading="lazy" decoding="async" data-nimg="fill"
 											class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-											src="https://img2.joongna.com/media/original/2026/01/23/1769150260008UR5_G085D.jpg?impolicy=thumb&amp;size=150"
+											th:src="@{/images/thumbnail/{file}(file=*{thumbnail})}"
 											style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
 										
-										<div class="absolute bottom-2 z-20 right-2 w-6 h-6">
-											<label for=":rg:" class="relative cursor-pointer"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="pointer-events-none w-6 h-6">
-													<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z" stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input id=":rg:" type="checkbox" class="a11yHidden">
+										<div class="absolute bottom-2 z-20 right-2 w-6 h-6" >
+											<label for="${|btn*{productNum}|}" class="relative cursor-pointer" th:onclick="bookmark([[${temp.productNum}]]); event.stopPropagation();">
+												<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="pointer-events-none w-6 h-6">
+
+													<th:block th:if="*{bookmarkFlag eq 'N'}">
+														<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z" 
+															stroke-width="1.5" stroke="white" fill="#9ca3afb4">
+														</path>
+													</th:block>
+													<th:block th:if="*{bookmarkFlag eq 'Y'}">
+														<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z" 
+															stroke-width="1.5" stroke="#dc2626" fill="#dc2626">
+														</path>
+													</th:block>
+													
+												</svg>
+											</label>
+											<input id="${|btn*{productNum}|}" type="button" class="a11yHidden">
 										</div>
+										
+										<!-- <div class="absolute bottom-2 z-20 right-2 w-6 h-6" >
+											<label for="|btn*{productNum}|" class="relative cursor-pointer" th:onclick="bookmark2([[${temp.productNum}]])">
+												<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="pointer-events-none w-6 h-6">
+												</svg>
+											</label>
+											<input id="|btn*{productNum}|" type="checkbox" class="a11yHidden">
+										</div> -->
+												
 
 									</div>
 									<div class="w-full overflow-hidden p-2 px-0">
@@ -268,9 +335,13 @@ function searchCategory(categorycode){
 										<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
 											class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5 max-lg:mt-1">가격</div>
 										<div class="mt-1 mb-2 min-h-6 max-lg:mb-0 max-lg:mt-1.5">
+											
+											<th:block th:if="*{tradingArea ne null}">
 											<span th:text="*{tradingArea}" class="text-sm text-gray-400 max-lg:text-xs">강일동</span>
 											<span class="mx-1 text-sm text-gray-400">|</span>
-											<span class="text-sm text-gray-400 max-lg:text-xs">방금 전</span>
+											</th:block>
+											
+											<span th:text="*{timeString}" class="text-sm text-gray-400 max-lg:text-xs">방금 전</span>
 										</div>
 										<div
 											class="flex lg:justify-between max-lg:flex-col max-lg:gap-2 max-lg:mt-3">

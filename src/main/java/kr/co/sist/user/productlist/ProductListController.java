@@ -21,9 +21,9 @@ public class ProductListController {
 	public String productList(Model model, ProductRangeDTO prDTO, HttpSession session) {
 //		System.out.println(prDTO);
 		
-		// pagenation 관려
+		// pagenation 관련
 		if(session.getAttribute("uid") != null & !"".equals(session.getAttribute("uid"))) {
-			prDTO.setUserId((String)session.getAttribute("uid"));
+			prDTO.setUserId((Integer)session.getAttribute("uid"));
 		}// end if
 		int totalCnt = pls.totalCnt(prDTO);// 총 게시물의 수
 		int pageScale = pls.pageScale();// 한화면에 보여줄 게시물의 수
@@ -36,12 +36,13 @@ public class ProductListController {
 		prDTO.setEndNum(endNum);
 		prDTO.setTotalPage(totalPage);
 		
-		System.out.println(prDTO);
-		
+		prDTO.setUserId(5);
+//		System.out.println(prDTO);
 		
 		
 		List<ProductDomain> list = pls.searchProductList(prDTO);
-		System.out.println(list);
+//		System.out.println(list);
+//		System.out.println("조회 건수 : " + list.size());
 		model.addAttribute("tempData", list);
 		
 		
