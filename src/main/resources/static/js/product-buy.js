@@ -44,19 +44,9 @@ function getSelectedType() {
   return drawer.dataset.selectedType || null;
 }
 
+/* toss api 부르기 */
 function openPaymentForm(pnum, type) { 
 	loadDrawerContent(`/buy/payment/${pnum}?type=${type}`, () => { 
-		/*if (window.initTossPayments) {
-            // 1. 로드된 버튼 요소를 찾습니다.
-            const paymentBtn = document.getElementById("payment-button");
-            
-            if (paymentBtn) {
-                // 2. data- 속성에 심어둔 값을 읽어옵니다.
-                const title = paymentBtn.getAttribute("data-title");
-                
-                // 3. 읽어온 값을 인자로 넘기며 초기화 함수를 실행합니다.
-                window.initTossPayments(pnum,title);
-            }
-        } */
+		initTossPayments(pnum);
 	});
 }

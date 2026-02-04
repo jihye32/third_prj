@@ -2,8 +2,9 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="kr.co.sist.user.buy">
- <!-- 상품 정보 받는 쿼리문 -->
+<mapper namespace="kr.co.sist.user.buy">
+<!-- 구매 페이지에서 사용할 정보 -->
+<!-- 상품 정보 받는 쿼리문 -->
 <resultMap type="buyDomain" id="bDomain">
 	<result column="product_num" property="pnum"/>
 	<result column="title" property="title"/>
@@ -27,9 +28,37 @@ where rownum =1
 </select>
 
 <!-- 거래 방법 코드 받는 쿼리문 -->
-<select id="selectProductSellCode" parameterType="int" resultType="int">
+<select id="selectProductSellCode" parameterType="int" resultType="Integer">
 select sell_code
 from sell_option
 where product_num = #{productnum}
 </select>
+
+
+<!-- 결제할 때 -->
+<!-- 주문 정보 저장 -->
+<insert id="insertOrder" parameterType="kr.co.sist.user.buy.OrderDTO">
+insert into product_order(order_id,product_num,buyer_id,amount,charge,order_status,created_date) 
+values (#{orderId},#{pnum},#{buyerId},#{amount},#{charge},#{orderStatus},sysdate)
+</insert>
+
+<!-- DB에 저장된 금액 -->
+<select id="selectAmount" parameterType="String" resultType="Integer">
+select amount
+from product_order
+where order_id = #{orderId}
+</select>
+
+<!-- 결제 정보 저장 -->
+<insert id="insertPayment" parameterType="kr.co.sist.user.buy.PaymentDTO">
+insert into payment(order_id,payment_key,payment_type,amount,payment_status,approved_date) 
+values (#{orderId},#{paymentKey},#{paymentType},#{amount},#{paymentStatus},sysdate)
+</insert>
+
+<!-- 결제 완료 시 주문 정보 상태 변경 -->
+<!-- PAID로 고정하지 말것! -->
+<update id="updateOrderStatus" parameterType="String">
+update product_order set order_status='PAID'
+where order_id = #{orderId}
+</update>
 </mapper>

@@ -7,11 +7,11 @@
 <body>
 <th:block th:fragment="paymentFrm">
 <main role="main" aria-label="본문 영역" id="main-content" class="flex flex-col min-h-full relative">
-<th:block th:object="${BuyDomian}">
+<th:block th:object="${BuyDomain}">
 <div class="flex-1 pt-6">
 	<div class="outline-none gap-4 flex flex-col mb-6 px-5">
 		<div class="flex flex-row justify-between items-center">
-			<h2 th:text="${type eq 'DIRECT'?'직거래로 구매':'택배거래로 구매'}" class="text-18 font-semibold text-gray-900">선택한 거래 방식</h2>
+			<h2 th:text="${type == 'DIRECT'?'직거래로 구매':'택배거래로 구매'}" class="text-18 font-semibold text-gray-900">선택한 거래 방식</h2>
 		</div>
 		<div class="flex flex-row gap-4 items-center">
 			<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
@@ -28,7 +28,7 @@
 	</div>
 
 	<!-- 택배 거래 선택 시 생성됨 -->
-	<form th:if="${type eq 2}">
+	<form th:if="${type == 'DELIVERY'}">
 		<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
 		<div class="outline-none gap-4 flex flex-col justify-start items-stretch flex-nowrap p-5 w-full">
 			<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">

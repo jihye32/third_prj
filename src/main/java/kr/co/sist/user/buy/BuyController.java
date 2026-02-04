@@ -33,7 +33,7 @@ public class BuyController {
 		if(bd==null)return "redirect: /";
 
 		model.addAttribute("type", type);
-		model.addAttribute("BuyDomian", bd);
+		model.addAttribute("BuyDomain", bd);
 		return "/buy/payment_form :: paymentFrm";
 	}
 	

@@ -43,11 +43,51 @@ public class BuyDAO {
 	}
 	
 	
+	//구매할 때 필요한 함수
+	//주문 정보 저장
+	public boolean insertOrderInfo(OrderDTO oDTO) {
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		int cnt=ss.insert("kr.co.sist.user.buy.insertOrder", oDTO);
+		
+		if( ss != null) { ss.close(); }//end if
+		return cnt==1;
+	}
 	
+	//저장된 금액 가져오기
+	public Integer selectOrderAmount(String orderId) {
+		Integer amount = null;
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		amount = ss.selectOne("kr.co.sist.user.buy.selectAmount", orderId);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return amount;
+	}
 	
+	//결제 완료 시 결제 정보 저장
 	public int insertPaymentInfo(PaymentDTO pDTO) {
 		int cnt = 0;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
 		
+		cnt=ss.insert("kr.co.sist.user.buy.insertPayment", pDTO);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return cnt;
+	}
+	
+	//주문의 상태 변경
+	//현재 성공했을 때만 적용 추후 수정되어야함
+	public int updateOrderStaus(String orderId) {
+		int cnt = 0;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.update("kr.co.sist.user.buy.updateOrderStatus", orderId);
+		
+		if( ss != null) { ss.close(); }//end if
 		return cnt;
 	}
 }
