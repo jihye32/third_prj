@@ -85,7 +85,7 @@
         INSERT INTO adminboard(
             context_num, board_type, title, content, write_date, admin_id, delete_flag
         ) VALUES (
-            seq_adminboard.NEXTVAL,
+            SEQ_ADMINBOARD_NUM.NEXTVAL,
             #{boardType},
             #{title},
             #{content},
