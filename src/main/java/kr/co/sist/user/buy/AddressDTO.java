@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AddrDTO {
-	private int pnum, tel;
-	private String name, addr, addrDetail;
+public class AddressDTO {
+	private int tel;
+	private String orderId, name, addr, addrDetail;
 }

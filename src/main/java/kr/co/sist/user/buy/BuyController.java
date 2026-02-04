@@ -34,7 +34,7 @@ public class BuyController {
 		bd.setDealType(sell);
 		bd.setDealAddr("양재동");
 		bd.setPrice(100000000);
-		bd.setCharge(1);
+		bd.setChargeRate(1);
 		
 		
 //		BuyDomain bd = bs.searchProduct(pnum);
@@ -54,7 +54,7 @@ public class BuyController {
 		bd.setDealType(sell);
 		bd.setDealAddr("양재동");
 		bd.setPrice(100);
-		bd.setCharge(1);
+		bd.setChargeRate(1);
 		
 		
 //		BuyDomain bd = bs.searchProduct(pnum);

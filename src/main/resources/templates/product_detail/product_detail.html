@@ -9,38 +9,58 @@
 <script>
 // fragment 내부 script 부분
 /* paymentFrm 프래그먼트 내부 스크립트 */
-window.initTossPayments = async function (price, title) { // main() 대신 전역 함수 선언
-    const button = document.getElementById("payment-button");
-    const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-    const tossPayments = TossPayments(clientKey);
-    const customerKey = "YoA3w8vRTZPoaV13MAQ3j";
-    
-    const widgets = tossPayments.widgets({ customerKey });
-    // 화면의 가격과 일치하도록 설정
-    await widgets.setAmount({
-        currency: "KRW",
-        value: price, 
-    });
+window.initTossPayments = async function (pnum, title) {
+  const button = document.getElementById("payment-button");
+  const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+  const tossPayments = TossPayments(clientKey);
+  const customerKey = "YoA3w8vRTZPoaV13MAQ3j";
 
-    await Promise.all([
-        widgets.renderPaymentMethods({
-            selector: "#payment-method",
-            variantKey: "DEFAULT",
-        }),
-        widgets.renderAgreement({ 
-            selector: "#agreement", 
-            variantKey: "AGREEMENT" 
-        }),
-    ]);
+  const widgets = tossPayments.widgets({ customerKey });
 
-    button.addEventListener("click", async function () {
-        await widgets.requestPayment({
-            orderId: "ORDER_" + new Date().getTime(),
-            orderName: title,
-            successUrl: window.location.origin + "/buy/toss",
-            failUrl: window.location.origin + "/buy/fail",
-        });
-    });
+  // ✅ 렌더는 "열릴 때 1번만"
+  await Promise.all([
+    widgets.renderPaymentMethods({
+      selector: "#payment-method",
+      variantKey: "DEFAULT",
+    }),
+    widgets.renderAgreement({
+      selector: "#agreement",
+      variantKey: "AGREEMENT",
+    }),
+  ]);
+
+  // ✅ 이벤트 누적 방지: addEventListener 대신 onclick으로 덮어쓰기
+  button.onclick = async () => {
+    // (선택) 중복 클릭 방지
+    button.disabled = true;
+
+    try {
+      const response = await fetch("/orders/prepare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pnum: pnum }),
+      });
+
+      if (!response.ok) throw new Error("prepare failed");
+
+      const data = await response.json();
+      const orderId = data.orderId;
+      const amount = data.amount;
+
+      // ✅ 결제 직전에 amount 맞추기
+      await widgets.setAmount({ currency: "KRW", value: amount });
+
+      await widgets.requestPayment({
+        orderId: orderId,
+        orderName: title,
+        successUrl: window.location.origin + "/buy/toss",
+        failUrl: window.location.origin + "/buy/fail",
+      });
+
+    } finally {
+      button.disabled = false;
+    }
+  };
 };
 </script>
 <link th:href="@{/css/output.css}" rel="stylesheet">
@@ -48,7 +68,7 @@ window.initTossPayments = async function (price, title) { // main() 대신 전�
 </style>
 <!-- JQuery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 /////이미지 캐러셀/////////////////
 // HTML이 모두 로드된 후 코드가 실행되도록 감쌉니다.
 document.addEventListener('DOMContentLoaded', function() {
@@ -131,42 +151,16 @@ function openPaymentForm(pnum, type) {
             
             if (paymentBtn) {
                 // 2. data- 속성에 심어둔 값을 읽어옵니다.
-                const amount = Number(paymentBtn.getAttribute("data-price"));
                 const title = paymentBtn.getAttribute("data-title");
                 
                 // 3. 읽어온 값을 인자로 넘기며 초기화 함수를 실행합니다.
-                window.initTossPayments(amount, title);
+                window.initTossPayments(pnum,title);
             }
         } 
 	}); 
 }
 
-/**
- * 3. 상품 상태 변경 (판매자용)
- */
-function toggleDropdown() {
-    document.getElementById('dropdown-menu').classList.toggle('hidden');
-}
 
-window.addEventListener('click', (e) => {
-    const container = document.getElementById('dropdown-container');
-    if (container && !container.contains(e.target)) {
-        document.getElementById('dropdown-menu').classList.add('hidden');
-    }
-});
-
-function selectOption(value) {
-    // pnum은 타임리프에서 인라인으로 넘겨받아야 함
-    toggleDropdown();
-}
-
-function updateStatus(pnum, sellStatusCode) {
-    fetch('/product/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pnum, sellStatusCode })
-    }).then(res => { if (res.ok) alert("상태가 변경되었습니다."); });
-}
 
 /**
  * 4. 게시글 수정 (JQuery)
@@ -203,7 +197,14 @@ function execDaumPostcode() {
         }
     }).open();
 }
+</script> -->
+
+<script th:inline="javascript">
+window.PageContext = Object.freeze({
+	pnum: /*[[${pnum}]]*/ null
+});
 </script>
+<script th:src="@{/js/product-detail.js}" defer></script>
 </head>
 <body>
 <div th:replace="~{template/header :: headerImgFragment}"></div>
@@ -216,23 +217,23 @@ function execDaumPostcode() {
 						<!-- 이미지!!!!!!!!!!!!!!!!!!! -->
 					<div class="flex flex-col">
 						<div class="relative overflow-hidden rounded-2xl">
-						<th:block th:object="${ProductDetailDomain}">
+						<th:block th:object="${Product}">
 							<div class="carouselWrapper relative product-gallery swiperThumbnail product-gallery-slider lg:sticky lg:top-56 overflow-hidden rounded-2xl">
 								<div class="swiper swiper-initialized swiper-horizontal swiper-pointer-events" dir="ltr">
 									<!-- 이미지 들어가는 곳!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 									<div id="image-slider" class="flex transition-transform duration-500 ease-out" style="transform: translateX(0%);">
-										<div th:each="img : *{img}" class="swiper-slide w-full flex-shrink-0">
+										<div th:each="img : *{images}" class="swiper-slide w-full flex-shrink-0">
 											<div class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
 												<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--0"
 													referrerpolicy="no-referrer" fetchpriority="high"
 													decoding="async" data-nimg="fill"
 													class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
-													th:src="${img}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-												<div th:unless="*{sellStatusCode eq 1}" class="absolute top-0 left-0 bg-black/[0.5] w-full h-full z-[1] rounded-lg">
-													<div th:if="*{sellStatusCode eq 2}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
+													th:src="@{/assets/images/{file}(file=${img})}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+												<div th:unless="*{sellStatus == SellStatus.ON_SALE}" class="absolute top-0 left-0 bg-black/[0.5] w-full h-full z-[1] rounded-lg">
+													<div th:if="*{sellStatus == SellStatus.RESERVED}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
 														<img alt="예약 중" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" src="/assets/images/minus-circle-white.svg">예약 중
 													</div>
-													<div th:if="*{sellStatusCode eq 3}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
+													<div th:if="*{sellStatus == SellStatus.SOLD_OUT}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
 														<img alt="판매 완료" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" src="/assets/images/minus-circle-white.svg">판매 완료
 													</div>
 												</div>
@@ -240,7 +241,7 @@ function execDaumPostcode() {
 										</div>
 									</div>
 								</div>
-								<th:block th:unless="*{img.size() eq 1}">
+								<th:block th:unless="*{images.size() eq 1}">
 								<button onclick="prevSlide()" class="w-7 h-7 text-black flex items-center justify-center absolute z-10 transition duration-250 transform -translate-y-1/2 top-1/2 focus:outline-none rounded-full text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl max-[1023px]:hidden left-4 bg-transparent shadow-transparent hover:bg-transparent hover:text-black !text-white !text-6xl swiper-button-disabled"
 										id="product-gallery-slider-prev" aria-label="prev-button" disabled="">
 									<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
@@ -295,15 +296,15 @@ function execDaumPostcode() {
 								</button>
 								</th:block>
 							</div>
-							<th:block th:unless="*{img.size() eq 1}">
+							<th:block th:unless="*{images.size() eq 1}">
 							<div class="absolute z-10 px-2 py-1 text-sm text-white bg-black bg-opacity-50 rounded-full pointer-events-none top-6 right-6">
-								<span id="current-slide">1</span> / <span th:text="${#lists.size(ProductDetailDomain.img)}">전체 사진 개수</span>
+								<span id="current-slide">1</span> / <span th:text="*{#lists.size(images)}">전체 사진 개수</span>
 							</div>
 							</th:block>
 						</div>
 					</div>
 					<!-- 오른쪽 상품 내용 들어가는 곳 -->
-					<div th:object="${ProductDetailDomain}">
+					<div th:object="${Product}">
 						<div class="flex items-center w-full chawkbazarBreadcrumb mt-5 mb-4 sm:mb-2 sm:mt-0">
 							<ol class="flex flex-wrap items-center w-full mt-0 lg:mt-0">
 								<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
@@ -335,8 +336,8 @@ function execDaumPostcode() {
 								제품가격</div>
 							</div>
 							<div class="flex items-center justify-between mb-4 text-xs font-normal text-gray-400">
-								<span class="text-jnGray-500 leading-[15px]">
-								<span th:text="*{viewCnt}"></span> 전 ·
+								<span class="text-gray-500 leading-[15px]">
+								<span id="timeAgo" th:text="*{timeAgo}"></span> 전 ·
 								조회 <span th:text="*{viewCnt}"></span> ·
 								채팅 <span th:text="*{chatCnt}"></span> ·
 								찜 <span th:text="*{bookmarkCnt}"></span>
@@ -388,73 +389,98 @@ function execDaumPostcode() {
 								<span class="text-inherit">거래방법</span>
 							</div>
 						</div>
-						<div th:switch="*{dealType.size()}" class="px-4 rounded-b-[4px] border-b border-gray-300 border-x text-sm">
-						<th:block th:case="2">
-							<div class="py-4 border-b border-gray-300 flex flex-col gap-y-3">
-								<div>
-									<h3>택배거래</h3>
-								</div>
-							</div>
-							<div class="py-4 border-b border-gray-300 flex flex-col gap-y-3 border-none">
-								<div class="flex justify-between text-sm font-medium text-jnBlack">
-									<h3>직거래</h3>
-									<p></p>
-								</div>
-								<dl class="flex flex-col gap-y-3">
-									<div class="flex justify-between items-center">
-										<dt class="whitespace-nowrap text-gray-500">만나서 직거래</dt>
-										<dd class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
-											<svg width="16" height="16" viewBox="0 0 10 10" fill="none"
-												xmlns="http://www.w3.org/2000/svg" class="text-jnGray-400">
-												<g id="ico_location">
-												<g id="Group 7574">
-												<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd"
-													d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
-													fill="currentColor"></path></g></g></svg>
-											<button class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
-												<p th:text="*{dealAddr}">직거래 지역</p>
-											</button>
-										</dd>
-									</div>
-								</dl>
-							</div>
-						</th:block>
-						<th:block th:case="1">
-							<div th:if="*{dealType[0] == 2}" class="py-4 flex flex-col gap-y-3">
-								<div>
-									<h3>택배거래</h3>
-								</div>
-							</div>
-							<div th:if="*{dealType[0] == 1}" class="py-4 flex flex-col gap-y-3 border-none">
-								<div class="flex justify-between text-sm font-medium text-jnBlack">
-									<h3>직거래</h3>
-									<p></p>
-								</div>
-								<div class="flex flex-col gap-y-3">
-									<div class="flex justify-between items-center">
-										<div class="whitespace-nowrap text-gray-500">만나서 직거래</div>
-										<div class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
-											<svg width="16" height="16" viewBox="0 0 10 10" fill="none"
-												xmlns="http://www.w3.org/2000/svg" class="text-jnGray-400">
-												<g id="ico_location">
-												<g id="Group 7574">
-												<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd"
-													d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
-													fill="currentColor"></path></g></g></svg>
-											<span th:text="*{dealAddr}" class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
-												직거래 지역
-											</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</th:block>
+						<div th:switch="*{#lists.size(dealType)}" class="px-4 rounded-b-[4px] border-b border-gray-300 border-x text-sm">
+						
+						  <!-- dealType이 2개일 때 -->
+						  <th:block th:case="2">
+						    <div class="py-4 border-b border-gray-300 flex flex-col gap-y-3">
+						      <div>
+						        <h3>택배거래</h3>
+						      </div>
+						    </div>
+						
+						    <div class="py-4 border-b border-gray-300 flex flex-col gap-y-3 border-none">
+						      <div class="flex justify-between text-sm font-medium text-jnBlack">
+						        <h3>직거래</h3>
+						        <p></p>
+						      </div>
+						      <dl class="flex flex-col gap-y-3">
+						        <div class="flex justify-between items-center">
+						          <dt class="whitespace-nowrap text-gray-500">만나서 직거래</dt>
+						          <dd class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
+						            <!-- 아이콘 그대로 -->
+						            <svg width="16" height="16" viewBox="0 0 10 10" fill="none"
+						                 xmlns="http://www.w3.org/2000/svg" class="text-jnGray-400">
+						              <g id="ico_location">
+						                <g id="Group 7574">
+						                  <path id="Subtract" fill-rule="evenodd" clip-rule="evenodd"
+						                        d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
+						                        fill="currentColor"></path>
+						                </g>
+						              </g>
+						            </svg>
+						
+						            <span th:text="*{dealAddress}" class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
+						              직거래 지역
+						            </span>
+						          </dd>
+						        </div>
+						      </dl>
+						    </div>
+						  </th:block>
+						
+						  <!-- dealType이 1개일 때 -->
+						  <th:block th:case="1">
+						    <!-- 택배만 -->
+						    <div th:if="*{dealType != null and #lists.contains(dealType.![name()], 'DELIVERY')}" class="py-4 flex flex-col gap-y-3">
+						      <div>
+						        <h3>택배거래</h3>
+						      </div>
+						    </div>
+						
+						    <!-- 직거래만 -->
+						    <div th:if="*{dealType != null and #lists.contains(dealType.![name()], 'DIRECT')}" class="py-4 flex flex-col gap-y-3 border-none">
+						      <div class="flex justify-between text-sm font-medium text-jnBlack">
+						        <h3>직거래</h3>
+						      </div>
+						
+						      <div class="flex flex-col gap-y-3">
+						        <div class="flex justify-between items-center">
+						          <div class="whitespace-nowrap text-gray-500">만나서 직거래</div>
+						          <div class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
+						            <!-- 아이콘 그대로 -->
+						            <svg width="16" height="16" viewBox="0 0 10 10" fill="none"
+						                 xmlns="http://www.w3.org/2000/svg" class="text-jnGray-400">
+						              <g id="ico_location">
+						                <g id="Group 7574">
+						                  <path id="Subtract" fill-rule="evenodd" clip-rule="evenodd"
+						                        d="M0.500572 4.33686C0.461335 2.03812 2.44609 0.0664601 4.87009 0.00172047C7.41486 -0.0659179 9.5 1.86951 9.5 4.2668C9.5 5.53695 8.91145 6.67425 7.98201 7.45595L5.51062 9.79962C5.22883 10.0668 4.77124 10.0668 4.48945 9.79962L2.01755 7.45595C1.10543 6.68874 0.521464 5.57899 0.500572 4.33686ZM6.29884 3.7499C5.88477 3.03268 4.96724 2.7871 4.25008 3.2012C3.53291 3.61529 3.28683 4.53237 3.70141 5.2501C4.11548 5.96732 5.03249 6.2129 5.74966 5.7988C6.46734 5.38471 6.7129 4.46763 6.29884 3.7499Z"
+						                        fill="currentColor"></path>
+						                </g>
+						              </g>
+						            </svg>
+						
+						            <span th:text="*{dealAddress}" class="inline-flex gap-1 items-center text-[13px] underline text-black underline-offset-[3px]">
+						              직거래 지역
+						            </span>
+						          </div>
+						        </div>
+						      </div>
+						    </div>
+						  </th:block>
+						
+						  <!-- dealType이 0(null 포함)일 때 -->
+						  <th:block th:case="0">
+						    <!-- 아무것도 표시 안 하거나 안내 문구 -->
+						  </th:block>
+						
 						</div>
+						
 						<div class="flex flex-col gap-5 my-5 sm:my-9 max-lg:mb-0">
 							<div class="flex detail-regular-12 items-start justify-start">
 								<span class="text-sm text-gray-600 min-w-[95px]">상품 상태</span>
 								<div class="text-sm text-gray-700">
-									<p th:text="*{productStatus == 'Y' ? '새 상품' : '중고 상품'}">새 상품</p>
+									<p th:text="*{productStatus == ProductStatus.USED ? '중고 상품' : '새 상품'}">새 상품</p>
 								</div>
 							</div>
 						</div>
@@ -478,10 +504,10 @@ function execDaumPostcode() {
 						</div>	
 						<th:block th:if="${storeCheck}">
 						<!--판매자와 아이디가 같은 경우(결제가 되지 않은 상태) -->
-						<div th:unless="*{sellStatusCode eq 3}" class="flex border border-gray-300 items-center space-s-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white">
+						<div th:unless="*{sellStatus == SellStatus.SOLD_OUT}" class="flex border border-gray-300 items-center space-s-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white">
 							<ul class="flex w-full rounded bg-gray-100">
 								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-black min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button class="flex flex-col items-center py-[6px]">
+									<button type="button" data-action="bump-date" class="flex flex-col items-center py-[6px]">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M5 8.99995V13.9656C5 17.8505 7.91015 21 11.5 21C15.0899 21 18 17.8505 18 13.9656V5" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 											<rect x="4.25" y="4" width="1.5" height="1" rx="0.5" fill="#141313"></rect>
@@ -491,7 +517,7 @@ function execDaumPostcode() {
 									</button>
 								</li>
 								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-black min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button class="flex flex-col items-center py-[6px]">
+									<button type="button" data-action="bump-date" class="flex flex-col items-center py-[6px]">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M12 21H21" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 											<path
@@ -500,8 +526,8 @@ function execDaumPostcode() {
 										<p class="mt-1 text-xs font-medium text-center">수정</p>
 									</button>
 								</li>
-								<li id="dropdown-container" class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button onclick="toggleDropdown()" class="flex flex-col items-center py-[6px]">
+								<li class="status-container flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
+									<button type="button" data-action="open-status-list" class="flex flex-col items-center py-[6px]">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path
 												d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
@@ -509,18 +535,15 @@ function execDaumPostcode() {
 											<path d="M16 9L10.5 14.5L8 12" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 										<p class="mt-1 text-xs font-medium text-center">상태 변경</p>
 									</button>
-									<div id="dropdown-menu" class="hidden absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 transition-all duration-200">
-        								<div class="py-1" role="menu">
+									<div class="status-option hidden absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 transition-all duration-200">
+        								<div th:each="status : ${SellStatus.values()}" class="py-1" role="menu">
            		 							<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none" 
-           		 							th:onclick="*{sellStatusCode eq 1}?'':'selectOption(1)'" th:disabled="*{sellStatusCode eq 1}">판매 중</button>
-            								<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none"
-											th:onclick="*{sellStatusCode eq 2}?'':'selectOption(2)'" th:disabled="*{sellStatusCode eq 2}">예약 중</button>
-            								<button class="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" onclick="selectOption(3)">판매 완료</button>
+           		 							th:data-action="change-status" th:data-option="${status.code}" th:disabled="${Product.sellStatus == status}" th:text="${status.label}">판매 중</button>
         								</div>
     								</div>
 								</li>
 								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-jnBlack min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button class="flex flex-col items-center py-[6px]">
+									<button type="button" data-action="remove-product" class="flex flex-col items-center py-[6px]">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 										<path d="M3 6H5H21" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 										<path
@@ -533,9 +556,9 @@ function execDaumPostcode() {
 								</li>
 							</ul>
 						</div>
-						<div th:if="*{sendFlag eq 'N'}" class="flex items-center mt-4">
-							<!-- 판매자와 아이디가 같은 경우(결제가 된 상태) -->
-							<button class="flex-1 h-12 border border-black font-bold text-black rounded-md hover:bg-gray-50 transition">발송완료</button>
+						<!-- 판매자와 아이디가 같은 경우(결제가 된 상태) -->
+						<div th:if="${sendFlag}" class="flex items-center mt-4">
+							<button type="button" data-action="send-product" class="flex-1 h-12 border border-black font-bold text-black rounded-md hover:bg-gray-50 transition">발송완료</button>
 						</div>
 						</th:block>
 					</div>
@@ -555,7 +578,7 @@ function execDaumPostcode() {
 									th:unless=${storeCheck}><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <a href="jnapps3://?applink=report&amp;targetType=&amp;reportedStore=1250491&amp;reportedProductSeq=224185769" target="_blank" rel="noopener noreferrer" style="color: rgb(20, 19, 19); font-weight: 600;">중고나라로 신고</a>해 주세요</span></div>
 								</div>
 								<article class="flex flex-col flex-1">
-									<p th:text="${ProductDetailDomain.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
+									<p th:text="${Product.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
 									상품설명</p>
 								</article>
 							</div>
@@ -571,7 +594,7 @@ function execDaumPostcode() {
 										xmlns="http://www.w3.org/2000/svg">
 										<path d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path></svg></a>
 							</div>
-							<th:block th:object="${SellerDomain}">
+							<th:block th:object="${SellerInfo}">
 							<div class="flex flex-col">
 								<div class="max-lg:px-5">
 									<a class="flex justify-between items-center mt-6 mb-8 w-full" href="/store/1250491">
@@ -582,7 +605,7 @@ function execDaumPostcode() {
 											<img alt="프로파일" loading="lazy" width="48" height="48"
 												decoding="async" data-nimg="1"
 												class="box-content max-w-none h-12 rounded-full border-4 border-white -translate-x-4"
-												src="https://img2.joongna.com/common/Profile/Default/profile_m.png"
+												th:src="@{/상위경로/{profile}(profile=*{sellerProfile})}"
 												style="color: transparent;">
 										</div>
 									</a>

@@ -58,6 +58,21 @@ $(function () {
 	});// click
 });// ready
 </script>
+<script>
+	function toggleReview(button) {
+		const reviewBox = button.closest("li").querySelector("div.hidden");
+		reviewBox.classList.toggle("hidden");
+	}
+
+	function setRating(el, rating) {
+		const stars = el.parentElement.querySelectorAll(".star");
+		stars.forEach((star, index) => {
+			star.classList.toggle("text-yellow-400", index < rating);
+			star.classList.toggle("text-gray-300", index >= rating);
+		});
+	}
+</script>
+
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 

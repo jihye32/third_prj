@@ -8,8 +8,10 @@
     <!-- 지혜님 typeAlias -->
 	<typeAlias type="kr.co.sist.user.productdetail.ProductDetailDomain" alias="productDetailDomain"/>
 	<typeAlias type="kr.co.sist.user.productdetail.ProductModifyDTO" alias="productModifyDTO"/>
-	<typeAlias type="kr.co.sist.user.productdetail.SellerDomain" alias="sellerDomain"/>
-	<typeAlias type="kr.co.sist.user.buy.AddrDTO" alias="addrDTO"/>
+	<typeAlias type="kr.co.sist.user.productdetail.SellerInfoDomain" alias="sellerInfoDomain"/>
+	<typeAlias type="kr.co.sist.user.productdetail.OrderDomain" alias="orderDomain"/>
+	<typeAlias type="kr.co.sist.user.productdetail.BookmarkDTO" alias="bookmarkDTO"/>
+	<typeAlias type="kr.co.sist.user.productdetail.SellStatusDTO" alias="sellStatusDTO"/>
 	<typeAlias type="kr.co.sist.user.buy.BuyDomain" alias="buyDomain"/>
 	<typeAlias type="kr.co.sist.user.buy.PaymentDTO" alias="paymentDTO"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatContentDTO" alias="chatContentDTO"/>
@@ -53,21 +55,18 @@
 	<mapper resource="kr/co/sist/user/mainMapper.xml"/>
 	<mapper resource="kr/co/sist/user/buy/buyMapper.xml"/>
 	<mapper resource="kr/co/sist/user/chat/chatMapper.xml"/>
-	<mapper resource="kr/co/sist/user/faq/faqMapper.xml"/>
 	<mapper resource="kr/co/sist/user/findAccount/findAccountMapper.xml"/>
 	<mapper resource="kr/co/sist/user/info/infoMapper.xml"/>
 	<mapper resource="kr/co/sist/user/join/joinMapper.xml"/>
 	<mapper resource="kr/co/sist/user/login/loginMapper.xml"/>
 	<mapper resource="kr/co/sist/user/mypage/myPageMapper.xml"/>
-	<mapper resource="kr/co/sist/user/notice/noticeMapper.xml"/>
 	<mapper resource="kr/co/sist/user/productdetail/productDetailMapper.xml"/>
 	<mapper resource="kr/co/sist/user/productlist/productListMapper.xml"/>
-	<mapper resource="kr/co/sist/user/qna/qnaMapper.xml"/>
 	<mapper resource="kr/co/sist/user/report/reportMapper.xml"/>
 	<mapper resource="kr/co/sist/user/scam/scamMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sell/sellMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sellerpage/sellerReviewMapper.xml"/>
+	<mapper resource="kr/co/sist/user/support/supportMapper.xml"/>
 	
-
   </mappers>
 </configuration>

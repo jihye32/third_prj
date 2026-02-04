@@ -2,5 +2,151 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="kr.co.sist.user.product.detail">
- </mapper>
+<mapper namespace="kr.co.sist.user.product.detail">
+<!-- 상품 정보 받는 쿼리문 -->
+<resultMap type="productDetailDomain" id="productDomain">
+	<result column="product_num" property="productNum"/>
+	<result column="title" property="title"/>
+	<result column="price" property="price"/>
+	<result column="product_status" property="productStatusCode"/>
+	<result column="thumbnail" property="thumbnail"/>
+	<result column="content" property="content"/>
+	<result column="up_date" property="bumpDate"/>
+	<result column="view_count" property="viewCnt"/>
+	<result column="store_num" property="sellerId"/>
+	<result column="status_code" property="sellStatusCode"/>
+	<result column="delete_flag" property="deleteFlag"/>
+	<result column="code_text" property="category"/>
+	<result column="addr" property="dealAddress"/>
+</resultMap>
+<select id="selectProduct" parameterType="int" resultMap="productDomain">
+select p.product_num, p.title, p.price, p.product_status, p.thumbnail, p.content,  p.up_date, p.view_count, p.store_num, p.status_code, p.delete_flag, c.code_text, s.addr
+from product p, category c, sell_place s
+where p.category_code = c.category_code and p.product_num = s.product_num and p.product_num = #{productNum}
+</select>
+
+<select id="selectProductTag" parameterType="int" resultType="String">
+select tag
+from tag
+where product_num = #{productNum}
+</select>
+
+<select id="selectProductImg" parameterType="int" resultType="String">
+select product_img
+from product_img
+where product_num = #{productnum}
+</select>
+
+<select id="selectProductSellCode" parameterType="int" resultType="int">
+select sell_code
+from sell_option
+where product_num = #{productnum}
+</select>
+
+<select id="selectProductBookmark" parameterType="int" resultType="int">
+select count(*)
+from bookmark
+where product_num = #{productnum}
+</select>
+
+<select id="selectProductChat" parameterType="int" resultType="int">
+select count(distinct chatroom_num)
+from chat
+where product_num = #{productnum}
+</select>
+
+<!-- 배송 완료 확인 쿼리문 -->
+<resultMap type="orderDomain" id="odDomain">
+	<result column="ORDER_ID" property="orderId"/>
+	<result column="DELIVERED_date" property="deliveredDate"/>
+</resultMap>
+<select id="selectOrderInfo" parameterType="int" resultMap="odDomain">
+select order_id, delivered_date
+from product_order
+where product_num = #{pnum}
+</select>
+
+
+
+<!-- 판매자 정보 받는 쿼리문 -->
+<resultMap type="sellerInfoDomain" id="sellerDomain">
+	<result column="store_num" property="sellerId"/>
+	<result column="store_name" property="storeName"/>
+	<result column="profile_img" property="sellerProfile"/>
+</resultMap>
+<select id="sellerInfo" parameterType="int" resultMap="sellerDomain">
+select store_num, store_name, profile_img
+from store
+where store_num = #{value}
+</select>
+
+<select id="sellerProductCnt" parameterType="int" resultType="int">
+select count(product_num)
+from product
+where store_num = #{productnum}
+</select>
+
+<select id="sellerReviewCnt" parameterType="int" resultType="int">
+select count(r.product_num)
+from review r, product p
+where r.product_num = p.product_num and p.store_num = #{productnum}
+</select>
+
+
+<!-- 상품 정보 수정 -->
+<!-- 찜하기 확인 -->
+<select id="selectBookmark" parameterType="kr.co.sist.user.productdetail.BookmarkDTO" resultType="String">
+select product_num
+from bookmark
+where product_num = #{pnum} and store_num=#{snum}
+</select>
+<!-- 찜 추가 -->
+<insert id="insertBookmark" parameterType="kr.co.sist.user.productdetail.BookmarkDTO">
+insert into bookmark(product_num, store_num,input_date) values(#{pnum},#{snum},sysdate)
+</insert>
+<!-- 찜 삭제 -->
+<delete id="deleteBookmark" parameterType="kr.co.sist.user.productdetail.BookmarkDTO">
+delete from bookmark
+where product_num = #{pnum} and store_num=#{snum}
+</delete>
+
+<!-- 상품 조회수 업데이트 -->
+<update id="updateViewCnt" parameterType="int">
+update product set view_count = view_count+1
+where product_num = #{productnum}
+</update>
+
+<!-- 끌올 날짜 확인 -->
+<select id="selectBumpDate" parameterType="int" resultType="java.time.LocalDateTime">
+select up_date 
+from product
+where product_num = #{productnum}
+</select>
+<!-- 끌올 날짜 수정 -->
+<update id="updateBumpDate" parameterType="int">
+update product set up_date = sysdate
+where product_num = #{productnum}
+</update>
+
+<!-- 상품 상태 변경 -->
+<update id="updateSellStatus" parameterType="kr.co.sist.user.productdetail.SellStatusDTO">
+update product set status_code = #{sellStatusCode}
+where product_num=#{pnum}
+</update>
+<!-- 상품 판매 완료 -->
+<update id="updateOverSell" parameterType="int">
+update product set over_selling_date = sysdate
+where product_num=#{pnum}
+</update>
+<!-- 상품 발송 완료 -->
+<update id="updateDeliveryDate" parameterType="int">
+update product_order set delivered_date=sysdate
+where product_num = #{pnum}
+</update>
+
+<!-- 상품 삭제 -->
+<update id="updateDeleteFlag" parameterType="int">
+update product set delete_flag = 'Y'
+where product_num = #{productnum}
+</update>
+</mapper>

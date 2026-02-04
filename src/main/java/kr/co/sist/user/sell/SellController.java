@@ -8,4 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller("UserSellController")
 public class SellController {
 
+	@GetMapping("/sellFrm")
+	public String sellFrm() {
+		return "/sell/sellFrm";
+	}// sellFrm
+	
 }
