@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class OrderRequestDTO {
 	private int pnum, tell;
-	private String name, addr, addrDetail;
+	private String name, addr, addrDetail, paymentType;
 }

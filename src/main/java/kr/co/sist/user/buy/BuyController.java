@@ -37,4 +37,27 @@ public class BuyController {
 		return "/buy/payment_form :: paymentFrm";
 	}
 	
+	@GetMapping("/success/{orderId}")
+	public String buySuccess(@PathVariable String orderId, Model model) {
+		//거래 정보 가져오기
+		PaymentDomain pd = bs.searchPayment(orderId);
+		
+		if (orderId == null || orderId.length() < 8) {
+	        return orderId;
+	    }
+
+	    // UUID 뒤쪽 12자 사용
+	    String base = orderId.substring(Math.max(0, orderId.length() - 12));
+	    String id = "TN-" + base.toUpperCase(); // 약 15자
+	    pd.setOrderId(id);
+		
+		model.addAttribute("PaymentDomain", pd);
+		
+		return "/buy/buy_success :: sellSuccessFrm";
+	}
+	@GetMapping("/fail/{orderId}")
+	public String buyFail(@PathVariable String orderId, Model model) {
+		return "/buy/buy_fail :: sellFailFrm";
+	}
+	
 }

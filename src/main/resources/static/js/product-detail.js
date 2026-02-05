@@ -1,6 +1,25 @@
 /**
  * product_detail.html에서 사용되는 js
  */
+/* 상세화면을 로드할 때 drawerUrl이 없으면 작동하지 않게 함 */
+document.addEventListener("DOMContentLoaded", () => {
+  const qs = new URLSearchParams(location.search);
+  const drawerUrl = qs.get("drawerUrl");
+  
+  if (drawerUrl) {
+	alert("drawerUrl true");
+    loadDrawerContent(drawerUrl, () => openDrawer('결제 결과'));
+
+    qs.delete("drawerUrl");
+	const cleanUrl = location.pathname + (qs.toString() ? "?" + qs.toString() : "");
+
+    //주소창만 바꾸고, 새로고침/뒤로가기 히스토리는 유지
+    history.replaceState(null, "", cleanUrl);
+  }
+});
+
+
+
 document.getElementById("heart-checkbox")?.addEventListener("change", async (e) => {
   const checkbox = e.target;
   const checked = checkbox.checked;

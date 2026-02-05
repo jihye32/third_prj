@@ -102,7 +102,7 @@
 <div class="sticky bottom-0 left-0 w-full bg-white py-4 px-5 z-50 mt-auto">
 	<!-- 이용약관 UI -->
 	<div id="agreement"></div>
-	<button class="w-full h-14 bg-black text-white font-bold rounded-lg text-16 active:bg-gray-800" id="payment-button" th:data-price="*{price+price*chargeRate/100}" th:data-title="*{title}">
+	<button class="w-full h-14 bg-black text-white font-bold rounded-lg text-16 active:bg-gray-800" id="payment-button" th:data-price="*{price+price*chargeRate/100}" th:data-title="*{title}" th:data-deal-type="${type}">
 		<span th:text="|*{#numbers.formatInteger(price+price*chargeRate/100,3,'COMMA')}원 결제|">결제하기</span>
 	</button>
 </div>

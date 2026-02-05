@@ -10,6 +10,6 @@ import lombok.ToString;
 @ToString
 public class OrderDTO {
 	private String orderId, buyerId;
-	private int pnum, amount,charge;
+	private int pnum, amount,charge, dealTypeCode;
 	private OrderStatus orderStatus;
 }

@@ -93,4 +93,26 @@ public class BuyService {
 	public boolean modifyOrderStaus(String orderId) {
 		return bDAO.updateOrderStaus(orderId)==1;
 	}
+	
+	//상품 번호 가져옴
+	public int searchProductNum(String orderId) {
+		int pnum = 0;
+		Integer amount = bDAO.selectProductNum(orderId);
+		if(amount != null) pnum = amount.intValue();
+		return pnum;
+	}
+	//상품 상태 변경
+	public boolean modifyProductStaus(int pnum) {
+		return bDAO.updateProductStatus(pnum)==1;
+	}
+	
+	//결제 완료 결과 가져오기
+	public PaymentDomain searchPayment(String orderId) {
+		PaymentDomain pd = bDAO.selectPayment(orderId);
+		BuyDomain bd= bDAO.selectProduct(pd.getPnum());
+		pd.setThumbnail(bd.getThumbnail());
+		pd.setTitle(bd.getTitle());
+		pd.setPrice(bd.getPrice());
+		return pd;
+	}
 }

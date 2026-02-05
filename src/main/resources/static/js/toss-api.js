@@ -9,6 +9,7 @@ async function initTossPayments(pnum) {
   if (widgets) return;
 
   const amount = Number(payBtn.dataset.price);
+  const dealType = payBtn.dataset.deal.type;
 
   const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; //결제 위젯 연동 테스트 키
   const customerKey = "ANONYMOUS"; // 또는 로그인 유저 아이디 넣어주기
@@ -37,16 +38,15 @@ async function initTossPayments(pnum) {
 		const response = await fetch("/order/prepare", {
 	        method: "POST",
 	        headers: { "Content-Type": "application/json" },
-	        body: JSON.stringify(pnum)
+	        body: JSON.stringify({pnum, dealType})
 		});
 
 		if (!response.ok) throw new Error("prepare failed");
 	
 		//orderId랑 amount는 서버에서 가져와서 설정해줌
-		const data = await response.json();
-		const orderName = data.orderName;
-      	const orderId = data.orderId;
-      	amount = data.amount;
+		const { orderName, orderId, amount } = await response.json();
+		
+		sessionStorage.setItem("returnUrl", location.href);
 	  
 	  	//결제 금액 맞춰주기
 	  	await widgets.setAmount({ currency: "KRW", value: amount });
@@ -57,7 +57,7 @@ async function initTossPayments(pnum) {
         	successUrl: `${location.origin}/order/toss`,
         	failUrl: `${location.origin}/order/fail`,
       	});
-    	} catch (e) {
+    } catch (e) {
       	// 자주 나는 에러들: 약관 미동의/결제수단 미선택 등
       	console.error(e);
       	alert(e?.message || "결제 요청 중 오류가 발생했습니다.");
