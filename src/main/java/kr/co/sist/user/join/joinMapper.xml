@@ -3,7 +3,39 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.user.join">
+	<!-- id 중복 조회 -->
+	<select id="selectId" parameterType="kr.co.sist.user.join.JoinDTO" resultType="int">
+		select count(*) cnt
+		from member
+		where user_id=#{id}
+	</select>
 
+	<!-- store name 중복 조회 -->
+	<select id="selectStoreName" parameterType="kr.co.sist.user.join.JoinDTO" resultType="int">
+		select count(*) cnt
+		from store
+		where store_name=#{storeName}
+	</select>
+
+	<!-- member 추가 -->
+	<insert id="insertMember" parameterType="kr.co.sist.user.join.JoinDTO">
+		insert into member(user_id, user_pass, name, ip, birthday, email,
+		input_date, delete_flag)
+		values(#{id}, #{pass}, #{userName}, #{ip}, #{birth}, #{email}, SYSDATE, 'N')
+	</insert>
+
+	<!-- store 추가 -->
+	<insert id="insertStore" parameterType="kr.co.sist.user.join.JoinDTO">
+		insert into store(store_num, store_name, profile_img, input_date,
+		user_id)
+		values(seq_store_num.nextval, #{storeName}, 'default.jpg', SYSDATE, #{id})
+	</insert>
+
+	<!-- suspension 추가 -->
+	<insert id="insertSuspension" parameterType="kr.co.sist.user.join.JoinDTO">
+		insert into suspension(user_id, flag)
+		values(#{id}, 'N')
+	</insert>
 </mapper>
 
 
