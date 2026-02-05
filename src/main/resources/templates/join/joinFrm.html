@@ -2,118 +2,213 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>회원가입</title>
 <link th:href="@{/css/output.css}" rel="stylesheet">
 <link th:href="@{/css/test.css}" rel="stylesheet">
+<style type="text/css">
+	input[type="date"]::-webkit-calendar-picker-indicator {
+		cursor: pointer;
+	}
+</style>
 <!-- JQuery CDN -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#idChkBtn").click(function() {
+
+		});// click
+
+		$("#storeNameChkBtn").click(function() {
+
+		});// click
+
+		$("#sendVerifyCodeBtn").click(function() {
+
+		});// click
+
+		$("#verifyCodeChkBtn").click(function() {
+
+		});// click
+
+		$("#joinBtn").click(function() {
+			$("#joinFrm").submit();
+		});// click
+	});// ready
+</script>
 </head>
 <body>
 	<div id="__next" style="height: auto !important;">
-		<div class="md:px-8 2xl:px-16 flex flex-col gap-8 justify-center items-center px-0 mx-auto min-h-[100vh] sm:w-full sm:my-auto w-full max-w-full box-border [&amp;&gt;*]:z-[1]">
-			<a class="inline-flex focus:outline-none relative" href="/" style="width: 200px; height: 30px; margin-top: 100px;">
-				<img alt="Joonggonara" loading="eager" decoding="async" data-nimg="fill" src="https://web.joongna.com/main-web/assets/images/custom-logo.svg" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+		<div
+			class="md:px-8 2xl:px-16 flex flex-col gap-8 justify-center items-center px-0 mx-auto min-h-[100vh] sm:w-full sm:my-auto w-full max-w-full box-border [&amp;&gt;*]:z-[1]">
+			<!-- 상단 로고 -->
+			<a class="inline-flex focus:outline-none relative" href="/"
+				style="width: 200px; height: 30px; margin-top: 100px;"> <img
+				alt="Joonggonara" loading="eager" decoding="async" data-nimg="fill"
+				src="https://web.joongna.com/main-web/assets/images/custom-logo.svg"
+				style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
 			</a>
 			<div>
 				<div type="default" style="margin-bottom: 100px; text-align: center">
-					<div class="relative mx-auto w-screen bg-white sm:w-[450px] sm:border sm:border-gray-300 sm:overflow-hidden sm:rounded-lg px-5 sm:px-8">
-						<div class="body-regular-14 py-3 w-full bg-jnGray-100 rounded-lg text-center hidden">
-							<span class="text-green-700">로그인하면 바로 상품등록</span>을 할 수 있어요.
-						</div>
+					<div
+						class="relative mx-auto w-screen bg-white sm:w-[450px] sm:border sm:border-gray-300 sm:overflow-hidden sm:rounded-lg px-5 sm:px-8">
 						<div>
 							<div class="flex flex-col justify-between min-h-[500px]">
-							<h2 class="headline-semibold-20 sm:headline-semibold-24" style="text-align:center; margin-top:32px">회원가입</h2>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="user-id" class="flex justify-start items-center">
-											<span class="inline-block text-sm font-semibold">아이디</span>
-										</label>
+								<h2 class="headline-semibold-20 sm:headline-semibold-24"
+									style="text-align: center; margin-top: 32px">회원가입</h2>
+								<form th:action="@{/join/joinProcess}" method="post"
+									id="joinFrm">
+									<!-- 아이디 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="user-id" class="flex justify-start items-center">
+												<span class="inline-block text-sm font-semibold">아이디</span>
+											</label>
+										</div>
+										<input type="text" name="id" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black;">
+										<button type="button" id="idChkBtn" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between"
+											style="background-color: black;">
+											<span class="flex-1 mr-[22px]"
+												style="color: white; text-align: left; margin-left: 10px;">아이디
+												중복확인</span>
+										</button>
+										<!-- 아이디 중복확인 메시지 -->
+										<div id="idChkMsg" style="font-size: 0.8em; margin-top: 5px;"></div>
 									</div>
-									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="id" style="background-color: white; border: 1px solid black;">
-									<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black;">
-										<span class="flex-1 mr-[22px]" style="color: white; text-align: left; margin-left: 10px;">아이디 중복확인</span>
-									</button>
-								</div>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="user-pass" class="flex justify-start items-center">
-											<span class="inline-block text-sm font-semibold">비밀번호</span>
-										</label>
+									<!-- 비밀번호 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="user-pass"
+												class="flex justify-start items-center"> <span
+												class="inline-block text-sm font-semibold">비밀번호</span>
+											</label>
+										</div>
+										<input type="password" name="pass" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black;">
 									</div>
-									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="password" name="pass" style="background-color: white; border: 1px solid black;">
-								</div>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="user-pass-check" class="flex justify-start items-center">
-											<span class="inline-block text-sm font-semibold">비밀번호 확인</span>
-										</label>
+									<!-- 비밀번호 확인 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="user-pass-check"
+												class="flex justify-start items-center"> <span
+												class="inline-block text-sm font-semibold">비밀번호 확인</span>
+											</label>
+										</div>
+										<input type="password" name="passChk" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black;">
 									</div>
-									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="password" name="passChk" style="background-color: white; border: 1px solid black;">
-								</div>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="user-name" class="flex justify-start items-center">
-											<span class="inline-block text-sm font-semibold">이름</span>
-										</label>
+									<!-- 이름 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="user-name"
+												class="flex justify-start items-center"> <span
+												class="inline-block text-sm font-semibold">이름</span>
+											</label>
+										</div>
+										<input type="text" name="userName" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black;">
 									</div>
-									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="user_name" style="background-color: white; border: 1px solid black;">
-								</div>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="store-name" class="flex justify-start items-center">
-											<span class="inline-block text-sm font-semibold">가게명</span>
-										</label>
+									<!-- 가게명 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="store-name"
+												class="flex justify-start items-center"> <span
+												class="inline-block text-sm font-semibold">가게명</span>
+											</label>
+										</div>
+										<input type="text" name="storeName" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black;">
+										<button type="button" id="storeNameChkBtn" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between"
+											style="background-color: black;">
+											<span class="flex-1 mr-[22px]"
+												style="color: white; text-align: left; margin-left: 10px;">가게명
+												중복확인</span>
+										</button>
+										<!-- 가게명 중복확인 메시지 -->
+										<div id="storeNameChkMsg"
+											style="font-size: 0.8em; margin-top: 5px;"></div>
 									</div>
-									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="store_name" style="background-color: white; border: 1px solid black;">
-									<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black;">
-										<span class="flex-1 mr-[22px]" style="color: white; text-align: left; margin-left: 10px;">가게명 중복확인</span>
-									</button>
-								</div>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="user-birth" class="flex justify-start items-center">
-											<span class="inline-block text-sm font-semibold">생년월일</span>
-										</label>
+									<!-- 생년월일 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="user-birth"
+												class="flex justify-start items-center"> <span
+												class="inline-block text-sm font-semibold">생년월일</span>
+											</label>
+										</div>
+										<input type="date" name="birth"
+											class="text-[13px] md:text-sm leading-4 items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black;">
 									</div>
-									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="birth" style="background-color: white; border: 1px solid black;">
-								</div>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="user-email" class="flex justify-start items-center">
-											<span class="inline-block text-sm font-semibold">이메일</span>
-										</label>
+									<!-- 이메일 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="user-email"
+												class="flex justify-start items-center"> <span
+												class="inline-block text-sm font-semibold">이메일</span>
+											</label>
+										</div>
+										<input type="text" name="emailLocal" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black;">
+										<select name="emailDomain" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black; padding: 10px; cursor: pointer">
+											<option value="@naver.com">@naver.com</option>
+											<option value="@gmail.com">@gmail.com</option>
+											<option value="@daum.net">@daum.net</option>
+										</select>
+										<button type="button" id="sendVerifyCodeBtn"
+											data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between"
+											style="background-color: black;">
+											<span class="flex-1 mr-[22px]"
+												style="color: white; text-align: left; margin-left: 10px;">인증번호
+												전송</span>
+										</button>
+										<!-- 이메일 인증번호 전송 확인 메시지 -->
+										<div id="sendVerifyCodeMsg"
+											style="font-size: 0.8em; margin-top: 5px;"></div>
 									</div>
-									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="email" style="background-color: white; border: 1px solid black;">
-									<select data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" name="email_domain" style="background-color: white; border: 1px solid black; padding: 10px; cursor: pointer">
-										<option value="@naver.com">@naver.com</option>
-										<option value="@gmail.com">@gmail.com</option>
-										<option value="@daum.net">@daum.net</option>
-									</select>
-									<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black;">
-										<span class="flex-1 mr-[22px]" style="color: white; text-align: left; margin-left: 10px;">인증번호 전송</span>
-									</button>
-								</div>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="verify-code" class="flex justify-start items-center">
-											<span class="inline-block text-sm font-semibold">인증번호</span>
-										</label>
+									<!-- 이메일 인증번호 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="verify-code"
+												class="flex justify-start items-center"> <span
+												class="inline-block text-sm font-semibold">인증번호</span>
+											</label>
+										</div>
+										<input type="text" name="verifyCode" data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white; border: 1px solid black;">
+										<button type="button" id="verifyCodeChkBtn"
+											data-variant="flat"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between"
+											style="background-color: black;">
+											<span class="flex-1 mr-[22px]"
+												style="color: white; text-align: left; margin-left: 10px;">인증하기</span>
+										</button>
+										<!-- 이메일 인증번호 인증 확인 메시지 -->
+										<div id="verifyCodeChkMsg"
+											style="font-size: 0.8em; margin-top: 5px;"></div>
 									</div>
-									<input data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none" type="text" name="verify_code" style="background-color: white; border: 1px solid black;">
-									<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black;">
-										<span class="flex-1 mr-[22px]" style="color: white; text-align: left; margin-left: 10px;">인증하기</span>
-									</button>
-								</div>
+								</form>
 							</div>
 						</div>
-						<div class="w-full font-semibold text-center text-black text-sm my-5 hidden sm:block"></div>
+						<div
+							class="w-full font-semibold text-center text-black text-sm my-5 hidden sm:block"></div>
 					</div>
-					<button type="button" data-variant="flat" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between" style="background-color: black; width: 383px; margin-top: 30px">
-						<span class="flex-1 mr-[22px]" style="color: white;">회원가입</span>
-					</button>
+					<input type="button" id="joinBtn" value="회원가입" data-variant="flat"
+						class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-kakao hover:bg-kakao hover:text-black text-black justify-between"
+						style="background-color: black; width: 383px; margin-top: 30px; color: white;">
 				</div>
 			</div>
 		</div>

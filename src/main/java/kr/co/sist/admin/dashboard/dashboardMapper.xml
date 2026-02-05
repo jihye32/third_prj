@@ -4,6 +4,135 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.admin.dashboard">
 
+<select id="selectJoinToday" resultType="int">
+
+select count(user_id)
+from member
+where input_date=trunc(sysdate)
+
+</select>
+<select id="selectJoinMonth" resultType="int">
+
+select count(user_id)
+from member
+where trunc(input_date, 'MM') = trunc(sysdate, 'MM')
+
+
+</select>
+<select id="selectJoinYear" resultType="int">
+
+select count(user_id)
+from member
+where trunc(input_date, 'YY') = trunc(sysdate, 'YY')
+
+
+</select>
+
+<select id="selectVisitToday" resultType="int">
+
+select count(ip)
+from user_history
+where input_date=trunc(sysdate)
+
+</select>
+<select id="selectVisitMonth" resultType="int">
+
+select count(ip)
+from user_history
+where trunc(input_date, 'MM') = trunc(sysdate, 'MM')
+
+
+</select>
+<select id="selectVisitYear" resultType="int">
+
+select count(ip)
+from user_history
+where trunc(input_date, 'YY') = trunc(sysdate, 'YY')
+
+
+</select>
+
+<select id="selectSoldToday" resultType="int">
+
+select count(product_num)
+from product
+where over_selling_date=trunc(sysdate)
+
+
+</select>
+<select id="selectSoldMonth" resultType="int">
+
+select count(product_num)
+from product
+where trunc(over_selling_date, 'MM') = trunc(sysdate, 'MM')
+
+
+</select>
+<select id="selectSoldYear" resultType="int">
+
+select count(product_num)
+from product
+where trunc(over_selling_date, 'YY') = trunc(sysdate, 'YY')
+
+
+</select>
+
+<select id="selectUpload" resultType="map">
+  SELECT trunc(input_date) as day, count(*) as cnt
+  FROM product
+  WHERE trunc(input_date) BETWEEN trunc(sysdate)-14 AND trunc(sysdate)
+  GROUP BY trunc(input_date)
+  ORDER BY day
+</select>
+
+<select id="selectSoldItem" resultType="map">
+  SELECT trunc(over_selling_date) as day, count(*) as cnt
+  FROM product
+  WHERE trunc(over_selling_date) BETWEEN trunc(sysdate)-14 AND trunc(sysdate)
+  GROUP BY trunc(over_selling_date)
+  ORDER BY day
+</select>
+
+<select id="selectTenUser" resultType="int">
+SELECT COUNT(*) FROM member 
+WHERE SUBSTR(birth_date, 1, 4) >= TO_CHAR(SYSDATE, 'YYYY') - 19
+</select>
+<select id="selectTwentyUser" resultType="int">
+SELECT COUNT(*) FROM member 
+WHERE SUBSTR(birth_date, 1, 4) BETWEEN TO_CHAR(SYSDATE, 'YYYY') - 29 AND TO_CHAR(SYSDATE, 'YYYY') - 20
+</select>
+<select id="selectThirtyUser" resultType="int">
+SELECT COUNT(*) FROM member 
+WHERE SUBSTR(birth_date, 1, 4) BETWEEN TO_CHAR(SYSDATE, 'YYYY') - 39 AND TO_CHAR(SYSDATE, 'YYYY') - 30
+</select>
+<select id="selectFourtyUser" resultType="int">
+SELECT COUNT(*) FROM member 
+WHERE SUBSTR(birth_date, 1, 4) BETWEEN TO_CHAR(SYSDATE, 'YYYY') - 49 AND TO_CHAR(SYSDATE, 'YYYY') - 40
+</select>
+<select id="selectFiftyUser" resultType="int">
+SELECT COUNT(*) FROM member 
+WHERE SUBSTR(birth_date, 1, 4) BETWEEN TO_CHAR(SYSDATE, 'YYYY') - 59 AND TO_CHAR(SYSDATE, 'YYYY') - 50
+</select>
+<select id="selectSixtyUser" resultType="int">
+SELECT COUNT(*) FROM member 
+WHERE SUBSTR(birth_date, 1, 4) &lt;= TO_CHAR(SYSDATE, 'YYYY') - 60
+</select>
+
+<select id="selectBestseller" resultType="map">
+SELECT 
+    c.code_text, 
+    COUNT(p.over_selling_date) AS sales_count
+FROM category c
+JOIN product p ON c.category_code = p.category_code
+GROUP BY c.category_code, c.code_text
+ORDER BY sales_count DESC;
+
+</select>
+
+
+
+
+
 
 
 </mapper>

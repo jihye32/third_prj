@@ -2,11 +2,31 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+
+<script>
+    function submitReport(event) {
+      event.preventDefault(); // 페이지 새로고침 방지
+
+      // 컨트롤러 PostMapping 주소로 요청
+      fetch('/report/wrapper_reportDone', {
+        method: 'POST',
+      })
+      .then(response => response.text()) // 서버에서 fragment 조각(HTML)을 텍스트로 받음
+      .then(html => {
+        // id가 report-container인 영역을 받은 HTML로 교체
+        document.getElementById('report-container').innerHTML = html;
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+
+
 <title>Insert title here</title>
 </head>
 <body>
 	<!-- fragment 이름 바꿔주세요 -->
-	<div th:fragment="fragmentReport">
+	<div th:fragment="fragmentReport" id="report-container">
+	
 		<main class="min-h-screen bg-gray-50 py-10 px-4">
   <article class="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
     
@@ -19,7 +39,7 @@
       </p>
     </div>
 
-    <form action="/report/wrapper_ReportDone.html" method="post" class="p-6 space-y-4">
+ <form onsubmit="submitReport(event)" class="p-6 space-y-4">
       
      <div class="space-y-3">
   <div class="relative">
@@ -68,18 +88,19 @@
       </div>
 
       <div class="pt-4">
-        <button 
-          type="submit" 
-          
-          class="w-full py-4 bg-gray-200 text-gray-500 font-bold rounded-lg cursor-not-allowed transition-colors disabled:opacity-70"
-        >
-          등록
-        </button>
+       <button type="submit" class="w-full py-4 bg-blue-600 text-white font-bold rounded-lg transition-colors">
+  등록
+</button>
       </div>
 
     </form>
   </article>
 </main>
+	
 	</div>
+	
+	
+	
+	
 </body>
 </html>
