@@ -9,5 +9,6 @@ import lombok.ToString;
 @ToString
 public class BookmarkDTO {
 	private String userId;
-	private int productNum;
+	private int productNum, storeNum;
+	private boolean resultFlag;
 }

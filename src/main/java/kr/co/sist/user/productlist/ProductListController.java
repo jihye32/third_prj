@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import jakarta.servlet.http.HttpSession;
 import kr.co.sist.user.ProductDomain;
 
 @Controller
@@ -17,18 +18,34 @@ public class ProductListController {
 	private ProductListService pls;
 	
 	@GetMapping("/searchList")
-	public String productList(Model model, ProductRangeDTO prDTO) {
+	public String productList(Model model, ProductRangeDTO prDTO, HttpSession session) {
 //		System.out.println(prDTO);
-		ProductDomain pd = null;
-		List<ProductDomain> list = new ArrayList<ProductDomain>();
-		for(int i =1; i<=10;i++) {
-//			pd = new ProductDomain("https://img2.joongna.com/media/original/2026/01/18/1768736344461BM3_LaDt3.jpg?impolicy=thumb&amp;size=150", "판매 상태 표시", "상품 제목", "거래 지역", null, null, 1, 1, 10000, i, null);
-			pd.setProductName(pd.getProductName()+i);
-			list.add(pd);
-		} 
-		model.addAttribute("tempData", list);
-		 
 		
+		// pagenation 관련
+		if(session.getAttribute("snum") != null & !"".equals(session.getAttribute("snum"))) {
+			prDTO.setUserId((Integer)session.getAttribute("snum"));
+		}// end if
+		int totalCnt = pls.totalCnt(prDTO);// 총 게시물의 수
+		int pageScale = pls.pageScale();// 한화면에 보여줄 게시물의 수
+		int totalPage = pls.totalPage(totalCnt, pageScale);// 총 페이지수
+		int currentPage = prDTO.getCurrentPage();// 현재 페이지
+		int startNum = pls.startNum(currentPage, pageScale);// 시작번호
+		int endNum = pls.endNum(startNum, pageScale);// 끝번호
+		prDTO.setUrl("/searchList");
+		prDTO.setStartNum(startNum);
+		prDTO.setEndNum(endNum);
+		prDTO.setTotalPage(totalPage);
+		
+//		System.out.println(prDTO);
+		
+		
+		List<ProductDomain> list = pls.searchProductList(prDTO);
+//		System.out.println(list);
+//		System.out.println("조회 건수 : " + list.size());
+		model.addAttribute("tempData", list);
+		
+		
+		// 카테고리 작업
 		String selCategoryName = "";
 		int selCategoryNum =0;
 		selCategoryNum = prDTO.getCategory();
@@ -40,6 +57,11 @@ public class ProductListController {
 		}// end for
 		model.addAttribute("selCategoryName", selCategoryName);
 		model.addAttribute("categorylist", categorylist);
+		// 카테고리 작업 끝
+		
+		// 페이지네이션
+		model.addAttribute("pagination", pls.pagination(prDTO));
+		
 		
 		return "/product_list/productList";
 	}// productList

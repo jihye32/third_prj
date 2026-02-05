@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ProductDomain {
-	private int productNum, sellStateCode, price;
+	private int productNum, sellStateCode, price, chatCnt, bookmarkCnt;
 	private String thumbnail, sellState, productName, tradingArea, bookmarkFlag, receiveFlag, timeString; 
 	private double timDif;
 	private Date lastModify;

@@ -8,6 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ProductRangeDTO {
-	private String keyword, url, sortBy, userId;
-	private int startNum, endNum, currentPage, totalPage, startPrice, endPrice, category;
+	private String keyword, url, sortBy;
+	private int startNum, endNum, totalPage, startPrice, endPrice, category, userId;
+	private int currentPage=1;
 }//class
