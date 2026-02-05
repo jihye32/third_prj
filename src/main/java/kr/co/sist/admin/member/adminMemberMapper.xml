@@ -6,6 +6,7 @@
 		parameterType="kr.co.sist.admin.member.AdminMemberDTO">
 		SELECT COUNT(*) FROM member
 		<where>
+			delete_flag = 'N'
 			<if test="keyword != null and keyword != ''">
 				AND user_id LIKE '%' || #{keyword} || '%'
 			</if>
@@ -16,16 +17,22 @@
 		resultType="kr.co.sist.admin.member.AdminMemberDomain"
 		parameterType="kr.co.sist.admin.member.AdminMemberDTO">
 		SELECT * FROM (
-		SELECT rownum rnum, m.* FROM (
-		SELECT user_id, email, input_date
-		FROM member
-		<where>
-			<if test="keyword != null and keyword != ''">
-				AND user_id LIKE '%' || #{keyword} || '%'
-			</if>
-		</where>
-		ORDER BY input_date DESC
-		) m
+			SELECT rownum rnum, m_sub.* FROM (
+				SELECT
+					m.user_id,
+					m.email,
+					m.input_date,
+					s.store_name 
+				FROM member m
+				LEFT OUTER JOIN store s ON m.user_id = s.user_id
+				<where>
+					m.delete_flag = 'N'
+					<if test="keyword != null and keyword != ''">
+						AND m.user_id LIKE '%' || #{keyword} || '%'
+					</if>
+				</where>
+				ORDER BY m.input_date DESC
+			) m_sub
 		) WHERE rnum BETWEEN #{startNum} AND #{endNum}
 	</select>
 
@@ -33,8 +40,8 @@
 		resultType="kr.co.sist.admin.member.AdminMemberDetailDomain"
 		parameterType="String">
 		SELECT
-		m.user_id, s.store_name, m.name,
-		TO_CHAR(m.birthday, 'YYYY/MM/DD') AS birthday, m.email
+			m.user_id, s.store_name, m.name,
+			TO_CHAR(m.birthday, 'YYYY/MM/DD') AS birthday, m.email
 		FROM member m
 		LEFT OUTER JOIN store s ON m.user_id = s.user_id
 		WHERE m.user_id = #{userId}
@@ -43,8 +50,8 @@
 	<select id="selectStoreDetail"
 		resultType="kr.co.sist.admin.member.AdminMemberPrdvDomain">
 		SELECT
-		store_name, profile_img, introduce,
-		TRUNC(SYSDATE - input_date) as open_days
+			store_name, profile_img, introduce,
+			TRUNC(SYSDATE - input_date) as open_days
 		FROM store
 		WHERE user_id = #{userId}
 	</select>
@@ -54,39 +61,41 @@
 		FROM product
 		WHERE store_num = (SELECT store_num FROM store WHERE user_id = #{userId})
 		AND delete_flag = 'N'
+		AND status_code IN (1, 2)
 	</select>
 
 	<select id="selectStoreProducts"
 		resultType="kr.co.sist.admin.member.AdminMemberPrdvDomain"
 		parameterType="java.util.Map">
 		SELECT * FROM (
-		SELECT rownum rnum, a.* FROM (
-		SELECT
-		p.product_num, p.title, p.price, p.status_code,
-		TO_CHAR(p.input_date, 'YYYY-MM-DD') as p_input_date,
-		sp.addr,
-		(SELECT COUNT(*) FROM bookmark b WHERE b.product_num = p.product_num) as
-		bookmark_count
-		FROM product p
-		LEFT JOIN sell_place sp ON p.product_num = sp.product_num
-		WHERE p.store_num = (SELECT store_num FROM store WHERE user_id = #{userId})
-		AND p.delete_flag = 'N'
-		<choose>
-			<when test="sort == 'popular'">ORDER BY p.view_count DESC</when>
-			<when test="sort == 'lowPrice'">ORDER BY p.price ASC</when>
-			<when test="sort == 'highPrice'">ORDER BY p.price DESC</when>
-			<otherwise>ORDER BY p.input_date DESC</otherwise>
-		</choose>
-		) a
+			SELECT rownum rnum, a.* FROM (
+				SELECT
+					p.product_num,
+					p.title, p.price, p.status_code,
+					TO_CHAR(p.input_date, 'YYYY-MM-DD') as p_input_date,
+					sp.addr,
+					(SELECT COUNT(*) FROM bookmark b WHERE b.product_num = p.product_num) as bookmark_count
+				FROM product p
+				LEFT JOIN sell_place sp ON p.product_num = sp.product_num
+				WHERE p.store_num = (SELECT store_num FROM store WHERE user_id = #{userId})
+				AND p.delete_flag = 'N'
+				AND p.status_code IN (1, 2)
+				<choose>
+					<when test="sort == 'popular'">ORDER BY p.view_count DESC</when>
+					<when test="sort == 'lowPrice'">ORDER BY p.price ASC</when>
+					<when test="sort == 'highPrice'">ORDER BY p.price DESC</when>
+					<otherwise>ORDER BY p.input_date DESC</otherwise>
+				</choose>
+			) a
 		) WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 
 	<select id="selectStoreReviews"
 		resultType="kr.co.sist.admin.member.AdminMemberPrdvDomain">
 		SELECT
-		r.review_text, r.review_rate,
-		TO_CHAR(r.review_date, 'YYYY-MM-DD') as review_date,
-		'구매자' as writer_id
+			r.review_text, r.review_rate,
+			TO_CHAR(r.review_date, 'YYYY-MM-DD') as review_date,
+			'구매자' as writer_id
 		FROM review r
 		WHERE r.store_num = (SELECT store_num FROM store WHERE user_id = #{userId})
 		ORDER BY r.review_date DESC
@@ -96,9 +105,9 @@
 		resultType="kr.co.sist.admin.member.AdminMemberProductDomain"
 		parameterType="String">
 		SELECT
-		user_id, store_name, profile_img, introduce,
-		TO_CHAR(input_date, 'YYYY-MM-DD') as input_date,
-		TRUNC(SYSDATE - input_date) as open_days
+			user_id, store_name, profile_img, introduce,
+			TO_CHAR(input_date, 'YYYY-MM-DD') as input_date,
+			TRUNC(SYSDATE - input_date) as open_days
 		FROM store
 		WHERE user_id = #{id}
 	</select>
@@ -120,25 +129,31 @@
 		resultType="kr.co.sist.admin.member.AdminMemberProductDomain"
 		parameterType="java.util.Map">
 		SELECT * FROM (
-		SELECT rownum rnum, a.* FROM (
-		SELECT
-		p.product_num,
-		p.title,
-		o.AMOUNT as price,
-		TO_CHAR(o.CREATED_date, 'YYYY.MM.DD') as trade_date,
-		o.ORDER_STATUS as status_text,
-		<if test="type == 'purchase'"> s.store_name as target_id </if>
-		<if test="type == 'sale'"> o.BUYER_ID as target_id </if>
-		FROM product_ORDER o
-		JOIN product p ON o.product_num = p.product_num
-		JOIN store s ON p.store_num = s.store_num
-		WHERE
-		<if test="type == 'purchase'"> o.BUYER_ID = #{id} </if>
-		<if test="type == 'sale'"> s.user_id = #{id} </if>
-		AND o.ORDER_STATUS != 'CANCELED'
-		ORDER BY o.CREATED_date DESC
-		) a
+			SELECT rownum rnum, a.* FROM (
+				SELECT
+					p.product_num,
+					p.title,
+					o.AMOUNT as price,
+					TO_CHAR(o.CREATED_date, 'YYYY.MM.DD') as trade_date,
+					o.ORDER_STATUS as status_text,
+					<if test="type == 'purchase'"> s.store_name as target_id </if>
+					<if test="type == 'sale'"> o.BUYER_ID as target_id </if>
+				FROM product_ORDER o
+				JOIN product p ON o.product_num = p.product_num
+				JOIN store s ON p.store_num = s.store_num
+				WHERE
+				<if test="type == 'purchase'"> o.BUYER_ID = #{id} </if>
+				<if test="type == 'sale'"> s.user_id = #{id} </if>
+				AND o.ORDER_STATUS != 'CANCELED'
+				ORDER BY o.CREATED_date DESC
+			) a
 		) WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
+
+	<update id="updateMemberDeleteFlag" parameterType="String">
+		UPDATE member
+		SET delete_flag = 'Y'
+		WHERE user_id = #{userId}
+	</update>
 
 </mapper>

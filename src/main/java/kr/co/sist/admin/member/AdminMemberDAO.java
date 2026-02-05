@@ -36,7 +36,7 @@ public class AdminMemberDAO {
         return list;
     }
     
-    // [3] 회원 기본 인적사항 상세 조회 (member_detail)
+    // [3] 회원 기본 인적사항 상세 조회
     public AdminMemberDetailDomain selectMemberDetail(String userId) throws SQLException {
         AdminMemberDetailDomain detail = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -48,7 +48,7 @@ public class AdminMemberDAO {
         return detail;
     }
     
-    // [4] 상점 프로필 정보 조회 (member_prdv 상단 헤더용)
+    // [4] 상점 프로필 정보 조회
     public AdminMemberPrdvDomain selectStoreDetail(String userId) throws SQLException {
         AdminMemberPrdvDomain store = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -60,7 +60,7 @@ public class AdminMemberDAO {
         return store;
     }
 
-    // [5] 상점 내 현재 판매 중인 물품 총 개수 (prdv 페이징용)
+    // [5] 상점 내 현재 판매 중인 물품 총 개수
     public int selectStoreProductCount(String userId) throws SQLException {
         int count = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -72,7 +72,7 @@ public class AdminMemberDAO {
         return count;
     }
 
-    // [6] 상점 내 현재 판매 중인 물품 리스트 (prdv 테이블용)
+    // [6] 상점 내 현재 판매 중인 물품 리스트
     public List<AdminMemberPrdvDomain> selectStoreProducts(Map<String, Object> params) throws SQLException {
         List<AdminMemberPrdvDomain> list = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -84,7 +84,7 @@ public class AdminMemberDAO {
         return list;
     }
 
-    // [7] 상점 후기 리스트 조회 (prdv 후기 탭)
+    // [7] 상점 후기 리스트 조회
     public List<AdminMemberPrdvDomain> selectStoreReviews(String userId) throws SQLException {
         List<AdminMemberPrdvDomain> list = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -96,7 +96,7 @@ public class AdminMemberDAO {
         return list;
     }
     
-    // [8] 거래 내역 페이지 헤더용 상점 정보 (member_product/history용)
+    // [8] 거래 내역 페이지 헤더용 상점 정보
     public AdminMemberProductDomain selectMemberStoreInfo(String userId) throws SQLException {
         AdminMemberProductDomain domain = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -108,7 +108,7 @@ public class AdminMemberDAO {
         return domain;
     }
 
-    // [9] 거래 내역(구매/판매) 총 개수 조회 (history 페이징용)
+    // [9] 거래 내역(구매/판매) 총 개수 조회
     public int selectHistoryCount(Map<String, Object> params) throws SQLException {
         int count = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -120,7 +120,7 @@ public class AdminMemberDAO {
         return count;
     }
 
-    // [10] 과거 거래 내역 리스트 조회 (member_product/history 테이블용)
+    // [10] 과거 거래 내역 리스트 조회
     public List<AdminMemberProductDomain> selectMemberHistoryList(Map<String, Object> params) throws SQLException {
         List<AdminMemberProductDomain> list = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -130,5 +130,17 @@ public class AdminMemberDAO {
             if (ss != null) ss.close();
         }
         return list;
+    }
+
+    // [11] 추가: 회원 삭제 플래그 업데이트
+    public int updateMemberDeleteFlag(String userId) throws SQLException {
+        int result = 0;
+        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+        try {
+            result = ss.update("kr.co.sist.admin.member.updateMemberDeleteFlag", userId);
+        } finally {
+            if (ss != null) ss.close();
+        }
+        return result;
     }
 }

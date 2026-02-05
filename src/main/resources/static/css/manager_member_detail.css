@@ -2,67 +2,79 @@
 
 /* 상세 정보 카드 컨테이너 */
 .detail_card {
-    background: #fff; 
-    padding: 40px; 
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
-    border: 1px solid #e2e5e8;
-    max-width: 800px; 
-    margin: 0 auto;
+	background: #fff;
+	padding: 40px;
+	border-radius: 12px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+	border: 1px solid #e2e5e8;
+	max-width: 800px;
+	margin: 0 auto;
 }
 
 /* 상단 '회원 정보' 타이틀 박스 */
-.detail_title { 
-    text-align: center; 
-    font-size: 28px; 
-    font-weight: bold; 
-    margin-bottom: 40px; 
-    border: 2px solid #e2e5e8; 
-    padding: 15px; 
-    border-radius: 8px; 
-    color: #333;
+.detail_title {
+	text-align: center;
+	font-size: 28px;
+	font-weight: bold;
+	margin-bottom: 40px;
+	border: 2px solid #e2e5e8;
+	padding: 15px;
+	border-radius: 8px;
+	color: #333;
 }
 
 /* 항목별 라벨 (아이디, 이름 등) */
-.info_label { 
-    font-size: 14px; 
-    color: #888; 
-    margin-bottom: 5px; 
-    font-weight: bold; 
+.info_label {
+	font-size: 14px;
+	color: #888;
+	margin-bottom: 5px;
+	font-weight: bold;
 }
 
 /* 항목별 실제 데이터 출력 박스 */
-.info_value { 
-    background-color: #fcfcfc; 
-    border: 1px solid #dee2e6; 
-    padding: 12px 15px; 
-    border-radius: 6px; 
-    margin-bottom: 20px; 
-    font-size: 16px; 
-    color: #333; 
+.info_value {
+	background-color: #fcfcfc;
+	border: 1px solid #dee2e6;
+	padding: 12px 15px;
+	border-radius: 6px;
+	margin-bottom: 20px;
+	font-size: 16px;
+	color: #333;
 }
 
 /* 하단 버튼 그룹 배치 */
-.btn_group_bottom { 
-    display: flex; 
-    justify-content: center; 
-    gap: 15px; 
-    margin-top: 30px; 
+.btn_group_bottom {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	margin-top: 30px;
 }
 
 /* 활동 정지용 빨간 버튼 */
-.btn-red { 
-    background-color: #dc3545 !important; 
-    color: #fff !important; 
+.btn-red {
+	background-color: #dc3545 !important;
+	color: #fff !important;
 }
 
-.btn-red:hover { 
-    background-color: #c82333 !important; 
+.btn-red:hover {
+	background-color: #c82333 !important;
 }
 
 /* 목록으로 버튼 우측 정렬 */
-.btn-list { 
-    margin-top: 20px; 
-    display: flex; 
-    justify-content: flex-end; 
+.btn-list {
+	margin-top: 20px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.btn-custom {
+	font-size: 1.1rem !important; /* 글자 크기 살짝 키움 */
+	min-width: 160px; /* 최소 너비 설정 (선택사항) */
+	transition: all 0.2s; /* 마우스 올릴 때 부드럽게 */
+}
+
+/* 마우스 올렸을 때 살짝 커지는 효과 (센스!) */
+.btn-custom:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
