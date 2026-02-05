@@ -32,6 +32,27 @@ public class ProductListService {
 		return list;
 	}// searchProductList
 	
+	public boolean addBookmark(BookmarkDTO bDTO) {
+		boolean flag = false;
+		try {
+			plDAO.insertBookmark(bDTO);
+			flag = true;
+		} catch (PersistenceException pe) {
+		} // end catch
+		
+		return flag;
+	}// addBookmark
+	public boolean removeBookmark(BookmarkDTO bDTO) {
+		boolean flag = false;
+		try {
+			plDAO.deleteBookmark(bDTO);
+			flag = true;
+		} catch (PersistenceException pe) {
+		} // end catch
+		
+		return flag;
+	}// addBookmark
+	
 	public int totalCnt(ProductRangeDTO prDTO) {
 		int totalCnt = 0;
 		try {
@@ -114,19 +135,44 @@ public class ProductListService {
 		// 5.첫페이지가 인덱스화면 (1페이지가 아닌 경우)
 		int movePage = 0;
 		StringBuilder prevMark = new StringBuilder();
-		prevMark.append("[&lt;&lt;]");
+		prevMark.append("<li class='w-4 mr-2'><a class='items-center h-full flex'><svg stroke='currentColor' fill='currentColor' stroke-width='0\' viewBox='0 0 24 24' height='1em' width='1em' xmlns='http://www.w3.org/2000/svg'><path d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z'></path></svg></a></li>");
 		// prevMark.append("<li class='page-item'><a class='page-link'
 		// href='#'>Previous</a></li>");
+		
+		
 		
 		if (rDTO.getCurrentPage() > pageNumber) {// 시작페이지 번호가 3보다 크면
 			movePage = startPage - 1;// 4,5,6 -> 3,2,1 / 7,8,9 -> 4,5,6
 			prevMark.delete(0, prevMark.length());// 이전에 링크가 없는 [<<] 삭제
-			prevMark.append("[<a href='").append(rDTO.getUrl()).append("?currentPage=").append(movePage);
+			prevMark
+			.append("<li class='w-4 mr-2'><a class='items-center h-full flex' href='").append(rDTO.getUrl())
+			.append("?currentPage=").append(movePage);
+			
 			// 검색 키워드가 있다면 검색 키워드를 붙인다.
 			if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {// 검색 키워드가 있다면 검색 키워드를 붙인다.
-//				prevMark.append("&keyword=").append(rDTO.getKeyword()).append("&field=").append(rDTO.getField());
+				prevMark.append("&keyword=").append(rDTO.getKeyword());
 			} // end if	
-			prevMark.append("' class='prevMark'>&lt;&lt;</a>]");
+			
+			// http://localhost:8080/searchList?keyword=&category=1&startPrice=10&endPrice=100000&sortBy=asc
+			
+			// 선택 카테고리가 0이 아니면, 즉 선택 카테고리가 있다면 카테고릐를 붙인다
+			if(rDTO.getCategory() != 0) {
+				prevMark.append("&category=").append(rDTO.getCategory());
+			}// end if
+			
+			// 가격 범위
+			if(rDTO.getStartPrice() != 0 && rDTO.getEndPrice() != 0) {
+				prevMark
+				.append("&startPrice=").append(rDTO.getStartPrice())
+				.append("&endPrice=").append(rDTO.getEndPrice());
+			}// end if
+			
+			// 정렬 방식
+			if(rDTO.getSortBy() != null && !rDTO.getSortBy().isEmpty()){
+				prevMark.append("&sortBy=").append(rDTO.getSortBy());
+			}// end if
+			
+			prevMark.append("'><svg stroke='currentColor' fill='currentColor' stroke-width='0' viewBox='0 0 24 24' height='1em' width='1em' xmlns='http://www.w3.org/2000/svg'><path d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z'></path></svg></a></li>");
 		} // end if
 
 		// 6.시작페이지 번호부터 끝페이지 번호까지 화면에 출력
@@ -134,44 +180,84 @@ public class ProductListService {
 		movePage = startPage;
 
 		while (movePage <= endPage) {
+			
+			//<li class="w-10 h-10 rounded-md shrink-0 bg-jngreen/80 text-white"><a class="block leading-10" href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=1">1</a></li>
 			if (movePage == rDTO.getCurrentPage()) {// 현재 페이지 : 링크x
-				pageLink.append("[ <span class='currentPage'>").append(movePage).append("</span> ]");
+				pageLink.append("<li class='w-10 h-10 rounded-md shrink-0 bg-jngreen/80 text-white'><a class='block leading-10'>").append(movePage).append("</a></li>");
 			} else {// 현재페이지가 아닌 다른 페이지 : 링크 O
-				pageLink.append("[ <a class='notCurrentPage' href='").append(rDTO.getUrl()).append("?currentPage=")
-						.append(movePage);
+				
+				pageLink
+				.append("<li class='w-10 h-10 rounded-md shrink-0'><a class='block leading-10' href='")
+				.append(rDTO.getUrl())
+				.append("?currentPage=") .append(movePage);
 				// 검색 키워드가 있다면 검색 키워드를 붙인다.
 				if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {// 검색 키워드가 있다면 검색 키워드를 붙인다.
-//					pageLink.append("&keyword=").append(rDTO.getKeyword()).append("&field=").append(rDTO.getField());
-				} // end if
-				pageLink.append("'>").append(movePage).append("</a> ]");
+					pageLink.append("&keyword=").append(rDTO.getKeyword());
+				} // end if	
+				
+				// 선택 카테고리가 0이 아니면, 즉 선택 카테고리가 있다면 카테고릐를 붙인다
+				if(rDTO.getCategory() != 0) {
+					pageLink.append("&category=").append(rDTO.getCategory());
+				}// end if
+				
+				// 가격 범위
+				if(rDTO.getStartPrice() != 0 && rDTO.getEndPrice() != 0) {
+					pageLink
+					.append("&startPrice=").append(rDTO.getStartPrice())
+					.append("&endPrice=").append(rDTO.getEndPrice());
+				}// end if
+				
+				// 정렬 방식
+				if(rDTO.getSortBy() != null && !rDTO.getSortBy().isEmpty()){
+					pageLink.append("&sortBy=").append(rDTO.getSortBy());
+				}// end if
+				pageLink.append("'>").append(movePage).append("</a></li>");
 			} // end else
 			movePage++;
 		} // end while
 
 		// 7. 뒤에 페이지가 더 있는 경우
 		StringBuilder nextMark = new StringBuilder();
-		nextMark.append("[&gt;&gt;]");
+		nextMark.append("<li class='w-4 mr-2'><a class='items-center h-full flex'><svg stroke='currentColor' fill='currentColor' stroke-width='0' viewBox='0 0 24 24' height='1em' width='1em' xmlns='http://www.w3.org/2000/svg'><path d='M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z'></path></svg></a></li>");
 		if (rDTO.getTotalPage() > endPage) {// 뒤에 페이지가 더 있음
 			movePage = endPage + 1;
 			nextMark.delete(0, nextMark.length());
-			nextMark.append("[<a class='nextMark' href='").append(rDTO.getUrl()).append("?currentPage=")
-					.append(movePage);
+			nextMark
+			.append("<li class='w-4 mr-2'><a class='items-center h-full flex' href='")
+			.append(rDTO.getUrl()).append("?currentPage=").append(movePage);
+
 			// 검색 키워드가 있다면 검색 키워드를 붙인다.
 			if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {// 검색 키워드가 있다면 검색 키워드를 붙인다.
-//				nextMark.append("&keyword=").append(rDTO.getKeyword()).append("&field=").append(rDTO.getField());
-			} // end if
-			nextMark.append("'>&gt;&gt;</a>]");
+				nextMark.append("&keyword=").append(rDTO.getKeyword());
+			} // end if	
+			
+			// 선택 카테고리가 0이 아니면, 즉 선택 카테고리가 있다면 카테고릐를 붙인다
+			if(rDTO.getCategory() != 0) {
+				nextMark.append("&category=").append(rDTO.getCategory());
+			}// end if
+			
+			// 가격 범위
+			if(rDTO.getStartPrice() != 0 && rDTO.getEndPrice() != 0) {
+				nextMark
+				.append("&startPrice=").append(rDTO.getStartPrice())
+				.append("&endPrice=").append(rDTO.getEndPrice());
+			}// end if
+			
+			// 정렬 방식
+			if(rDTO.getSortBy() != null && !rDTO.getSortBy().isEmpty()){
+				nextMark.append("&sortBy=").append(rDTO.getSortBy());
+			}// end if
+			
+			nextMark.append("'><svg stroke='currentColor' fill='currentColor' stroke-width='0' viewBox='0 0 24 24' height='1em' width='1em' xmlns='http://www.w3.org/2000/svg'><path d='M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z'></path></svg></a></li>");
 		} // end if
-
-		pagination.append(prevMark).append(" ... ");
+		
+		pagination.append(prevMark);
 		pagination.append(pageLink);
-		pagination.append(" ... ").append(nextMark);
-
-//		System.out.println(startPage);
-//		System.out.println(endPage);
-//		System.out.println(rDTO.getTotalPage());
-//		System.out.println("=========");
-
+		pagination.append(nextMark);
+		
+		if(rDTO.getTotalPage() == 0) {
+			return "";
+		}
 		return pagination.toString();
 	}// pagination
 	

@@ -16,8 +16,8 @@
 $(document).ready(function() {
     // 모든 숨겨진 찜 버튼에 클릭 이벤트
     $('input.a11yHidden[type="button"]').on('click', function(event) {
-        // <a>로 이벤트 버블링 방지
-        event.stopPropagation();
+    	event.preventDefault();   // ⭐ a 태그 기본 동작 차단
+    	event.stopPropagation();  // ⭐ 이벤트 전파 차단
 
         // productNum 추출 (id에서)
         var productNum = $(this).attr('id').replace('btn_', '');
@@ -27,21 +27,52 @@ $(document).ready(function() {
     });
 
     function toggleBookmark(productNum, $input) {
-        console.log("찜 클릭됨:", productNum);
+        //console.log("찜 클릭됨:", productNum);
 	
         // label 내부 svg path 선택
         var $svgPath = $input.prev('label').find('path');
-
         // 찜 상태 토글
         if ($svgPath.attr('fill') === '#dc2626') {
-            // 비활성화
-            $svgPath.attr('fill', '#9ca3afb4');
-            $svgPath.attr('stroke', 'white');
+        	$.ajax({
+        		url:"/bookmark/"+productNum,
+        		type:"DELETE",
+        		contentType:"application/JSON",
+        		data:{productNum,productNum},
+        		dataType:"JSON",
+        		error:function(xhr){
+        			alert(xhr.status)
+        			},// error
+        		success:function(jsonObj){
+        			if(jsonObj.resultFlag){
+        				// 비활성화
+        	            $svgPath.attr('fill', '#9ca3afb4');
+        	            $svgPath.attr('stroke', 'white');
+        			}// end if
+        		}// success
+        	});// ajax
+            
         } else {
-            // 활성화
-            $svgPath.attr('fill', '#dc2626');
-            $svgPath.attr('stroke', '#dc2626');
-        }
+        	$.ajax({
+        		url:"/bookmark/"+productNum,
+        		type:"POST",
+        		contentType:"application/JSON",
+        		data:{productNum,productNum},
+        		dataType:"JSON",
+        		error:function(xhr){
+        			alert(xhr.status)
+        			},// error
+        		success:function(jsonObj){
+        			if(jsonObj.resultFlag){
+        				// 활성화
+        	            $svgPath.attr('fill', '#dc2626');
+        	            $svgPath.attr('stroke', '#dc2626');
+        			}else{
+        				alert("로그인이 필요한 서비스입니다.");
+        			}// end else
+        		}// success
+        	});// ajax
+            
+        }// end else
 
         // 서버로 AJAX 요청 예시
         /*
@@ -65,13 +96,15 @@ function searchCategory(categorycode){
 	if(categorycode != null){
 		var url = new URL(window.location.href);  // 현재 URL
 	    url.searchParams.set('category', categorycode);
+	    url.searchParams.set('currentPage', 1);
 	    window.location.href = url.toString();    // 이동
 	}// end if
 }// searchCategory
 
-function bookmark(productNum){
-	alert(productNum);
-}
+function reset(){
+	location.href="searchList";
+}// reset
+
 </script>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -227,6 +260,7 @@ function bookmark(productNum){
 									    if (endPrice !== null && endPrice !== '') {
 									        url.searchParams.set('endPrice', endPrice);
 									    }
+									    url.searchParams.set('currentPage', 1);
 									    window.location.href = url.toString();    // 이동
 									});
 									</script>
@@ -237,35 +271,45 @@ function bookmark(productNum){
 												<div class="flex flex-wrap">
 													<div class="flex items-center flex-shrink-0 py-2 pl-3 mb-2 mr-2 text-sm font-medium border rounded lg:m-0 lg:border-none lg:p-0 lg:text-base border-jnGray-300 text-jnBlack">
 														<span class="truncate">전체</span>
-														<svg xmlns="http://www.w3.org/2000/svg" width="16"
+														<svg width="16"
 															height="16" fill="none" data-routerlink="true"
 															class="flex-shrink-0 w-4 text-sm cursor-pointer ms-1 me-3 text-body fill-jnGray-600"
 															size="16">
-															<g stroke="#787E89" stroke-linecap="round"
-																stroke-linejoin="round"
-																clip-path="url(#close-icon_svg__a)">
-															<path d="M13 3 3 13M3 3l10 10"></path></g>
 															<defs>
 															<clipPath id="close-icon_svg__a">
 															<path fill="#fff" d="M0 0h16v16H0z"></path></clipPath></defs></svg>
 													</div>
-													<div
-														class="flex items-center flex-shrink-0 py-2 pl-3 mb-2 mr-2 text-sm font-medium border rounded lg:m-0 lg:border-none lg:p-0 lg:text-base border-jnGray-300 text-jnBlack">
-														<span class="truncate">판매완료 상품 제외</span>
-														<svg xmlns="http://www.w3.org/2000/svg" width="16"
-															height="16" fill="none" data-routerlink="true"
-															class="flex-shrink-0 w-4 text-sm cursor-pointer ms-1 me-3 text-body fill-jnGray-600"
-															size="16">
-															<g stroke="#787E89" stroke-linecap="round"
-																stroke-linejoin="round"
-																clip-path="url(#close-icon_svg__a)">
-															<path d="M13 3 3 13M3 3l10 10"></path></g>
-															<defs>
-															<clipPath id="close-icon_svg__a">
-															<path fill="#fff" d="M0 0h16v16H0z"></path></clipPath></defs></svg>
-													</div>
+													
+													<th:block th:if="${selCategoryName ne null and selCategoryName ne ''}">
+														<div class="flex items-center flex-shrink-0 py-2 pl-3 mb-2 mr-2 text-sm font-medium border rounded lg:m-0 lg:border-none lg:p-0 lg:text-base border-jnGray-300 text-jnBlack">
+															<span th:text="|카테고리 : ${selCategoryName}|" class="truncate"></span>
+															<svg width="16"
+																height="16" fill="none" data-routerlink="true"
+																class="flex-shrink-0 w-4 text-sm cursor-pointer ms-1 me-3 text-body fill-jnGray-600"
+																size="16">
+																<defs>
+																<clipPath id="close-icon_svg__a">
+																<path fill="#fff" d="M0 0h16v16H0z"></path></clipPath></defs></svg>
+														</div>
+													</th:block>
+													
+													<th:block th:if="${param.startPrice ne null and param.endPrice ne nul}">
+														<div class="flex items-center flex-shrink-0 py-2 pl-3 mb-2 mr-2 text-sm font-medium border rounded lg:m-0 lg:border-none lg:p-0 lg:text-base border-jnGray-300 text-jnBlack">
+															<span th:text="|가격 : ${param.startPrice}~${param.endPrice}|" class="truncate"></span>
+															<svg width="16"
+																height="16" fill="none" data-routerlink="true"
+																class="flex-shrink-0 w-4 text-sm cursor-pointer ms-1 me-3 text-body fill-jnGray-600"
+																size="16">
+																<defs>
+																<clipPath id="close-icon_svg__a">
+																<path fill="#fff" d="M0 0h16v16H0z"></path></clipPath></defs></svg>
+														</div>
+													</th:block>
+													
+													
+													
 												</div>
-												<button data-routerlink="true"
+												<button data-routerlink="true" onclick="reset()"
 													class="text-sm underline whitespace-nowrap text-jnGray-700">초기화</button>
 											</div></td>
 									</tr>
@@ -277,14 +321,63 @@ function bookmark(productNum){
 							class="inline-flex sticky z-10 w-full justify-end bg-white lg:top-[204px] xl:top-[220px] pt-7 pb-5 text-end">
 							<li
 								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-semibold text-jnGray-900">
-								<button class="px-2">최신순</button></li>
+								<button class="px-2" onclick="sort('update')">최신순</button></li>
 							<li
 								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-medium text-jnGray-600">
-								<button class="px-2">낮은가격순</button></li>
+								<button class="px-2" onclick="sort('asc')">낮은가격순</button></li>
 							<li
 								class="text-sm leading-[17px] [&amp;:not(:last-child)]:after:content-[''] after:inline-block after:border after:border-jnGray-300 after:h-[10px] [&amp;:last-of-type]:after:border-none font-medium text-jnGray-600">
-								<button class="px-2">높은가격순</button></li>
+								<button class="px-2" onclick="sort('desc')">높은가격순</button></li>
 						</ul>
+						<script type="text/javascript">
+	function sort(sortBy){
+		var url = new URL(window.location.href);
+		url.searchParams.set('sortBy', sortBy);
+		url.searchParams.set('currentPage', 1);
+		window.location.href = url.toString();
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const ul = document.querySelector('ul.inline-flex');
+		const items = ul.querySelectorAll('li');
+
+		// URL 파라미터 기준 초기 active 설정
+		const params = new URLSearchParams(window.location.search);
+		const currentSort = params.get('sortBy') || 'update'; // 기본값 최신순
+
+		items.forEach(li => {
+			const btn = li.querySelector('button');
+			const sortValue = btn.getAttribute('onclick')
+				.match(/'(.+)'/)?.[1];
+
+			// 초기화
+			li.classList.remove('font-semibold', 'text-jnGray-900');
+			li.classList.add('font-medium', 'text-jnGray-600');
+
+			// 현재 정렬과 일치하면 활성화
+			if (sortValue === currentSort) {
+				li.classList.remove('font-medium', 'text-jnGray-600');
+				li.classList.add('font-semibold', 'text-jnGray-900');
+			}
+		});
+
+		// 클릭 시 active 처리
+		ul.addEventListener('click', function (e) {
+			const button = e.target.closest('button');
+			if (!button) return;
+
+			const li = button.closest('li');
+
+			items.forEach(item => {
+				item.classList.remove('font-semibold', 'text-jnGray-900');
+				item.classList.add('font-medium', 'text-jnGray-600');
+			});
+
+			li.classList.remove('font-medium', 'text-jnGray-600');
+			li.classList.add('font-semibold', 'text-jnGray-900');
+		});
+	});
+</script>
 						<ul class="grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5 lg:gap-x-5 xl:gap-x-7 xl:gap-y-5 2xl:gap-y-8 search-results [&amp;_div]:ps-0">
 							
 							
@@ -301,7 +394,7 @@ function bookmark(productNum){
 											style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
 										
 										<div class="absolute bottom-2 z-20 right-2 w-6 h-6" >
-											<label for="${|btn*{productNum}|}" class="relative cursor-pointer" th:onclick="bookmark([[${temp.productNum}]]); event.stopPropagation();">
+											<label th:for="|btn_*{productNum}|" class="relative cursor-pointer">
 												<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="pointer-events-none w-6 h-6">
 
 													<th:block th:if="*{bookmarkFlag eq 'N'}">
@@ -317,7 +410,7 @@ function bookmark(productNum){
 													
 												</svg>
 											</label>
-											<input id="${|btn*{productNum}|}" type="button" class="a11yHidden">
+											<input th:id="|btn_*{productNum}|" type="button" class="a11yHidden">
 										</div>
 										
 										<!-- <div class="absolute bottom-2 z-20 right-2 w-6 h-6" >
@@ -346,7 +439,7 @@ function bookmark(productNum){
 										<div
 											class="flex lg:justify-between max-lg:flex-col max-lg:gap-2 max-lg:mt-3">
 											<div class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5 max-lg:hidden"></div>
-											<div class="text-xs text-gray-400 text-muted">찜 0 ∙ 채팅 0</div>
+											<div th:text="|찜 *{bookmarkCnt} ∙ 채팅 *{chatCnt}|" class="text-xs text-gray-400 text-muted">찜 0 ∙ 채팅 0</div>
 										</div>
 									</div></a></li>
 								
@@ -356,51 +449,7 @@ function bookmark(productNum){
 									
 						<div class="bottom-0 py-3 m-auto text-center bg-white lg:mb-2">
 							<ul class="flex justify-center space-x-2 space-x-reverse">
-								<li class="w-4 mr-2"><a class="items-center hidden h-full"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=0"><svg
-											stroke="currentColor" fill="currentColor" stroke-width="0"
-											viewBox="0 0 24 24" height="1em" width="1em"
-											xmlns="http://www.w3.org/2000/svg">
-											<path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"></path></svg></a></li>
-								<li class="w-10 h-10 rounded-md shrink-0 bg-jngreen/80 text-white"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=1">1</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=2">2</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=3">3</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=4">4</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=5">5</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=6">6</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=7">7</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=8">8</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=9">9</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=10">10</a></li>
-								<li class="w-10 h-10 rounded-md shrink-0"><a
-									class="block leading-10"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=11">11</a></li>
-								<li class="w-4 mr-2"><a class="items-center h-full flex"
-									href="/search?keyword=&amp;keywordSource=INPUT_KEYWORD&amp;page=2"><svg
-											stroke="currentColor" fill="currentColor" stroke-width="0"
-											viewBox="0 0 24 24" height="1em" width="1em"
-											xmlns="http://www.w3.org/2000/svg">
-											<path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path></svg></a></li>
+							<th:block th:utext="${pagination}"></th:block>
 							</ul>
 						</div>
 						<div>

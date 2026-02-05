@@ -22,8 +22,8 @@ public class ProductListController {
 //		System.out.println(prDTO);
 		
 		// pagenation 관련
-		if(session.getAttribute("uid") != null & !"".equals(session.getAttribute("uid"))) {
-			prDTO.setUserId((Integer)session.getAttribute("uid"));
+		if(session.getAttribute("snum") != null & !"".equals(session.getAttribute("snum"))) {
+			prDTO.setUserId((Integer)session.getAttribute("snum"));
 		}// end if
 		int totalCnt = pls.totalCnt(prDTO);// 총 게시물의 수
 		int pageScale = pls.pageScale();// 한화면에 보여줄 게시물의 수
@@ -36,7 +36,6 @@ public class ProductListController {
 		prDTO.setEndNum(endNum);
 		prDTO.setTotalPage(totalPage);
 		
-		prDTO.setUserId(5);
 //		System.out.println(prDTO);
 		
 		
@@ -59,6 +58,10 @@ public class ProductListController {
 		model.addAttribute("selCategoryName", selCategoryName);
 		model.addAttribute("categorylist", categorylist);
 		// 카테고리 작업 끝
+		
+		// 페이지네이션
+		model.addAttribute("pagination", pls.pagination(prDTO));
+		
 		
 		return "/product_list/productList";
 	}// productList

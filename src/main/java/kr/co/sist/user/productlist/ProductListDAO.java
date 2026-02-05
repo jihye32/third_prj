@@ -33,12 +33,24 @@ public class ProductListDAO {
 		return list;
 	}// selectCategory
 	
-	public int selectProductTotalCnt(ProductRangeDTO prDTO) {
+	public int selectProductTotalCnt(ProductRangeDTO prDTO) throws PersistenceException{
 		int cnt = 0;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
 		cnt = ss.selectOne("kr.co.sist.user.productlist.selectProdcutCnt",prDTO);
 		if(ss != null) {ss.close();}// end if
 		return cnt;
 	}// selectProductTotalCnt
+	
+	public void insertBookmark(BookmarkDTO bDTO)throws PersistenceException{
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		ss.insert("kr.co.sist.user.productlist.insertBookmark", bDTO);
+		if(ss != null) {ss.close();}// end if
+	}// insertBookmark
+	
+	public void deleteBookmark(BookmarkDTO bDTO)throws PersistenceException{
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		ss.delete("kr.co.sist.user.productlist.deleteBookmark", bDTO);
+		if(ss != null) {ss.close();}// end if
+	}// deleteBookmark
 	
 }// class
