@@ -10,30 +10,13 @@
 	th:href="@{/css/manager_member.css}">
 <link rel="stylesheet" type="text/css"
 	th:href="@{/css/manager_member_detail.css}">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-	<header id="kakaoHead">
-		<div class="tit_logo">쌍용장터 관리자센터</div>
-		<div class="util_menu">
-			<a th:href="@{/logout}" class="btn_logout">로그아웃</a>
-		</div>
-	</header>
+<header th:replace="manage/common_layout :: header"></header>
 
 	<div class="wrapper">
-		<aside class="menu_side">
-			<div class="menu_group">관리자 메뉴</div>
-			<ul class="list_menu">
-				<li>대시보드</li>
-				<li><a th:href="@{/manage/product/product_main}"
-					style="text-decoration: none; color: inherit;">물품관리</a></li>
-				<li class="active">회원관리</li>
-				<li>고객센터관리</li>
-				<li>신고관리</li>
-				<li>매출관리</li>
-				<li>이벤트관리</li>
-			</ul>
-		</aside>
+		<aside th:replace="manage/common_layout :: sidebar"></aside>
 
 		<main id="main-container">
 			<div class="container-fluid">

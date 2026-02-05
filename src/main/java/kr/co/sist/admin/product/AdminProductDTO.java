@@ -16,6 +16,10 @@ public class AdminProductDTO {
     private int totalPage;
     private int pageScale = 15; 
     
+ // [에러 해결 포인트] 이 필드와 Getter가 반드시 있어야 합니다!
+    private int productNo;      
+    private String deleteReason; // [필수] 매퍼의 #{deleteReason}과 이름이 똑같아야 함
+    
     private String keyword;     
     private String sortBy = "latest"; 
     private int product_num;
