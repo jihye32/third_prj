@@ -5,7 +5,7 @@
   <title th:text="${dto.type == 'FAQ' ? (mode=='edit'?'FAQ 수정':'FAQ 작성') : (mode=='edit'?'공지 수정':'공지 작성')}">
     글 작성/수정
   </title>
-
+   <link rel="stylesheet" th:href="@{/css/style.css}">
   <!-- jQuery -->
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 
@@ -19,7 +19,7 @@
     .wrap{padding:18px;}
     .card{background:#fff;border-radius:6px;padding:18px;box-shadow:0 1px 2px rgba(0,0,0,.06);}
     .row{display:flex;gap:12px;align-items:center;margin-bottom:12px;}
-    .row .left{width:120px;color:#333;font-weight:600;}
+    .row .left{width:120px;color:#333;font-weight:750;}
     input[type="text"]{width:100%;height:38px;border:1px solid #d7dbe2;border-radius:4px;padding:0 10px;font-size:14px;}
     .actions{display:flex;justify-content:flex-end;margin-top:14px;gap:8px;}
     .btn{min-width:92px;height:34px;border:none;border-radius:4px;background:#111827;color:#fff;cursor:pointer;font-size:13px;}
@@ -27,25 +27,19 @@
   </style>
 </head>
 <body>
-<div class="topbar">
-  <div style="font-weight:700;">중고마켓 관리자센터</div>
-  <div>Customer</div>
-</div>
 
-<div class="wrap">
+<header th:replace="manage/common_layout :: header"></header>
+<div class="wrap" style="padding-top:85px;">
   <div class="card">
 
-    <!-- action: FAQ/공지 + create/edit에 따라 분기 -->
     <form method="post"
           th:action="${dto.type=='FAQ'}
                       ? (${mode=='edit'} ? @{/manage/faq/modifyProcess} : @{/manage/faq/writeProcess})
                       : (${mode=='edit'} ? @{/manage/notice/modifyProcess} : @{/manage/notice/writeProcess})"
           onsubmit="return validateForm();">
 
-      <!-- 수정일 때만 boardNum 필요 -->
       <input type="hidden" name="boardNum" th:if="${mode=='edit'}" th:value="${dto.boardNum}"/>
 
-      <!-- 서버에서 kind로 고정해도 되지만, 전달값 유지 -->
       <input type="hidden" name="boardType" th:value="${dto.boardType}"/>
       <input type="hidden" name="type" th:value="${dto.type}"/>
 
@@ -64,7 +58,7 @@
       <div class="row" style="align-items:flex-start;">
         <div class="left" style="padding-top:8px;">내용</div>
         <div style="flex:1;">
-          <!-- Summernote는 textarea에 붙임 -->
+
           <textarea id="content" name="content" th:text="${dto.content}"></textarea>
         </div>
       </div>
@@ -84,7 +78,7 @@
 <script>
   $(function () {
     $('#content').summernote({
-      height: 520
+      height: 590
     });
   });
 

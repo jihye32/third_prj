@@ -30,7 +30,8 @@
                     <a th:href="@{/manage/faq/faq}">- FAQ 관리</a>
                 </li>
                 <li class="sub_menu_item" th:classappend="${subMenu == 'ask' ? 'sub_active' : ''}">
-                    <a th:href="@{/manage/ask/ask}">- 1:1 문의관리</a>
+                    <a th:href="@{/manage/ask/list}">- 1:1 문의관리</a>
+
                 </li>
                 <li class="sub_menu_item" th:classappend="${subMenu == 'notice' ? 'sub_active' : ''}">
                     <a th:href="@{/manage/notice/notice}">- 공지사항관리</a>
@@ -39,7 +40,7 @@
         </li>
         
         <li class="menu_item" th:classappend="${menu == 'report' ? 'active' : ''}">
-            <a th:href="@{/manage/report}" class="menu_link">신고관리</a>
+            <a th:href="@{/manage/report/reportlist}" class="menu_link">신고관리</a>
         </li>
         
         <li class="menu_item" th:classappend="${menu == 'sales' ? 'active' : ''}">

@@ -54,17 +54,32 @@ public class BoardController {
         return boardList(dto, model, "manage/notice/notice");
     }
 
-    // 공통 목록 처리 
+ // 공통 목록 처리
     private String boardList(BoardDTO dto, Model model, String viewName) {
 
-        int pageSize = 10;
+        int pageSize = 10;   // 한 페이지 글 수
+        int blockSize = 5;   // 페이지 번호 묶음(1~5, 6~10 ...)
+
+        // startRow/endRow 계산
         dto.setStartRow((dto.getCurrentPage() - 1) * pageSize + 1);
         dto.setEndRow(dto.getCurrentPage() * pageSize);
 
+        // 전체 건수 + 목록
+        int totalCount = bs.getTotalCount(dto);
         List<BoardDomain> list = bs.getBoardList(dto);
+
+        // 페이지바 HTML 생성 (검색 유지 포함)
+        String baseUrl = dto.getType().equals("FAQ")
+                ? "/manage/faq/faq"
+                : "/manage/notice/notice";
+
+        String pagination = buildPageBar(baseUrl, dto, totalCount, pageSize, blockSize);
+        model.addAttribute("pagination", pagination); // ✅ 템플릿이 쓰는 이름
 
         model.addAttribute("list", list);
         model.addAttribute("dto", dto);
+        model.addAttribute("totalCount", totalCount);
+
         model.addAttribute("menu", "customer");
         model.addAttribute("subMenu", dto.getType().equals("FAQ") ? "faq" : "notice");
 
@@ -95,8 +110,9 @@ public class BoardController {
         dto.setBoardType("F");
         //dto.setAdminId(getAdminId(session)); // 세션에서 관리자 아이디
 
-        dto.setAdminId("admin");//임시 관리자 아이디
+        dto.setAdminId("admin01");//임시 관리자 아이디
         bs.addBoard(dto);
+        System.out.println("adminId = " + dto.getAdminId());
 
         return "redirect:/manage/faq/faq";
     }
@@ -124,7 +140,7 @@ public class BoardController {
         dto.setType("NOTICE");
         dto.setBoardType("N");
         //dto.setAdminId(getAdminId(session));
-        dto.setAdminId("admin");//임시 관리자 아이디
+        dto.setAdminId("admin01");//임시 관리자 아이디
 
         bs.addBoard(dto);
 
@@ -182,8 +198,9 @@ public class BoardController {
 
         dto.setBoardType("F");
         dto.setType("FAQ");
-        dto.setAdminId((String)session.getAttribute("adminId"));
+        //dto.setAdminId((String)session.getAttribute("adminId"));
 
+        dto.setAdminId("admin01");//임시 관리자 아이디
         bs.modifyBoard(dto);
 
         return "redirect:/manage/faq/faq";
@@ -194,10 +211,74 @@ public class BoardController {
 
         dto.setBoardType("N");
         dto.setType("NOTICE");
-        dto.setAdminId((String)session.getAttribute("adminId"));
+        //dto.setAdminId((String)session.getAttribute("adminId"));
 
+        dto.setAdminId("admin01");//임시 관리자 아이디
         bs.modifyBoard(dto);
 
         return "redirect:/manage/notice/notice";
+    }
+    
+ // FAQ 삭제(논리삭제)
+    @PostMapping("/faq/deleteProcess")
+    public String faqDeleteProcess(@RequestParam int boardNum) {
+        bs.removeBoard(boardNum);     // delete_flag = 'Y'
+        return "redirect:/manage/faq/faq";
+    }
+
+    // 공지 삭제(논리삭제)
+    @PostMapping("/notice/deleteProcess")
+    public String noticeDeleteProcess(@RequestParam int boardNum) {
+        bs.removeBoard(boardNum);
+        return "redirect:/manage/notice/notice";
+    }
+    
+    //페이지네이션
+    private String buildPageBar(String baseUrl, BoardDTO dto, int totalCount, int pageSize, int blockSize) {
+
+        int totalPage = (int) Math.ceil((double) totalCount / pageSize);
+        if (totalPage == 0) totalPage = 1;
+
+        int currentPage = dto.getCurrentPage();
+        int startPage = ((currentPage - 1) / blockSize) * blockSize + 1;
+        int endPage = Math.min(startPage + blockSize - 1, totalPage);
+
+        String searchType = dto.getSearchType();
+        String keyword = dto.getKeyword();
+
+        // 검색 파라미터 유지
+        String extra = "";
+        if (keyword != null && !keyword.isBlank()) {
+            extra = "&searchType=" + searchType + "&keyword=" + keyword;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        // 이전 블록
+        if (startPage > 1) {
+            sb.append("<a href='").append(baseUrl)
+              .append("?currentPage=").append(startPage - 1)
+              .append(extra).append("'>이전</a> ");
+        }
+
+        // 페이지 번호
+        for (int p = startPage; p <= endPage; p++) {
+            if (p == currentPage) {
+                sb.append("<strong>").append(p).append("</strong> ");
+            } else {
+                sb.append("<a href='").append(baseUrl)
+                  .append("?currentPage=").append(p)
+                  .append(extra).append("'>").append(p).append("</a> ");
+            }
+        }
+
+        // 다음 블록
+        if (endPage < totalPage) {
+            sb.append("<a href='").append(baseUrl)
+              .append("?currentPage=").append(endPage + 1)
+              .append(extra).append("'>다음</a>");
+        }
+
+        return sb.toString();
     }
 }

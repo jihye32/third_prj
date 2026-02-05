@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>신고 상세</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+
+  <style>
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { margin-bottom: 14px; }
+    .label { font-size: 12px; color: #777; margin-bottom: 6px; }
+    .control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; background:#f7f7f7; }
+    .control.edit { background:#fff; }
+    .card { border: 1px solid #eee; border-radius: 8px; padding: 16px; margin-top: 14px; }
+    .actions { display:flex; justify-content:flex-end; gap:8px; margin-top: 12px; }
+    .btn { padding: 8px 14px; border-radius: 6px; text-decoration:none; display:inline-block; border:1px solid #ccc; background:#fff; color:#111; }
+    .btn.primary { background:#111; border-color:#111; color:#fff; }
+    .hint { font-size: 12px; color: #999; margin-top: 6px; }
+    .files a { margin-right: 10px; text-decoration:none; color:#4682b4; }
+  </style>
+</head>
+<body>
+
+<header th:replace="manage/common_layout :: header"></header>
+
+<div class="container">
+  <h2>신고 관리 - 상세</h2>
+
+  <!-- 조회 전용 영역 -->
+  <div class="card">
+    <div class="grid2">
+      <div class="field">
+        <div class="label">신고자</div>
+        <input class="control" type="text" th:value="${report.reporterId}" disabled>
+      </div>
+
+      <div class="field">
+        <div class="label">신고 대상자</div>
+        <input class="control" type="text" th:value="${report.reporteeId}" disabled>
+      </div>
+
+      <div class="field">
+        <div class="label">신고 종류</div>
+        <input class="control" type="text" th:value="${report.reportText}" disabled>
+      </div>
+
+      <div class="field">
+        <div class="label">신고 일자</div>
+        <input class="control" type="text" th:value="${#dates.format(report.reportDate,'yyyy-MM-dd')}" disabled>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="label">신고 사유</div>
+      <input class="control" type="text" th:value="${report.reportContent}" disabled>
+    </div>
+
+    <div class="field">
+      <div class="label">신고 자료</div>
+
+      <div th:if="${imgList == null or #lists.isEmpty(imgList)}" class="control">
+        첨부 없음
+      </div>
+
+      <div th:if="${imgList != null and !#lists.isEmpty(imgList)}" class="control files">
+        <a th:each="img : ${imgList}"
+           th:href="@{/upload/report/{f}(f=${img})}"
+           th:text="${img}" download></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 관리자 입력 영역 -->
+  <form class="card" id="processForm" th:action="@{/manage/report/reportprocess}" method="post">
+    <input type="hidden" name="reportNum" th:value="${report.reportNum}">
+
+    <div class="field">
+      <div class="label">처리 상태</div>
+      <select class="control edit" name="reportStateCode" id="reportState">
+        <option th:each="s : ${stateList}"
+                th:value="${s.reportStateCode}"
+                th:text="${s.reportStateText}"
+                th:selected="${s.reportStateCode == report.reportStateCode}">
+        </option>
+      </select>
+    </div>
+
+    <div class="field">
+      <div class="label">처리 후 전달 내용</div>
+      <textarea class="control edit" name="answer" id="answerBox" rows="15"
+                th:text="${report.answer}"></textarea>
+      <div class="hint">※ 처리완료(3)일 때만 입력/저장됩니다.</div>
+    </div>
+
+    <div class="actions">
+      <!-- ✅ 목록 버튼 (리스트로) -->
+      <a class="btn" th:href="@{/manage/report/reportlist}">목록</a>
+      <!-- ✅ 완료 버튼 -->
+      <button class="btn primary" type="submit">완료</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const reportState = document.getElementById('reportState');
+  const answerBox = document.getElementById('answerBox');
+  const form = document.getElementById('processForm');
+
+  // 처리완료(3)에서만 textarea 활성화
+  function syncAnswerEnable() {
+    const isDone = reportState.value === '3';
+    answerBox.disabled = !isDone;
+    if (!isDone) answerBox.value = '';
+  }
+
+  // ✅ 처리완료(3)인데 내용 없으면 경고 후 submit 막기
+  form.addEventListener('submit', function(e) {
+    const isDone = reportState.value === '3';
+    const msg = (answerBox.value || '').trim();
+
+    if (isDone && msg.length === 0) {
+      e.preventDefault();
+      alert('처리완료로 저장하려면 처리 후 전달 내용을 입력해야 합니다.');
+      answerBox.focus();
+    }
+  });
+
+  reportState.addEventListener('change', syncAnswerEnable);
+  syncAnswerEnable();
+</script>
+
+</body>
+</html>

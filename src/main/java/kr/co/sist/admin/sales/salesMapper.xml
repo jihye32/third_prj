@@ -3,6 +3,88 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.admin.sales">
+<!-- 안전결제 건 수 -->
+<select id="selectSafepayToday" resultType="int">
+select count(order_id) 
+from payment
+where approved_date=trunc(sysdate)
+</select>
+<select id="selectSafepayYesterday" resultType="int">
+select count(order_id) 
+from payment
+where approved_date=TRUNC(SYSDATE) - 1
+</select>
+<select id="selectSafepayMonth" resultType="int">
+select count(order_id) 
+from payment
+where trunc(approved_date, 'MM') = trunc(sysdate, 'MM')
+</select>
+<select id="selectSafepayLastMonth" resultType="int">
+select count(order_id) 
+from payment
+where trunc(approved_date, 'MM') = add_months(trunc(sysdate, 'MM'),-1)
+</select>
+
+<!-- 매출(수수료ㅛ) -->
+<select id="selectChargeToday" resultType="int">
+select charge
+from product_order
+where created_date=trunc(sysdate)
+
+</select>
+<select id="selectChargeYesterday" resultType="int">
+select charge
+from product_order
+where created_date=trunc(sysdate)-1
+
+</select>
+<select id="selectChargeMonth" resultType="int">
+select charge
+from product_order
+where trunc(created_date, 'MM') = trunc(sysdate, 'MM')
+
+</select>
+<select id="selectChargeLastMonth" resultType="int">
+select charge
+from product_order
+where trunc(created_date, 'MM') = add_months(trunc(sysdate, 'MM'),-1)
+
+</select>
+
+<insert id="insertCharge" parameterType="int">
+insert into charge(charge,update_date)
+values(${newCharge},sysdate)
+</insert> 
+
+<select id="selectCharge" resultType="map">
+SELECT charge
+FROM (
+    SELECT charge
+    FROM charge
+    ORDER BY update_date DESC
+)
+WHERE ROWNUM = 1
+</select>
+
+<select id="selectLastYearCharges" resultType="map">
+SELECT
+    TO_CHAR(created_date, 'MM') AS month,
+    SUM(amount) AS total_sales
+FROM orders
+WHERE order_date >= ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), -12)
+  AND order_date &lt;  TRUNC(SYSDATE, 'YYYY')
+GROUP BY TO_CHAR(created_date, 'MM')
+ORDER BY month;
+
+</select>
+
+
+
+
+
+
+
+
 
 
 </mapper>
