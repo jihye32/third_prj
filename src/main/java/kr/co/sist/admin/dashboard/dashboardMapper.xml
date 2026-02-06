@@ -95,7 +95,7 @@ where trunc(over_selling_date, 'YY') = trunc(sysdate, 'YY')
 
 <select id="selectTenUser" resultType="int">
 SELECT COUNT(*) FROM member 
-WHERE SUBSTR(birth_date, 1, 4) >= TO_CHAR(SYSDATE, 'YYYY') - 19
+WHERE SUBSTR(birth_date, 1, 4) &gt;= TO_CHAR(SYSDATE, 'YYYY') - 19
 </select>
 <select id="selectTwentyUser" resultType="int">
 SELECT COUNT(*) FROM member 
@@ -128,10 +128,6 @@ GROUP BY c.category_code, c.code_text
 ORDER BY sales_count DESC;
 
 </select>
-
-
-
-
 
 
 

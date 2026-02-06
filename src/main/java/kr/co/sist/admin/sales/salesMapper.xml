@@ -19,35 +19,46 @@ select count(order_id)
 from payment
 where trunc(approved_date, 'MM') = trunc(sysdate, 'MM')
 </select>
-<select id="selectSafepayLastMonth" resultType="int">
+<select id="selectSafepayMonthNow" resultType="int" parameterType="Date">
 select count(order_id) 
 from payment
-where trunc(approved_date, 'MM') = add_months(trunc(sysdate, 'MM'),-1)
+where trunc(approved_date, 'MM') = trunc(${safepayMonth}, 'MM')
+</select>
+<select id="selectSafepayLastMonth" resultType="int" parameterType="Date">
+select count(order_id) 
+from payment
+where trunc(approved_date, 'MM') = add_months(trunc(${safepayMonth}, 'MM'),-1)
 </select>
 
 <!-- 매출(수수료ㅛ) -->
 <select id="selectChargeToday" resultType="int">
-select charge
+select sum(charge)
 from product_order
 where created_date=trunc(sysdate)
 
 </select>
 <select id="selectChargeYesterday" resultType="int">
-select charge
+select sum(charge)
 from product_order
 where created_date=trunc(sysdate)-1
 
 </select>
 <select id="selectChargeMonth" resultType="int">
-select charge
+select sum(charge)
 from product_order
 where trunc(created_date, 'MM') = trunc(sysdate, 'MM')
 
 </select>
-<select id="selectChargeLastMonth" resultType="int">
-select charge
+<select id="selectChargeMonthNow" resultType="int" parameterType="Date">
+select sum(charge)
 from product_order
-where trunc(created_date, 'MM') = add_months(trunc(sysdate, 'MM'),-1)
+where trunc(created_date, 'MM') = trunc(${chargeMonth}, 'MM')
+
+</select>
+<select id="selectChargeLastMonth" resultType="int" parameterType="Date">
+select sum(charge)
+from product_order
+where trunc(created_date, 'MM') = add_months(trunc(${chargeMonth}, 'MM'),-1)
 
 </select>
 
@@ -66,6 +77,19 @@ FROM (
 WHERE ROWNUM = 1
 </select>
 
+<!-- 판매완료면서 주문테이블(안전결제로 거래된 것)에 없으면 개인들의 송금 -->
+<select id="selectPayMethod" resultType="int">
+SELECT count(p.product_num)
+FROM product p
+LEFT JOIN product_order o
+  ON p.product_num = o.product_num
+WHERE p.product_status = 'SOLD'
+  AND o.product_num IS NULL;
+
+
+</select>
+
+<!-- 지난해 월별 수수료 -->
 <select id="selectLastYearCharges" resultType="map">
 SELECT
     TO_CHAR(created_date, 'MM') AS month,
@@ -75,6 +99,13 @@ WHERE order_date >= ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), -12)
   AND order_date &lt;  TRUNC(SYSDATE, 'YYYY')
 GROUP BY TO_CHAR(created_date, 'MM')
 ORDER BY month;
+
+</select>
+
+<!-- 카테고리 목록 -->
+<select id="selectCateory" resultType="String">
+select category_text
+from category
 
 </select>
 
