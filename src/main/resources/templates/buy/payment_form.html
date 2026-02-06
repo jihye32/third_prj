@@ -28,7 +28,7 @@
 	</div>
 
 	<!-- 택배 거래 선택 시 생성됨 -->
-	<form th:if="${type == 'DELIVERY'}">
+	<th:block th:if="${type == 'DELIVERY'}">
 		<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
 		<div class="outline-none gap-4 flex flex-col justify-start items-stretch flex-nowrap p-5 w-full">
 			<div class="outline-none flex flex-col justify-start items-stretch flex-nowrap">
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-	</form>
+	</th:block>
 	<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
 	<div id="payment-method"></div>
 	<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
@@ -102,7 +102,7 @@
 <div class="sticky bottom-0 left-0 w-full bg-white py-4 px-5 z-50 mt-auto">
 	<!-- 이용약관 UI -->
 	<div id="agreement"></div>
-	<button class="w-full h-14 bg-black text-white font-bold rounded-lg text-16 active:bg-gray-800" id="payment-button" th:data-price="*{price+price*chargeRate/100}" th:data-title="*{title}">
+	<button class="w-full h-14 bg-black text-white font-bold rounded-lg text-16 active:bg-gray-800" id="payment-button" th:data-price="*{price+price*chargeRate/100}" th:data-deal-type="${type}">
 		<span th:text="|*{#numbers.formatInteger(price+price*chargeRate/100,3,'COMMA')}원 결제|">결제하기</span>
 	</button>
 </div>

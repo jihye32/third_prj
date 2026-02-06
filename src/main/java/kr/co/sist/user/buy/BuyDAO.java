@@ -53,6 +53,15 @@ public class BuyDAO {
 		if( ss != null) { ss.close(); }//end if
 		return cnt==1;
 	}
+	//배송 정보가 있다면 저장
+	public boolean insertAddress(AddressDTO aDTO) {
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		int cnt=ss.insert("kr.co.sist.user.buy.insertAddress", aDTO);
+		
+		if( ss != null) { ss.close(); }//end if
+		return cnt==1;
+	}
 	
 	//저장된 금액 가져오기
 	public Integer selectOrderAmount(String orderId) {
@@ -90,4 +99,41 @@ public class BuyDAO {
 		if( ss != null) { ss.close(); }//end if
 		return cnt;
 	}
+	
+	//상품 번호 조회
+	public Integer selectProductNum(String orderId) {
+		Integer pnum = null;
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		pnum = ss.selectOne("kr.co.sist.user.buy.selectProductNum", orderId);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return pnum;
+	}
+	
+	//상품 상태 변경
+	public int updateProductStatus(int pnum) {
+		int cnt = 0;
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.update("kr.co.sist.user.buy.updateProductStatus", pnum);
+		
+		if( ss != null) { ss.close(); }//end if
+		return cnt;
+	}
+	
+	public PaymentDomain selectPayment(String orderId) {
+		PaymentDomain pd = null;
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		pd = ss.selectOne("kr.co.sist.user.buy.selectPaymnet", orderId);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return pd;
+	}
+	
 }

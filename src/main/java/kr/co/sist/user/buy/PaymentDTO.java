@@ -1,6 +1,6 @@
 package kr.co.sist.user.buy;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import kr.co.sist.user.buy.enums.PaymentStatus;
 import lombok.Getter;
@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 public class PaymentDTO {
 	private int amount;
-	private String paymentType,orderId,paymentKey;
-	private Date approvedDate;
+	private String method,orderId,paymentKey,provider;
 	private PaymentStatus paymentStatus;
+	private Timestamp approvedDate;
+
 }

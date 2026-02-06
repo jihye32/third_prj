@@ -34,8 +34,8 @@ public class BuyService {
 	}
 	
 	//주문 정보 저장
-	public OrderDomain orderProduct(int pnum, String buyerId) {
-		BuyDomain bd= searchProduct(pnum);
+	public OrderDomain orderProduct(OrderRequestDTO orDTO, String buyerId) {
+		BuyDomain bd= searchProduct(orDTO.getPnum());
 		if(bd == null) return null;
 		
 		OrderDomain od = new OrderDomain();
@@ -68,10 +68,19 @@ public class BuyService {
 		oDTO.setBuyerId(buyerId);
 		oDTO.setCharge(charge);
 		oDTO.setOrderId(orderId);
-		oDTO.setPnum(pnum);
-		oDTO.setOrderStatus(OrderStatus.READY);
+		oDTO.setPnum(orDTO.getPnum());
+		oDTO.setOrderStatus(OrderStatus.READY.name());
+		oDTO.setDealType(orDTO.getDealType().name());
 		
 		bDAO.insertOrderInfo(oDTO);
+		
+		AddressDTO aDTO = orDTO.getAddress();
+		if(aDTO != null) {
+			//배송지 추가
+			aDTO.setOrderId(orderId);
+			System.out.println(aDTO.toString());
+			bDAO.insertAddress(aDTO);
+		}
 		
 		return od;
 	}
@@ -92,5 +101,27 @@ public class BuyService {
 	//주문 상태 변경
 	public boolean modifyOrderStaus(String orderId) {
 		return bDAO.updateOrderStaus(orderId)==1;
+	}
+	
+	//상품 번호 가져옴
+	public int searchProductNum(String orderId) {
+		int pnum = 0;
+		Integer amount = bDAO.selectProductNum(orderId);
+		if(amount != null) pnum = amount.intValue();
+		return pnum;
+	}
+	//상품 상태 변경
+	public boolean modifyProductStaus(int pnum) {
+		return bDAO.updateProductStatus(pnum)==1;
+	}
+	
+	//결제 완료 결과 가져오기
+	public PaymentDomain searchPayment(String orderId) {
+		PaymentDomain pd = bDAO.selectPayment(orderId);
+		BuyDomain bd= bDAO.selectProduct(pd.getPnum());
+		pd.setThumbnail(bd.getThumbnail());
+		pd.setTitle(bd.getTitle());
+		pd.setPrice(bd.getPrice());
+		return pd;
 	}
 }
