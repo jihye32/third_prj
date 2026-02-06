@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const drawerUrl = qs.get("drawerUrl");
   
   if (drawerUrl) {
-	alert("drawerUrl true");
     loadDrawerContent(drawerUrl, () => openDrawer('결제 결과'));
 
     qs.delete("drawerUrl");

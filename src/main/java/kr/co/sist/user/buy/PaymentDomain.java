@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class PaymentDomain {
 	private int pnum, amount, charge, price;
-	private String orderId, provider, method, paymentType, thumbnail, title;
+	private String orderId, provider, method, paymentType, thumbnail, title, dealType;
 	private Timestamp approvedDate;
 }

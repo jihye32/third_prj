@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import kr.co.sist.user.buy.enums.PaymentStatus;
+import kr.co.sist.user.productdetail.enums.DealType;
 
 @RequestMapping("/order")
 @Controller("UserOrderController")
@@ -46,12 +47,19 @@ public class OrderController {
 	   
 	   @ResponseBody
 	   @PostMapping("/prepare")
-	   public OrderDomain order(@RequestBody int pnum, @RequestBody String dealType, HttpSession session) {
+	   public OrderDomain order(@RequestBody OrderRequestDTO orDTO, HttpSession session) {
 		   //상품 정보 가져오기 및 주문 레코드 생성을 서비스에서 해줌.
 //		   String buyerId = (String)session.getAttribute("uid");
-//		   System.out.println(orDTO.getPnum());
 		   String buyerId = "test";
-		   OrderDomain od = bs.orderProduct(pnum,buyerId);
+		   DealType dealType = orDTO.getDealType();
+		   AddressDTO address = orDTO.getAddress();
+
+		   if (dealType == DealType.DELIVERY && address == null) {
+		       throw new IllegalArgumentException("배송지 정보가 필요합니다.");
+		   }
+
+		   OrderDomain od = bs.orderProduct(orDTO,buyerId);
+		   
 		   return od;
 	   }
 

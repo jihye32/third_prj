@@ -38,8 +38,13 @@ where product_num = #{productnum}
 <!-- 결제할 때 -->
 <!-- 주문 정보 저장 -->
 <insert id="insertOrder" parameterType="kr.co.sist.user.buy.OrderDTO">
-insert into product_order(order_id,product_num,buyer_id,amount,charge,order_status,created_date) 
-values (#{orderId},#{pnum},#{buyerId},#{amount},#{charge},#{orderStatus},sysdate)
+insert into product_order(order_id,product_num,buyer_id,amount,charge,order_status,created_date,deal_type) 
+values (#{orderId},#{pnum},#{buyerId},#{amount},#{charge},#{orderStatus},sysdate,#{dealType})
+</insert>
+<!-- 배송 정보 저장 -->
+<insert id="insertAddress" parameterType="kr.co.sist.user.buy.AddressDTO">
+insert into address(order_id,name,tell,address,address_detail) 
+values (#{orderId},#{name},#{tel},#{addr},#{addrDetail})
 </insert>
 
 <!-- DB에 저장된 금액 -->
@@ -99,9 +104,10 @@ where product_num = #{productNum}
 <result column="provider" property="provider"/>
 <result column="payment_type" property="method"/>
 <result column="approved_date" property="approvedDate"/>
+<result column="deal_type" property="dealType"/>
 </resultMap>
 <select id="selectPaymnet" parameterType="String" resultMap="paymentDomain">
-select p.order_id, p.payment_type, p.amount, p.approved_date, p.provider, po.product_num, po.charge
+select p.order_id, p.payment_type, p.amount, p.approved_date, p.provider, po.deal_type, po.product_num, po.charge
 from payment p, product_order po 
 where p.order_id = po.order_id and p.order_id = #{orderId}
 </select>

@@ -47,6 +47,6 @@ function getSelectedType() {
 /* toss api 부르기 */
 function openPaymentForm(pnum, type) { 
 	loadDrawerContent(`/buy/payment/${pnum}?type=${type}`, () => { 
-		initTossPayments(pnum);
+		initTossPayments();
 	});
 }

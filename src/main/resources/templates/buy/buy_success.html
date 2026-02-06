@@ -164,8 +164,8 @@
 					<li
 						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
 							class="text-gray-500">거래방법</h3>
-						<span class="z-auto rounded-none relative text-right break-all"><span
-							class="whitespace-pre-line" aria-hidden="false">직거래</span></span></li>
+						<span class="z-auto rounded-none relative text-right break-all">
+						<span th:text="*{dealType == 'DIRECT'?'직거래':'택배거래'}"class="whitespace-pre-line" aria-hidden="false">직거래</span></span></li>
 					<li
 						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
 							class="text-gray-500">결제일시</h3>
@@ -222,7 +222,7 @@
 				class="outline-none flex flex-row justify-between items-center flex-nowrap">
 				<h2
 					class="whitespace-pre-line text-18 font-semibold text-gray-900">최종 결제 금액</h2>
-				<span th:text="|*{#numbers.formatInteger(amount,3,'COMMA')}원|" class="whitespace-pre-line font-semibold text-Green-700">11,111원</span>
+				<span th:text="|*{#numbers.formatInteger(amount,3,'COMMA')}원|" class="whitespace-pre-line font-semibold text-green-700">11,111원</span>
 			</div>
 		</div>
 	</div>

@@ -53,6 +53,15 @@ public class BuyDAO {
 		if( ss != null) { ss.close(); }//end if
 		return cnt==1;
 	}
+	//배송 정보가 있다면 저장
+	public boolean insertAddress(AddressDTO aDTO) {
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		int cnt=ss.insert("kr.co.sist.user.buy.insertAddress", aDTO);
+		
+		if( ss != null) { ss.close(); }//end if
+		return cnt==1;
+	}
 	
 	//저장된 금액 가져오기
 	public Integer selectOrderAmount(String orderId) {

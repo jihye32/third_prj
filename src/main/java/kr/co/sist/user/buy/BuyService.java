@@ -34,8 +34,8 @@ public class BuyService {
 	}
 	
 	//주문 정보 저장
-	public OrderDomain orderProduct(int pnum, String buyerId) {
-		BuyDomain bd= searchProduct(pnum);
+	public OrderDomain orderProduct(OrderRequestDTO orDTO, String buyerId) {
+		BuyDomain bd= searchProduct(orDTO.getPnum());
 		if(bd == null) return null;
 		
 		OrderDomain od = new OrderDomain();
@@ -68,10 +68,19 @@ public class BuyService {
 		oDTO.setBuyerId(buyerId);
 		oDTO.setCharge(charge);
 		oDTO.setOrderId(orderId);
-		oDTO.setPnum(pnum);
-		oDTO.setOrderStatus(OrderStatus.READY);
+		oDTO.setPnum(orDTO.getPnum());
+		oDTO.setOrderStatus(OrderStatus.READY.name());
+		oDTO.setDealType(orDTO.getDealType().name());
 		
 		bDAO.insertOrderInfo(oDTO);
+		
+		AddressDTO aDTO = orDTO.getAddress();
+		if(aDTO != null) {
+			//배송지 추가
+			aDTO.setOrderId(orderId);
+			System.out.println(aDTO.toString());
+			bDAO.insertAddress(aDTO);
+		}
 		
 		return od;
 	}
