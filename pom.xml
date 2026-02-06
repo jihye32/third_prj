@@ -111,7 +111,7 @@
 		<!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-aop</artifactId>
+		    <artifactId>spring-boot-starter-aop</artifactId> 
 		    <version>3.5.9</version>
 		    <scope>compile</scope>
 		</dependency>
