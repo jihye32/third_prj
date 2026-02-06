@@ -36,9 +36,21 @@
       </div>
 
       <div class="field">
-        <div class="label">신고 대상자</div>
-        <input class="control" type="text" th:value="${report.reporteeId}" disabled>
-      </div>
+  <div class="label">신고 대상자</div>
+
+  <div class="inline">
+  <input class="control reportee-danger"
+         type="text"
+         th:value="${report.reporteeId}"
+         disabled>
+
+    <a class="btn mini"
+   th:href="@{/manage/member/member_detail(userId=${report.reporteeId})}"
+   onclick="return openMemberPopup(this.href);">
+  조회
+</a>
+  </div>
+</div>
 
       <div class="field">
         <div class="label">신고 종류</div>
@@ -107,14 +119,12 @@
   const answerBox = document.getElementById('answerBox');
   const form = document.getElementById('processForm');
 
-  // 처리완료(3)에서만 textarea 활성화
   function syncAnswerEnable() {
     const isDone = reportState.value === '3';
     answerBox.disabled = !isDone;
     if (!isDone) answerBox.value = '';
   }
 
-  // ✅ 처리완료(3)인데 내용 없으면 경고 후 submit 막기
   form.addEventListener('submit', function(e) {
     const isDone = reportState.value === '3';
     const msg = (answerBox.value || '').trim();
@@ -129,6 +139,36 @@
   reportState.addEventListener('change', syncAnswerEnable);
   syncAnswerEnable();
 </script>
+<script th:inline="javascript">
+  const saved = null;
+  if (saved && saved[0] === '1') {
+    alert('저장되었습니다.');
+  }
+</script>
+
+<script>
+  function openMemberPopup(url) {
+    const w = 1000;
+    const h = 900;
+    const left = Math.max(0, (window.screen.width - w) / 2);
+    const top = Math.max(0, (window.screen.height - h) / 2);
+
+    const win = window.open(
+      url,
+      'memberDetailPopup',
+      `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+
+    if (!win) {
+      alert('팝업이 차단되었습니다. 브라우저에서 팝업 허용 후 다시 시도하세요.');
+      return false;
+    }
+    win.focus();
+    return false; // 기본 이동 막기
+  }
+</script>
+
+
 
 </body>
 </html>

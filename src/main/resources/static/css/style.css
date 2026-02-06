@@ -259,6 +259,7 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
   justify-content: center;
   height: 28px;
   padding: 0 12px;
+  min-width: 70px;  
   border-radius: 999px; 
   font-size: 12px;
   font-weight: 700;
@@ -271,6 +272,13 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
   background: #fff7ed;
   border-color: #ffcc99;
   color: #9a3412;
+}
+
+/*  처리중  */
+.badge_ing {
+  background: #e0f2fe;
+  border-color: #7dd3fc;  
+  color: #0369a1;         
 }
 
 /* 답변완료 */
@@ -479,7 +487,36 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
   transform: translateY(-1px);
 }
 
+.link {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f7f7f7;
+  color: #4682b4;
+  text-decoration: none;
+}
+.link:hover { text-decoration: underline; }
 
+.inline { display:flex; gap:8px; align-items:center; }
+.btn.mini {
+  padding: 6px 7px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  text-decoration: none;
+  color: #b42318;
+  white-space: nowrap;
+}
+.btn.mini:hover { background:#f5f5f5; }
+
+/* 신고 대상자 강조 */
+.reportee-danger {
+  border-color: #fca5a5;      /* 연한 빨강 테두리 */
+  background: #fff5f5;        /* 연한 핑크 배경 */
+  color: #b42318;             /* 진한 레드 텍스트 */
+  font-weight: 700;
+}
 
 
 
