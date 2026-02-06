@@ -1,376 +1,116 @@
-/* 1. 기본 초기화 및 폰트 설정 (원래 설정 복구) */
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-}
+@charset "UTF-8";
 
-body { 
-    font-family: 'Apple SD Gothic Neo', sans-serif; 
-    background-color: #fff; 
-    line-height: 1.5;
-}
-
-/* 2. [상단바] 카카오 다크 네이비 고정 레이아웃 */
-#kakaoHead {
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 60px;
-    background-color: #0c193a;
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    padding: 0 25px; 
-    z-index: 1000;
-}
-
-.tit_logo { 
-    font-size: 18px; 
-    font-weight: bold; 
-    color: #fff; 
-}
-
-.btn_logout {
-    text-decoration: none; 
-    color: #bdc3d1; 
-    font-size: 14px;
-    padding: 6px 12px; 
-    border: 1px solid #3d4b6a; 
-    border-radius: 4px; 
-    transition: 0.2s;
-}
-
-.btn_logout:hover { 
-    color: #fff; 
-    background-color: #1e2a4a; 
-    border-color: #fff; 
-}
-
-/* 3. [전체 레이아웃] 사이드바와 본문 분리 */
-.wrapper { 
-    display: flex; 
-    padding-top: 60px; 
-}
-
-/* [사이드바] 좌측 고정 메뉴 */
-.menu_side {
-    width: 260px; 
-    height: calc(100vh - 60px);
-    background-color: #fff; 
-    border-right: 1px solid #e2e5e8;
-    position: fixed; 
-    overflow-y: auto; 
-    padding: 20px 0;
-    z-index: 900;
-}
-
-.menu_group { 
-    padding: 20px 25px 10px; 
-    font-size: 15px; 
-    color: #999; 
-    font-weight: bold; 
-}
-
-.list_menu { 
-    list-style: none; 
-}
-
-.list_menu li { 
-    padding: 12px 25px; 
-    font-size: 19px; 
-    color: #555; 
-    cursor: pointer; 
-}
-
-.list_menu li:hover { 
-    background-color: #f8f9fa; 
-    color: #000; 
-}
-
-.list_menu li.active { 
-    background-color: #f8f9fa; 
-    color: #000; 
-    font-weight: bold; 
-    border-right: 3.5px solid #0c193a; 
-}
-
-/* [본문 영역] */
-#main-container {
-    margin-left: 260px; 
-    flex: 1;
-    padding: 40px;
-    background-color: #f4f6f9;
-    min-height: calc(100vh - 60px);
-}
-
-/* 4. [검색창] 돋보기 위치 정밀 교정 (수직 정렬 최적화) */
+/* 1. 검색바 (돋보기 아이콘 및 입력창) */
 .search-bar-wrap {
     background-color: #f2f3f5;
-    padding: 0 20px; 
+    padding: 0 20px;
     border-radius: 6px;
     display: flex;
     align-items: center;
-    height: 48px; 
+    height: 48px;
     margin-bottom: 24px;
-}
-
-.search-input-box {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100%; 
-    gap: 12px;
+    position: relative;
 }
 
 .search-icon {
-    display: flex; 
-    align-items: center;
-    justify-content: center;
     color: #8e94a0;
-    font-size: 1.1rem;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     pointer-events: none;
-    flex-shrink: 0;
-    /* 돋보기와 텍스트 베이스라인 일치를 위한 미세 조정 */
-    margin-top: 1px; 
 }
 
 .search-input {
     border: none;
     background: transparent;
     width: 100%;
-    height: 100%; 
+    height: 100%;
     outline: none;
     font-size: 15px;
     color: #333;
-    padding: 0;
-    line-height: normal; 
+    padding-left: 35px;
 }
 
-/* 5. [카테고리 & 정렬 버튼] */
-.categoryMenu { 
-    position: relative; 
-    display: inline-block;
-}
-
-.category-btn {
-    display: flex;
-    background-color: #000;
-    color: #fff;
-    height: 44px;
-    padding: 0 16px;
-    border-radius: 6px;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-}
-
+/* 2. 카테고리 & 정렬 버튼 */
+.categoryMenu { position: relative; display: inline-block; }
 .subMenu {
-    visibility: hidden;
-    opacity: 0;
-    transition: all 0.2s ease-in-out;
+    display: none;
     position: absolute;
-    top: 100%;
-    left: 0;
+    top: 100%; left: 0;
     background: white;
     width: 240px;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
     z-index: 1050;
     margin-top: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.categoryMenu:hover .subMenu { 
-    visibility: visible; 
-    opacity: 1; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .nav-link-custom {
-    display: flex;
-    align-items: center;
+    display: block;
     padding: 10px 24px;
     text-decoration: none;
     color: #4b5563;
     font-size: 14px;
 }
-
-.nav-link-custom:hover { 
-    background-color: #f3f4f6; 
-    color: #000; 
+.nav-link-custom:hover {
+    background-color: #f3f4f6;
+    color: #0c193a;
+    font-weight: bold;
 }
 
-.sort-buttons {
-    display: flex;
-    align-items: center;
-}
+.sort-buttons { display: flex; align-items: center; }
+.btn-sort { border: none; background: none; font-size: 13px; color: #999; cursor: pointer; }
+.btn-sort.active, .btn-sort:hover { color: #0c193a; font-weight: bold; }
+.divider { color: #eee; font-size: 11px; margin: 0 8px; }
 
-.btn-sort { 
-    border: none; 
-    background: none; 
-    font-size: 13px; 
-    color: #999; 
-    cursor: pointer; 
-}
-
-.btn-sort.active, .btn-sort:hover { 
-    color: #000; 
-    font-weight: bold; 
-}
-
-.divider { 
-    color: #eee; 
-    font-size: 11px; 
-    margin: 0 8px; 
-}
-
-/* 6. [카드 리스트] */
+/* 3. 상품 카드 & 상태 오버레이 (예약중/판매완료) */
 .card {
     transition: transform 0.2s, border-color 0.2s;
-    cursor: pointer;
     border: 1px solid #e2e5e8;
     background-color: #fff;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    border-color: #0c193a;
-}
-
-.card-img-top {
-    border-radius: 8px 8px 0 0 !important;
-    aspect-ratio: 1 / 1; 
-    object-fit: cover;
-    background-color: #f8f9fa;
-    width: 100%;
-}
-
-.card-body {
-    padding: 15px 12px;
-}
-
-/* 7. [페이지네이션] */
-.pagination .page-item.active .page-link {
-    background-color: #0c193a;
-    border-color: #0c193a;
-    color: #fff;
-}
-
-.pagination .page-link {
-    color: #0c193a;
-    font-size: 14px;
-}
-
-/* 카테고리 메뉴 및 정렬 버튼 스타일 */
-.divider {
-	margin: 0 10px;
-	color: #dee2e6;
-}
-
-.btn-sort {
-	background: none;
-	border: none;
-	font-size: 14px;
-	color: #666;
-	cursor: pointer;
-	padding: 0;
-}
-
-.btn-sort.active {
-	color: #000;
-	font-weight: bold;
-}
-
-.categoryMenu {
-	position: relative;
-	display: inline-block;
-}
-
-.subMenu {
-	display: none;
-	position: absolute;
-	top: 46px;
-	left: 0;
-	background: white;
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	z-index: 1000;
-	width: 220px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.categoryMenu:hover .subMenu {
-	display: block;
-}
-
-.nav-link-custom {
-	display: block;
-	padding: 12px 20px;
-	color: #333;
-	text-decoration: none;
-	font-size: 14px;
-}
-
-.nav-link-custom:hover {
-	background-color: #f8f9fa;
-	color: #000;
-	font-weight: bold;
-}
-
-.search-icon {
-	position: absolute;
-	left: 15px;
-	top: 13px;
-	color: #999;
-}
-
-.search-input-box {
-	position: relative;
-	width: 100%;
-}
-
-.search-input {
-	padding-left: 40px !important;
-}
-
-/* 상품 이미지 컨테이너 (오버레이 기준점) */
-.card-img-wrap {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
     overflow: hidden;
-    background-color: #f8f9fa;
+    border-radius: 8px;
 }
+.card:hover { transform: translateY(-5px); border-color: #0c193a; }
+.card-img-wrap { position: relative; aspect-ratio: 1/1; background-color: #f8f9fa; overflow: hidden; }
+.card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
-/* 이미지 기본 스타일 (기존 card-img-top 수정) */
-.card-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s;
-}
-
-/* 어두운 배경 및 글자 오버레이 */
 .status-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 이미지 어둡게 처리 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex; justify-content: center; align-items: center; z-index: 5;
+}
+.status-overlay span { color: #fff; font-size: 1.4rem; font-weight: 800; }
+
+/* 4. 삭제된 상품 전용 (빨간빛 + 블러) */
+.is-deleted { pointer-events: none; opacity: 0.95; border: 2px solid #ff000033 !important; }
+.gray-img { filter: grayscale(30%) blur(3px) sepia(100%) hue-rotate(-50deg) saturate(3); }
+
+.deleted-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(231, 76, 60, 0.45);
+    display: flex; justify-content: center; align-items: center; z-index: 10;
+}
+.overlay-content i { font-size: 4rem; color: #fff; text-shadow: 0 0 15px rgba(0,0,0,0.3); }
+.overlay-content span {
+    background: #c0392b; color: #fff; padding: 2px 10px;
+    border-radius: 4px; font-size: 1rem; font-weight: bold;
 }
 
-.status-overlay span {
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* 글자 가독성 향상 */
+/* 5. 빈 결과 화면 & 페이지네이션 */
+.empty-result-box {
+    padding: 100px 0; text-align: center; background: #fdfdfd;
+    border: 1px dashed #ddd; border-radius: 12px; margin-top: 20px;
 }
+.empty-result-box i { font-size: 4rem; color: #eee; display: block; margin-bottom: 20px; }
+.btn-reset-search {
+    margin-top: 15px; background: #0c193a; color: #fff; border: none;
+    padding: 8px 20px; border-radius: 6px; cursor: pointer;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0c193a !important; border-color: #0c193a !important; color: #fff !important;
+}
+.pagination .page-link { color: #0c193a; }

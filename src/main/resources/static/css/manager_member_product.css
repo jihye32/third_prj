@@ -1,20 +1,31 @@
 @charset "UTF-8";
 
-/* [1. 공통 및 레이아웃 - 주신 코드 절대 유지] */
+/* [1. 공통 및 레이아웃] */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; line-height: 1.5; }
 
-#kakaoHead { position: fixed; top: 0; left: 0; width: 100%; height: 60px; background-color: #0c193a; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; z-index: 1000; }
+/* 상단 헤더 */
+#kakaoHead { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 60px; 
+    background-color: #0c193a; display: flex; align-items: center; 
+    justify-content: space-between; padding: 0 25px; z-index: 1000; 
+}
 .tit_logo { font-size: 18px; font-weight: bold; color: #fff; }
-.btn_logout { text-decoration: none; color: #bdc3d1; font-size: 14px; padding: 6px 12px; border: 1px solid #3d4b6a; border-radius: 4px; }
+.btn_logout { 
+    text-decoration: none; color: #bdc3d1; font-size: 14px; 
+    padding: 6px 12px; border: 1px solid #3d4b6a; border-radius: 4px; 
+}
 
-.wrapper { display: flex; padding-top: 60px; }
-.menu_side { width: 260px; height: calc(100vh - 60px); background-color: #fff; border-right: 1px solid #e2e5e8; position: fixed; overflow-y: auto; padding: 20px 0; z-index: 900; }
-.list_menu li { padding: 12px 25px; font-size: 19px; color: #555; cursor: pointer; list-style: none; }
-.list_menu li.active { background-color: #f8f9fa; color: #000; font-weight: bold; border-right: 3.5px solid #0c193a; }
+/* 레이아웃 구조 수정 */
+.wrapper { padding-top: 60px; } /* 사이드바가 없으므로 flex 제거 */
 
 /* [2. 본문 전용 스타일] */
-#main-container { margin-left: 260px; flex: 1; padding: 40px; background-color: #fff; min-height: calc(100vh - 60px); }
+#main-container { 
+    width: 100%; /* 전체 너비 사용 */
+    padding: 40px; 
+    background-color: #fff; 
+    min-height: calc(100vh - 60px); 
+}
 
 /* 프로필 헤더 */
 .shop-header { border-bottom: 1px solid #eee; padding-bottom: 30px; margin-bottom: 30px; display: flex; align-items: center; gap: 20px; }

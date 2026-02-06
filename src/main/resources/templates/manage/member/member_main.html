@@ -3,113 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <title>쌍용장터 관리자센터 - 회원관리</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/manager_member.css}">
-<style>
-/* 상세페이지 확인 및 내역 확인 버튼 색상 */
-.btn-navy {
-	background-color: #0c193a !important;
-	color: white !important;
-}
-
-.btn-navy:hover {
-	background-color: #1e2a4a !important;
-	color: white !important;
-}
-
-/* 행 마우스 커서 */
-tr[style*="cursor: pointer"]:hover {
-    background-color: #f1f3f5 !important;
-}
-</style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/css/manager_member.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+    <header th:replace="manage/common_layout :: header"></header>
+    <div class="wrapper">
+        <aside th:replace="manage/common_layout :: sidebar"></aside>
+        <main id="main-container">
+            <div class="container-fluid">
+                <h3 class="mb-4 fw-bold">회원관리</h3>
+                <div class="table_card">
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>번호</th><th>아이디</th><th>상점명</th><th>계정 생성일</th>
+                                <th>계정 삭제</th><th>상세페이지</th><th>구매/판매내역</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="m, mStat : ${memberList}" 
+                                th:onclick="|location.href='@{/manage/member/member_detail(userId=${m.user_id})}'|" style="cursor: pointer">
+                                <td th:text="${mStat.count}"></td>
+                                <td th:text="${m.user_id}"></td>
+                                <td th:text="${m.store_name ?: '상점없음'}"></td>
+                                <td th:text="${#dates.format(m.input_date, 'yyyy-MM-dd')}"></td>
+                                <td onclick="event.stopPropagation();">
+                                    <button class="btn btn-sm btn-danger btn-custom" th:onclick="deleteMember([[${m.user_id}]])">삭제하기</button>
+                                </td>
+                                <td onclick="event.stopPropagation();">
+                                    <button class="btn btn-sm btn-navy btn-custom" th:onclick="|location.href='@{/manage/member/member_prdv(userId=${m.user_id})}'|">상세페이지 확인</button>
+                                </td>
+                                <td onclick="event.stopPropagation();">
+                                    <button class="btn btn-sm btn-navy btn-custom" th:onclick="|location.href='@{/manage/member/member_product(userId=${m.user_id})}'|">구매/판매내역 확인</button>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(memberList)}">
+                                <td colspan="7" class="py-5 text-muted">등록된 회원이 없습니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-4 d-flex justify-content-center">
+                        <div th:if="${pagination != null}" th:utext="${pagination}"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-	<header id="kakaoHead">
-		<div class="tit_logo">쌍용장터 관리자센터</div>
-		<div class="util_menu">
-			<a th:href="@{/logout}" class="btn_logout">로그아웃</a>
-		</div>
-	</header>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    function deleteMember(userId) {
+        if (!confirm(userId + " 회원을 삭제하시겠습니까?")) return;
 
-	<div class="wrapper">
-		<aside class="menu_side">
-			<div class="menu_group">관리자 메뉴</div>
-			<ul class="list_menu">
-				<li>대시보드</li>
-				<li><a th:href="@{/manage/product/product_main}"
-					style="text-decoration: none; color: inherit; display: block; width: 100%;">
-						물품관리 </a></li>
-				<li class="active">회원관리</li>
-				<li>고객센터관리</li>
-				<li>신고관리</li>
-				<li>매출관리</li>
-				<li>이벤트관리</li>
-			</ul>
-		</aside>
-
-		<main id="main-container">
-			<div class="container-fluid">
-				<h3 class="mb-4 fw-bold">회원관리</h3>
-
-				<div class="table_card">
-					<table class="table table-hover align-middle text-center">
-						<thead class="table-light">
-							<tr>
-								<th>번호</th> <th>회원 아이디</th>
-								<th>회원 E-mail</th>
-								<th>계정 생성일</th>
-								<th>계정 삭제</th>
-								<th>상세페이지</th>
-								<th>구매/판매내역</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="m, mStat : ${memberList}"
-								th:onclick="|location.href='@{/manage/member/member_detail(userId=${m.user_id})}'|"
-								style="cursor: pointer">
-
-								<td th:text="${mStat.count}"></td>
-								
-								<td th:text="${m.user_id}"></td>
-								<td th:text="${m.email}"></td>
-								<td th:text="${#dates.format(m.input_date, 'yyyy-MM-dd')}"></td>
-								
-								<td onclick="event.stopPropagation();">
-									<button class="btn btn-sm btn-danger btn-custom">삭제하기</button>
-								</td>
-
-								<td onclick="event.stopPropagation();">
-									<button class="btn btn-sm btn-navy btn-custom"
-										th:onclick="|location.href='@{/manage/member/member_prdv(userId=${m.user_id})}'|">
-										상세페이지 확인</button>
-								</td>
-
-								<td onclick="event.stopPropagation();">
-									<button class="btn btn-sm btn-navy btn-custom"
-										th:onclick="|location.href='@{/manage/member/member_product(userId=${m.user_id})}'|">
-										구매/판매내역 확인</button>
-								</td>
-							</tr>
-							
-							<tr th:if="${#lists.isEmpty(memberList)}">
-								<td colspan="7" class="py-5 text-muted">등록된 회원이 없습니다.</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<div class="mt-4 d-flex justify-content-center">
-						<div th:if="${pagination != null}" th:utext="${pagination}"></div>
-					</div>
-				</div>
-			</div>
-		</main>
-	</div>
-
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        fetch('/manage/member/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'userId=' + encodeURIComponent(userId)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("삭제 처리가 완료되었습니다.");
+                location.reload();
+            } else {
+                alert("삭제 처리 중 오류가 발생했습니다.");
+            }
+        })
+        .catch(error => alert("통신 오류 발생: " + error));
+    }
+    </script>
 </body>
 </html>

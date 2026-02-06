@@ -7,11 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AdminProductService {
+    
     @Autowired
     private AdminProductDAO pDAO;
-
     public int pageScale() { return 12; }
-
     public List<AdminProductDomain> getProductList(AdminProductDTO pDTO) {
         try {
             return pDAO.selectProductList(pDTO);
@@ -30,12 +29,34 @@ public class AdminProductService {
         }
     }
 
+    public AdminProductDomain getProductDetail(int productNo) {
+        AdminProductDomain pd = null;
+        try {
+            pd = pDAO.selectProductDetail(productNo);
+            
+            if (pd != null) {
+                pd.setTime_string(calculateTimeString(pd)); 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pd;
+    }
+
+    public List<String> getProductImages(int productNo) {
+        try {
+            return pDAO.selectProductImages(productNo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public String getPaginationHtml(AdminProductDTO pDTO, int totalCount) {
         int totalPage = (int)Math.ceil((double)totalCount / pDTO.getPageScale());
         int currentPage = pDTO.getCurrentPage();
         int pageBlock = 5; 
 
-        // 파라미터 유지 (검색어, 카테고리, 정렬)
         String queryParams = "";
         if (pDTO.getKeyword() != null && !pDTO.getKeyword().isEmpty()) queryParams += "&keyword=" + pDTO.getKeyword();
         if (pDTO.getSortBy() != null) queryParams += "&sort=" + pDTO.getSortBy();
@@ -64,31 +85,29 @@ public class AdminProductService {
         html.append("</ul></nav>");
         return html.toString();
     }
-    // 3. 상세 정보 조회 (이미지와 정보 분리 - 요구사항 반영)
-    public AdminProductDomain getProductDetail(int productNo) {
-        AdminProductDomain pd = null;
-        try {
-            pd = pDAO.selectProductDetail(productNo);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return pd;
-    }
-
-    public List<String> getProductImages(int productNo) {
-        List<String> list = null;
-        try {
-            list = pDAO.selectProductImages(productNo);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    // 4. 페이지네이션 HTML 생성
-    public String getPaginationHtml(AdminProductDTO pDTO) {
-        // 기존 Board 프로젝트의 pagination2 로직을 이식하여 리턴
-        return "페이지네이션 태그 문자열";
+    
+    // 6. 경과 시간 계산 로직
+    public String calculateTimeString(AdminProductDomain domain) {
+        java.util.Date baseDate = (domain.getModify_date() != null) 
+                                  ? domain.getModify_date() 
+                                  : domain.getInput_date();
+        if (baseDate == null) return "-";
+        long diffTime = (System.currentTimeMillis() - baseDate.getTime()) / 1000;
+        if (diffTime < 60) return "방금 전";
+        if (diffTime < 3600) return (diffTime / 60) + "분 전";
+        if (diffTime < 86400) return (diffTime / 3600) + "시간 전";
+        return (diffTime / 86400) + "일 전";
     }
     
+ // 상품 삭제 처리 (논리 삭제)
+    public int removeProduct(AdminProductDTO pDTO) {
+        int result = 0;
+        try {
+            // DAO의 deleteProduct 매퍼를 호출합니다.
+            result = pDAO.deleteProduct(pDTO); 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
