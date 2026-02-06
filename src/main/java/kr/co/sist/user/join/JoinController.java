@@ -22,7 +22,7 @@ public class JoinController {
 	public String joinFrm() {
 		return "/join/joinFrm";
 	}// joinFrm
-//	
+	
 //	@ResponseBody
 //	@GetMapping("/idDup")
 //	public String idDup(String id) {
