@@ -37,7 +37,7 @@ if (params.get("error") === "1") {
                     <div class="input-section" id="section-pw">
                         <label for="password">비밀번호</label>
                         <input type="password" id="password" name="adminPass" placeholder="비밀번호를 입력하세요">
-                        <p class="validation-msg">영문, 숫자, 특수문자를 조합해서 입력해주세요. (8-20자)</p>
+                        <p class="validation-msg">올바른 비밀번호를 입력해주세요.</p>
                     </div>
                     
                     <button type="button" class="btn-login" onclick="validateLogin()">로그인</button>
@@ -65,7 +65,7 @@ if (params.get("error") === "1") {
             }
 
             // 비밀번호 유효성 검사 (8자 이상)
-            if (pwInput.value.trim() === "" || pwInput.value.length < 8) {
+            if (pwInput.value.trim() === "" || pwInput.value.length < 4) {
                 sectionPw.classList.add('error');
                 isValid = false;
             } else {

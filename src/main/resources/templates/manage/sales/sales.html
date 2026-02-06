@@ -86,7 +86,7 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
 
 .search{
  position: relative;
- left:500px;
+ left:300px;
 }
 </style>
 <body>
@@ -123,15 +123,15 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
           <div class="container">
          	 <div class="item">
          	 오늘 안전결제(건)<br>
-        	  0
+        	  <span th:text="${safepayToday}"></span>
          	 </div>
          	 <div class="item">
          	 어제 안전결제(건)<br>
-        	  0
+        	   <span th:text="${safepayYesterday}"></span>
          	 </div>
          	 <div class="item">
          	 이번 달 안전결제(건)<br>
-        	  0
+        	   <span th:text="${safepayMonth}"></span>
          	 </div>|
           
          <div class="item">
@@ -148,9 +148,9 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
          	 </div>|
          
         <div class="item" id="charge">
-         	 안전결제 수수료 설정<br>
+         	 안전결제 수수료(%) 설정<br>
         	  <div>
-        	  <input type="text">
+        	  <input type="text" th:value="${chargeNow}" style="width:150px; height:30px">
         	  <input type="button" value="변경">
         	  
         	  </div>
@@ -167,12 +167,12 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
  <h2>월별 매출 통계</h2> 
   </div>
   <div class="search">
-  <select>
-  <option>
-  </option>
-  </select>
-  <input type="month">
-  <input type="button" value="조회">
+    
+<form action="/manage/sales" method="get" class="search"> 
+<select name="category"> <option value="">카테고리 선택</option> 
+<option th:each="cate : ${categoryList}" th:value="${cate}" th:text="${cate}"></option> </select>
+ <input type="month" name="safepayMonth" th:value="${currentMonth}"> <input type="submit" value="조회">
+  </form>
   
   </div>
   
@@ -253,14 +253,15 @@ const myChart = new Chart(ctx, {
 );
 		
 const ctx2 = document.getElementById('horizontalBar1');
-
+const monthNow = /*[[${monthNow}]]*/ 0;
+const monthLast = /*[[${monthLast}]]*/ 0;
 const myChart2 = new Chart(ctx2, {
     type: 'bar',
     data: {
         labels: ['이번 달', '지난 달'],
         datasets: [{
             label: '안전결제 건 수',
-            data: [20, 15],
+            data: [monthNow, monthLast],
             backgroundColor: [
                 'rgba(54, 162, 235, 0.6)',
                 'rgba(201, 203, 207, 0.6)'

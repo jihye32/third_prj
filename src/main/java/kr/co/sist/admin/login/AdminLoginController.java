@@ -27,13 +27,14 @@ public class AdminLoginController {
 	@PostMapping("/adminLoginProcess")
 	public String loginProcess(AdminLoginDTO dto, HttpSession session) throws SQLException {
 
+		System.out.println("로그인 시도id: "+dto.getAdminId());
 	   boolean ok=als.login(dto);
 	    if(!ok) {
-	    	  return "redirect:/manage/login?error=1";
+	    	  return "redirect:/manage?error=1";
 	    }
 
 	    session.setAttribute("loginAdmin", dto.getAdminId());
-	    return "redirect:/manage/dashboard/dashboard";
+	    return "redirect:/manage/dashboard";
 	}
 
 }
