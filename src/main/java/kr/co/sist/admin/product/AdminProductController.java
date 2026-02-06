@@ -1,11 +1,14 @@
 package kr.co.sist.admin.product;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class AdminProductController {
@@ -45,5 +48,12 @@ public class AdminProductController {
 	    model.addAttribute("productImages", productImages);
 
 	    return "manage/product/product_detail";
+	}
+	
+	@PostMapping("/manage/product/delete_product")
+	@ResponseBody 
+	public String deleteProduct(AdminProductDTO pDTO) {
+	    int result = ps.removeProduct(pDTO); 
+	    return (result > 0) ? "success" : "fail";
 	}
 }

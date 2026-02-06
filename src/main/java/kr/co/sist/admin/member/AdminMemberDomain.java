@@ -13,5 +13,7 @@ public class AdminMemberDomain {
     private String name;       // 회원 이름
     private String email;      // 이메일
     private Date input_date;    // 계정 생성일
+    private String store_name;
+    private String delete_flag;
     
 }

@@ -16,11 +16,11 @@
         </li>
         
         <li class="menu_item" th:classappend="${menu == 'product' ? 'active' : ''}">
-            <a th:href="@{/manage/product}" class="menu_link">물품관리</a>
+            <a th:href="@{/manage/product/product_main}" class="menu_link">물품관리</a>
         </li>
 
         <li class="menu_item" th:classappend="${menu == 'member' ? 'active' : ''}">
-            <a th:href="@{/manage/member}" class="menu_link">회원관리</a>
+            <a th:href="@{/manage/member/member_main}" class="menu_link">회원관리</a>
         </li>
         
         <li class="menu_item" th:classappend="${menu == 'customer' ? 'active' : ''}">

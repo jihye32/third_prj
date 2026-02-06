@@ -98,4 +98,16 @@ public class AdminProductService {
         if (diffTime < 86400) return (diffTime / 3600) + "시간 전";
         return (diffTime / 86400) + "일 전";
     }
+    
+ // 상품 삭제 처리 (논리 삭제)
+    public int removeProduct(AdminProductDTO pDTO) {
+        int result = 0;
+        try {
+            // DAO의 deleteProduct 매퍼를 호출합니다.
+            result = pDAO.deleteProduct(pDTO); 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
