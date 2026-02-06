@@ -32,14 +32,12 @@ public class ReportDAO {
         }
     }
 
-    // ✅ 신고유형 드롭다운(ReportDomain 재사용)
     public List<ReportDomain> selectReportTypes() {
         try (SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false)) {
             return ss.selectList("kr.co.sist.admin.report.selectReportTypes");
         }
     }
 
-    // ✅ 처리상태 드롭다운(ReportDomain 재사용)
     public List<ReportDomain> selectReportStates() {
         try (SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false)) {
             return ss.selectList("kr.co.sist.admin.report.selectReportStates");

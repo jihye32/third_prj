@@ -36,7 +36,6 @@ public class ReportService {
         return rDAO.selectReportStates();
     }
 
-    // ✅ 처리완료(3)일 때만 answer 저장
     public int processReport(ReportDTO dto) {
         if (dto.getReportStateCode() != null && dto.getReportStateCode() == 3) {
             if (dto.getAnswer() == null || dto.getAnswer().isBlank()) {
