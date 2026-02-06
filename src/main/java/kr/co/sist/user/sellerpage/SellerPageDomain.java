@@ -10,8 +10,5 @@ import lombok.ToString;
 @Getter
 @ToString
 public class SellerPageDomain {
-	private String thumbnail, sellState, productName, tradingArea; 
-	private int productNum, sellStateCode, price;
-	private Date lastModify;
-
+	private String storeName, profileImg, introduce; 
 }

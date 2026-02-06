@@ -66,6 +66,7 @@
 	<mapper resource="kr/co/sist/user/scam/scamMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sell/sellMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sellerpage/sellerReviewMapper.xml"/>
+	<mapper resource="kr/co/sist/user/sellerpage/sellerPageMapper.xml"/>
 	<mapper resource="kr/co/sist/user/support/supportMapper.xml"/>
 	
   </mappers>

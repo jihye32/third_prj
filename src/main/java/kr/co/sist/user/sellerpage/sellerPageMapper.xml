@@ -4,5 +4,10 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.user.sellerPage">
 
+<select id="selectSellerInfo" parameterType="int" resultType="kr.co.sist.user.sellerpage.SellerPageDomain" >
+select store_name storename, profile_img profileimg, introduce introduce
+from store
+where store_num = #{storenum}
+</select>
 
 </mapper>
