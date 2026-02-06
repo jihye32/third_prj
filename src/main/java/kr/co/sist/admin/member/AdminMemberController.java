@@ -1,11 +1,16 @@
 package kr.co.sist.admin.member;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class AdminMemberController {
@@ -98,4 +103,23 @@ public class AdminMemberController {
         
         return "manage/member/member_product"; 
     }
+    
+    @PostMapping("/manage/member/delete")
+    @ResponseBody // AJAX 요청에 응답하기 위해 사용
+    public ResponseEntity<String> deleteMember(@RequestParam("userId") String userId) {
+        try {
+            // 실제 삭제가 아닌 delete_flag를 'Y'로 업데이트하는 로직 실행
+            boolean isUpdated = ms.removeMember(userId);
+            
+            if (isUpdated) {
+                return ResponseEntity.ok("Success");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        }
+    }
+    
+    
 }

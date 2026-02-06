@@ -216,4 +216,14 @@ public class AdminMemberService {
         sb.append("</ul></nav>");
         return sb.toString();
     }
+
+    public boolean removeMember(String userId) {
+        int result = 0;
+        try {
+            result = mDAO.updateMemberDeleteFlag(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result > 0; // 1이면 성공(true), 0이면 실패(false)
+    }
 }

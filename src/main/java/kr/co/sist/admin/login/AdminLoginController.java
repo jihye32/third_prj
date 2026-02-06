@@ -18,7 +18,7 @@ public class AdminLoginController {
 	
 	@GetMapping("/manage") //
 	public String loginPage() {
-	    return "manage/login/login"; // 앞의 /를 꼭 제거해 보세요.
+	    return "manage/login/login"; 
 	}
 	
 	
