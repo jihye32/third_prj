@@ -53,7 +53,6 @@ public class ReportController {
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("pagination", pagination);
 
-        // ✅ 드롭다운 데이터
         model.addAttribute("typeList", rs.getReportTypes());
         model.addAttribute("stateList", rs.getReportStates());
 
@@ -79,7 +78,7 @@ public class ReportController {
     @PostMapping("/reportprocess")
     public String reportProcess(ReportDTO dto) {
         rs.processReport(dto);
-        return "redirect:/manage/report/detail?reportNum=" + dto.getReportNum();
+        return "redirect:/manage/report/detail?reportNum=" + dto.getReportNum() + "&saved=1";
     }
 
     // AskController 페이지바 + 필터 유지

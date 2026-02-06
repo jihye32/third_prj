@@ -5,163 +5,13 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>sample</title>
-<script src="https://js.tosspayments.com/v2/standard"></script>
-<script>
-// fragment 내부 script 부분
-/* paymentFrm 프래그먼트 내부 스크립트 */
-window.initTossPayments = async function (pnum, title) {
-  const button = document.getElementById("payment-button");
-  const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-  const tossPayments = TossPayments(clientKey);
-  const customerKey = "YoA3w8vRTZPoaV13MAQ3j";
 
-  const widgets = tossPayments.widgets({ customerKey });
-
-  // ✅ 렌더는 "열릴 때 1번만"
-  await Promise.all([
-    widgets.renderPaymentMethods({
-      selector: "#payment-method",
-      variantKey: "DEFAULT",
-    }),
-    widgets.renderAgreement({
-      selector: "#agreement",
-      variantKey: "AGREEMENT",
-    }),
-  ]);
-
-  // ✅ 이벤트 누적 방지: addEventListener 대신 onclick으로 덮어쓰기
-  button.onclick = async () => {
-    // (선택) 중복 클릭 방지
-    button.disabled = true;
-
-    try {
-      const response = await fetch("/orders/prepare", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pnum: pnum }),
-      });
-
-      if (!response.ok) throw new Error("prepare failed");
-
-      const data = await response.json();
-      const orderId = data.orderId;
-      const amount = data.amount;
-
-      // ✅ 결제 직전에 amount 맞추기
-      await widgets.setAmount({ currency: "KRW", value: amount });
-
-      await widgets.requestPayment({
-        orderId: orderId,
-        orderName: title,
-        successUrl: window.location.origin + "/buy/toss",
-        failUrl: window.location.origin + "/buy/fail",
-      });
-
-    } finally {
-      button.disabled = false;
-    }
-  };
-};
-</script>
 <link th:href="@{/css/output.css}" rel="stylesheet">
 <style>
 </style>
 <!-- JQuery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <!-- <script type="text/javascript">
-/////이미지 캐러셀/////////////////
-// HTML이 모두 로드된 후 코드가 실행되도록 감쌉니다.
-document.addEventListener('DOMContentLoaded', function() {
-    let currentIndex = 0;
-    const slider = document.getElementById('image-slider');
-    const currentText = document.getElementById('current-slide');
-    
-    if (slider && slider.children.length > 0) {
-        const totalSlides = slider.children.length;
-
-        window.updateSlider = function() {
-            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-            if (currentText) currentText.innerText = currentIndex + 1;
-        };
-
-        window.nextSlide = function() {
-            currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
-            updateSlider();
-        };
-
-        window.prevSlide = function() {
-            currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
-            updateSlider();
-        };
-    }
-});
-
-/**
- * 2. 구매/결제 드로워(Drawer) 로직
- */
-const loadDrawerContent = (url, callback) => {
-    fetch(url)
-        .then(res => res.text())
-        .then(html => {
-            const drawer = document.getElementById('drawerContent');
-            drawer.innerHTML = html;
-            drawer.scrollTop = 0;
-            if (callback) callback();
-        })
-        .catch(err => console.error('Drawer Load Error:', err));
-};
-
-function openBuyForm(pnum) { 
-	loadDrawerContent(`/buy/${pnum}`, () => openDrawer('거래 방법 선택')); 
-}
-
-//선택된 거래 방식을 저장할 전역 변수
-let selectedType = null;
-
-function selectDealType(element) {
-    // 1. 모든 선택지의 테두리 색상을 연하게 초기화 (기본 클래스: border-gray-200)
-    document.querySelectorAll('.deal-option').forEach(opt => {
-        opt.classList.remove('border-gray-900');
-        opt.classList.add('border-gray-200');
-    });
-
-    // 2. 클릭한 요소만 테두리를 진하게 강조 (강조 클래스: border-gray-900)
-    element.classList.remove('border-gray-200');
-    element.classList.add('border-gray-900');
-
-    // 3. 선택한 data-type 값을 변수에 저장
-    selectedType = element.getAttribute('data-type');
-    console.log("선택된 방식:", selectedType);
-}
-
-function submitPayment(pnum) {
-    if (selectedType==null) {
-        alert("거래 방식을 선택해주세요.");
-        return;
-    }
-    // 다음 단계(결제 폼 열기) 호출
-    openPaymentForm(pnum, selectedType);
-}
-
-function openPaymentForm(pnum, type) { 
-	loadDrawerContent(`/buy/payment/${pnum}?type=${type}`, () => { 
-		if (window.initTossPayments) {
-            // 1. 로드된 버튼 요소를 찾습니다.
-            const paymentBtn = document.getElementById("payment-button");
-            
-            if (paymentBtn) {
-                // 2. data- 속성에 심어둔 값을 읽어옵니다.
-                const title = paymentBtn.getAttribute("data-title");
-                
-                // 3. 읽어온 값을 인자로 넘기며 초기화 함수를 실행합니다.
-                window.initTossPayments(pnum,title);
-            }
-        } 
-	}); 
-}
-
-
-
 /**
  * 4. 게시글 수정 (JQuery)
  */
@@ -180,31 +30,20 @@ $(function() {
     });
 });
 </script>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-//본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
-function execDaumPostcode() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-            // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
-            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-            var roadAddr = data.roadAddress; // 도로명 주소 변수
-
-            // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            $("#roadAddr").text(roadAddr);
-        }
-    }).open();
-}
-</script> -->
+ -->
 
 <script th:inline="javascript">
 window.PageContext = Object.freeze({
 	pnum: /*[[${pnum}]]*/ null
 });
 </script>
+<script src="https://js.tosspayments.com/v2/standard"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script th:src="@{/js/drawer-load.js}"></script>
 <script th:src="@{/js/product-detail.js}" defer></script>
+<script th:src="@{/js/product-buy.js}" defer></script>
+<script th:src="@{/js/api.js}" defer></script>
+
 </head>
 <body>
 <div th:replace="~{template/header :: headerImgFragment}"></div>
@@ -472,6 +311,7 @@ window.PageContext = Object.freeze({
 						  <!-- dealType이 0(null 포함)일 때 -->
 						  <th:block th:case="0">
 						    <!-- 아무것도 표시 안 하거나 안내 문구 -->
+						    판매자가 등록을 하지 않았습니다.
 						  </th:block>
 						
 						</div>
@@ -484,7 +324,7 @@ window.PageContext = Object.freeze({
 								</div>
 							</div>
 						</div>
-						<div th:unless="${storeCheck}" class="flex items-center gap-4 space-s-4 pt-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white max-[479px]:px-4 max-[479px]:pb-4">
+						<div th:unless="${storeCheck or Product.sellStatus == SellStatus.SOLD_OUT}" class="flex items-center gap-4 space-s-4 pt-4 max-[479px]:fixed max-[479px]:bottom-0 max-[479px]:left-0 max-[479px]:z-20 max-[479px]:w-full max-[479px]:bg-white max-[479px]:px-4 max-[479px]:pb-4">
 							<div class="w-8 h-8">
 								<label for="heart-checkbox" class="relative cursor-pointer">
 									<input id="heart-checkbox" type="checkbox" class="peer hidden" th:checked="${bookmarkFlag}">
@@ -499,7 +339,7 @@ window.PageContext = Object.freeze({
 							</div>
 							<button data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 py-2 transform-none normal-case hover:shadow-cart ga4_product_detail_bottom w-full bg-white hover:bg-white/90 text-jnblack hover:text-jnblack border-[1px] border-black">
 							채팅하기</button>
-							<button th:onclick="openBuyForm([[${pnum}]])" data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-black hover:bg-black/90">
+							<button data-action="buy-product" data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-black hover:bg-black/90">
 							구매하기</button>
 						</div>	
 						<th:block th:if="${storeCheck}">
