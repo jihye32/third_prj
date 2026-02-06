@@ -17,7 +17,7 @@ public class SellerPageController {
 	@GetMapping("/{storeNum}")
 	public String sellerPage(@PathVariable int storeNum, Model model) {
 		System.out.println(sps.searchSeller(storeNum));
-		model.addAttribute("temp",sps.searchSeller(storeNum));
+		model.addAttribute("SellerPageDomain",sps.searchSeller(storeNum));
 		return "/seller_page/sellerPage";
 	}
 }// class
