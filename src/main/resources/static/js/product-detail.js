@@ -1,6 +1,47 @@
 /**
  * product_detail.html에서 사용되는 js
  */
+/* 상세화면을 로드할 때 drawerUrl이 없으면 작동하지 않게 함 */
+document.addEventListener("DOMContentLoaded", () => {
+  const qs = new URLSearchParams(location.search);
+  const drawerUrl = qs.get("drawerUrl");
+  
+  if (drawerUrl) {
+    loadDrawerContent(drawerUrl, () => openDrawer('결제 결과'));
+
+    qs.delete("drawerUrl");
+	const cleanUrl = location.pathname + (qs.toString() ? "?" + qs.toString() : "");
+
+    //주소창만 바꾸고, 새로고침/뒤로가기 히스토리는 유지
+    history.replaceState(null, "", cleanUrl);
+  }
+  
+  let currentIndex = 0;
+      const slider = document.getElementById('image-slider');
+      const currentText = document.getElementById('current-slide');
+      
+      if (slider && slider.children.length > 0) {
+          const totalSlides = slider.children.length;
+
+          window.updateSlider = function() {
+              slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+              if (currentText) currentText.innerText = currentIndex + 1;
+          };
+
+          window.nextSlide = function() {
+              currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
+              updateSlider();
+          };
+
+          window.prevSlide = function() {
+              currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
+              updateSlider();
+          };
+      }
+});
+
+
+
 document.getElementById("heart-checkbox")?.addEventListener("change", async (e) => {
   const checkbox = e.target;
   const checked = checkbox.checked;
@@ -57,6 +98,10 @@ document.addEventListener("click", (e) => {
 		
 		case "send-product": //상품 발송
 	      	sendProduct(pnum);
+	      	return;
+			
+		case "buy-product": //상품 구매
+	      	openBuyForm(pnum);
 	      	return;
 	  }
   }
@@ -141,4 +186,8 @@ function sendProduct(pnum){
 			alert("현재 페이지 유지");
 		}
     });
+}
+
+function openBuyForm(pnum) { 
+	loadDrawerContent(`/buy/${pnum}`, () => openDrawer('거래 방법 선택')); 
 }

@@ -8,6 +8,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class OrderDomain {
+	private String orderId, orderName;
 	private int amount;
-	private String orderStatus;
 }

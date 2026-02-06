@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+처리 중
+
+<script>
+const returnUrl = sessionStorage.getItem("returnUrl");
+const url = "[[${url}]]";
+const u = new URL(returnUrl, location.origin);
+
+u.searchParams.set("drawerUrl", url);
+location.replace(u.toString());
+</script>
+
+
+</body>
+</html>
