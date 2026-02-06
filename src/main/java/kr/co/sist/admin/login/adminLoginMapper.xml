@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.admin.login">
 
-<select id="selectAdminLogin" parameterType="String" resultType="AdminLoginDomain">
+<select id="selectAdminLogin" parameterType="String" resultType="kr.co.sist.admin.login.AdminLoginDomain">
 
 select admin_id,admin_pass
 from admin
@@ -14,7 +14,7 @@ where admin_id=#{adminId}
 
 <update id="updateLastLogin" parameterType="String" >
 update admin
-set login_date=now()
+set login_date=sysdate
 where admin_id=#{adminId}
 
 </update>
