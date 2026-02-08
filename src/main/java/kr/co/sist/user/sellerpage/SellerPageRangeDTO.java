@@ -10,6 +10,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class SellerPageRangeDTO {
-	private String sortBy, sellerId;
-	private int page, size;
+	private String sortBy;
+	private int startNum, endNum, page,sellerId, myId;
 }

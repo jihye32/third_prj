@@ -20,7 +20,8 @@ public class MainAspect {
 	@AfterReturning(
 			pointcut = 
 	        "execution(* kr.co.sist.user.MainService.searchMostViewProdcut(..)) || " +
-	                "execution(* kr.co.sist.user.productlist.ProductListService.searchProductList(..))",
+	        "execution(* kr.co.sist.user.productlist.ProductListService.searchProductList(..)) ||" +
+	        "execution(* kr.co.sist.user.sellerpage.SellerPageService.searchAllProduct(..))",
 			returning = "result")
 	public void afterReturning2(JoinPoint jp, Object result) {
 		List<ProductDomain> list = (List<ProductDomain>) result;
@@ -44,7 +45,7 @@ public class MainAspect {
 		return cutArea;
 	}// cutArea
 	 
-	public static String formatDate(double timeDifference, Date lastModify) {
+	public String formatDate(double timeDifference, Date lastModify) {
 		// 1일 = 86400초
         long totalSeconds = Math.round(timeDifference * 86400);
         
