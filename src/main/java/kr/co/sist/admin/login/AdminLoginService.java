@@ -15,8 +15,11 @@ public class AdminLoginService {
 	    AdminLoginDomain adminDomain =
 	        adminDAO.selectAdminLogin(ldto.getAdminId());
 
-	    if (adminDomain == null) return false;
+	    if (adminDomain == null) {return false;}
 
+	    System.out.println("입력비번: [" + ldto.getAdminPass() + "]");
+	    System.out.println("DB비번: [" + adminDomain.getAdminPass() + "]");
+	    
 	    boolean ok = ldto.getAdminPass().equals(adminDomain.getAdminPass());
 
 	    if (ok) {//로그인 성공하면 로그인 최신일자 업데이트

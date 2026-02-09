@@ -5,18 +5,28 @@
 <configuration>
 <properties resource="properties/database.properties"/>
 <typeAliases>
-    <!-- 지혜님 typeAlias -->
+    <!-- product detail -->
 	<typeAlias type="kr.co.sist.user.productdetail.ProductDetailDomain" alias="productDetailDomain"/>
 	<typeAlias type="kr.co.sist.user.productdetail.ProductModifyDTO" alias="productModifyDTO"/>
 	<typeAlias type="kr.co.sist.user.productdetail.SellerInfoDomain" alias="sellerInfoDomain"/>
 	<typeAlias type="kr.co.sist.user.productdetail.OrderDomain" alias="orderDomain"/>
 	<typeAlias type="kr.co.sist.user.productdetail.BookmarkDTO" alias="bookmarkDTO"/>
 	<typeAlias type="kr.co.sist.user.productdetail.SellStatusDTO" alias="sellStatusDTO"/>
+	<!-- product buy -->
 	<typeAlias type="kr.co.sist.user.buy.BuyDomain" alias="buyDomain"/>
 	<typeAlias type="kr.co.sist.user.buy.PaymentDTO" alias="paymentDTO"/>
-	<typeAlias type="kr.co.sist.user.chat.ChatContentDTO" alias="chatContentDTO"/>
+	<typeAlias type="kr.co.sist.user.buy.OrderDTO" alias="orderDTO"/>
+	<typeAlias type="kr.co.sist.user.buy.AddressDTO" alias="addressDTO"/>
+	<typeAlias type="kr.co.sist.user.buy.PaymentDTO" alias="paymentDTO"/>
+	<typeAlias type="kr.co.sist.user.buy.PaymentDomain" alias="PaymentDomain"/>
+	<!-- chat -->
+	<typeAlias type="kr.co.sist.user.chat.ChatProductDTO" alias="chatProductDTO"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatDTO" alias="chatDTO"/>
+	<typeAlias type="kr.co.sist.user.chat.ChatDomain" alias="chatDomain"/>
+	<typeAlias type="kr.co.sist.user.chat.ChatListDTO" alias="chatListDTO"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatListDomain" alias="chatListDomain"/>
+	
+	
     <!-- 자빈님 typeAlias -->
     <typeAlias type="kr.co.sist.admin.product.AdminProductDomain" alias="AdminProductDomain"/>
     <typeAlias type="kr.co.sist.admin.product.AdminProductDTO" alias="AdminProductDTO"/>
@@ -66,6 +76,7 @@
 	<mapper resource="kr/co/sist/user/scam/scamMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sell/sellMapper.xml"/>
 	<mapper resource="kr/co/sist/user/sellerpage/sellerReviewMapper.xml"/>
+	<mapper resource="kr/co/sist/user/sellerpage/sellerPageMapper.xml"/>
 	<mapper resource="kr/co/sist/user/support/supportMapper.xml"/>
 	
   </mappers>

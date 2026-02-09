@@ -426,18 +426,18 @@ window.PageContext = Object.freeze({
 					</div>
 					<div th:unless=${storeCheck} class="basis-[420px] max-lg:!mt-0 max-lg:pt-7">
 						<div name="product-store" class="w-full lg:w-[420px]">
+							<th:block th:object="${SellerInfo}">
 							<div class=" max-lg:px-5">
-								<a class="flex items-center justify-between w-full pb-3 border-b border-gray-300 lg:pb-5" href="/store/1250491">
+								<a class="flex items-center justify-between w-full pb-3 border-b border-gray-300 lg:pb-5" th:href="@{/store/{storeNum}(storeNum=*{sellerId})}">
 									<h3 class="md:text-[22px] font-bold text-jnBlack text-lg">가게 정보</h3>
 									<svg stroke="currentColor" fill="currentColor"
 										stroke-width="0" viewBox="0 0 512 512" height="24" width="24"
-										xmlns="http://www.w3.org/2000/svg">
+										xmlns="http://www.w3.org/2000/svg"> 
 										<path d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path></svg></a>
 							</div>
-							<th:block th:object="${SellerInfo}">
 							<div class="flex flex-col">
 								<div class="max-lg:px-5">
-									<a class="flex justify-between items-center mt-6 mb-8 w-full" href="/store/1250491">
+									<a class="flex justify-between items-center mt-6 mb-8 w-full" th:href="@{/store/{storeNum}(storeNum=*{sellerId})}">
 										<div class="flex flex-col gap-1">
 											<p th:text="*{storeName}" class="text-lg font-semibold text-gray-900">상점명</p>
 										</div>

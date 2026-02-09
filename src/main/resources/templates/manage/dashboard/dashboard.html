@@ -109,41 +109,41 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
           <div class="container" style="width:100%">
          	 <div class="item">
          	 오늘 가입 수<br>
-        	  0
+        	  <span th:text="${joinToday}"></span>
          	 </div>
          	 <div class="item">
          	 이번 달 가입 수<br>
-        	  0
+        	   <span th:text="${joinMonth}"></span>
          	 </div>
          	 <div class="item">
          	 올해 가입 수<br>
-        	  0
+        	   <span th:text="${joinYear}"></span>
          	 </div>|
           
          <div class="item">
          	 오늘 방문자<br>
-        	  0
+        	  <span th:text="${visitToday}"></span>
          	 </div>
          	 <div class="item">
          	 이번 달 방문자<br>
-        	  0
+        	<span th:text="${visitMonth}"></span>
          	 </div>
          	 <div class="item">
          	 올해 방문자<br>
-        	  0
+        	  <span th:text="${visitYear}"></span>
          	 </div>|
          
         <div class="item">
          	 오늘 거래 수<br>
-        	  0
+        	   <span th:text="${soldToday}"></span>
          	 </div>
          	 <div class="item">
          	 이번 달 거래 수<br>
-        	  0
+        	   <span th:text="${soldMonth}"></span>
          	 </div>
          	 <div class="item">
          	 올해 거래 수<br>
-        	  0
+        	  <span th:text="${soldYear}"></span>
          	 </div>
          </div>
          </div>
@@ -177,47 +177,49 @@ function getPastDates(days) {
 </script>
   
 
-<script>
+<script th:inline="javascript">
+const uploadServer = /*[[${uploadList}]]*/ []; 
+const soldServer = /*[[${soldList}]]*/ [];
+
+/* 2. 15일치 날짜 리스트 만들기 (기존 함수 활용) */
+const labels = getPastDates(15); 
+
+const productRegisterData = labels.map(date => {
+    // === 대신 includes를 써서 날짜가 포함되는지 확인합니다.
+    const found = uploadServer.find(d => {
+        const dbDate = String(d.DAY || d.day || "");
+        return dbDate.includes(date); 
+    });
+    return found ? (found.CNT || found.cnt) : 0;
+});
+
+const productSalesData = labels.map(date => {
+    const found = soldServer.find(d => {
+        const dbDate = String(d.DAY || d.day || "");
+        return dbDate.includes(date);
+    });
+    return found ? (found.CNT || found.cnt) : 0;
+});
+
 const ctx = document.getElementById('lineChart');
-
-const labels = getPastDates(15);
-
-const productRegisterData = [12, 10, 14, 8, 6, 9, 11, 15, 13, 7, 5, 6, 9, 10, 12];
-const productSalesData   = [5, 7, 6, 4, 3, 5, 8, 9, 10, 6, 4, 3, 5, 7, 8];
-
-const myChart = new Chart(ctx, {
+new Chart(ctx, {
     type: 'line',
     data: {
-        labels: labels,
+        labels: labels, // YYYY-MM-DD 형태의 15일치 날짜
         datasets: [
             {
                 label: '상품 등록 수',
-                data: productRegisterData,
+                data: productRegisterData, // 매칭된 15개 숫자 배열
                 borderColor: 'rgba(54, 162, 235, 1)',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 fill: false
             },
             {
                 label: '상품 판매 수',
-                data: productSalesData,
+                data: productSalesData, // 매칭된 15개 숫자 배열
                 borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 fill: false
             }
         ]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'top'
-            }
-        }
     }
 });
 </script>
@@ -235,10 +237,13 @@ const myChart = new Chart(ctx, {
    
   
   <div class="item" style="height:300px; width:500px; text-align:center" >
- <h5>이번 달 많이 팔린 상품</h5>
+ <h5>이번 달 많이 팔린 상품(개수)</h5>
   <hr>
   <ul>
-  <li>의류</li>
+  <li th:each="item : ${bestsellerList}">
+        <span th:text="${item.CODE_TEXT}">카테고리명</span> 
+        (<span th:text="${item.SALES_COUNT}">0</span>)
+    </li>
   </ul>
   </div>
   
@@ -247,20 +252,44 @@ const myChart = new Chart(ctx, {
        
         </main>
     </div>
-<script>
+<script th:inline="javascript">
   const pie = document.getElementById('circleChart');
-
   new Chart(pie, {
-    type: 'pie',
-    data: {
-      labels: ['10대 이하', '20대', '30대', '40대', '50대', '60대 이상'],
-      datasets: [{
-        label: '비율',
-        data: [20, 19, 20, 20, 20, 21],
-        borderWidth: 1
-      }]
-    }
-  });
+	    type: 'pie',
+	    data: {
+	      labels: ['10대 이하', '20대', '30대', '40대', '50대', '60대 이상'],
+	      datasets: [{
+	        label: '인원 수',
+	        data: [
+	          /*[[${ageTen}]]*/ 0,      // ageStats.ten 이 아니라 ageTen 입니다!
+	          /*[[${ageTwenty}]]*/ 0,
+	          /*[[${ageThirty}]]*/ 0,
+	          /*[[${ageForty}]]*/ 0,
+	          /*[[${ageFifty}]]*/ 0,
+	          /*[[${ageSixty}]]*/ 0
+	        ],
+	        backgroundColor: [
+	          'rgba(255, 99, 132, 0.2)',
+	          'rgba(54, 162, 235, 0.2)',
+	          'rgba(255, 206, 86, 0.2)',
+	          'rgba(75, 192, 192, 0.2)',
+	          'rgba(153, 102, 255, 0.2)',
+	          'rgba(255, 159, 64, 0.2)'
+	        ],
+	        borderColor: [
+	          'rgba(255, 99, 132, 1)',
+	          'rgba(54, 162, 235, 1)',
+	          'rgba(255, 206, 86, 1)',
+	          'rgba(75, 192, 192, 1)',
+	          'rgba(153, 102, 255, 1)',
+	          'rgba(255, 159, 64, 1)'
+	        ],
+	        borderWidth: 1
+	      }]
+	    }
+	  });
 </script>
+
+
 </body>
 </html>

@@ -1,5 +1,5 @@
 package kr.co.sist.user.chat;
 
-public class ChatContentDTO {
+public class ChatListDTO {
 
 }
