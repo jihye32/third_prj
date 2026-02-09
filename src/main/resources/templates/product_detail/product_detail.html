@@ -43,6 +43,7 @@ window.PageContext = Object.freeze({
 <script th:src="@{/js/product-detail.js}" defer></script>
 <script th:src="@{/js/product-buy.js}" defer></script>
 <script th:src="@{/js/api.js}" defer></script>
+<script th:src="@{/js/chat.js}" defer></script>
 
 </head>
 <body>
@@ -337,7 +338,7 @@ window.PageContext = Object.freeze({
 									</svg>
 						 		</label>
 							</div>
-							<button data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 py-2 transform-none normal-case hover:shadow-cart ga4_product_detail_bottom w-full bg-white hover:bg-white/90 text-jnblack hover:text-jnblack border-[1px] border-black">
+							<button data-action="chat" th:data-store="${SellerInfo.storeName}" data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 py-2 transform-none normal-case hover:shadow-cart ga4_product_detail_bottom w-full bg-white hover:bg-white/90 text-jnblack hover:text-jnblack border-[1px] border-black">
 							채팅하기</button>
 							<button data-action="buy-product" data-variant="slim" class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md h-11 md:h-12 px-5 text-white py-2 transform-none normal-case hover:text-white hover:shadow-cart w-full ga4_product_detail_bottom bg-black hover:bg-black/90">
 							구매하기</button>

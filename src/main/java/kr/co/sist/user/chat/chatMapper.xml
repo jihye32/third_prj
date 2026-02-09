@@ -2,5 +2,39 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="kr.co.sist.user.chat">
- </mapper>
+<mapper namespace="kr.co.sist.user.chat">
+<resultMap type="kr.co.sist.user.chat.ProductDomain" id="productDomain">
+	<result column="title" property="title"/>
+	<result column="user_id" property="sellerId"/>
+	<result column="price" property="price"/>
+	<result column="thumbnail" property="thumbnail"/>
+</resultMap>
+<select id="selectProductInfo" parameterType="int" resultMap="productDomain">
+select s.user_id, p.title, p.price, p.thumbnail
+from store s, product p
+where s.store_num = p.store_num and p.product_num = #{productNum}
+</select>
+<select id="selectChatRoom" parameterType="kr.co.sist.user.chat.ChatListDTO" resultType="Integer">
+select chatroom_num 
+from chat_list 
+where user_low = #{lowId} and user_high=#{highId}
+</select>
+<insert id="insertChatRoom" parameterType="kr.co.sist.user.chat.ChatListDTO">
+insert into chat_list(chatroom_num, user_low, user_high, create_date) values (seq_chat_list.NEXTVAL, #{lowId}, #{highId}, sysdate)
+</insert>
+<select id="selectChatProduct" parameterType="kr.co.sist.user.chat.ChatListDTO" resultType="String">
+select chatroom_num 
+from room_product 
+where chatroom_num=#{roomNum} and product_num=#{productNum}
+</select>
+<insert id="insertRoomProduct" parameterType="kr.co.sist.user.chat.ChatDTO">
+insert into room_product(chatroom_num, product_num, create_date) values (#{roomNum}, #{productNum}, sysdate)
+</insert>
+<update id="updateLastChat" parameterType="kr.co.sist.user.chat.ChatListDTO">
+update chat_list set last_product_num=#{pnum}, last_talk=#{content}, last_talk_date=sysdate
+where user_low = #{lowId} and user_high=#{highId}
+</update>
+<insert id="insertChat" parameterType="kr.co.sist.user.chat.ChatDTO">
+insert into chat(chat_num, talk, writer_id, chat_date, chatroom_num) values (seq_chat_num.NEXTVAL, #{content}, #{writerId}, sysdate, #{roomNum})
+</insert>
+</mapper>

@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ChatDTO {
-	private String content, writerId;
-	private Integer roomNum, productNum;
+public class ProductDomain {
+	private String title, thumbnail, sellerId;
+	private int price;
 }
