@@ -3,28 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <title>쌍용장터 관리자센터 - 물품상세</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" type="text/css" th:href="@{/css/manager_product_detail.css}">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/manager_product_detail.css}">
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
-    /* 삭제 버튼 비활성화 시 흑백 처리 디자인 */
-    .btn-del-red:disabled {
-        background-color: #bdc3c7 !important;
-        border-color: #bdc3c7 !important;
-        color: #fff !important;
-        cursor: not-allowed;
-        filter: grayscale(100%);
-        opacity: 0.7;
-    }
-    
-    /* 거래 정보 박스 스타일 유지 */
-    .trans-info-box { background-color: #f8f9fa; border-radius: 8px; padding: 25px; border: 1px solid #eee; margin: 10px 0 30px 0; }
-    .trans-title { font-size: 17px; font-weight: bold; margin-bottom: 20px; color: #0c193a; border-left: 5px solid #0c193a; padding-left: 12px; }
-    .trans-table { width: 100%; }
-    .trans-table th { color: #888; width: 120px; padding: 8px 0; font-size: 14px; }
-    .trans-table td { color: #333; font-weight: 500; font-size: 14px; }
+/* 삭제 버튼 비활성화 시 흑백 처리 디자인 */
+.btn-del-red:disabled {
+	background-color: #bdc3c7 !important;
+	border-color: #bdc3c7 !important;
+	color: #fff !important;
+	cursor: not-allowed;
+	filter: grayscale(100%);
+	opacity: 0.7;
+}
+
+/* 거래 정보 박스 스타일 유지 */
+.trans-info-box {
+	background-color: #f8f9fa;
+	border-radius: 8px;
+	padding: 25px;
+	border: 1px solid #eee;
+	margin: 10px 0 30px 0;
+}
+
+.trans-title {
+	font-size: 17px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	color: #0c193a;
+	border-left: 5px solid #0c193a;
+	padding-left: 12px;
+}
+
+.trans-table {
+	width: 100%;
+}
+
+.trans-table th {
+	color: #888;
+	width: 120px;
+	padding: 8px 0;
+	font-size: 14px;
+}
+
+.trans-table td {
+	color: #333;
+	font-weight: 500;
+	font-size: 14px;
+}
 </style>
 </head>
 <body>
@@ -36,16 +68,17 @@
 		<main id="main-container">
 			<div class="detail-inner-wrap">
 				<div class="d-flex justify-content-between align-items-center mb-4">
-					<div style="background: #f4f6f8; padding: 6px 16px; border-radius: 4px; font-weight: bold;">물품관리</div>
-					
-                    <div class="d-flex align-items-stretch">
-                        <button class="btn-del-red" id="deleteBtn" 
-                                th:disabled="${product?.status_code == 2 or product?.status_code == 3 or true}" 
-                                onclick="deleteProduct()">상품 삭제</button>
+					<div
+						style="background: #f4f6f8; padding: 6px 16px; border-radius: 4px; font-weight: bold;">물품관리</div>
 
-                        <select class="form-select sel-del-reason" id="deleteReason" 
-                                onchange="toggleDeleteButton()"
-                                th:if="${product?.status_code != 2 and product?.status_code != 3}">
+					<div class="d-flex align-items-stretch">
+						<button class="btn-del-red" id="deleteBtn"
+							th:disabled="${product?.status_code == 2 or product?.status_code == 3 or true}"
+							onclick="deleteProduct()">상품 삭제</button>
+
+						<select class="form-select sel-del-reason" id="deleteReason"
+							onchange="toggleDeleteButton()"
+							th:if="${product?.status_code != 2 and product?.status_code != 3}">
 							<option value="" selected>상품 삭제 사유</option>
 							<option value="1">사기로 의심됨</option>
 							<option value="2">부적절한 물품</option>
@@ -54,38 +87,52 @@
 							<option value="5">기타 사유</option>
 						</select>
 
-                        <div th:if="${product?.status_code == 2}" 
-                             class="ms-3 d-flex align-items-center text-danger small fw-bold">
-                            <i class="bi bi-exclamation-triangle-fill me-1"></i> 거래 중인 상품은 삭제할 수 없습니다.
-                        </div>
-                        <div th:if="${product?.status_code == 3}" 
-                             class="ms-3 d-flex align-items-center text-danger small fw-bold">
-                            <i class="bi bi-exclamation-triangle-fill me-1"></i> 거래 완료된 상품은 삭제할 수 없습니다.
-                        </div>
+						<div th:if="${product?.status_code == 2}"
+							class="ms-3 d-flex align-items-center text-danger small fw-bold">
+							<i class="bi bi-exclamation-triangle-fill me-1"></i> 거래 중인 상품은
+							삭제할 수 없습니다.
+						</div>
+						<div th:if="${product?.status_code == 3}"
+							class="ms-3 d-flex align-items-center text-danger small fw-bold">
+							<i class="bi bi-exclamation-triangle-fill me-1"></i> 거래 완료된 상품은
+							삭제할 수 없습니다.
+						</div>
 					</div>
 				</div>
 
 				<div class="top-layout">
 					<div class="img-fixed-box">
-						<img th:src="${product?.thumbnail != null ? '/images/thumbnail/' + product.thumbnail : '/images/product_detail/default.jpg'}"
+						<img
+							th:src="${product?.thumbnail != null and product?.thumbnail != '' ? '/images/product_detail/' + product.thumbnail : '/images/product_detail/default.jpg'}"
 							onerror="this.src='/images/product_detail/default.jpg';">
-						<div class="img-status-overlay" th:if="${product?.status_code == 2 or product?.status_code == 3}">
+
+
+						<div class="img-status-overlay"
+							th:if="${product?.status_code == 2 or product?.status_code == 3}">
 							<span th:text="${product.status_code == 2 ? '예약중' : '판매완료'}"></span>
 						</div>
 					</div>
 					<div class="info-box">
 						<h2 class="fw-bold" th:text="${product?.title}"></h2>
 						<div class="price-val">
-							<span th:text="${product != null ? #numbers.formatInteger(product.price, 3, 'COMMA') : '0'}"></span>원
+							<span
+								th:text="${product != null ? #numbers.formatInteger(product.price, 3, 'COMMA') : '0'}"></span>원
 						</div>
 						<div class="stats-row">
-							<span><i class="bi bi-heart"></i> [[${product?.bookmark_count ?: 0}]]</span> 
-                            <span><i class="bi bi-eye"></i> [[${product?.view_count ?: 0}]]</span> 
-                            <span><i class="bi bi-clock"></i> [[${product?.time_string ?: '-'}]]</span>
+							<span><i class="bi bi-heart"></i>
+								[[${product?.bookmark_count ?: 0}]]</span> <span><i
+								class="bi bi-eye"></i> [[${product?.view_count ?: 0}]]</span> <span><i
+								class="bi bi-clock"></i> [[${product?.time_string ?: '-'}]]</span>
 						</div>
 						<table class="detail-table">
-							<tr><th>· 상품상태</th><td th:text="${product?.product_status}"></td></tr>
-							<tr><th>· 직거래지역</th><td th:text="${product?.addr}"></td></tr>
+							<tr>
+								<th>· 상품상태</th>
+								<td th:text="${product?.product_status}"></td>
+							</tr>
+							<tr>
+								<th>· 직거래지역</th>
+								<td th:text="${product?.addr}"></td>
+							</tr>
 						</table>
 					</div>
 				</div>
@@ -96,28 +143,52 @@
 						<div class="desc-content" th:text="${product?.description}"></div>
 
 						<div class="icon-bar">
-							<div class="icon-item"><i class="bi bi-geo-alt"></i><span class="label">직거래지역</span><span class="val" th:text="${product?.addr}"></span></div>
 							<div class="icon-item">
-								<i class="bi bi-list-task"></i><span class="label">카테고리</span> 
-                                <span class="val" th:switch="${product?.category_code}"> 
-                                    <span th:case="1">전자기기</span><span th:case="2">패션/의류</span><span th:case="3">잡화</span><span th:case="4">취미/게임</span><span th:case="5">뷰티</span><span th:case="6">리빙/생활</span><span th:case="7">스포츠</span><span th:case="8">티켓/쿠폰</span><span th:case="9">레저/여행</span><span th:case="10">가전제품</span><span th:case="*">-</span>
+								<i class="bi bi-geo-alt"></i><span class="label">직거래지역</span><span
+									class="val" th:text="${product?.addr}"></span>
+							</div>
+							<div class="icon-item">
+								<i class="bi bi-list-task"></i><span class="label">카테고리</span> <span
+									class="val" th:switch="${product?.category_code}"> <span
+									th:case="1">전자기기</span><span th:case="2">패션/의류</span><span
+									th:case="3">잡화</span><span th:case="4">취미/게임</span><span
+									th:case="5">뷰티</span><span th:case="6">리빙/생활</span><span
+									th:case="7">스포츠</span><span th:case="8">티켓/쿠폰</span><span
+									th:case="9">레저/여행</span><span th:case="10">가전제품</span><span
+									th:case="*">-</span>
 								</span>
 							</div>
-							<div class="icon-item"><i class="bi bi-tag"></i><span class="label">상품태그</span><span class="val">#관리자화면 #물품정보</span></div>
+							<div class="icon-item">
+								<i class="bi bi-tag"></i><span class="label">상품태그</span><span
+									class="val">#관리자화면 #물품정보</span>
+							</div>
 						</div>
 
 						<div class="trans-info-box" th:if="${product?.status_code == 3}">
 							<div class="trans-title">거래 정보</div>
-							<table class="trans-table" th:if="${product.destination_addr != null}">
-								<tr><th>구매자 ID</th><td th:text="${product.buyer_id}"></td></tr>
-								<tr><th>발송지</th><td th:text="${product.addr}"></td></tr>
-								<tr><th>수령지</th><td class="fw-bold text-primary" th:text="${product.destination_addr + ' ' + product.destination_detail}"></td></tr>
+							<table class="trans-table"
+								th:if="${product.destination_addr != null}">
+								<tr>
+									<th>구매자 ID</th>
+									<td th:text="${product.buyer_id}"></td>
+								</tr>
+								<tr>
+									<th>발송지</th>
+									<td th:text="${product.addr}"></td>
+								</tr>
+								<tr>
+									<th>수령지</th>
+									<td class="fw-bold text-primary"
+										th:text="${product.destination_addr + ' ' + product.destination_detail}"></td>
+								</tr>
 							</table>
-							<div th:unless="${product.destination_addr != null}" class="alert alert-light border d-flex align-items-center mb-0">
+							<div th:unless="${product.destination_addr != null}"
+								class="alert alert-light border d-flex align-items-center mb-0">
 								<i class="bi bi-geo-fill fs-4 me-3 text-secondary"></i>
 								<div>
 									<div class="fw-bold text-secondary">직거래된 상품입니다.</div>
-									<div class="small text-muted">구매자([[${product.buyer_id}]])와 대면하여 거래를 완료하였습니다.</div>
+									<div class="small text-muted">구매자([[${product.buyer_id}]])와
+										대면하여 거래를 완료하였습니다.</div>
 								</div>
 							</div>
 						</div>
@@ -126,13 +197,18 @@
 					<div class="shop-col">
 						<div class="section-head">상점정보</div>
 						<div class="d-flex align-items-center">
-							<div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; border: 1px solid #eee;"><i class="bi bi-shop fs-4"></i></div>
+							<div
+								class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3"
+								style="width: 50px; height: 50px; border: 1px solid #eee;">
+								<i class="bi bi-shop fs-4"></i>
+							</div>
 							<div>
 								<div class="fw-bold" th:text="${product?.store_name}"></div>
 								<div class="small text-muted">상품 21</div>
 							</div>
 						</div>
-						<button class="btn-list-navy" th:onclick="|location.href='/manage/product/product_main'|">목록으로</button>
+						<button class="btn-list-navy"
+							th:onclick="|location.href='/manage/product/product_main'|">목록으로</button>
 					</div>
 				</div>
 			</div>
