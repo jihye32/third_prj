@@ -103,6 +103,11 @@ document.addEventListener("click", (e) => {
 		case "buy-product": //상품 구매
 	      	openBuyForm(pnum);
 	      	return;
+			
+		case "chat": //상품 구매
+			const store = actionBtn.dataset.store;
+	      	openChatForm(pnum, store);
+	      	return;
 	  }
   }
   
@@ -190,4 +195,8 @@ function sendProduct(pnum){
 
 function openBuyForm(pnum) { 
 	loadDrawerContent(`/buy/${pnum}`, () => openDrawer('거래 방법 선택')); 
+}
+
+function openChatForm(pnum, store) { 
+	loadDrawerContent(`/chat/init/${pnum}`, () => openDrawer(`${store}`)); 
 }

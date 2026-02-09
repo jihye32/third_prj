@@ -20,7 +20,6 @@
 	<typeAlias type="kr.co.sist.user.buy.PaymentDTO" alias="paymentDTO"/>
 	<typeAlias type="kr.co.sist.user.buy.PaymentDomain" alias="PaymentDomain"/>
 	<!-- chat -->
-	<typeAlias type="kr.co.sist.user.chat.ChatProductDTO" alias="chatProductDTO"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatDTO" alias="chatDTO"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatDomain" alias="chatDomain"/>
 	<typeAlias type="kr.co.sist.user.chat.ChatListDTO" alias="chatListDTO"/>
