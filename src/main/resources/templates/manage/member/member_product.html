@@ -18,8 +18,8 @@
 			<div class="container">
 				<div class="row shop-header align-items-center" th:if="${store != null}">
 					<div class="col-auto">
-						<img th:src="${store.profile_img != null and store.profile_img != 'default.jpg' ? '/upload/' + store.profile_img : 'https://via.placeholder.com/80'}"
-							class="shop-profile-img">
+						<img th:src="${store.profile_img != null and store.profile_img != '' ? '/images/profile/' + store.profile_img : '/images/profile/default.jpg'}"
+							class="shop-profile-img" onerror="this.src='/images/profile/default.jpg';">
 					</div>
 					<div class="col">
 						<h4 class="fw-bold mb-1" th:text="${store.store_name}">상점명</h4>
@@ -31,22 +31,29 @@
 					</div>
 				</div>
 
-				<ul class="nav nav-tabs" id="shopTabs" role="tablist">
-					<li class="nav-item" style="width: 50%;">
-						<a class="nav-link" th:classappend="${type == 'purchase' ? 'active' : ''}"
-						   th:href="@{/manage/member/member_product(userId=${userId}, type='purchase')}">구매한 상품</a>
-					</li>
-					<li class="nav-item" style="width: 50%;">
-						<a class="nav-link" th:classappend="${type == 'sale' ? 'active' : ''}"
-						   th:href="@{/manage/member/member_product(userId=${userId}, type='sale')}">판매한 상품</a>
-					</li>
-				</ul>
+				<div class="d-flex justify-content-between align-items-center mt-4 mb-0 border-bottom-black pb-2">
+					<ul class="nav nav-tabs border-0" id="shopTabs" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link" th:classappend="${type == 'purchase' ? 'active' : ''}"
+							   th:href="@{/manage/member/member_product(userId=${userId}, type='purchase')}">구매한 상품</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:classappend="${type == 'sale' ? 'active' : ''}"
+							   th:href="@{/manage/member/member_product(userId=${userId}, type='sale')}">판매한 상품</a>
+						</li>
+					</ul>
+					
+					<div class="btn-group-wrap">
+						<a th:href="@{/manage/member/member_detail(userId=${userId})}" class="btn btn-sm btn-primary px-3 me-2 fw-bold">회원 상세정보</a>
+						<a th:href="@{/manage/member/member_prdv(userId=${userId})}" class="btn btn-sm btn-primary px-3 fw-bold">상점 상세정보</a>
+					</div>
+				</div>
 
 				<div class="tab-content mt-4">
 					<div th:if="${not #lists.isEmpty(historyList)}">
 						<div class="history-summary">
 							<div class="prod-count">
-								상품 <span>[[${historyList.size()}]]</span>
+								전체 <span>[[${historyList.size()}]]</span>개
 							</div>
 						</div>
 
@@ -63,7 +70,7 @@
 							<tbody>
 								<tr th:each="h : ${historyList}">
 									<td th:text="${h.product_num}">번호</td>
-									<td><span class="text-muted" th:text="${h.title}">상품이름</span></td>
+									<td><span class="text-dark fw-medium" th:text="${h.title}">상품이름</span></td>
 									<td><span class="box-date" th:text="${h.trade_date}">날짜</span></td>
 									<td><span class="box-id" th:text="${h.target_id}">상대방ID</span></td>
 									<td class="text-price" th:text="${h.price != null ? #numbers.formatInteger(h.price, 3, 'COMMA') + '원' : '0원'}">가격</td>
@@ -72,7 +79,7 @@
 						</table>
 						
 						<div class="d-flex justify-content-center mt-5">
-							<div th:utext="${pagination}"></div>
+							<div th:if="${pagination != null}" th:utext="${pagination}"></div>
 						</div>
 					</div>
 
