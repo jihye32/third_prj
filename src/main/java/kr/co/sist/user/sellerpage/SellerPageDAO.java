@@ -20,12 +20,20 @@ public class SellerPageDAO {
 		return spd;
 	}// selectSeller
 	
-	public List<ProductDomain> selectAllProduct(SellerPageRangeDTO sprDTO) throws PersistenceException {
+	public List<ProductDomain> selectProductList(SellerPageRangeDTO sprDTO) throws PersistenceException {
 		List<ProductDomain> list = null; 
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-		list = ss.selectList("kr.co.sist.user.sellerPage.selectAllProduct", sprDTO);
+		list = ss.selectList("kr.co.sist.user.sellerPage.selectProductList", sprDTO);
 		if(ss != null) {ss.close();}// end if
 		return list;
-	}// selectAllProduct
+	}// selectProductList
 	
-}
+	public int selectProductListCnt ( SellerPageRangeDTO sprDTO)throws PersistenceException{
+		int cnt = 0;
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		cnt = ss.selectOne("kr.co.sist.user.sellerPage.selectProdcutListCnt", sprDTO);
+		if(ss != null) {ss.close();}// end if
+		return cnt;
+	}// selectProductListCnt
+	
+}// class

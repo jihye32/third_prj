@@ -11,5 +11,5 @@ import lombok.ToString;
 @ToString
 public class SellerPageRangeDTO {
 	private String sortBy;
-	private int startNum, endNum, page,sellerId, myId;
+	private int startNum, endNum, page,sellerId, myId, sellStateCode, totalCnt;
 }

@@ -18,13 +18,12 @@ $(document).ready(function() {
     $('input.a11yHidden[type="button"]').on('click', function(event) {
     	event.preventDefault();   // ⭐ a 태그 기본 동작 차단
     	event.stopPropagation();  // ⭐ 이벤트 전파 차단
-
         // productNum 추출 (id에서)
         var productNum = $(this).attr('id').replace('btn_', '');
 
         // UI 및 서버 처리
         toggleBookmark(productNum, $(this));
-    });
+    });// onclick
 
     function toggleBookmark(productNum, $input) {
         //console.log("찜 클릭됨:", productNum);
@@ -80,8 +79,8 @@ $(document).ready(function() {
             console.log('서버 응답:', response);
         });
         */
-    }
-});
+    }// toggleBookmark
+});// ready
 
 function openReportForm() {
     fetch('/report/form')

@@ -10,8 +10,9 @@ from store
 where store_num = #{storenum}
 </select>
 
-<select id="selectAllProduct" parameterType="kr.co.sist.user.sellerpage.SellerPageRangeDTO" 
-resultType="kr.co.sist.user.ProductDomain">
+<select id="selectProductList" 
+		parameterType="kr.co.sist.user.sellerpage.SellerPageRangeDTO" 
+		resultType="kr.co.sist.user.ProductDomain">
 select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY, bookmarkFlag
 from(
 	select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY, bookmarkFlag, rownum r
@@ -45,6 +46,9 @@ from(
 					AND b.store_num = 0
 		            </if>
 		    where pv.storeNum =#{sellerId}
+		    <if test="sellStateCode != 0">
+			and sellStateCode = #{sellStateCode}
+			</if>
 		    
 			<choose>
 			    <when test="sortBy eq 'asc'">order by pv.PRICE ASC </when>
@@ -54,6 +58,22 @@ from(
    		)
 	)
 where r between #{startNum} and #{endNum}
+</select>
+
+
+<select id="selectProdcutListCnt" 
+		parameterType="kr.co.sist.user.sellerpage.SellerPageRangeDTO" 
+		resultType="int">
+select count(product_Num)
+from product
+
+<where>
+store_num = #{sellerId}
+<if test="sellStateCode != 0">
+and status_code = #{sellStateCode}
+</if>
+</where>
+
 </select>
 
 </mapper>
