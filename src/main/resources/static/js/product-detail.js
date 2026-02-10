@@ -106,7 +106,8 @@ document.addEventListener("click", (e) => {
 			
 		case "chat": //상품 구매
 			const store = actionBtn.dataset.store;
-	      	openChatForm(pnum, store);
+			const seller = actionBtn.dataset.sellerId;
+	      	openChatForm(seller, store);
 	      	return;
 	  }
   }
@@ -197,6 +198,3 @@ function openBuyForm(pnum) {
 	loadDrawerContent(`/buy/${pnum}`, () => openDrawer('거래 방법 선택')); 
 }
 
-function openChatForm(pnum, store) { 
-	loadDrawerContent(`/chat/init/${pnum}`, () => openDrawer(`${store}`)); 
-}

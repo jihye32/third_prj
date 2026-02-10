@@ -71,14 +71,14 @@ async function sendChatMessage(root) {
   const content = input.value.trim();
   if (!content) return;
 
-  const productNum = PageContext.pnum;
+  const productNum = window.PageContext?.pnum ?? null;
   let roomNum = root.querySelector("#room-num")?.value || null;
-
+  const otherId = root.querySelector("#other-id").value;
   try {
     const res = await fetch("/chat/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ roomNum, productNum, content }),
+      body: JSON.stringify({ roomNum, productNum, content, otherId }),
     });
     if (!res.ok) throw new Error("send failed");
 
@@ -87,8 +87,6 @@ async function sendChatMessage(root) {
     if (!roomNum && data.roomNum) {
       root.querySelector("#room-num").value = data.roomNum;
       roomNum = data.roomNum;
-      // (선택) URL을 room 기반으로 바꾸고 싶으면:
-      // history.replaceState(null, "", `/chat/room/${roomNum}`);
     }
 
     // 화면에 append
@@ -104,18 +102,31 @@ async function sendChatMessage(root) {
   }
 }
 
-function appendMyMessage(root, { content, timeText, readText }) {
+function appendMyMessage(root, { content }) {
   const box = root.querySelector("#chat-messages");
   const tpl = root.querySelector("#my-message");
   if (!box || !tpl) return;
 
   const node = tpl.content.cloneNode(true);
   node.querySelector(".msg-text").textContent = content;
-  node.querySelector(".msg-time").textContent = timeText || "";
-  node.querySelector(".msg-read").textContent = readText || "";
+  node.querySelector(".msg-time").textContent =  formatChatTime()|| "";
+  node.querySelector(".msg-read").textContent = " " || "";
 
   box.appendChild(node);
   box.scrollTop = box.scrollHeight;
+}
+
+function openChatForm(sellerId, store) { 
+	const pnum = PageContext.pnum;
+	loadDrawerContent(`/chat/${sellerId}?pnum=${pnum}`, () => openDrawer(`${store}`)); 
+}
+
+function formatChatTime(date = new Date()) {
+  return date.toLocaleTimeString("ko-KR", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  });
 }
 
 

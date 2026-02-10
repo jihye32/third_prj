@@ -1,5 +1,7 @@
 package kr.co.sist.user.chat;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -7,6 +9,37 @@ import kr.co.sist.dao.MyBatisHandler;
 
 @Repository("UserChatDAO")
 public class ChatDAO {
+	//채팅 리스트
+	public List<ChatListDomain> selectChatList(String uid){
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		List<ChatListDomain> list=ss.selectList("kr.co.sist.user.chat.selectChatList", uid);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return list;
+	}
+	
+	public ChatListInfoDomain selectStoreName(String otherId) {
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		ChatListInfoDomain clid=ss.selectOne("kr.co.sist.user.chat.selectStoreName", otherId);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return clid;
+	}
+	
+	public String selectProductProfile(int pnum) {
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		String thumbnail=ss.selectOne("kr.co.sist.user.chat.selectProductThumbnail", pnum);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return thumbnail;
+	}
+	
 	//선택된 상품 번호로 상품의 정보 조회
 	public ProductDomain selectProduct(int pnum) {
 		ProductDomain pd = null;
@@ -78,4 +111,25 @@ public class ChatDAO {
 		
 		return cnt;
 	}//insertChatProduct
+	
+	public List<ChatDomain> selectChat(int roomNum) {
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		List<ChatDomain> list=ss.selectList("kr.co.sist.user.chat.selectChat", roomNum);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return list;
+	}//insertChatProduct
+	
+	public int updateReadChat(ChatDTO cDTO) {
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		int cnt=ss.update("kr.co.sist.user.chat.updateReadChat", cDTO);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return cnt;
+	}//insertChatProduct
+	
 }
