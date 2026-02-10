@@ -2,9 +2,6 @@ package kr.co.sist.user;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.aspectj.lang.JoinPoint;
@@ -20,7 +17,8 @@ public class MainAspect {
 	@AfterReturning(
 			pointcut = 
 	        "execution(* kr.co.sist.user.MainService.searchMostViewProdcut(..)) || " +
-	                "execution(* kr.co.sist.user.productlist.ProductListService.searchProductList(..))",
+	        "execution(* kr.co.sist.user.sellerpage.SellerPageService.searchProductList(..)) || " +
+	        "execution(* kr.co.sist.user.productlist.ProductListService.searchProductList(..))",
 			returning = "result")
 	public void afterReturning2(JoinPoint jp, Object result) {
 		List<ProductDomain> list = (List<ProductDomain>) result;
