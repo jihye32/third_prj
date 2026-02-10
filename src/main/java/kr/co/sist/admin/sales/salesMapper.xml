@@ -35,19 +35,19 @@ select count(order_id)
 
 <!-- 매출(수수료ㅛ) -->
 <select id="selectChargeToday" resultType="int">
-select sum(charge)
+select nvl(sum(charge),0)
 from product_order
 where created_date=trunc(sysdate)
 
 </select>
 <select id="selectChargeYesterday" resultType="int">
-select sum(charge)
+select nvl(sum(charge),0)
 from product_order
 where created_date=trunc(sysdate)-1
 
 </select>
 <select id="selectChargeMonth" resultType="int">
-select sum(charge)
+select nvl(sum(charge),0)
 from product_order
 where trunc(created_date, 'MM') = trunc(sysdate, 'MM')
 
@@ -65,10 +65,10 @@ select nvl(sum(charge), 0)
 
 </select>
 
-<insert id="insertCharge" parameterType="int">
-insert into charge(charge,update_date)
-values(${newCharge},sysdate)
-</insert> 
+<insert id="insertCharge" parameterType="double">
+    INSERT INTO charge (charge, update_date)
+    VALUES (#{newCharge}, SYSDATE)
+</insert>
 
 <select id="selectCharge" resultType="double">
 SELECT charge
@@ -80,14 +80,21 @@ FROM (
 WHERE ROWNUM = 1
 </select>
 
-<!-- 판매완료면서 주문테이블(안전결제로 거래된 것)에 없으면 개인들의 송금 -->
+<select id="allPayMethod" resultType="int">
+select count(product_num)
+from product
+where over_selling_date is not null
+
+</select>
+
+<!-- 판매완료면서 주문테이블(안전결제로 거래된 것)에 있으면 안전결제 건!-->
 <select id="selectPayMethod" resultType="int">
-SELECT count(p.product_num)
-FROM product p
-LEFT JOIN product_order o
-  ON p.product_num = o.product_num
-WHERE p.product_status = 'SOLD'
-  AND o.product_num IS NULL;
+SELECT count(product_num)
+FROM product
+WHERE over_selling_date IS NOT NULL    
+  AND product_num IN (               
+      SELECT product_num FROM product_order
+  )
 
 
 </select>
@@ -98,10 +105,10 @@ SELECT
     TO_CHAR(created_date, 'MM') AS month,
     SUM(charge) AS total_sales
 FROM product_order
-WHERE order_date >= ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), -12)
-  AND order_date &lt;  TRUNC(SYSDATE, 'YYYY')
+WHERE created_date >= ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), -12)
+  AND created_date &lt;  TRUNC(SYSDATE, 'YYYY')
 GROUP BY TO_CHAR(created_date, 'MM')
-ORDER BY month;
+ORDER BY month
 
 </select>
 
