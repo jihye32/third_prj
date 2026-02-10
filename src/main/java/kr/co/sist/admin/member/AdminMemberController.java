@@ -121,5 +121,21 @@ public class AdminMemberController {
         }
     }
     
+    @PostMapping("/manage/member/suspend")
+    @ResponseBody
+    public ResponseEntity<String> suspendMember(@RequestParam("userId") String userId, 
+                                                @RequestParam("action") String action,
+                                                @RequestParam(value="days", defaultValue="0") int days) { // [추가]
+        try {
+            // 서비스에 days 정보도 함께 넘겨줍니다.
+            boolean isUpdated = ms.modifySuspension(userId, action, days);
+            
+            if (isUpdated) return ResponseEntity.ok("Success");
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        }
+    }
     
 }
