@@ -14,27 +14,143 @@
 <!-- JQuery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-	$(function() {
-		$("#idChkBtn").click(function() {
+$(function() {
+    // 중복확인 및 인증 여부를 체크하기 위한 플래그
+    let isIdChecked = false;
+    let isStoreNameChecked = false;
+    let isEmailVerified = false;
 
-		});// click
+    // 1. 아이디 중복 확인
+    $("#idChkBtn").click(function() {
+        const id = $("input[name='id']").val().trim();
+        if(id === "") {
+            alert("아이디를 입력해주세요.");
+            return;
+        }
 
-		$("#storeNameChkBtn").click(function() {
+        $.ajax({
+            url: "/join/idDup",
+            type: "GET",
+            data: { id: id },
+            success: function(isAvailable) {
+                if(isAvailable) {
+                    $("#idChkMsg").text("사용 가능한 아이디입니다.").css("color", "#0DCC5A");
+                    isIdChecked = true;
+                } else {
+                    $("#idChkMsg").text("이미 사용 중인 아이디입니다.").css("color", "red");
+                    isIdChecked = false;
+                }
+            },
+            error: function() {
+                alert("아이디 중복 확인 중 오류가 발생했습니다.");
+            }
+        });
+    });
 
-		});// click
+    // 2. 가게명 중복 확인
+    $("#storeNameChkBtn").click(function() {
+        const storeName = $("input[name='storeName']").val().trim();
+        if(storeName === "") {
+            alert("가게명을 입력해주세요.");
+            return;
+        }
 
-		$("#sendVerifyCodeBtn").click(function() {
+        $.ajax({
+            url: "/join/storeNameDup",
+            type: "GET",
+            data: { storeName: storeName },
+            success: function(isAvailable) {
+                if(isAvailable) {
+                    $("#storeNameChkMsg").text("사용 가능한 가게명입니다.").css("color", "#0DCC5A");
+                    isStoreNameChecked = true;
+                } else {
+                    $("#storeNameChkMsg").text("이미 사용 중인 가게명입니다.").css("color", "red");
+                    isStoreNameChecked = false;
+                }
+            },
+            error: function() {
+                alert("가게명 중복 확인 중 오류가 발생했습니다.");
+            }
+        });
+    });
 
-		});// click
+    // 3. 인증번호 전송
+    $("#sendVerifyCodeBtn").click(function() {
+        const emailLocal = $("input[name='emailLocal']").val().trim();
+        const emailDomain = $("select[name='emailDomain']").val();
 
-		$("#verifyCodeChkBtn").click(function() {
+        if(emailLocal === "") {
+            alert("이메일을 입력해주세요.");
+            return;
+        }
 
-		});// click
+        $("#sendVerifyCodeMsg").text("인증번호를 발송 중입니다...").css("color", "black");
 
-		$("#joinBtn").click(function() {
-			$("#joinFrm").submit();
-		});// click
-	});// ready
+        $.ajax({
+            url: "/join/sendVerifyCode",
+            type: "GET",
+            data: { emailLocal: emailLocal, emailDomain: emailDomain },
+            success: function(result) {
+                if(result) {
+                    $("#sendVerifyCodeMsg").text("인증번호가 발송되었습니다.").css("color", "#0DCC5A");
+                } else {
+                    $("#sendVerifyCodeMsg").text("발송 실패. 이메일을 다시 확인해주세요.").css("color", "red");
+                }
+            },
+            error: function() {
+                alert("서버 통신 오류가 발생했습니다.");
+            }
+        });
+    });
+
+    // 4. 인증번호 확인
+    $("#verifyCodeChkBtn").click(function() {
+        const inputCode = $("input[name='inputCode']").val().trim();
+        if(inputCode === "") {
+            alert("인증번호를 입력해주세요.");
+            return;
+        }
+
+        $.ajax({
+            url: "/join/verifyCodeChk",
+            type: "POST",
+            data: { inputCode: inputCode },
+            success: function(isMatch) {
+                if(isMatch) {
+                    $("#verifyCodeChkMsg").text("인증에 성공했습니다.").css("color", "#0DCC5A");
+                    isEmailVerified = true;
+                    $("input[name='inputCode']").attr("readonly", true); // 인증 성공 시 수정 불가
+                } else {
+                    $("#verifyCodeChkMsg").text("인증번호가 일치하지 않습니다.").css("color", "red");
+                    isEmailVerified = false;
+                }
+            },
+            error: function() {
+                alert("인증 확인 중 오류가 발생했습니다.");
+            }
+        });
+    });
+
+    // 5. 최종 회원가입 버튼 클릭
+    $("#joinBtn").click(function() {
+        // 필수 유효성 검사
+        if(!isIdChecked) { alert("아이디 중복 확인을 해주세요."); return; }
+        if(!isStoreNameChecked) { alert("가게명 중복 확인을 해주세요."); return; }
+        if(!isEmailVerified) { alert("이메일 인증을 완료해주세요."); return; }
+        
+        // 비밀번호 일치 확인
+        const pass = $("input[name='pass']").val();
+        const passChk = $("input[name='passChk']").val();
+        if(pass !== passChk) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        if(confirm("회원가입을 진행하시겠습니까?")) {
+            $("#joinFrm").submit();
+        }
+    });
+});// ready
 </script>
 </head>
 <body>
@@ -186,7 +302,7 @@
 												class="inline-block text-sm font-semibold">인증번호</span>
 											</label>
 										</div>
-										<input type="text" name="verifyCode" data-variant="flat"
+										<input type="text" name="inputCode" data-variant="flat"
 											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
 											style="background-color: white; border: 1px solid black;">
 										<button type="button" id="verifyCodeChkBtn"
