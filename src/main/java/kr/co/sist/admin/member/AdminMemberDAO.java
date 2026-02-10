@@ -143,4 +143,15 @@ public class AdminMemberDAO {
         }
         return result;
     }
+    
+    public int updateSuspension(Map<String, Object> map) throws SQLException {
+        int result = 0;
+        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+        try {
+            result = ss.update("kr.co.sist.admin.member.updateSuspension", map);
+        } finally {
+            if (ss != null) ss.close();
+        }
+        return result;
+    }
 }

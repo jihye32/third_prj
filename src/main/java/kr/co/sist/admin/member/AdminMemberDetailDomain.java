@@ -15,4 +15,7 @@ public class AdminMemberDetailDomain {
     private String email;       // 이메일
     
     private long open_days;
+    
+    private String suspension_flag;    // 'Y' 또는 'N'
+    private java.util.Date suspension_end_date;
 }

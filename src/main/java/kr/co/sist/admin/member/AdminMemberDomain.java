@@ -16,4 +16,7 @@ public class AdminMemberDomain {
     private String store_name;
     private String delete_flag;
     
+    private String suspension_flag;    // 'Y' 또는 'N'
+    private Date suspension_end_date;  // 정지 종료일
+    
 }
