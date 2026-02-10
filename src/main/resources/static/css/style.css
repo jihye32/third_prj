@@ -23,11 +23,27 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
 .wrapper { display: flex; padding-top: 60px; }
 
 .menu_side {
-    width: 260px; height: calc(100vh - 60px);
-    background-color: #fff; border-right: 1px solid #e2e5e8;
-    position: fixed; overflow-y: auto; padding: 20px 0;
+    width: 260px;
+    height: calc(100vh - 60px);
+    background-color: #fff;
+    border-right: 1px solid #e2e5e8;
+    
+    /* 위치 고정 및 밀착 */
+    position: fixed;
+    top: 60px;
+    left: 0;   /* 이 코드가 왼쪽 여백을 제거합니다 */
+    
+    overflow-y: auto;
+    padding: 20px 0;
+    z-index: 990; /* 컨텐츠보다는 위, 헤더보다는 아래 */
 }
-#main-container { margin-left: 260px; flex: 1; padding: 40px; }
+
+#main-container {
+    margin-left: 260px; /* 사이드바 너비만큼 정확히 밀어줌 */
+    flex: 1;
+    padding: 40px;
+    min-width: 0; /* flex 아이템의 너비 깨짐 방지 */
+}
 .menu_group { padding: 10px 25px 15px; font-size: 15px; color: #999; font-weight: bold; }
 
 /* -----------------------------------------------------------
