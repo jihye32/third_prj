@@ -20,7 +20,7 @@
 		<aside th:replace="manage/common_layout :: sidebar"></aside>
 
 		<div id="main-container">
-			<div class="mt-3"> 
+			<div class="mt-3">
 				<h2 class="h4 mb-3 fw-bold">물품관리</h2>
 
 				<div class="search-bar-wrap mb-4">
@@ -114,8 +114,8 @@
 
 								<div class="deleted-overlay" th:if="${p.delete_flag == 'Y'}">
 									<div class="overlay-content">
-										<i class="bi bi-x-circle-fill"></i> <br>
-										<span>삭제된 상품</span>
+										<i class="bi bi-x-circle-fill"></i> <br> <span>삭제된
+											상품</span>
 									</div>
 								</div>
 
@@ -130,9 +130,9 @@
 								<h5 class="card-title h6 text-truncate" th:text="${p.title}">상품명</h5>
 								<p class="card-text fw-bold"
 									th:text="${#numbers.formatInteger(p.price, 3, 'COMMA') + '원'}"></p>
-								<div class="text-muted" style="font-size: 11px;">
-									<span th:text="${p.addr}">지역</span> | <span
-										th:text="${p.time_string ?: '-'}">날짜</span>
+								<div class="card-info text-muted">
+									<span class="info-addr" th:text="${p.addr}">지역</span> <span
+										class="info-split">
 								</div>
 							</div>
 						</div>
