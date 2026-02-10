@@ -89,6 +89,31 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
  left:300px;
 }
 </style>
+
+<script>
+
+
+function validateAndSubmit() {
+    const input = document.getElementById('chargeInput');
+    const val = input.value.trim();
+    
+    const doubleRegex = /^[0-9]+(\.[0-9]+)?$/;
+
+    if (!doubleRegex.test(val)) {
+        alert("유효한 수수료율을 입력해주세요. (숫자만 가능)");
+        input.focus();
+        return false; // 
+    }
+
+    if (confirm("정말 수수료율을 " + val + "%로 수정하시겠습니까?")) {
+        // 확인을 누른 경우에만 폼 제출
+        document.getElementById('chargeForm').submit();
+    } else {
+    	
+    }
+}
+
+</script>
 <body>
 
     <header id="kakaoHead">
@@ -117,7 +142,7 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
 
         <main id="main-container">
             
-          <span th:text="${now}"></span> 기준
+         <h5><span th:text="${now}"></span> 기준</h5> 
           
           <div class="bg-body-tertiary p-5 rounded" style="text-align:center"> 
           <div class="container">
@@ -136,26 +161,34 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
           
          <div class="item">
          	 오늘 매출<br>
-        	  0
+        	 <span th:text="${chargeToday}"></span>
          	 </div>
          	 <div class="item">
          	 어제 매출<br>
-        	  0
+        	 <span th:text="${chargeYesterday}"></span>
          	 </div>
          	 <div class="item">
          	 이번 달 매출<br>
-        	  0
+        	  <span th:text="${chargeMonth}"></span>
          	 </div>|
          
-        <div class="item" id="charge">
-         	 안전결제 수수료(%) 설정<br>
-        	  <div>
-        	  <input type="text" th:value="${chargeNow}" style="width:150px; height:30px">
-        	  <input type="button" value="변경">
-        	  
-        	  </div>
-         	 </div>
-         	
+        <form id="chargeForm" th:action="@{/insert-charge}" method="post">
+    <div class="item" id="charge">
+        안전결제 수수료(%) 설정<br>
+        <div>
+            <input type="text" id="chargeInput" name="chargeNow" 
+                   th:value="${chargeNow}" 
+                   style="width:150px; height:30px" 
+                   placeholder="숫자만 입력 (예: 3.5)"> %
+            
+            <input type="button" value="변경" onclick="validateAndSubmit()">
+        </div>
+        <p id="errorMsg" style="color:red; font-size:12px; display:none;">
+            정수 또는 소수점 숫자만 입력해주세요.
+        </p>
+    </div>
+</form>
+
          	
          </div>
          </div>
@@ -171,7 +204,7 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
 <form action="/manage/sales" method="get" class="search"> 
 <select name="category"> <option value="">카테고리 선택</option> 
 <option th:each="cate : ${categoryList}" th:value="${cate}" th:text="${cate}"></option> </select>
- <input type="month" name="safepayMonth" th:value="${currentMonth}"> <input type="submit" value="조회">
+ <input type="month" name="currentMonth" th:value="${currentMonth}"> <input type="submit" value="조회">
   </form>
   
   </div>
@@ -214,54 +247,70 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
   </div> 
   
     
-<script>
+<script th:inline="javascript">
+const rawData = /*[[${lastYearChargeList}]]*/ [];
+
+const monthlyData = new Array(12).fill(0);
+
+rawData.forEach(item => {
+    const m = parseInt(item.MONTH); 
+    const s = item.TOTAL_SALES;
+    
+    if (!isNaN(m)) {
+        monthlyData[m - 1] = s; // 월은 1부터 시작하므로 인덱스는 -1
+    }
+});
+
+// 4. Chart.js 설정
 const ctx = document.getElementById('lineChart');
-const myChart = new Chart(ctx, {
+new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ['1월', '2월', '3월','4월', '5월', '6월','7월', '8월', '9월','10월', '11월', '12월' ],
+        labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
         datasets: [{
-            label: ['매출'],
-            data: [10,20,30,40,50,60,10,20,30,40,50,60],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }],
+            label: '작년 월별 수수료 합계',
+            data: monthlyData, // 가공한 배열 주입
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true
+        }]
     },
     options: {
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                ticks: {
+                    // 숫자에 콤마(,) 추가
+                    callback: function(value) {
+                        return value.toLocaleString() + '원';
+                    }
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.parsed.y.toLocaleString() + '원';
+                    }
+                }
             }
         }
     }
-}
-);
+});
 		
 const ctx2 = document.getElementById('horizontalBar1');
-const monthNow = /*[[${monthNow}]]*/ 0;
-const monthLast = /*[[${monthLast}]]*/ 0;
+const safepayMonthNow = /*[[${safepayMonthNow}]]*/ 0;
+const safepayMonthLast = /*[[${safepayMonthLast}]]*/ 0;
 const myChart2 = new Chart(ctx2, {
     type: 'bar',
     data: {
         labels: ['이번 달', '지난 달'],
         datasets: [{
             label: '안전결제 건 수',
-            data: [monthNow, monthLast],
+            data: [safepayMonthNow, safepayMonthLast],
             backgroundColor: [
                 'rgba(54, 162, 235, 0.6)',
                 'rgba(201, 203, 207, 0.6)'
@@ -280,14 +329,15 @@ const myChart2 = new Chart(ctx2, {
 });
 
 const ctx3 = document.getElementById('horizontalBar2');
-
+const chargeMonthNow = /*[[${chargeMonthNow}]]*/ 0;
+const chargeMonthLast = /*[[${chargeMonthLast}]]*/ 0;
 const myChart3 = new Chart(ctx3, {
     type: 'bar',
     data: {
         labels: ['이번 달', '지난 달'],
         datasets: [{
             label: '매출',
-            data: [5000000, 4200000],
+            data: [chargeMonthNow, chargeMonthLast],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.6)',
                 'rgba(201, 203, 207, 0.6)'
@@ -313,16 +363,17 @@ const myChart3 = new Chart(ctx3, {
        
         </main>
     </div>
-<script>
+<script th:inline="javascript">
   const pie = document.getElementById('circleChart');
-
+  const allPay = /*[[${allPayMethod}]]*/ 0;   
+  const safepay = /*[[${selectPayMethod}]]*/ 0;
   new Chart(pie, {
     type: 'pie',
     data: {
       labels: ['안전결제', '사용자 간 송금'],
       datasets: [{
-        label: '비율',
-        data: [60,40],
+        //label: '비율',
+        data: [safepay,allPay-safepay],
         borderWidth: 1
       }]
     }
