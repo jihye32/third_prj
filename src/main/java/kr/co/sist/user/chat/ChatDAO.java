@@ -132,4 +132,13 @@ public class ChatDAO {
 		return cnt;
 	}//insertChatProduct
 	
+	public Integer selectProductNum(int roomNum) {
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		Integer pnum=ss.selectOne("kr.co.sist.user.chat.selectProductNum", roomNum);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return pnum;
+	}
 }

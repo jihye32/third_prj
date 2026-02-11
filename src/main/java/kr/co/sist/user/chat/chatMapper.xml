@@ -25,7 +25,13 @@ insert into chat_list(chatroom_num, user_low, user_high, create_date) values (se
 <select id="selectChatProduct" parameterType="kr.co.sist.user.chat.ChatListDTO" resultType="String">
 select chatroom_num 
 from room_product 
-where chatroom_num=#{roomNum} and product_num=#{productNum}
+where chatroom_num=#{roomNum} 
+<if test="productNum != null">
+  and product_num = #{productNum}
+</if>
+<if test="productNum == null">
+  and product_num is null
+</if>
 </select>
 <insert id="insertRoomProduct" parameterType="kr.co.sist.user.chat.ChatDTO">
 insert into room_product(chatroom_num, product_num) values (#{roomNum}, #{productNum})
@@ -75,6 +81,11 @@ where user_id = #{otherId}
 select thumbnail
 from product
 where product_num = #{pnum}
+</select>
+<select id="selectProductNum" parameterType="int" resultType="Integer">
+select last_product_num
+from chat_list
+where chatroom_num = #{roomNum}
 </select>
 
 <!-- 채팅 내역 가져오기 -->

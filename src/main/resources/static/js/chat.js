@@ -172,9 +172,14 @@ function appendOtherMessage(root, { content }) {
 
 
 function openChatForm(sellerId, store) { 
-  const pnum = PageContext.pnum;
+  const pnum = window.PageContext?.pnum ?? null;
+  
+ 	const url = `/chat/${sellerId}`;
+	if(pnum !== null){
+		url+=`?pnum=${pnum}`;
+	}
 
-  loadDrawerContent(`/chat/${sellerId}?pnum=${pnum}`, async () => {
+  loadDrawerContent(url, async () => {
     openDrawer(`${store}`);
 
     const root = document.querySelector("#chat-root");
