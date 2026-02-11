@@ -13,108 +13,85 @@
 		<div class="h-full overflow-auto">
 			<div class="flex flex-col h-full pb-[85px] sm:pb-0">
 				<ul class="flex flex-col h-full overflow-auto bg-white overscroll-contain">
-				
-					<li class="flex gap-5 justify-between px-5 w-full cursor-pointer bg-white">
-						<div class="flex py-3 border-t-[1px] border-gray-200 w-[100%]">
-							<div class="border border-gray-100 relative flex flex-shrink-0 items-center justify-center bg-gray-300 rounded-md overflow-hidden">
-								<img alt="프로필" loading="lazy" width="60" height="60"
-									decoding="async" data-nimg="1"
-									class="rounded-md max-w-none h-[60px] object-cover"
-									th:src="@{/images/thumbnail/{imageName}(imageName='default.jpg')}"
-									style="color: transparent;">
-							</div>
-							<div
-								class="flex w-[calc(100%-56px)] flex-col justify-around ml-4">
-								<div class="flex flex-wrap items-center gap-x-2">
-									<div class="flex gap-2">
-										<h4 class="font-semibold">상품제목</h4>
-									</div>
-									<p class="text-[12px]">거래일자</p>
+
+					<th:block th:each="BuyProductDomain : ${list}" th:object="${BuyProductDomain}">
+
+					<li class="flex flex-col px-5 w-full bg-white">
+						<div class="flex gap-5 justify-between w-full cursor-pointer">
+							<div class="flex py-3 border-t-[1px] border-gray-200 w-full">
+								<div class="border border-gray-100 relative flex flex-shrink-0 items-center justify-center bg-gray-300 rounded-md overflow-hidden">
+									<img alt="프로필" loading="lazy" width="60" height="60"
+										class="rounded-md max-w-none h-[60px] object-cover"
+										th:src="@{/images/thumbnail/{imageName}(imageName=*{thumbnail})}">
 								</div>
-								<span
+
+								<div class="flex w-[calc(100%-56px)] flex-col justify-around ml-4">
+									<div class="flex flex-wrap items-center gap-x-2">
+										<h4 class="font-semibold" th:text="*{productName}">상품제목</h4>
+										<p class="text-[12px]" th:text="*{createdDate}">거래일자</p>
+									</div>
+									<span th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
 									class="text-sm text-ellipsis overflow-hidden whitespace-nowrap min-[1024px]:max-w-[300px]">
 									00,000원</span>
+								</div>
+							</div>
+
+						</div> 
+						
+						<th:block th:if="*{deliverdDate eq null}">
+							<button type="button"
+								class="text-sm px-3 py-1.5 border rounded-md bg-white text-black hover:text-white hover:bg-gray-600 hover:shadow-cart"
+								data-action="toggle-review"
+								onclick="toggleReview(this)">수령 확인</button>
+						</th:block>
+						
+						<th:block th:if="*{deliverdDate ne null}">
+						<th:block th:if="*{review eq null}">
+						<!-- 후기 쓰기 버튼 -->
+							<button type="button"
+								class="text-sm px-3 py-1.5 border rounded-md bg-white text-black hover:text-white hover:bg-gray-600 hover:shadow-cart"
+								data-action="toggle-review"
+								onclick="toggleReview(this)">후기 쓰기</button>
+						
+						<!-- ⭐ 후기 작성 영역 (숨김) -->
+						<div class="hidden mt-3 p-4 border rounded-md bg-gray-50">
+							<!-- 별점 -->
+							<div class="flex items-center gap-1 mb-3">
+								<span class="text-sm mr-2">별점</span>
+								<div class="flex gap-1">
+									<button class="star text-gray-300 text-xl"
+										onclick="setRating(this,1)">★</button>
+									<button class="star text-gray-300 text-xl"
+										onclick="setRating(this,2)">★</button>
+									<button class="star text-gray-300 text-xl"
+										onclick="setRating(this,3)">★</button>
+									<button class="star text-gray-300 text-xl"
+										onclick="setRating(this,4)">★</button>
+									<button class="star text-gray-300 text-xl"
+										onclick="setRating(this,5)">★</button>
+								</div>
+							</div>
+
+							<!-- 후기 입력 -->
+							<textarea
+								class="w-full border rounded-md p-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+								rows="3" placeholder="후기를 작성해주세요"></textarea>
+
+							<!-- 등록 버튼 -->
+							<div class="flex justify-end mt-3">
+								<button
+									class="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
+									등록</button>
 							</div>
 						</div>
-						<!-- 후기 쓰기 버튼 -->
-						<button
-							type="button"
-							class="self-center text-sm px-3 py-1.5 border rounded-md text-blue-600 border-blue-500 hover:bg-blue-50"
-							onclick="toggleReview(this)">
-							후기 쓰기
-						</button>
-						</li>
-					<div class="min-h-[5px]"></div>
-					
-					
-					
-					
-					<li class="flex flex-col px-5 w-full bg-white">
-	<div class="flex gap-5 justify-between w-full cursor-pointer">
-		<div class="flex py-3 border-t-[1px] border-gray-200 w-full">
-			<div
-				class="border border-gray-100 relative flex flex-shrink-0 items-center justify-center bg-gray-300 rounded-md overflow-hidden">
-				<img alt="프로필" loading="lazy" width="60" height="60"
-					class="rounded-md max-w-none h-[60px] object-cover"
-					th:src="@{/images/thumbnail/{imageName}(imageName='default.jpg')}">
-			</div>
+						</th:block>
+						</th:block>
+						
+					</li>
 
-			<div class="flex w-[calc(100%-56px)] flex-col justify-around ml-4">
-				<div class="flex flex-wrap items-center gap-x-2">
-					<h4 class="font-semibold">상품제목</h4>
-					<p class="text-[12px]">거래일자</p>
-				</div>
-				<span class="text-sm">00,000원</span>
-			</div>
-		</div>
+					</th:block>
 
-	</div>
-		<!-- 후기 쓰기 버튼 -->
-	<div class="mt-2 flex justify-end">
-		<button
-			type="button"
-			class="text-sm px-3 py-1.5 border rounded-md text-blue-600 border-blue-500 hover:bg-blue-50 review-toggle"
-			data-action="toggle-review"
-			style="color: rgb(13, 204, 90); border-color: rgb(13, 204, 90);"
-			onclick="toggleReview(this)">
-			후기 쓰기
-		</button>
-	</div>
-	
 
-	<!-- ⭐ 후기 작성 영역 (숨김) -->
-	<div class="hidden mt-3 p-4 border rounded-md bg-gray-50">
-		<!-- 별점 -->
-		<div class="flex items-center gap-1 mb-3">
-			<span class="text-sm mr-2">별점</span>
-			<div class="flex gap-1">
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,1)">★</button>
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,2)">★</button>
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,3)">★</button>
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,4)">★</button>
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,5)">★</button>
-			</div>
-		</div>
-
-		<!-- 후기 입력 -->
-		<textarea
-			class="w-full border rounded-md p-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
-			rows="3"
-			placeholder="후기를 작성해주세요"></textarea>
-
-		<!-- 등록 버튼 -->
-		<div class="flex justify-end mt-3">
-			<button
-				class="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
-				등록
-			</button>
-		</div>
-	</div>
-</li>
-
-					
-					
-					
 				</ul>
 			</div>
 		</div>
