@@ -11,9 +11,21 @@ public class AdminProductService {
     @Autowired
     private AdminProductDAO pDAO;
     public int pageScale() { return 12; }
+ // 이 부분을 찾아서 아래 코드로 교체하세요
     public List<AdminProductDomain> getProductList(AdminProductDTO pDTO) {
         try {
-            return pDAO.selectProductList(pDTO);
+            // 1. DAO에서 리스트를 먼저 가져옵니다.
+            List<AdminProductDomain> list = pDAO.selectProductList(pDTO);
+            
+            // 2. 리스트가 비어있지 않다면, 하나씩 꺼내서 시간 계산 로직을 적용합니다.
+            if (list != null) {
+                for (AdminProductDomain pd : list) {
+                    // 이미 만들어두신 6번 로직을 여기서 호출합니다.
+                    pd.setTime_string(calculateTimeString(pd)); 
+                }
+            }
+            
+            return list;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
