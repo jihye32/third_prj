@@ -54,7 +54,7 @@ public class JoinService {
             StringBuilder body = new StringBuilder();
             body.append("<div style='margin:20px; padding:40px; border:1px solid #E7FAEF; border-radius:40px; text-align:center; font-family:sans-serif;'>");
             body.append("<h2 style='color:#222222; font-size:24px; font-weight:bold;'>인증번호</h2>");
-            body.append("<p style='color:#888888; font-size:16px; margin-top:20px;'>아래 인증번호를 입력하시고<br>인증하기 버튼을 눌러주세요.</p>");
+            body.append("<p style='color:#888888; font-size:16px; margin-top:20px;'>아래 번호를 입력하시고 <br>인증하기 버튼을 눌러주세요.</p>");
             body.append("<div style='margin:40px auto; padding:20px; background-color:#F5F5F5; border-radius:20px; width:180px;'>");
             body.append("<span style='font-size:32px; font-weight:bold; color:#0DCC5A; letter-spacing:5px;'>").append(verifyCode).append("</span>");
             body.append("</div>");
