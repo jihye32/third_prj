@@ -15,6 +15,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 $(function() {
+	var joinFlag = "[[${joinFlag}]]";
+	
+	if (joinFlag === "fail") {
+        alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
+    }// end if
+	
     // 중복확인 및 인증 여부를 체크하기 위한 플래그
     let isIdChecked = false;
     let isStoreNameChecked = false;
