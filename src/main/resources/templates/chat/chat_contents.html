@@ -13,8 +13,10 @@
 </head>
 <body>
 <th:block th:fragment="chatContentsForm">
+<div id="chat-root">
 <div class="h-full overflow-auto">
 	<div class="flex flex-col justify-between w-full h-full bg-[#e9edef]">
+		<input type="hidden" id="user-id" th:value="${session.uid}">
 		<div class="relative" th:if="${product != null}" th:object="${product}">
 			<div class="flex items-center w-full gap-2 px-3 py-4 bg-white">
 				<a class="flex flex-grow h-10 gap-4 flex-1" href="/product/224062120">
@@ -38,7 +40,7 @@
 			<input type="hidden" id="other-id" th:value="${otherId}">
 				<th:block th:if="${roomNum != null}">
 					<div type="textMessage" th:each="chatLog:${chatList}" th:object="${chatLog}">
-						<div th:if="*{writerId eq 'user10'}" class="flex items-end w-auto mb-2 flex-start space-x-1 flex-row-reverse space-x-reverse">
+						<div th:if="*{writerId} == ${session.uid}" class="flex items-end w-auto mb-2 flex-start space-x-1 flex-row-reverse space-x-reverse">
 							<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tr bg-[#363C45] text-white w-auto">
 								<p th:text="*{content}" class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-jngreen [&amp;&gt;a]:underline"></p>
 							</div>
@@ -47,7 +49,7 @@
 								<span th:text="*{#dates.format(chatDate, 'a h:mm')}" class="msg-time block text-[13px] uppercase text-end"></span>
 							</div>
 						</div>
-						<div th:unless="*{writerId eq 'user10'}" class="flex items-end w-auto mb-2 flex-start space-x-1">
+						<div th:unless="*{writerId} == ${session.uid}" class="flex items-end w-auto mb-2 flex-start space-x-1">
 							<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tl bg-white w-auto">
 								<p th:text="*{content}" class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-jngreen [&amp;&gt;a]:underline"></p>
 							</div>
@@ -92,7 +94,7 @@
 		</div>
 	</div>
 </form>
-
+</div>
 <template id="my-message">
 <div type="textMessage">
 	<div class="flex items-end w-auto mb-2 flex-start space-x-1 flex-row-reverse space-x-reverse">
@@ -102,6 +104,18 @@
 		<div class="flex flex-col">
 			<p class="msg-read mb-0 text-right text-[13px]"></p>
 			<span class="msg-time block text-[13px] uppercase text-end"></span>
+		</div>
+	</div>
+</div>
+</template>
+<template id="other-message">
+<div type="textMessage">
+	<div class="flex items-end w-auto mb-2 flex-start space-x-1">
+		<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tl bg-white w-auto">
+			<p class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-jngreen [&amp;&gt;a]:underline"></p>
+		</div>
+		<div class="flex">
+			<span class="msg-time block text-[13px] uppercase text-start"></span>
 		</div>
 	</div>
 </div>
