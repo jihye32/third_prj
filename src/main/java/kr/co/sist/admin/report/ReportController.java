@@ -81,7 +81,6 @@ public class ReportController {
         return "redirect:/manage/report/detail?reportNum=" + dto.getReportNum() + "&saved=1";
     }
 
-    // AskController 페이지바 + 필터 유지
     private String buildPageBar(String baseUrl, ReportDTO dto, int totalCount, int pageSize, int blockSize) {
 
         int totalPage = (int) Math.ceil((double) totalCount / pageSize);

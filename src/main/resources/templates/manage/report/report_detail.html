@@ -14,10 +14,17 @@
     .control.edit { background:#fff; }
     .card { border: 1px solid #eee; border-radius: 8px; padding: 16px; margin-top: 14px; }
     .actions { display:flex; justify-content:flex-end; gap:8px; margin-top: 12px; }
-    .btn { padding: 8px 14px; border-radius: 6px; text-decoration:none; display:inline-block; border:1px solid #ccc; background:#fff; color:#111; }
-    .btn.primary { background:#111; border-color:#111; color:#fff; }
+    .btn { padding: 8px 14px; border-radius: 6px; text-decoration:none; display:inline-block; border:1px solid #ccc; background:#fff; color:#111; cursor: pointer; }
+    .btn.primary { background:#111; border-color:#111; color:#fff !important; }
     .hint { font-size: 12px; color: #999; margin-top: 6px; }
-    .files a { margin-right: 10px; text-decoration:none; color:#4682b4; }
+   
+    .files a { 
+        display: block;         
+        margin-bottom: 8px;    
+        text-decoration: none; 
+        color: #4682b4; 
+    }
+    .files a:last-child { margin-bottom: 0; }
   </style>
 </head>
 <body>
@@ -27,7 +34,6 @@
 <div class="container">
   <h2>신고 관리 - 상세</h2>
 
-  <!-- 조회 전용 영역 -->
   <div class="card">
     <div class="grid2">
       <div class="field">
@@ -36,21 +42,12 @@
       </div>
 
       <div class="field">
-  <div class="label">신고 대상자</div>
-
-  <div class="inline">
-  <input class="control reportee-danger"
-         type="text"
-         th:value="${report.reporteeId}"
-         disabled>
-
-    <a class="btn mini"
-   th:href="@{/manage/member/member_detail(userId=${report.reporteeId})}"
-   onclick="return openMemberPopup(this.href);">
-  조회
-</a>
-  </div>
-</div>
+        <div class="label">신고 대상자</div>
+        <div class="inline" style="display:flex; gap:5px;">
+          <input class="control reportee-danger" type="text" th:value="${report.reporteeId}" disabled>
+          <a class="btn mini" th:href="@{/manage/member/member_detail(userId=${report.reporteeId})}" onclick="return openMemberPopup(this.href);">조회</a>
+        </div>
+      </div>
 
       <div class="field">
         <div class="label">신고 종류</div>
@@ -70,49 +67,47 @@
 
     <div class="field">
       <div class="label">신고 자료</div>
-
-      <div th:if="${imgList == null or #lists.isEmpty(imgList)}" class="control">
-        첨부 없음
-      </div>
-
+      <div th:if="${imgList == null or #lists.isEmpty(imgList)}" class="control">첨부 없음</div>
       <div th:if="${imgList != null and !#lists.isEmpty(imgList)}" class="control files">
-        <a th:each="img : ${imgList}"
-           th:href="@{/upload/report/{f}(f=${img})}"
-           th:text="${img}" download></a>
+        <a th:each="img : ${imgList}" th:href="@{/upload/report/{f}(f=${img})}" th:text="${img}" download></a>
       </div>
     </div>
   </div>
 
-  <!-- 관리자 입력 영역 -->
   <form class="card" id="processForm" th:action="@{/manage/report/reportprocess}" method="post">
     <input type="hidden" name="reportNum" th:value="${report.reportNum}">
 
     <div class="field">
       <div class="label">처리 상태</div>
       <select class="control edit" name="reportStateCode" id="reportState">
-        <option th:each="s : ${stateList}"
-                th:value="${s.reportStateCode}"
-                th:text="${s.reportStateText}"
-                th:selected="${s.reportStateCode == report.reportStateCode}">
-        </option>
+        <option th:each="s : ${stateList}" th:value="${s.reportStateCode}" th:text="${s.reportStateText}" th:selected="${s.reportStateCode == report.reportStateCode}"></option>
       </select>
     </div>
 
     <div class="field">
       <div class="label">처리 후 전달 내용</div>
-      <textarea class="control edit" name="answer" id="answerBox" rows="15"
-                th:text="${report.answer}"></textarea>
-      <div class="hint">※ 처리완료(3)일 때만 입력/저장됩니다.</div>
+      <textarea class="control edit" name="answer" id="answerBox" rows="15" th:text="${report.answer}"></textarea>
+      <div class="hint">※ 처리완료일 때만 입력/저장됩니다.</div>
     </div>
 
     <div class="actions">
-      <!-- ✅ 목록 버튼 (리스트로) -->
       <a class="btn" th:href="@{/manage/report/reportlist}">목록</a>
-      <!-- ✅ 완료 버튼 -->
       <button class="btn primary" type="submit">완료</button>
     </div>
   </form>
 </div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+  // URL 파라미터 ?saved=1 을 안전하게 읽어옴
+  // IDE 빨간 줄 방지를 위해 주석 문법 사용
+  const saved = /*[[${param.saved}]]*/ null; 
+
+  if (saved != null && saved.length > 0 && saved[0] === '1') {
+    alert('저장되었습니다.');
+  }
+/*]]>*/
+</script>
 
 <script>
   const reportState = document.getElementById('reportState');
@@ -128,7 +123,6 @@
   form.addEventListener('submit', function(e) {
     const isDone = reportState.value === '3';
     const msg = (answerBox.value || '').trim();
-
     if (isDone && msg.length === 0) {
       e.preventDefault();
       alert('처리완료로 저장하려면 처리 후 전달 내용을 입력해야 합니다.');
@@ -138,37 +132,16 @@
 
   reportState.addEventListener('change', syncAnswerEnable);
   syncAnswerEnable();
-</script>
-<script th:inline="javascript">
-  const saved = null;
-  if (saved && saved[0] === '1') {
-    alert('저장되었습니다.');
-  }
-</script>
 
-<script>
   function openMemberPopup(url) {
-    const w = 1000;
-    const h = 900;
+    const w = 1000; const h = 900;
     const left = Math.max(0, (window.screen.width - w) / 2);
     const top = Math.max(0, (window.screen.height - h) / 2);
-
-    const win = window.open(
-      url,
-      'memberDetailPopup',
-      `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`
-    );
-
-    if (!win) {
-      alert('팝업이 차단되었습니다. 브라우저에서 팝업 허용 후 다시 시도하세요.');
-      return false;
-    }
+    const win = window.open(url, 'memberDetailPopup', `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`);
+    if (!win) { alert('팝업이 차단되었습니다.'); return false; }
     win.focus();
-    return false; // 기본 이동 막기
+    return false;
   }
 </script>
-
-
-
 </body>
 </html>
