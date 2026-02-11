@@ -1,5 +1,21 @@
 @charset "UTF-8";
 
+/* 🔵 사이드바 강제 밀착 및 메인 컨테이너 영역 확보 */
+.wrapper {
+    display: flex !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+}
+
+#main-container {
+    margin-left: 260px !important; /* 사이드바 가로폭만큼 정확히 이격 */
+    padding: 40px !important;
+    background-color: #fff;
+    min-height: calc(100vh - 60px);
+    width: calc(100% - 260px) !important; /* 남은 너비 전부 사용 */
+}
+
 /* [1] 검색바 및 돋보기 아이콘 */
 .search-bar-wrap { width: 100%; margin-bottom: 24px; }
 .search-input-box {
@@ -31,7 +47,7 @@
 .divider { color: #eee; font-size: 11px; margin: 0 8px; }
 
 /* [3] 카드 및 상태 오버레이 */
-.card { transition: transform 0.2s, border-color 0.2s; border: 1px solid #e2e5e8; background-color: #fff; overflow: hidden; border-radius: 8px; }
+.card { transition: transform 0.2s, border-color 0.2s; border: 1px solid #e2e5e8; background-color: #fff; overflow: hidden; border-radius: 8px; height: 100%; }
 .card:hover { transform: translateY(-5px); border-color: #0c193a; }
 .card-img-wrap { position: relative; aspect-ratio: 1/1; background-color: #f8f9fa; overflow: hidden; }
 .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
@@ -50,10 +66,12 @@
 .empty-result-box { padding: 100px 0; text-align: center; background: #fdfdfd; border: 1px dashed #ddd; border-radius: 12px; margin-top: 20px; }
 .empty-result-box i { font-size: 4rem; color: #eee; display: block; margin-bottom: 20px; }
 .btn-reset-search { margin-top: 15px; background: #0c193a; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; }
+
+/* 페이지네이션 Bootstrap 스타일 보정 */
 .pagination .page-item.active .page-link { background-color: #0c193a !important; border-color: #0c193a !important; color: #fff !important; }
 .pagination .page-link { color: #0c193a; }
 
-/* [6] 날짜 잘림 방지 (Flexbox 레이아웃 적용) */
+/* [6] 정보 레이아웃 */
 .card-info {
     font-size: 11px;
     display: flex;
@@ -61,25 +79,17 @@
     gap: 4px;
     width: 100%;
     margin-top: 4px;
-    white-space: nowrap; /* 절대 줄바꿈 되지 않도록 설정 */
+    white-space: nowrap;
     overflow: hidden;
 }
-
-.info-addr {
-    flex: 1; /* 주소가 남는 공간을 모두 차지함 */
-    overflow: hidden;
-    text-overflow: ellipsis; /* 주소가 너무 길면 자동으로 ... 처리 */
-}
-
-.info-date {
-    flex-shrink: 0; /* 날짜는 주소가 길어도 절대 줄어들거나 잘리지 않음 */
-    color: #888;
-}
-
+.info-addr { flex: 1; overflow: hidden; text-overflow: ellipsis; color: #888; }
+.info-date { flex-shrink: 0; color: #888; }
 .info-split { color: #ddd; flex-shrink: 0; }
-
 .card-body { padding: 12px !important; }
 
-/* 레이아웃 여백 조정 */
-#main-container { padding: 40px !important; }
-.row { margin-left: 0; margin-right: 0; }
+/* 사이드바 활성화 디자인 */
+.menu_item.active { 
+    background-color: #f8f9fa !important; 
+    border-right: 4px solid #0c193a !important; 
+}
+.menu_item.active > .menu_link { color: #0c193a !important; font-weight: bold !important; }
