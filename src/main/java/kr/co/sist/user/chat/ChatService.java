@@ -98,4 +98,8 @@ public class ChatService {
 	    // 그 다음 조회
 	    return cDAO.selectChat(roomNum);
 	}
+	
+	public Integer searchProductNum(int room) {
+		return cDAO.selectProductNum(room);
+	}
 }

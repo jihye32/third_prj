@@ -81,26 +81,66 @@ async function sendChatMessage(root) {
       body: JSON.stringify({ roomNum, productNum, content, otherId }),
     });
     if (!res.ok) throw new Error("send failed");
-
     const data = await res.json();
     // 서버가 roomId를 생성해줬으면 hidden에 반영
     if (!roomNum && data.roomNum) {
       root.querySelector("#room-num").value = data.roomNum;
       roomNum = data.roomNum;
+	  alert(roomNum);
+	  await ensureConnectedAndSubscribe(roomNum, root);
     }
 
-    // 화면에 append
     appendMyMessage(root, data);
 
     // 입력 초기화
     input.value = "";
-    root.querySelector("#chat-input") && (root.querySelector("#chat-input").textContent = "0");
+	const counter = root.querySelector("#chat-count");
+	if (counter) counter.textContent = "0";
 
   } catch (e) {
     alert("메시지 전송에 실패했습니다.");
     console.error(e);
   }
 }
+
+let stompClient = null;
+let currentRoom = null;
+
+function ensureConnected() {
+  return new Promise((resolve, reject) => {
+    if (stompClient?.connected) return resolve();
+
+    const socket = new SockJS("/ws");
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, () => resolve(), (err) => reject(err));
+  });
+}
+
+async function ensureConnectedAndSubscribe(roomNum, root) {
+  await ensureConnected();
+
+
+  if (currentRoom === String(roomNum)) {
+    return;
+  }
+
+  currentRoom = String(roomNum);
+
+  const myId = root.querySelector("#user-id")?.value;
+
+  const sub = stompClient.subscribe(`/topic/room/${roomNum}`, (frame) => {
+    
+    const msg = JSON.parse(frame.body);
+
+    if (myId && msg.writerId === myId) {
+      return;
+    }
+
+    appendOtherMessage(root, msg);
+  });
+
+}
+
 
 function appendMyMessage(root, { content }) {
   const box = root.querySelector("#chat-messages");
@@ -116,9 +156,40 @@ function appendMyMessage(root, { content }) {
   box.scrollTop = box.scrollHeight;
 }
 
+function appendOtherMessage(root, { content }) {
+  const box = root.querySelector("#chat-messages");
+
+  const tpl = root.querySelector("#other-message");
+  if (!box || !tpl) return;
+
+  const node = tpl.content.cloneNode(true);
+  node.querySelector(".msg-text").textContent = content;
+  node.querySelector(".msg-time").textContent =  formatChatTime()|| "";
+
+  box.appendChild(node);
+  box.scrollTop = box.scrollHeight;
+}
+
+
 function openChatForm(sellerId, store) { 
-	const pnum = PageContext.pnum;
-	loadDrawerContent(`/chat/${sellerId}?pnum=${pnum}`, () => openDrawer(`${store}`)); 
+  const pnum = window.PageContext?.pnum ?? null;
+  
+ 	const url = `/chat/${sellerId}`;
+	if(pnum !== null){
+		url+=`?pnum=${pnum}`;
+	}
+
+  loadDrawerContent(url, async () => {
+    openDrawer(`${store}`);
+
+    const root = document.querySelector("#chat-root");
+    if (!root) return;
+
+    const roomNum = root.querySelector("#room-num")?.value;
+    if (roomNum) {
+      await ensureConnectedAndSubscribe(roomNum, root);
+    }
+  });
 }
 
 function formatChatTime(date = new Date()) {
@@ -128,5 +199,6 @@ function formatChatTime(date = new Date()) {
     hour12: true
   });
 }
+
 
 

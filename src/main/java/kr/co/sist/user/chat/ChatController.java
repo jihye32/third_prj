@@ -3,6 +3,7 @@ package kr.co.sist.user.chat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +23,12 @@ public class ChatController {
 	@Autowired
 	private ChatService cs;
 	
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
+	
 	@GetMapping("/list")
 	public String chatList(HttpSession session, Model model) {
 		String uid = (String)session.getAttribute("uid");
-		uid="user10";
 		
 		List<ChatListDomain> clDomain = cs.searchChatList(uid);  
 		model.addAttribute("list", clDomain);
@@ -36,14 +39,19 @@ public class ChatController {
 	@GetMapping("/{otherId}")
 	public String chat(@PathVariable String otherId, @RequestParam(required = false) Integer pnum, HttpSession session, Model model) {
 		String uid = (String)session.getAttribute("uid");
-		uid="user10";
+		
+		ProductDomain pd = null;
+		
 		Integer room = cs.searchChatRoom(otherId, uid);
 		if(room != null) {
 			//이전에 대화한 기록 가져오기
 			List<ChatDomain> chatList = cs.searchChat(room, uid);
 			model.addAttribute("chatList", chatList);
+			
+			if(pnum == null) {
+				pnum = cs.searchProductNum(room);
+			}
 		}
-		ProductDomain pd = null;
 		if(pnum != null) {
 			pd=cs.searchProduct(pnum);
 		}
@@ -57,9 +65,19 @@ public class ChatController {
 	@ResponseBody
 	@PostMapping("/send")
 	public ChatDTO sendChat(@RequestBody ChatDTO cDTO, HttpSession session) {
+		
 		String uid = (String)session.getAttribute("uid");
-		uid = "user10";
 		cDTO.setWriterId(uid);
-		return cs.sendMessage(cDTO);
+		
+		if(cDTO.getProductNum()==null) {
+			cDTO.setProductNum(cs.searchProductNum(cDTO.getRoomNum()));
+		}
+		ChatDTO cc= cs.sendMessage(cDTO);
+
+		messagingTemplate.convertAndSend("/topic/room/" + cc.getRoomNum(), cc);
+
+
+	    return cc;
 	}
+	
 }

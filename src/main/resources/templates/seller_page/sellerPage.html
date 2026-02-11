@@ -12,7 +12,27 @@
 <!-- JQuery CDN -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+$(document).on("click", "#reportBtn", function(){
 
+    const select = $("#report_code").val();
+    const content = $("#report_content").val();
+
+    if(!select){
+        alert("신고 사유를 선택해주세요.");
+        return;
+    }
+
+    if(!content || content.trim() === ""){
+        alert("신고 내용을 입력해주세요.");
+        return;
+    }
+
+    $("#reportForm").submit();
+});
+
+  </script>		
+	
 <script type="text/javascript">
 var storeId = "[[${storeNum}]]";
 function openReviewForm() {// 리뷰 페이지
