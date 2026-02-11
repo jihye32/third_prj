@@ -63,15 +63,18 @@ public class JoinController {
 	}// verifyCodeChk
 
 	@PostMapping("/joinProcess")
-	public String joinProcess(JoinDTO jDTO, HttpServletRequest request, RedirectAttributes ra) {
+	public String joinProcess(JoinDTO jDTO, HttpServletRequest request, HttpSession session, RedirectAttributes ra) {
 		jDTO.setIp(request.getRemoteAddr());
 		boolean result = js.joinMember(jDTO);
 
 		if (result) {
-			ra.addFlashAttribute("flag", "success");
+			session.setAttribute("uid", jDTO.getId());
+	        session.setAttribute("snum", jDTO.getStoreNum());
+	        
 			return "redirect:/join/joinSuccess";
 		} else {
-			ra.addFlashAttribute("flag", "fail");
+			ra.addFlashAttribute("joinFlag", "fail");
+			
 			return "redirect:/join/joinFrm";
 		} // end else
 	}// joinProcess

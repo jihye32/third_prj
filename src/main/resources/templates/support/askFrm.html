@@ -34,238 +34,123 @@
 								class="text-2xl font-semibold text-jnGray-900 mt-8 text-center">고객센터</h2>
 							<div class="h-[1px] bg-jnGray-900 my-5 "></div>
 						</div>
-						<div
-							class="flex items-center justify-between rounded-md bg-jnGray-200 py-[10px] my-4">
-							<form novalidate="" role="search" class="w-full">
-								<label for="search" class="flex items-center"><span
-									class="px-3"><svg width="20" height="20"
-											viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-											class="md:w-4 xl:w-5 md:h-4 xl:h-5">
-											<path
-												d="M10.0278 19.0556C14.3233 19.0556 17.8056 15.5733 17.8056 11.2778C17.8056 6.98223 14.3233 3.5 10.0278 3.5C5.73223 3.5 2.25 6.98223 2.25 11.2778C2.25 15.5733 5.73223 19.0556 10.0278 19.0556Z"
-												stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round" fill="white"></path>
-											<path d="M21 21.8999L15.5 16.8999" stroke="#9CA3AF"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></svg></span><input id="search"
-									type="search"
-									class="w-full h-full text-sm bg-transparent outline-none placeholder-jnGray-500 10 text-heading lg:text-base placeholder:text-sm"
-									placeholder="궁금하신 점을 검색해 주세요." aria-label="faq-search"
-									autocomplete="off" value=""></label>
-							</form>
-						</div>
+
+						 <!-- 검색 (tab 유지 + keyword 전달) -->
+			            <div class="flex items-center justify-between rounded-md bg-jnGray-200 py-[10px] my-4">
+			              <form th:action="@{/support/askFrm}" method="get" novalidate="" role="search" class="w-full">
+			                <input type="hidden" name="tab" th:value="${tab}" />
+			                <label for="search" class="flex items-center">
+			                  <span class="px-3">
+			                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="md:w-4 xl:w-5 md:h-4 xl:h-5">
+			                      <path
+			                        d="M10.0278 19.0556C14.3233 19.0556 17.8056 15.5733 17.8056 11.2778C17.8056 6.98223 14.3233 3.5 10.0278 3.5C5.73223 3.5 2.25 6.98223 2.25 11.2778C2.25 15.5733 5.73223 19.0556 10.0278 19.0556Z"
+			                        stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="white"></path>
+			                      <path d="M21 21.8999L15.5 16.8999" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+			                    </svg>
+			                  </span>
+			                  <input id="search" name="keyword" type="search"
+			                    class="w-full h-full text-sm bg-transparent outline-none placeholder-jnGray-500 10 text-heading lg:text-base placeholder:text-sm"
+			                    placeholder="궁금하신 점을 검색해 주세요."
+			                    aria-label="faq-search"
+			                    autocomplete="off"
+			                    th:value="${keyword}">
+			                </label>
+			              </form>
+			            </div>
+
+						<!-- 탭(원본 디자인 유지) -->
 						<section class="flex sticky px-5 space-y-5 bg-white"
 							style="top: 80px;">
 							<ul class="flex my-3 flex-wrap">
-								<li><button
-										class="flex flex-row items-center h-10 px-5 py-2 m-1 text-sm font-normal border border-solid rounded-full justify-items-center min-w-min max-w-max border-jnGray-300 break-keep truncate text-jnGray-900 bg-white">공지사항</button></li>
-								<li><button
-										class="flex flex-row items-center h-10 px-5 py-2 m-1 text-sm font-normal border border-solid rounded-full justify-items-center min-w-min max-w-max border-jnGray-300 break-keep truncate text-jnGray-900 bg-white">자주묻는질문</button></li>
-								<li><button
-										class="flex flex-row items-center h-10 px-5 py-2 m-1 text-sm font-normal border border-solid rounded-full justify-items-center min-w-min max-w-max border-jnGray-300 break-keep truncate text-jnGray-900 bg-white">문의내역</button></li>
+								<li>
+									<a th:href="@{/support/supportFrm(tab='notice')}"
+									   class="flex flex-row items-center h-10 px-5 py-2 m-1 text-sm font-normal border border-solid rounded-full justify-items-center min-w-min max-w-max border-jnGray-300 break-keep truncate text-jnGray-900 bg-white">
+										공지사항
+									</a>
+								</li>
+								<li>
+									<a th:href="@{/support/supportFrm(tab='faq')}"
+									   class="flex flex-row items-center h-10 px-5 py-2 m-1 text-sm font-normal border border-solid rounded-full justify-items-center min-w-min max-w-max border-jnGray-300 break-keep truncate text-jnGray-900 bg-white">
+										자주묻는질문
+									</a>
+								</li>
+								<li>
+									<!-- 현재 페이지(문의내역) : 너무 까맣지 않게 연회색 활성 -->
+									<span
+										class="flex flex-row items-center h-10 px-5 py-2 m-1 text-sm font-normal border border-solid rounded-full justify-items-center min-w-min max-w-max border-jnGray-300 break-keep truncate text-jnGray-900 bg-jnGray-200">
+										문의내역
+									</span>
+								</li>
 							</ul>
 						</section>
+
+						<!-- 문의내역 리스트 -->
 						<section class="flex flex-col">
 							<ul class="flex flex-col py-4 w-full">
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
+
+								<!-- 비어있을 때 -->
+								<li th:if="${list == null || #lists.isEmpty(list)}">
+									<div class="px-5 py-10 text-center text-jnGray-500">
+										문의 내역이 없습니다.
+									</div>
+								</li>
+
+								<!-- 반복 -->
+								<li th:each="row : ${list}">
+									<a th:href="@{/support/askDetailFrm(askNum=${row.askNum})}"
+									   class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
 										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[판매자]
-													안심결제로 물건을 판매했는데 판매대금은 언제 입금되나요?</span></span>
-											<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
+											<span class="text-left">
+												<span class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight"
+												      th:text="${row.askTitle}">
+													문의 제목
+												</span>
+											</span>
+
+											<!-- 분류/날짜/상태 한 줄 -->
+											<div class="flex items-center gap-2 mt-1">
+												<span class="text-xs font-medium text-jnGray-500"
+												      th:text="${row.askTypeText}">문의유형</span>
+												<span class="text-xs font-medium text-jnGray-400">·</span>
+												<span class="text-xs font-medium text-jnGray-500"
+												      th:text="${#dates.format(row.askDate,'yyyy-MM-dd')}">2026-02-10</span>
+												<span class="text-xs font-medium text-jnGray-400">·</span>
+												<span class="text-xs font-medium"
+												      th:classappend="${row.answerText == null ? ' text-jnGray-500' : ' text-jnGray-900'}"
+												      th:text="${row.answerStatus}">미답변</span>
+											</div>
 										</div>
+
 										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
 											xmlns="http://www.w3.org/2000/svg"
 											class="-rotate-90 rotate-[0deg]">
 											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
+												<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
+													stroke-width="1.5" stroke-linecap="round"
+													stroke-linejoin="round"></path>
+											</g>
 											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[안심보상제도]
-													안심보상제도란?</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">계좌
-													전송 기능이 무엇인가요?</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">관리자
-													확인이 필요한 상품이 있다고 안내받았는데 사유가 궁금해요.</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[판매자]
-													판매자 수수료가 무엇인가요?</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[안심보상제도]
-													안심보상제도 제외대상은 어떤 경우인가요?</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">[안심보상제도]
-													사건사고사실확인원 발급 방법을 알고 싶어요</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">등급은
-													어떻게 분류되나요?</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">왜
-													상품등록은 앱에서만 가능하도록 변경되었나요?</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
-								<li><button
-										class="flex justify-between items-center px-5 py-4 w-full border-b border-solid border-jnGray-300">
-										<div class="flex flex-col flex-1 items-start mr-2">
-											<span class="text-left"><span
-												class="text-sm font-normal text-jnGray-900 text-start md:tracking-tight">선택
-													및 입력해야 하는 항목이 많아 상품 등록이 어려워요</span></span>
-													<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
-										</div>
-										<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											class="-rotate-90 rotate-[0deg]">
-											<g clip-path="url(#clip0_2224_69059)">
-											<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-												stroke-width="1.5" stroke-linecap="round"
-												stroke-linejoin="round"></path></g>
-											<defs>
-											<clipPath id="clip0_2224_69059">
-											<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-									</button></li>
+												<clipPath id="clip0_2224_69059">
+													<rect width="20" height="20" fill="white"></rect>
+												</clipPath>
+											</defs>
+										</svg>
+									</a>
+								</li>
+
 							</ul>
 						</section>
+
 						<div></div>
-						<div
-							class="grid grid-cols-2 gap-2 justify-between items-center w-full">
-							<button
-								class="flex justify-center w-full py-3 text-sm font-medium text-center bg-white border border-solid rounded border-jnGray-300 text-jnGray-900 break-keep col-span-2">1:1
-								문의</button>
+
+						<!-- 1:1 문의 작성 버튼(원본 디자인 유지, 링크만 변경) -->
+						<div class="grid grid-cols-2 gap-2 justify-between items-center w-full">
+							<a th:href="@{/support/askWriteFrm}"
+							   class="flex justify-center w-full py-3 text-sm font-medium text-center bg-white border border-solid rounded border-jnGray-300 text-jnGray-900 break-keep col-span-2">
+								1:1 문의
+							</a>
 						</div>
+
 					</article>
 				</div>
 			</main>

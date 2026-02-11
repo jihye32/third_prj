@@ -8,8 +8,48 @@
 <link th:href="@{/css/output.css}" rel="stylesheet">
 <link th:href="@{/css/test.css}" rel="stylesheet">
 <!-- JQuery CDN -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+    var loginFlag = "[[${loginFlag}]]";
+	var errorMsg = "[[${errorMsg}]]";
+
+    if (loginFlag === "fail" && errorMsg) {
+        alert(errorMsg);
+    }// end if
+	
+	$("#loginBtn").click(function() {
+		chkNull();
+    });
+
+    $("input[name='pass']").keydown(function(evt) {
+        if (evt.keyCode === 13) {
+            chkNull();
+        }// end if
+    });
+});// ready
+
+function chkNull() {
+    var id = $("input[name='id']").val().trim();
+    var pass = $("input[name='pass']").val().trim();
+
+    if (id === "") {
+        alert("아이디를 입력해주세요.");
+        $("input[name='id']").focus();
+        
+        return;
+    }// end if
+
+    if (pass === "") {
+        alert("비밀번호를 입력해주세요.");
+        $("input[name='pass']").focus();
+        
+        return;
+    }// end if
+
+    $("#loginFrm").submit();
+};// chkNull
+</script>
 </head>
 <body>
 	<div id="__next" style="height: auto !important;">
@@ -42,26 +82,35 @@
 											style="color: transparent;">
 									</div>
 								</div>
-								<div class="mt-atuo">
-									<div class="mt-6">
-										<label for="auto-login"
-											class="flex justify-start items-center"><span
-											class="inline-block text-sm font-semibold">아이디</span></label><input
-											id="auto-login" type="checkbox" class="a11yHidden" checked="">
+								<form th:action="@{/user/login/loginProcess}" method="post"
+									id="loginFrm">
+									<!-- 아이디 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="auto-login"
+												class="flex justify-start items-center"><span
+												class="inline-block text-sm font-semibold">아이디</span></label><input
+												id="auto-login" type="checkbox" class="a11yHidden"
+												checked="">
+										</div>
+										<input type="text" name="id"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white !important; border: 1px solid black !important; margin-bottom: -0.5rem !important; color: black !important; cursor: text !important;">
 									</div>
-									<input type="text" name="id"
-										class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
-										style="background-color: white !important; border: 1px solid black !important; margin-bottom: -0.5rem !important; color: black !important; cursor: text !important;">
-									<div class="mt-6">
-										<label for="auto-login"
-											class="flex justify-start items-center"><span
-											class="inline-block text-sm font-semibold">비밀번호</span></label><input
-											id="auto-login" type="checkbox" class="a11yHidden" checked="">
+									<!-- 비밀번호 -->
+									<div class="mt-atuo">
+										<div class="mt-6">
+											<label for="auto-login"
+												class="flex justify-start items-center"><span
+												class="inline-block text-sm font-semibold">비밀번호</span></label><input
+												id="auto-login" type="checkbox" class="a11yHidden"
+												checked="">
+										</div>
+										<input type="password" name="pass"
+											class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
+											style="background-color: white !important; border: 1px solid black !important; color: black !important; cursor: text !important;">
 									</div>
-									<input type="password" name="pass"
-										class="text-[13px] md:text-sm leading-4 inline-flex items-center transition ease-in-out duration-300 font-semibold font-body border rounded-md px-5 py-4 h-11 md:h-12 w-full mt-2.5 focus:ring-2 focus:ring-black focus:outline-none"
-										style="background-color: white !important; border: 1px solid black !important; color: black !important; cursor: text !important;">
-									<button data-variant="flat"
+									<button type="button" id="loginBtn" data-variant="flat"
 										class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center placeholder-white focus-visible:outline-none focus:outline-none rounded-md px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-gray-600 hover:shadow-cart h-11 md:h-12 w-full mt-2.5 bg-white text-black border-solid border border-black justify-between"
 										style="background-color: black !important; margin-top: 1rem !important">
 										<svg stroke="currentColor" fill="currentColor"
@@ -73,7 +122,7 @@
 									<div class="flex justify-center items-center h-12 mt-2.5"
 										style="margin-top: 1rem !important">
 										<span style="display: contents; cursor: pointer;"><a
-											href="/"><button type="button"
+											href="/findAccount/findAccountFrm"><button type="button"
 													class="inline-flex p-0.5 rounded relative justify-start items-center gap-0.5 text-jnGray-900 hover:bg-jnGray-900/5 active:bg-jnGray-900/10">
 													<span
 														class="text-center justify-start font-regular text-sm h-5 text-jnGray-900">아이디
@@ -86,7 +135,7 @@
 									<div class="flex justify-center items-center h-12 mt-2.5"
 										style="margin-bottom: 1rem !important; margin-top: 0rem !important; height: 2rem !important">
 										<span style="display: contents; cursor: pointer;"><a
-											href="/"><button type="button"
+											href="/join/joinFrm"><button type="button"
 													class="inline-flex p-0.5 rounded relative justify-start items-center gap-0.5 text-jnGray-900 hover:bg-jnGray-900/5 active:bg-jnGray-900/10">
 													<span
 														class="text-center justify-start font-regular text-sm h-5 text-jnGray-900">회원가입</span>
@@ -95,7 +144,7 @@
 														aria-hidden="true"></div>
 												</button></a></span>
 									</div>
-								</div>
+								</form>
 							</div>
 						</div>
 					</div>

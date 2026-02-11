@@ -25,14 +25,23 @@ function openReviewForm() {// 리뷰 페이지
         });
 }// openReviewForm
 function openReportForm(reviewerId) {// 신고 페이지
-    fetch('/report/review?reviewerId='+reviewerId) // 
+	
+console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍힘
+    
+    if(!reviewerId) {
+        alert("신고 대상자 ID가 없습니다.");
+        return;
+    }
+	
+    fetch('/store/report/review?reviewerId='+reviewerId) // 
         .then(res => res.text()) 
         .then(html => {
             // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
             document.getElementById('drawerContent').innerHTML = html;
-            openDrawer('후기'); // 서랍 여는 공통 함수 실행
+            openDrawer('신고'); // 서랍 여는 공통 함수 실행
         });
 }// openReviewForm
+
 
 
 $(document).ready(function() {
