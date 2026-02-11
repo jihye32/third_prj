@@ -2,5 +2,101 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="kr.co.sist.user.chat">
- </mapper>
+<mapper namespace="kr.co.sist.user.chat">
+<resultMap type="kr.co.sist.user.chat.ProductDomain" id="productDomain">
+	<result column="title" property="title"/>
+	<result column="user_id" property="sellerId"/>
+	<result column="price" property="price"/>
+	<result column="thumbnail" property="thumbnail"/>
+</resultMap>
+<select id="selectProductInfo" parameterType="int" resultMap="productDomain">
+select s.user_id, p.title, p.price, p.thumbnail
+from store s, product p
+where s.store_num = p.store_num and p.product_num = #{productNum}
+</select>
+<select id="selectChatRoom" parameterType="kr.co.sist.user.chat.ChatListDTO" resultType="Integer">
+select chatroom_num 
+from chat_list 
+where user_low = #{lowId} and user_high=#{highId}
+</select>
+<insert id="insertChatRoom" parameterType="kr.co.sist.user.chat.ChatListDTO">
+insert into chat_list(chatroom_num, user_low, user_high, create_date) values (seq_chat_list.NEXTVAL, #{lowId}, #{highId}, systimestamp)
+</insert>
+<select id="selectChatProduct" parameterType="kr.co.sist.user.chat.ChatListDTO" resultType="String">
+select chatroom_num 
+from room_product 
+where chatroom_num=#{roomNum} and product_num=#{productNum}
+</select>
+<insert id="insertRoomProduct" parameterType="kr.co.sist.user.chat.ChatDTO">
+insert into room_product(chatroom_num, product_num) values (#{roomNum}, #{productNum})
+</insert>
+<update id="updateLastChat" parameterType="kr.co.sist.user.chat.ChatListDTO">
+update chat_list set last_product_num=#{pnum}, last_talk=#{content}, last_talk_date=systimestamp
+where user_low = #{lowId} and user_high=#{highId}
+</update>
+<insert id="insertChat" parameterType="kr.co.sist.user.chat.ChatDTO">
+insert into chat(chat_num, talk, writer_id, chat_date, chatroom_num) values (seq_chat_num.NEXTVAL, #{content}, #{writerId}, systimestamp, #{roomNum})
+</insert>
+
+
+
+<!-- 채팅 리스트 가져오기 -->
+<resultMap type="kr.co.sist.user.chat.ChatListDomain" id="chatListDomain">
+<result column="other_id" property="otherId"/>
+<result column="chatroom_num" property="roomNum"/>
+<result column="last_product_num" property="pnum"/>
+<result column="last_talk" property="content"/>
+<result column="last_talk_date" property="sendDate"/>
+</resultMap>
+<select id="selectChatList" parameterType="String" resultMap="chatListDomain">
+select chatroom_num,
+       case
+         when user_low = #{uid} then user_high
+         else user_low
+       end as other_id,
+       last_product_num,
+       last_talk,
+       last_talk_date
+from chat_list
+where user_low = #{uid}
+   or user_high = #{uid}
+order by last_talk_date desc
+</select>
+<resultMap type="kr.co.sist.user.chat.ChatListInfoDomain" id="infoDomain">
+	<result column="store_name" property="storeName"/>
+	<result column="profile_img" property="profile"/>
+</resultMap>
+<select id="selectStoreName" parameterType="String" resultMap="infoDomain">
+select store_name, profile_img
+from store
+where user_id = #{otherId}
+</select>
+<select id="selectProductThumbnail" parameterType="int" resultType="String">
+select thumbnail
+from product
+where product_num = #{pnum}
+</select>
+
+<!-- 채팅 내역 가져오기 -->
+<resultMap type="kr.co.sist.user.chat.ChatDomain" id="ChatDomain">
+	<result column="chat_num" property="chatNum"/>
+	<result column="talk" property="content"/>
+	<result column="writer_id" property="writerId"/>
+	<result column="chat_date" property="chatDate"/>
+	<result column="read_date" property="readDate"/>
+	<result column="chatroom_num" property="roomNum"/>
+</resultMap>
+<select id="selectChat" parameterType="int" resultMap="ChatDomain">
+select chat_num, talk, writer_id, chat_date, read_date, chatroom_num
+from chat 
+where chatroom_num = #{roomNum}
+order by chat_num
+</select>
+
+<!-- 읽음 표시 -->
+<update id="updateReadChat" parameterType="kr.co.sist.user.chat.ChatDTO">
+update chat
+set read_date = systimestamp
+where chatroom_num = #{roomNum} and writer_id != #{writerId} and read_date is null
+</update>
+</mapper>

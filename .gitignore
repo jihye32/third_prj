@@ -38,3 +38,6 @@ src/main/resources/static/css/output.css
 
 # 추가로 node_modules도 없다면 꼭 넣어주세요
 node_modules/
+
+# 메일 계정 및 비밀번호 설정 파일
+src/main/resources/application-mail.properties
