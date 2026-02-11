@@ -1,105 +1,84 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script> </head>
 <body>
-	<!-- fragment 이름 바꿔주세요 -->
-	<div th:fragment="fragmentWrapperReview">
-<div class="min-h-screen bg-gray-50 py-8 px-4">
-    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200">
-      
-      <div class="flex items-center px-5 py-4 border-b border-gray-100">
-        <button class="p-1 -ml-1 mr-3 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 18l-6-6 6-6"></path>
-          </svg>
-        </button>
-        <h1 class="text-lg font-bold text-gray-900">후기</h1>
-      </div>
-
-      <div class="p-5 space-y-8">
+    <div th:fragment="fragmentWrapperReview">
+        <div class="min-h-screen bg-gray-50 py-8 px-4">
+            <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200">
+                
+                <div class="p-5 space-y-8">
+                 <section>
+    <h2 class="text-[15px] font-bold text-gray-900 mb-3">평균 별점</h2>
+    <div class="flex items-center gap-3 bg-gray-50 p-4 rounded-xl">
+        <span class="text-3xl font-extrabold text-gray-900" 
+              th:text="${#numbers.formatDecimal(reviewStar, 1, 1)}">4.5</span>
         
-        <section>
-          <h2 class="text-[15px] font-bold text-gray-900 mb-4">이런점이 좋았어요</h2>
-          <ul class="space-y-2">
-            <li class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
-              <span class="text-sm text-gray-800">친절/매너가 좋아요.</span>
-              <div class="flex items-center gap-1 text-gray-500">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"></path>
-                </svg>
-                <span class="text-xs font-semibold">10</span>
-              </div>
-            </li>
-            <li class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
-              <span class="text-sm text-gray-800">응답이 빨라요.</span>
-              <div class="flex items-center gap-1 text-gray-500">
-                <span class="text-xs font-semibold">9</span>
-              </div>
-            </li>
-            <li class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
-              <span class="text-sm text-gray-800">상품 상태가 좋아요.</span>
-              <div class="flex items-center gap-1 text-gray-500">
-                <span class="text-xs font-semibold">8</span>
-              </div>
-            </li>
-            <li class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
-              <span class="text-sm text-gray-800">택배 거래가 수월했어요.(포장, 협조적)</span>
-              <div class="flex items-center gap-1 text-gray-500">
-                <span class="text-xs font-semibold">8</span>
-              </div>
-            </li>
-          </ul>
-        </section>
-
-        <div class="h-px bg-gray-100"></div>
-
-        <section>
-          <h2 class="text-[15px] font-bold text-gray-900 mb-5">
-            상세한 후기도 있어요 <span class="text-blue-500 ml-1">2</span>
-          </h2>
-
-          <div class="space-y-6">
-            <div class="border-b border-gray-50 pb-6 last:border-0">
-              <div class="flex items-center gap-3 mb-3">
-                <img src="https://img2.joongna.com/common/Profile/Default/profile_m.png" class="w-10 h-10 rounded-full border border-gray-100" alt="profile">
-                <div>
-                  <div class="text-sm font-bold text-gray-900">원누리7</div>
-                  <div class="flex items-center gap-2 mt-0.5">
-                    <span class="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-500 border border-blue-100 rounded font-medium">구매자</span>
-                    <span class="text-[11px] text-gray-400">2026-01-03</span>
-                  </div>
-                </div>
-              </div>
-              <div class="text-sm text-gray-700 leading-relaxed pl-[52px]">
-                좋은 물건 감사히 쓰겠습니다.
-              </div>
+        <div class="flex flex-col">
+            <div class="flex text-lg">
+                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                    <span th:text="'★'" 
+                          th:class="${i <= reviewStar} ? 'text-yellow-400' : 'text-gray-300'">
+                    </span>
+                </th:block>
             </div>
-
-            <div class="border-b border-gray-50 pb-6 last:border-0">
-              <div class="flex items-center gap-3 mb-3">
-                <img src="https://img2.joongna.com/common/Profile/Default/profile_m.png" class="w-10 h-10 rounded-full border border-gray-100" alt="profile">
-                <div>
-                  <div class="text-sm font-bold text-gray-900">적절한늑대머스터드</div>
-                  <div class="flex items-center gap-2 mt-0.5">
-                    <span class="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-500 border border-blue-100 rounded font-medium">구매자</span>
-                    <span class="text-[11px] text-gray-400">2025-10-27</span>
-                  </div>
-                </div>
-              </div>
-              <div class="text-sm text-gray-700 leading-relaxed pl-[52px]">
-                설명대로 작동 잘 돼요
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
+            <span class="text-xs text-gray-500 mt-0.5" 
+                  th:text="${countReview} + '개의 후기 기준'">0개의 후기 기준</span>
+        </div>
     </div>
-  </div>
+</section>
+                    <div class="h-px bg-gray-100"></div>
 
-	</div>
+                    <section>
+    <h2 class="text-[15px] font-bold text-gray-900 mb-5">
+        상세한 후기도 있어요 <span class="text-blue-500 ml-1" th:text="${countReview}">0</span>
+    </h2>
+
+    <div class="space-y-6">
+        <div th:each="review : ${reviews}" class="border-b border-gray-50 pb-6 last:border-0">
+            <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                    <img th:src="${review.writerProfile != null ? review.writerProfile : 'https://img2.joongna.com/common/Profile/Default/profile_m.png'}" 
+                         class="w-10 h-10 rounded-full border border-gray-100" alt="profile">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-gray-900" th:text="${review.writerNickname}">닉네임</span>
+                            
+                            <span class="text-yellow-400 text-xs">
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <span th:text="${i <= review.review_rate} ? '★' : '☆'"></span>
+                                </th:block>
+                            </span>
+
+                        <button type="button" 
+        th:data-reviewer-id="${review.reviewerId}"
+        onclick="openReportForm(this.getAttribute('data-reviewer-id'))" 
+        class="text-[11px] text-gray-400 hover:text-red-500 hover:underline ml-1">
+    신고
+</button>
+
+                        </div>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-500 border border-blue-100 rounded font-medium">구매자</span>
+                            <span class="text-[11px] text-gray-400" th:text="${review.review_date}">2026-00-00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-sm text-gray-700 leading-relaxed pl-[52px]" th:text="${review.review_text}">
+                리뷰 내용이 여기에 출력됩니다.
+            </div>
+        </div>
+        
+        <div th:if="${#lists.isEmpty(reviews)}" class="text-center py-10 text-gray-400 text-sm">
+            등록된 후기가 아직 없습니다.
+        </div>
+    </div>
+</section>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
