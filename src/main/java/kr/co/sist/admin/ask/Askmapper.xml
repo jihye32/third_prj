@@ -33,7 +33,6 @@
         </where>
     </select>
 
-    <!-- 목록 (Oracle ROW_NUMBER 페이징) -->
     <select id="selectAskList"
             parameterType="kr.co.sist.admin.ask.AskDTO"
             resultType="kr.co.sist.admin.ask.AskDomain">
@@ -74,7 +73,6 @@
         WHERE rnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
-    <!-- ✅ 상세 (parameterType=int 이므로 #{value} 사용) -->
     <select id="selectAskDetail"
             parameterType="int"
             resultType="kr.co.sist.admin.ask.AskDomain">
@@ -94,7 +92,6 @@
         WHERE a.ask_num = #{value}
     </select>
 
-    <!-- ✅ 추가: 문의 이미지 목록 -->
     <select id="selectAskImages"
             parameterType="int"
             resultType="string">
@@ -104,7 +101,6 @@
         ORDER BY ask_img
     </select>
 
-    <!-- 답변 등록/수정 -->
     <update id="updateAnswer"
             parameterType="kr.co.sist.admin.ask.AskDTO">
         UPDATE ask

@@ -20,7 +20,6 @@
 
             <form th:action="@{/manage/report/reportlist}" method="get" style="display:flex; gap:8px;">
 
-                <!-- ✅ 신고 종류 -->
                 <select name="reportCode">
                     <option value="">신고 종류</option>
                     <option th:each="t : ${typeList}"

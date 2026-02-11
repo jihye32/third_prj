@@ -5,8 +5,7 @@
 <mapper namespace="kr.co.sist.user.join">
 	<!-- id 중복 조회 -->
 	<select id="selectId" parameterType="String" resultType="int">
-		select
-		count(*) cnt
+		select count(*) cnt
 		from member
 		where user_id = #{value}
 	</select>
@@ -20,20 +19,18 @@
 
 	<!-- member 추가 -->
 	<insert id="insertMember" parameterType="kr.co.sist.user.join.JoinDTO">
-		insert into member(user_id, user_pass, name, ip,
-		birthday, email,
-		input_date, delete_flag)
-		values(#{id}, #{pass},
-		#{userName}, #{ip}, #{birth}, #{email}, SYSDATE, 'N')
+		insert into member(user_id, user_pass, name, ip, birthday, email, input_date, delete_flag)
+		values(#{id}, #{pass}, #{userName}, #{ip}, #{birth}, #{email}, SYSDATE, 'N')
 	</insert>
 
 	<!-- store 추가 -->
 	<insert id="insertStore" parameterType="kr.co.sist.user.join.JoinDTO">
-		insert into store(store_num, store_name, profile_img,
-		input_date,
-		user_id)
-		values(seq_store_num.nextval, #{storeName},
-		'default.jpg', SYSDATE, #{id})
+		<selectKey keyProperty="storeNum" resultType="int" order="BEFORE">
+	        select seq_store_num.nextval from dual
+	    </selectKey>
+	    
+		insert into store(store_num, store_name, profile_img, input_date, user_id)
+		values(#{storeNum}, #{storeName}, 'default.jpg', SYSDATE, #{id})
 	</insert>
 
 	<!-- suspension 추가 -->
