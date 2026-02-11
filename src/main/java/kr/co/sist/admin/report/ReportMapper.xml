@@ -63,7 +63,6 @@
         </where>
     </select>
 
-    <!-- 목록 (ROW_NUMBER 페이징 + 조인으로 텍스트 가져오기) -->
     <select id="selectReportList"
             parameterType="kr.co.sist.admin.report.ReportDTO"
             resultType="kr.co.sist.admin.report.ReportDomain">
@@ -122,7 +121,6 @@
         WHERE rnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
-    <!-- 상세 (parameterType=int -> #{value}) -->
     <select id="selectReportDetail"
             parameterType="int"
             resultType="kr.co.sist.admin.report.ReportDomain">
@@ -155,7 +153,6 @@
         ORDER BY report_img
     </select>
 
-    <!-- 처리 저장: "처리완료(3)"일 때만 answer/answer_date 저장 -->
     <update id="updateReportProcess"
             parameterType="kr.co.sist.admin.report.ReportDTO">
         UPDATE report

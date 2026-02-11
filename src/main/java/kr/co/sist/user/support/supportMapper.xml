@@ -1,16 +1,144 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.sist.user.notice">
+
+<mapper namespace="kr.co.sist.user.support.SupportMapper">
+
+  <!-- 목록: content(CLOB) 제외 -->
+  <select id="selectSupportList"
+          parameterType="kr.co.sist.user.support.SupportDTO"
+          resultType="kr.co.sist.user.support.SupportDomain">
+    SELECT
+        context_num AS boardNum,
+        board_type  AS boardType,
+        title       AS title,
+        write_date  AS writeDate,
+        admin_id    AS adminId,
+        delete_flag AS deleteFlag
+    FROM adminboard
+    WHERE delete_flag = 'N'
+      AND board_type = #{boardType}
+    <if test="keyword != null and keyword != ''">
+      AND (
+          title LIKE '%' || #{keyword} || '%'
+          OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0
+      )
+    </if>
+    ORDER BY context_num DESC
+  </select>
+
+  <!-- 상세: content 포함 -->
+  <select id="selectSupportDetail"
+          parameterType="kr.co.sist.user.support.SupportDTO"
+          resultType="kr.co.sist.user.support.SupportDomain">
+    SELECT
+        context_num AS boardNum,
+        board_type  AS boardType,
+        title       AS title,
+        content     AS content,
+        write_date  AS writeDate,
+        admin_id    AS adminId,
+        delete_flag AS deleteFlag
+    FROM adminboard
+    WHERE delete_flag = 'N'
+      AND board_type = #{boardType}
+      AND context_num = #{boardNum}
+  </select>
+
+  <!-- ===================== -->
+  <!-- Ask(1:1 문의) -->
+  <!-- ===================== -->
+
+   <!-- 내 문의 목록 -->
+  <select id="selectMyAskList" parameterType="map" resultType="kr.co.sist.user.support.UserAskDomain">
+    SELECT
+      a.ask_num   AS askNum,
+      a.ask_code  AS askCode,
+      v.ask_text  AS askTypeText,
+      a.ask_title AS askTitle,
+      a.ask_text  AS askText,
+      a.ask_date  AS askDate,
+      a.user_id   AS userId,
+      a.answer_text AS answerText,
+      a.answer_date AS answerDate,
+      CASE WHEN a.answer_text IS NULL THEN '미답변' ELSE '답변완료' END AS answerStatus
+    FROM ask a
+    LEFT JOIN ask_value v ON a.ask_code = v.ask_code
+    WHERE a.user_id = #{userId}
+    
+    <if test="keyword != null and keyword != ''">
+      AND a.ask_title LIKE '%' || #{keyword} || '%'
+    </if>
+    
+    ORDER BY a.ask_num DESC
+</select>
+
+  <!-- 내 문의 상세 -->
+  <select id="selectMyAskDetail" parameterType="map" resultType="kr.co.sist.user.support.UserAskDomain">
+    SELECT
+      a.ask_num   AS askNum,
+      a.ask_code  AS askCode,
+      v.ask_text  AS askTypeText,
+      a.ask_title AS askTitle,
+      a.ask_text  AS askText,
+      a.ask_date  AS askDate,
+      a.user_id   AS userId,
+      a.answer_text AS answerText,
+      a.answer_date AS answerDate,
+      CASE WHEN a.answer_text IS NULL THEN '미답변' ELSE '답변완료' END AS answerStatus
+    FROM ask a
+    LEFT JOIN ask_value v ON a.ask_code = v.ask_code
+    WHERE a.ask_num = #{askNum}
+      AND a.user_id = #{userId}
+  </select>
+
+  <!-- 문의 이미지 목록 -->
+  <select id="selectAskImgList" parameterType="int" resultType="string">
+    SELECT ask_img
+    FROM ask_img
+    WHERE ask_num = #{askNum}
+    ORDER BY ask_img
+  </select>
+
+ 
+  <insert id="insertAsk" parameterType="kr.co.sist.user.support.UserAskDTO">
+    <selectKey keyProperty="askNum" resultType="int" order="BEFORE">
+      SELECT seq_ask_num.NEXTVAL FROM dual
+    </selectKey>
+
+    INSERT INTO ask (
+      ask_num, ask_code, ask_title, ask_text, ask_date, user_id, answer_text, answer_date
+    ) VALUES (
+      #{askNum},
+      #{askCode},
+      #{askTitle},
+      #{askText},
+      SYSDATE,
+      #{userId},
+      NULL,
+      NULL
+    )
+  </insert>
+
+  <!-- 문의 이미지 저장(여러 장) -->
+  <insert id="insertAskImg" parameterType="map">
+    INSERT INTO ask_img (ask_num, ask_img)
+    VALUES (#{askNum}, #{askImg})
+  </insert>
+  
+<delete id="deleteAskImg" parameterType="int">
+    DELETE FROM ask_img
+    WHERE ask_num = #{askNum}
+</delete>
+
+<update id="updateAsk" parameterType="kr.co.sist.user.support.UserAskDTO">
+    UPDATE ask
+    SET ask_code  = #{askCode},
+    	ask_title = #{askTitle},
+        ask_text = #{askText}
+    WHERE ask_num = #{askNum}
+      AND user_id = #{userId}
+</update>
 
 </mapper>
-
-
-
-
-
-
-
-
-

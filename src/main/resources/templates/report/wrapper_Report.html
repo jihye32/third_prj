@@ -4,20 +4,7 @@
 <meta charset="UTF-8">
 
 <script>
-    function submitReport(event) {
-      event.preventDefault(); // 페이지 새로고침 방지
-
-      // 컨트롤러 PostMapping 주소로 요청
-      fetch('/report/wrapper_reportDone', {
-        method: 'POST',
-      })
-      .then(response => response.text()) // 서버에서 fragment 조각(HTML)을 텍스트로 받음
-      .then(html => {
-        // id가 report-container인 영역을 받은 HTML로 교체
-        document.getElementById('report-container').innerHTML = html;
-      })
-      .catch(error => console.error('Error:', error));
-    }
+   
   </script>
 
 
@@ -39,20 +26,21 @@
       </p>
     </div>
 
- <form onsubmit="submitReport(event)" class="p-6 space-y-4">
-      
+ <form th:action="@{/store/report/review_process}" method="post" 
+ enctype="multipart/form-data"
+ 
+ class="p-6 space-y-4">
+      <input type="hidden" name="reviewerId" th:value="${reviewerId}">
      <div class="space-y-3">
   <div class="relative">
     <select 
       class="w-full appearance-none px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors cursor-pointer"
-      name="reportType"
+      name="report_code"
     >
       <option value="" disabled selected>신고유형을 선택해 주세요</option>
-      <option value="illegal">불법 행위</option>
-      <option value="scam">사기 피해</option>
-      <option value="abuse">비매너 행위</option>
-      <option value="spam">스팸성 홍보</option>
-      <option value="other">기타 사유</option>
+      <option value="1">욕설/비방</option>
+      <option value="2">사기 의심</option>
+      <option value="3">부적절한 게시물</option>
     </select>
     
     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
@@ -64,7 +52,7 @@
 </div>
 
       <div class="mt-4">
-        <textarea 
+        <textarea name="report_content"
           placeholder="신고 사유를 입력해주세요"
           class="w-full h-40 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none text-sm placeholder-gray-400"
         ></textarea>
@@ -74,7 +62,7 @@
         <span class="text-sm font-semibold text-gray-700">사진/동영상 첨부</span>
         <div class="flex flex-wrap gap-3">
           <label class="cursor-pointer group">
-            <input type="file" class="hidden" multiple accept="image/*,video/*">
+            <input type="file" name="upFile" class="hidden" multiple accept="image/*,video/*">
             <div class="w-20 h-20 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg group-hover:border-blue-500 transition-colors">
               <svg class="w-8 h-8 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>

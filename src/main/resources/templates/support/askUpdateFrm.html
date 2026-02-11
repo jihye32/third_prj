@@ -8,15 +8,15 @@
 <link th:href="@{/css/output.css}" rel="stylesheet">
 <link th:href="@{/css/test.css}" rel="stylesheet">
 <style type="text/css">
+/* 작성폼과 동일한 스타일 적용 */
 .ask{
   border:1px solid lightgray;
   border-radius:5px;
   height:50px;
   padding-left:5px;
-
-
   width:100%;
   box-sizing:border-box;
+  
   margin-bottom: 15px;
 }
 
@@ -32,11 +32,6 @@
   box-sizing:border-box;
 }
 
-#btn {
-background-color: #EEEEEE;
-border-radius: 5px;
-height: 50px;
-}
 #btnSubmit {
   background-color: #3cb371; 
   color: #f5f5f5;
@@ -46,23 +41,27 @@ height: 50px;
   cursor: pointer;
 }
 </style>
-<!-- JQuery CDN -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$(function() {
+		// 업로드 버튼 클릭 시 hidden file input 클릭
 		$(document).on("click", "#btnPickFiles", function(e){
 			e.preventDefault();
 			$("#files").click();
 		});
 
+		// 파일 선택 시 카운트 표시
 		$(document).on("change", "#files", function(){
 			const cnt = this.files ? this.files.length : 0;
 			$("#fileCount").text(cnt + "/10");
 		});
 
+		// 수정 완료 버튼 클릭 -> 폼 submit
 		$(document).on("click", "#btnSubmit", function(){
-			$("#askForm").submit();
+			if(confirm("수정하시겠습니까?")) {
+				$("#askForm").submit();
+			}
 		});
 	});
 </script>
@@ -88,8 +87,7 @@ height: 50px;
 						<div class="flex items-center mt-8 mb-4 border-t border-b border-solid border-jnGray-300"
 						     style="border-top: 0; margin-top: 0; margin-bottom: 30px">
 
-							<!-- 뒤로가기 -->
-							<a th:href="@{/support/askFrm}">
+							<a th:href="@{/support/askDetailFrm(askNum=${detail.askNum})}">
 								<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
 									xmlns="http://www.w3.org/2000/svg"
 									class="rotate-90 rotate-[0deg]">
@@ -106,36 +104,33 @@ height: 50px;
 							<div class="flex flex-col flex-1 justify-between items-start px-5 py-4 mr-2 w-full"
 							     style="margin: 10px 0">
 								<span class="text-sm font-normal text-left text-jnGray-900 text-start md:tracking-tight">
-									1:1 문의
+									1:1 문의 수정
 								</span>
 							</div>
 						</div>
 
-						<div th:if="${err}" class="text-red-500 text-sm mb-2" th:text="${err}"></div>
-
-						<form id="askForm" method="post" th:action="@{/support/askWriteProcess}" enctype="multipart/form-data">
+						<form id="askForm" method="post" th:action="@{/support/askUpdateProcess}" enctype="multipart/form-data">
+							<input type="hidden" name="askNum" th:value="${detail.askNum}">
 
 							<select name="askCode" id="askCode" class="ask" required>
-								<option value="N/A">문의 유형을 선택해 주세요.</option>
-								<option value="1">결제/환불</option>
-								<option value="2">계정/보안</option>
-								<option value="3">기타</option>
+								<option value="1" th:selected="${detail.askCode == '1'}">결제/환불</option>
+								<option value="2" th:selected="${detail.askCode == '2'}">계정/보안</option>
+								<option value="3" th:selected="${detail.askCode == '3'}">기타</option>
 							</select>
 							<br>
 
-							<input type="text" name="askTitle" placeholder="문의 제목을 작성해 주세요." id="askTitle" class="ask" maxlength="100" required>
+							<input type="text" name="askTitle" th:value="${detail.askTitle}" placeholder="문의 제목을 작성해 주세요." id="askTitle" class="ask" maxlength="100" required>
 							<br>
 
-							<textarea name="askText" placeholder="정확한 답변을 위해 문의 내용을 자세히 작성해 주세요." id="askContent" class="ask" maxlength="1000" required></textarea>
+							<textarea name="askText" th:text="${detail.askText}" placeholder="정확한 답변을 위해 문의 내용을 자세히 작성해 주세요." id="askContent" class="ask" maxlength="1000" required></textarea>
 							<br>
 
 							<section class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mb-8">
-								<h2 class="col-span-1 mb-3 text-base lg:text-lg max-lg:py-1 pt-[10px]">사진 첨부</h2>
+								<h2 class="col-span-1 mb-3 text-base lg:text-lg max-lg:py-1 pt-[10px]">사진 재첨부</h2>
 								<div class="col-span-5">
 									<div class="flex pb-1.5 max-lg:pb-0">
 										<div class="pt-[10px]">
-
-											<input id="files" name="files" type="file" multiple accept="image/png, image/jpeg, image/jpg, image/webp, image/gif" class="hidden">
+											<input id="files" name="files" type="file" multiple accept="image/*" class="hidden">
 
 											<button id="btnPickFiles"
 											        class="flex justify-center items-center mr-3 rounded bg-jnGray-200 lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
@@ -146,30 +141,15 @@ height: 50px;
 													<p id="fileCount" class="text-jnGray-600 lg:text-base text-xs">0/10</p>
 												</div>
 											</button>
-
 										</div>
-
-										<div class="overflow-hidden">
-											<div class="os-host os-host-foreign os-theme-dark os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden os-host-transition">
-												<div class="os-padding">
-													<div class="os-viewport os-viewport-native-scrollbars-invisible os-viewport-native-scrollbars-overlaid">
-														<div class="os-content" style="padding: 0px; height: auto; width: 100%; float: left;">
-															<ul class="flex items-center pt-[10px]"></ul>
-														</div>
-													</div>
-												</div>
-												<div class="os-scrollbar-corner"></div>
-											</div>
-										</div>
-
 									</div>
+									<p class="text-xs text-jnGray-500 mt-2">* 사진을 새로 선택하면 기존 첨부파일이 대체됩니다.</p>
 								</div>
 							</section>
 
 							<br>
 
-							
-							<input type="button" value="등록" id="btnSubmit" style="width:100%;" class="ask">
+							<input type="button" value="수정 완료" id="btnSubmit" class="ask">
 
 						</form>
 
