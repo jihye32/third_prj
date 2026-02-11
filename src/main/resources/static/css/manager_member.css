@@ -1,8 +1,7 @@
-/* style.css */
+/* [기본 스타일 유지] - detail 페이지 공통 사용 부분 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
 
-/* [본문] 사이드바 마진 260px 절대 사수 */
 #main-container {
     margin-left: 260px; 
     flex: 1;
@@ -11,16 +10,13 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
     min-height: calc(100vh - 60px);
 }
 
-/* 테이블 카드 */
 .table_card {
     background: #fff; padding: 25px; border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e5e8;
 }
 
-/* 버튼 공통 설정 */
-.btn-custom { font-size: 13px; padding: 6px 12px; border: none; border-radius: 5px; font-weight: 500; }
+.btn-custom { font-size: 15px; padding: 6px 12px; border: none; border-radius: 5px; font-weight: 500; }
 
-/* 상세페이지/내역확인용 남색 스타일 반영 */
 .btn-navy {
     background-color: #0c193a !important; 
     color: #ffffff !important;
@@ -29,7 +25,6 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
 }
 .btn-navy:hover { background-color: #1e2a4a !important; }
 
-/* 페이지네이션 디자인 (사이드바 테마 일치) */
 .pagination .page-link { color: #0c193a; cursor: pointer; border: 1px solid #dee2e6; }
 .pagination .page-item.active .page-link {
     background-color: #0c193a !important;
@@ -37,18 +32,82 @@ body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fff; }
     color: #ffffff !important;
 }
 
-/* 상세페이지 확인 및 내역 확인 버튼 색상 */
-.btn-navy {
-	background-color: #0c193a !important;
-	color: white !important;
-}
-
-.btn-navy:hover {
-	background-color: #1e2a4a !important;
-	color: white !important;
-}
-
-/* 행 마우스 커서 */
 tr[style*="cursor: pointer"]:hover {
     background-color: #f1f3f5 !important;
 }
+
+/* ----------------------------------------------------------- */
+/* [회원관리 테이블 전용 튜닝] - 조화로운 비율 사수 */
+
+.custom-admin-table {
+    width: 100%;
+    table-layout: fixed; /* 상점명 폭주 방지 핵심 설정 */
+    border-collapse: collapse;
+}
+
+/* 각 컬럼 너비 비율 조정 (총합 100%) */
+.custom-admin-table th:nth-child(1) { width: 50px; }  /* 번호 */
+.custom-admin-table th:nth-child(2) { width: 12%; }   /* 아이디 */
+.custom-admin-table th:nth-child(3) { width: 100px; } /* 상태 */
+.custom-admin-table th:nth-child(4) { width: 22%; }   /* 상점명 (비중 조절) */
+.custom-admin-table th:nth-child(5) { width: 120px; } /* 생성일 */
+.custom-admin-table th:nth-child(6) { width: 80px; }  /* 삭제 버튼 */
+.custom-admin-table th:nth-child(7) { width: 100px; } /* 상세정보 버튼 */
+.custom-admin-table th:nth-child(8) { width: 100px; } /* 거래내역 버튼 */
+
+.custom-admin-table th, 
+.custom-admin-table td {
+    padding: 15px 5px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* 상점명 길면 ... 처리 */
+    vertical-align: middle;
+    font-size: 17px; /* 글자 크기 시원하게 확대 */
+}
+
+.custom-admin-table th {
+    font-weight: 700;
+    color: #4b5563;
+    border-bottom: 2px solid #edf2f7;
+}
+
+/* 정지 상태 레이아웃 정렬 */
+.status-flex-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* 배지 디자인 강화 */
+.badge-stop, .badge-normal {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #fff;
+}
+.badge-stop { background: #e74c3c; }
+.badge-normal { background: #27ae60; }
+.stop-date { color: #e74c3c; font-size: 13px; font-weight: 700; }
+
+/* 테이블 내 버튼 최적화 (기존 남색/빨간색 유지) */
+.btn-table-del, .btn-table-navy {
+    border: none;
+    padding: 7px 0;
+    border-radius: 5px;
+    font-size: 17px;
+    font-weight: 600;
+    width: 90%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-table-del { background-color: #e74c3c; color: white; }
+.btn-table-del:hover { background-color: #c0392b; }
+
+.btn-table-navy { background-color: #0c193a; color: white; }
+.btn-table-navy:hover { background-color: #1e2a4a; }
+
+/* 정지 회원 행 강조 색상 */
+.table-danger-light { background-color: #fff8f8 !important; }

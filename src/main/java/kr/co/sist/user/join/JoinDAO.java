@@ -9,12 +9,12 @@ import kr.co.sist.dao.MyBatisHandler;
 @Repository
 public class JoinDAO {
 
-	public int selectId(JoinDTO jDTO) throws PersistenceException {
+	public int selectId(String id) throws PersistenceException {
 		SqlSession ss = null;
 
 		try {
 			ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-			return ss.selectOne("kr.co.sist.user.join.selectId", jDTO);
+			return ss.selectOne("kr.co.sist.user.join.selectId", id);
 		} finally {
 			if (ss != null) {
 				ss.close();
@@ -22,12 +22,12 @@ public class JoinDAO {
 		} // end finally
 	}// selectId
 
-	public int selectStoreName(JoinDTO jDTO) throws PersistenceException {
+	public int selectStoreName(String storeName) throws PersistenceException {
 		SqlSession ss = null;
 
 		try {
 			ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-			return ss.selectOne("kr.co.sist.user.join.selectStoreName", jDTO);
+			return ss.selectOne("kr.co.sist.user.join.selectStoreName", storeName);
 		} finally {
 			if (ss != null) {
 				ss.close();

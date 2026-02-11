@@ -3,14 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>쌍용장터 관리자센터 - 회원 상세정보</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/manager_member.css}">
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/manager_member_detail.css}">
-	<link rel="stylesheet" th:href="@{/css/style.css}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/css/manager_member.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/manager_member_detail.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 <header th:replace="manage/common_layout :: header"></header>
@@ -21,6 +18,17 @@
 		<main id="main-container">
 			<div class="container-fluid">
 				<div class="detail_card">
+                    <div th:if="${member?.suspension_flag == 'Y'}" class="alert alert-danger mx-4 mt-4 mb-0 py-3 shadow-sm">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-exclamation-octagon-fill fs-4 me-3"></i>
+                            <div>
+                                <strong class="fs-5">활동 정지된 회원입니다.</strong><br>
+                                <span class="small">정지 종료 예정일: </span>
+                                <strong th:text="${#dates.format(member.suspension_end_date, 'yyyy-MM-dd HH:mm:ss')}">2026-02-14</strong>
+                            </div>
+                        </div>
+                    </div>
+
 					<div class="detail_title">회원 정보</div>
 
 					<div class="row px-4">
@@ -52,14 +60,30 @@
 						</div>
 					</div>
 
-					<div class="btn_group_bottom mb-4">
-						<button class="btn btn-navy btn-custom px-4"
+					<div class="btn_group_bottom mb-4 d-flex align-items-center justify-content-center">
+						<button class="btn btn-navy btn-custom px-4 me-2"
 							th:onclick="|location.href='@{/manage/member/member_prdv(userId=${member?.user_id})}'|">
 							상점정보 확인</button>
-						<button class="btn btn-navy btn-custom px-4"
+						<button class="btn btn-navy btn-custom px-4 me-2"
 							th:onclick="|location.href='@{/manage/member/member_product(userId=${member?.user_id})}'|">
 							구매/판매내역 확인</button>
-						<button class="btn btn-red btn-custom px-4">활동 정지</button>
+                        
+                        <div th:if="${member?.suspension_flag == 'N'}" class="me-2">
+                            <select id="suspensionDays" class="form-select form-select-sm" style="width: 130px; height: 38px;">
+                                <option value="1">1일 정지</option>
+                                <option value="3">3일 정지</option>
+                                <option value="7" selected>7일 정지</option>
+                                <option value="30">30일 정지</option>
+                                <option value="36500">영구 정지</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-custom px-4 shadow-sm"
+                                th:classappend="${member?.suspension_flag == 'Y' ? 'btn-success' : 'btn-red'}"
+                                th:onclick="manageSuspension([[${member?.user_id}]], [[${member?.suspension_flag}]])"
+                                th:text="${member?.suspension_flag == 'Y' ? '정지 해제' : '활동 정지'}">
+                            활동 정지
+                        </button>
 					</div>
 
 					<div class="btn-list">
@@ -72,7 +96,46 @@
 		</main>
 	</div>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script th:inline="javascript">
+    /**
+     * 회원 정지/해제 통합 처리 함수
+     */
+    function manageSuspension(userId, currentFlag) {
+        const isSuspending = (currentFlag !== 'Y'); 
+        let days = 0;
+        let confirmMsg = "";
+
+        if (isSuspending) {
+            // [수정] 드롭다운에서 선택된 기간 값을 가져옴
+            const selectTarget = document.getElementById('suspensionDays');
+            days = selectTarget.value;
+            const periodText = selectTarget.options[selectTarget.selectedIndex].text;
+            confirmMsg = userId + " 회원을 " + periodText + "하시겠습니까?";
+        } else {
+            confirmMsg = "정지 상태를 해제하시겠습니까?";
+        }
+        
+        if (!confirm(confirmMsg)) return;
+
+        // Fetch API를 사용한 비동기 처리
+        fetch('/manage/member/suspend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            // [수정] days 파라미터를 추가하여 전송
+            body: 'userId=' + encodeURIComponent(userId) + 
+                  '&action=' + (isSuspending ? 'suspend' : 'release') +
+                  '&days=' + days
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("처리가 완료되었습니다.");
+                location.reload(); 
+            } else {
+                alert("처리 중 오류가 발생했습니다.");
+            }
+        })
+        .catch(error => alert("서버 통신 오류: " + error));
+    }
+    </script>
 </body>
 </html>

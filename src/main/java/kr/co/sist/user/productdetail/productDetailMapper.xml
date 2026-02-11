@@ -51,7 +51,7 @@ where product_num = #{productnum}
 
 <select id="selectProductChat" parameterType="int" resultType="int">
 select count(distinct chatroom_num)
-from chat
+from room_product
 where product_num = #{productnum}
 </select>
 
@@ -73,9 +73,10 @@ where product_num = #{pnum}
 	<result column="store_num" property="sellerId"/>
 	<result column="store_name" property="storeName"/>
 	<result column="profile_img" property="sellerProfile"/>
+	<result column="user_id" property="id"/>
 </resultMap>
 <select id="sellerInfo" parameterType="int" resultMap="sellerDomain">
-select store_num, store_name, profile_img
+select store_num, store_name, profile_img,user_id
 from store
 where store_num = #{value}
 </select>

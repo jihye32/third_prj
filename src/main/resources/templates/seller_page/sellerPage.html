@@ -12,16 +12,275 @@
 <!-- JQuery CDN -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <script type="text/javascript">
-function openReportForm() {
-    fetch('/report/form')
-        .then(res => res.text())
+var storeId = "[[${storeNum}]]";
+function openReviewForm() {// 리뷰 페이지
+    fetch('/seller_page/review?storeId='+storeId) // @/seller_page/review
+        .then(res => res.text()) 
         .then(html => {
             // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
             document.getElementById('drawerContent').innerHTML = html;
-            openDrawer('제목'); // 서랍 여는 공통 함수 실행
+            openDrawer('후기'); // 서랍 여는 공통 함수 실행
         });
-}
+}// openReviewForm
+function openReportForm(reviewerId) {// 신고 페이지
+    fetch('/report/review?reviewerId='+reviewerId) // 
+        .then(res => res.text()) 
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('후기'); // 서랍 여는 공통 함수 실행
+        });
+}// openReviewForm
+
+
+$(document).ready(function() {
+
+    // 이벤트 위임 적용: 동적으로 추가되는 버튼에도 클릭 이벤트 적용
+    $(document).on('click', 'input.a11yHidden[type="button"]', function(event) {
+    	event.preventDefault();   // ⭐ a 태그 기본 동작 차단
+    	event.stopPropagation();  // ⭐ 이벤트 전파 차단
+        // productNum 추출 (id에서)
+        var productNum = $(this).attr('id').replace('btn_', '');
+
+        // UI 및 서버 처리
+        toggleBookmark(productNum, $(this));
+    });// onclick
+
+    
+});// ready
+
+
+function toggleBookmark(productNum, $input) {
+    //console.log("찜 클릭됨:", productNum);
+
+    // label 내부 svg path 선택
+    var $svgPath = $input.prev('label').find('path');
+    // 찜 상태 토글
+    if ($svgPath.attr('fill') === '#dc2626') {
+    	$.ajax({
+    		url:"/bookmark/"+productNum,
+    		type:"DELETE",
+    		contentType:"application/JSON",
+    		data:{productNum,productNum},
+    		dataType:"JSON",
+    		error:function(xhr){
+    			alert(xhr.status)
+    			},// error
+    		success:function(jsonObj){
+    			if(jsonObj.resultFlag){
+    				// 비활성화
+    	            $svgPath.attr('fill', '#9ca3afb4');
+    	            $svgPath.attr('stroke', 'white');
+    			}// end if
+    		}// success
+    	});// ajax
+        
+    } else {
+    	$.ajax({
+    		url:"/bookmark/"+productNum,
+    		type:"POST",
+    		contentType:"application/JSON",
+    		data:{productNum,productNum},
+    		dataType:"JSON",
+    		error:function(xhr){
+    			alert(xhr.status)
+    			},// error
+    		success:function(jsonObj){
+    			if(jsonObj.resultFlag){
+    				// 활성화
+    	            $svgPath.attr('fill', '#dc2626');
+    	            $svgPath.attr('stroke', '#dc2626');
+    			}else{
+    				alert("로그인이 필요한 서비스입니다.");
+    			}// end else
+    		}// success
+    	});// ajax
+        
+    }// end else
+
+    // 서버로 AJAX 요청 예시
+    /*
+    $.post('/bookmark/toggle', { productNum: productNum }, function(response){
+        console.log('서버 응답:', response);
+    });
+    */
+}// toggleBookmark
+
+function moreBtn(){
+	pageByStatus[sellStateCode]++;
+	//alert(page + ' / ' + sellStateCode + ' / ' + sortKeyword); 
+	searchProductList();
+}// moreBtn
+
+var pageByStatus =  [1, 1, 1, 1];
+var sellStateCode= 0;
+var sortKeyword='update';
+
+function searchProductList(){
+	var urlObj = new URL(window.location.href);
+    var path = urlObj.pathname; // "/store/2"
+    var url = path+"/more";
+    var page = pageByStatus[sellStateCode];
+    //alert(page);
+	$.ajax({
+		url:url,
+		type:"POST",
+		contentType:"application/JSON",
+		 data: JSON.stringify({
+		        page: page,
+		        sellStateCode: sellStateCode,
+		        sortBy: sortKeyword
+		    }),
+		dataType:"JSON",
+		error:function(xhr){
+			alert(xhr.status);
+			},// error
+		success:function(jsonObj){
+			//alert(jsonArr);
+			var cntMsg = "총 "+jsonObj.cnt+" 개";
+			$("#cntDiv").text(cntMsg); 
+			if(page == 1){
+				$("#output").empty(); 
+			}// end if
+			$.each(jsonObj.data, function(index, jsonObj){
+				
+				// 판매 상태
+				let sellStateHtml = "";
+
+			    if(jsonObj.sellStateCode == 1){
+			        sellStateHtml = `
+			            <div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
+			        `;
+			    }else if(jsonObj.sellStateCode == 2){
+			        sellStateHtml = `
+			            <div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
+			                <span class="font-semibold text-base lg:text-lg text-center text-white">예약중</span>
+			            </div>
+			        `;
+			    }else if(jsonObj.sellStateCode == 3){
+			        sellStateHtml = `
+			            <div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
+			                <span class="font-semibold text-base lg:text-lg text-center text-white">판매완료</span>
+			            </div>
+			        `;
+			    }// end else
+
+			    // 지역 유무에 따른 지역 명
+			    let tradingAreaHtml = "";
+			    if(jsonObj.tradingArea != null && jsonObj.tradingArea !== ''){
+			        tradingAreaHtml = `
+			            <span class="text-sm text-gray-400">${jsonObj.tradingArea}</span>
+			            <span class="text-sm text-gray-400 mx-1">|</span>
+			        `;
+			    }// end if
+			    
+			    // 찜 여부
+			    let bookmarkHtml = `
+			    	<div class="absolute bottom-2 z-20 right-2 w-6 h-6">
+			    	    <label for="btn_${jsonObj.productNum}" 
+			    	           class="relative cursor-pointer bookmark-btn"
+			    	           data-product-num="${jsonObj.productNum}">
+			    	        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+			    	             xmlns="http://www.w3.org/2000/svg"
+			    	             class="pointer-events-none w-6 h-6">
+			    	            <path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983
+			    	                     15.3641 26.4305 15.3975 26.4557
+			    	                     C15.7541 26.7249 16.2459 26.7249
+			    	                     16.6025 26.4557
+			    	                     C16.6359 26.4305 16.6718 26.3983
+			    	                     16.7436 26.3341L26.058 17.9925
+			    	                     C28.8244 15.5151 29.1565 11.3015
+			    	                     26.8124 8.42125L26.5675 8.12029
+			    	                     C23.8495 4.78056 18.5906 5.35863
+			    	                     16.663 9.20902
+			    	                     C16.3896 9.75505 15.6104 9.75505
+			    	                     15.337 9.20902
+			    	                     C13.4094 5.35863 8.1505 4.78056
+			    	                     5.43249 8.12028L5.18755 8.42125
+			    	                     C2.84352 11.3015 3.17564 15.5151
+			    	                     5.94197 17.9925Z"
+			    	                  stroke-width="1.5"
+			    	                  stroke="${jsonObj.bookmarkFlag === 'Y' ? '#dc2626' : 'white'}"
+			    	                  fill="${jsonObj.bookmarkFlag === 'Y' ? '#dc2626' : '#9ca3afb4'}">
+			    	            </path>
+			    	        </svg>
+			    	    </label>
+			    	    <input id="btn_${jsonObj.productNum}" type="button" class="a11yHidden">
+			    	</div>
+			    	`;
+
+			    let html = `
+			    <div class="relative">
+			        <div class="relative">
+			            <a class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+			               title="${jsonObj.productName}"
+			               href="/product/${jsonObj.productNum}">
+			               
+			                <div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+			                    <img alt="${jsonObj.productName}"
+			                         src="/images/thumbnail/${jsonObj.thumbnail}"
+			                         class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
+			                         style="position:absolute; inset:0;">
+			                    
+			                    ${sellStateHtml}
+			                    ${bookmarkHtml}
+			                </div>
+
+			                <div class="w-full overflow-hidden">
+			                    <h2 class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">
+			                        ${jsonObj.productName}
+			                    </h2>
+			                    <div class="font-semibold mt-0.5 text-heading lg:text-lg lg:mt-1.5">
+			                        ${jsonObj.price.toLocaleString()}원
+			                    </div>
+			                    <div class="mt-1 mb-2">
+			                        ${tradingAreaHtml}
+			                        <span class="text-sm text-gray-400">${jsonObj.timeString}</span>
+			                    </div>
+			                </div>
+			            </a>
+			        </div>
+			    </div>
+			    `;
+			    
+			    $("#output").append(html); 
+				
+				
+			}); // end each
+
+			 // ⭐ 기존 더보기 버튼 제거
+		    $("#moreBtn").remove();
+
+		    // ⭐ 다음 페이지가 있을 때만 더보기 버튼 추가
+		    if(jsonObj.hasNext){
+		        $("#moreBtnWrapper").append(`
+		            <div id="moreBtn" class="py-8 text-center xl:pt-14">
+		                <button onclick="moreBtn()" 
+		                    class="text-[13px] md:text-sm leading-4 inline-flex items-center justify-center 
+		                           font-semibold rounded-md h-11 md:h-12 px-5 bg-gray-600 text-white 
+		                           transition-colors duration-300 hover:bg-black hover:text-white">
+		                    더보기
+		                </button>
+		            </div>
+		        `);
+		    }// end if
+			
+		    
+		    $('input.a11yHidden[type="button"]').on('click', function(event) {
+		    	event.preventDefault();   // ⭐ a 태그 기본 동작 차단
+		    	event.stopPropagation();  // ⭐ 이벤트 전파 차단
+		        // productNum 추출 (id에서)
+		        var productNum = $(this).attr('id').replace('btn_', '');
+
+		        // UI 및 서버 처리
+		        toggleBookmark(productNum, $(this));
+		    });// onclick
+		    
+		}// success
+	});// ajax
+}// searchProductList
 </script>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -61,22 +320,21 @@ function openReportForm() {
 													loading="lazy" width="60" height="60" decoding="async"
 													data-nimg="1"
 													class="rounded-full w-[48px] h-[48px] lg:w-[60px] lg:h-[60px] box-content border-4 border-white -translate-x-3"
-													src="https://img2.joongna.com/common/Profile/Default/profile_m.png"
+													th:src="@{/images/profile/{profileImg}(profileImg=${SellerPageDomain.profileImg})}"
 													style="color: transparent;">
 											</div>
 											<div class="flex-1">
-												<div
-													class="flex justify-between items-center mb-0 w-full sm:mb-2">
-													<h2 th:text="${temp.storeName}"
-													 class="flex gap-1 items-center mr-3 font-semibold cursor-pointer text-[18px] lg:text-[24px] leading-[39px] lg:gap-2">
-													판매자 상점명
-													</h2>
+												<div class="flex justify-between items-center mb-0 w-full sm:mb-2">
+												<h2 class="flex gap-1 items-center mr-3 font-semibold cursor-pointer text-[18px] lg:text-[24px] leading-[39px] lg:gap-2" th:text="${SellerPageDomain.storeName}">
+												판매자 상점명
+												</h2>
 												</div>
 											</div>
 										</div>
 										<div class="flex order-2 items-start mt-5 lg:mt-8 lg:order-3">
 											<p class="flex-auto w-10 break-all text-[14px] text-jnGray-600">
-												<span class="w-fit max-w-[calc(100%+1px)] break-all block">
+												<span th:text="${SellerPageDomain.introduce}"
+												 class="w-fit max-w-[calc(100%+1px)] break-all block">
 												상점 소개글~~~~~~~~~~~~~
 												</span>
 											</p>
@@ -87,12 +345,11 @@ function openReportForm() {
 										<div class="relative mr-3 w-10 h-10 lg:w-12 lg:h-12 shrink-0">
 											<img alt="채팅" loading="lazy" decoding="async"
 												data-nimg="fill"
-												src="/main-web/_next/static/media/chat.8164dbdd.webp"
+												th:src="@{/images/chatLogo.webp}"
 												style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
 										</div>
 										<div class="flex-auto">
-											<span
-												class="block text-gray-900 font-bold text-[14px] lg:text-lg">'제이키드온'님과
+											<span class="block text-gray-900 font-bold text-[14px] lg:text-lg">'<span th:text="${SellerPageDomain.storeName}"></span>'님과
 												채팅하기</span><span
 												class="text-[#787E89] text-[12px] lg:text-[14px] flex flex-col min-[1600px]:flex-row min-[1600px]:space-x-[6px] break-keep">상품에
 												대한 자세한 정보를 알고싶다면?</span>
@@ -105,892 +362,179 @@ function openReportForm() {
 									<div class="flex relative justify-evenly py-4 rounded-lg border border-gray-300 pl-[8px] pr-[15px] lg:py-6 order-2 w-auto lg:order-3">
 										<dl class="flex justify-between items-center text-center text-jnGray-600 w-full m-0 [&amp;_div]:w-full [&amp;_div]:before:right-0 [&amp;_div]:before:top-1/2 [&amp;_div]:before:-translate-y-1/2 [&amp;_div]:before:absolute [&amp;_div]:before:w-[1px] [&amp;_div]:before:h-[40px] [&amp;_div]:before:bg-gray-300 [&amp;_div_dt]:text-[12px] [&amp;_div_dd]:text-[16px] lg:[&amp;_div_dt]:text-[14px] lg:[&amp;_div_dd]:text-[22px]">
 											<div class="relative">
-												<dt class="justify-center mt-0">안심결제</dt>
-												<dd class="font-semibold text-jnblack">4</dd>
+												<dt class="justify-center mt-0">판매물품 수</dt>
+												<dd class="font-semibold text-jnblack" th:text="${allProductCnt}">4</dd>
 											</div>
-											<div class="relative cursor-pointer">
+											<div class="relative before:content-none" onclick="openReviewForm()">
 												<dt class="justify-center mt-0">거래후기</dt>
 												<dd class="font-semibold underline text-jnblack">1</dd>
-											</div>
-											<div class="relative before:content-none">
-												<dt class="justify-center mt-0">단골</dt>
-												<dd class="font-semibold text-jnblack">0</dd>
-											</div>
-											<div class="hidden before:content-none">
-												<dt class="flex gap-1 justify-center items-center mt-0 ps-3">
-													<span class="flex-1 basis-4/5">에코마일</span>
-													<div
-														class="inline-block border-none flex-shrink basis-1/5 before:content-none"
-														data-headlessui-state="">
-														<button type="button" aria-expanded="false"
-															data-headlessui-state=""
-															id="headlessui-popover-button-:rt:">
-															<svg stroke="currentColor" fill="currentColor"
-																stroke-width="0" viewBox="0 0 24 24" color="#C2C6CE"
-																class="inline-block text-center" height="18" width="18"
-																xmlns="http://www.w3.org/2000/svg"
-																style="color: rgb(194, 198, 206);">
-																<g>
-																<path fill="none" d="M0 0h24v24H0z"></path>
-																<path
-																	d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"></path></g></svg>
-														</button>
-													</div>
-												</dt>
-												<dd class="font-semibold text-jnblack">0 M</dd>
 											</div>
 										</dl>
 									</div>
 								</div>
 							</div>
+							
+							
+							
 							<div class="px-0 mt-8 lg:mt-[60px] mx-5 sm:mx-0">
 								<div class="flex flex-col mb-4 w-full lg:mb-5">
 									<h3 class="text-lg font-bold md:text-[22px] text-jnBlack">판매상품</h3>
 									<div class="mt-3 mr-0 mb-9 lg:mt-2">
-										<ul
-											class="colors flex flex-nowrap justify-between lg:justify-start -me-3 border-b border-[#DADEE5]">
-											<li
-												class="shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-black border-b-[2px] border-black">전체</li>
-											<li
-												class="shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">판매중</li>
-											<li
-												class="shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">예약중</li>
-											<li
-												class="shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">판매완료</li>
+									
+										<ul class="sellState colors flex flex-nowrap justify-between lg:justify-start -me-3 border-b border-[#DADEE5]">
+											<li value="0" class="shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-black border-b-[2px] border-black">전체</li>
+											<li value="1" class="shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">판매중</li>
+											<li value="2" class="shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">예약중</li>
+											<li value="3" class="shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">판매완료</li>
 										</ul>
+										
 									</div>
+									<script type="text/javascript">
+									$(document).ready(function() {
+										  // 클릭된 li 요소에 'selected' 클래스를 추가하고, 나머지 li 요소에서 'selected' 클래스를 제거
+										  $('ul.sellState li').on('click', function() {
+										    // 모든 li 요소에서 선택, 미선택 css 클래스 초기화 후 미선택 css 추가
+										    $('ul.sellState li').removeClass('text-black border-b-[2px] border-black');
+										    $('ul.sellState li').removeClass('text-[#9CA3AF]');
+										    $('ul.sellState li').addClass('text-[#9CA3AF]');
+										    
+										    // 클릭된 li 요소에 미선택 css 삭제후 선택 css 클래스 추가
+										    $(this).addClass('text-black border-b-[2px] border-black');
+										    $(this).removeClass('text-[#9CA3AF]');
+										    sellStateCode=$(this).val();
+										    pageByStatus[sellStateCode]=1;
+										    //alert(sellStateCode);
+										    searchProductList();
+										  });// onclick
+										  
+										});// ready
+									</script>
+									
+									
 									<div class="flex flex-wrap justify-between items-center">
-										<div
-											class="flex-shrink-0 mb-1 text-sm text-body md:text-base pe-4 md:me-6 lg:block">총
+										<div id="cntDiv" th:text="|총 ${allProductCnt} 개|" class="flex-shrink-0 mb-1 text-sm text-body md:text-base pe-4 md:me-6 lg:block">총
 											380 개</div>
 										<ul class="flex space-x-3">
-											<li><button class="text-sm font-medium text-[#141313]">최신순</button></li>
-											<li><span
-												class="inline-block mb-0 w-[1px] h-[10px] border border-[#DADEE5]"></span></li>
-											<li><button class="text-sm font-medium text-[#787E89]">낮은가격순</button></li>
-											<li><span
-												class="inline-block mb-0 w-[1px] h-[10px] border border-[#DADEE5]"></span></li>
-											<li><button class="text-sm font-medium text-[#787E89]">높은가격순</button></li>
+											<li>
+												<button onclick="sort('update')" class="sort text-sm font-medium text-[#141313]">최신순</button>
+											</li>
+											<li>
+												<span class="inline-block mb-0 w-[1px] h-[10px] border border-[#DADEE5]"></span>
+											</li>
+											<li>
+												<button onclick="sort('asc')" class="sort text-sm font-medium text-[#787E89]">낮은가격순</button>
+											</li>
+											<li>
+												<span class="inline-block mb-0 w-[1px] h-[10px] border border-[#DADEE5]"></span>
+											</li>
+											<li>
+												<button onclick="sort('desc')" class="sort text-sm font-medium text-[#787E89]">높은가격순</button>
+											</li>
+											
 										</ul>
+										<script type="text/javascript">
+										function sort(sortBy){
+											sortKeyword = sortBy;
+											$('ul.flex li button').removeClass('text-[#141313]').addClass('text-[#787E89]');
+											if(sortBy === 'update') {
+										        $('button[onclick="sort(\'update\')"]').removeClass('text-[#787E89]').addClass('text-[#141313]');
+										    } else if(sortBy === 'asc') {
+										        $('button[onclick="sort(\'asc\')"]').removeClass('text-[#787E89]').addClass('text-[#141313]');
+										    } else if(sortBy === 'desc') {
+										        $('button[onclick="sort(\'desc\')"]').removeClass('text-[#787E89]').addClass('text-[#141313]');
+										    }// end else
+										    pageByStatus[sellStateCode]=1;
+											searchProductList();
+										}// sort
+									</script>
 									</div>
 								</div>
-								<div
-									class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5 gap-x-3 lg:gap-x-5 xl:gap-x-7 gap-y-3 xl:gap-y-5 2xl:gap-y-8 ">
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="캉골 벨벳 크로스백 미사용품" href="/product/224179947"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r12:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r12:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="캉골 벨벳 크로스백 미사용품" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/16/1768544695486wWC_mMmEN.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">캉골
-														벨벳 크로스백 미사용품</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">21,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">11분 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="듀오백 브라보 의자" href="/product/224103822"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r13:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r13:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="듀오백 브라보 의자" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/14/1768373524979mdi_aOLWH.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">듀오백
-														브라보 의자</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">175,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">12분 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="8bitdo 얼티밋 닌텐도스위치 버전 풀박스" href="/product/224103713"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r14:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r14:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="8bitdo 얼티밋 닌텐도스위치 버전 풀박스"
-														referrerpolicy="no-referrer" loading="lazy"
-														decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/14/1768373348091dAo_eHSoO.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">8bitdo
-														얼티밋 닌텐도스위치 버전 풀박스</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">30,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">12분 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="올리브영 기프티콘 1만원" href="/product/224104158"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r15:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r15:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="올리브영 기프티콘 1만원" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/14/1768374025947bud_CdCVJ.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">올리브영
-														기프티콘 1만원</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">9,200원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400"></span><span
-															class="text-sm text-gray-400 mx-1 hidden">|</span><span
-															class="text-sm text-gray-400">12분 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="엔피트닉스 나비500k 전조등+자전거 폰거치대" href="/product/224283772"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r16:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r16:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="엔피트닉스 나비500k 전조등+자전거 폰거치대"
-														referrerpolicy="no-referrer" loading="lazy"
-														decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/21/1768950370289mhY_jmq0g.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">엔피트닉스
-														나비500k 전조등+자전거 폰거치대</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">25,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">12분 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="다이슨 에어랩 컴플리트 보관통 세트" href="/product/224449619"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r17:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r17:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="다이슨 에어랩 컴플리트 보관통 세트" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/23/1769156728024uKp_TVTRl.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">다이슨
-														에어랩 컴플리트 보관통 세트</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">50,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">12분 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="s21플러스 블랙 256g + 케이스 6개" href="/product/224443428"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r18:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r18:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="s21플러스 블랙 256g + 케이스 6개"
-														referrerpolicy="no-referrer" loading="lazy"
-														decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/23/1769147523875Gus_e7njO.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">s21플러스
-														블랙 256g + 케이스 6개</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">200,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">2시간 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="프로그램 후드털 패딩" href="/product/224038114"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r19:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r19:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="프로그램 후드털 패딩" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/12/17682203349978kL_TbRMB.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">프로그램
-														후드털 패딩</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">30,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">1일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="프로젝트엠 덕다운 경량패딩 긴팔" href="/product/224038307"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1a:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1a:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="프로젝트엠 덕다운 경량패딩 긴팔" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/12/17682206199102Cs_bp04n.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">프로젝트엠
-														덕다운 경량패딩 긴팔</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">20,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">1일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="노스페이스 스팁테크 볼캡" href="/product/224103923"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1b:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1b:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="노스페이스 스팁테크 볼캡" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/14/1768373665281Kz0_KDe3h.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">노스페이스
-														스팁테크 볼캡</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">75,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">1일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="나이키 리펠마일러 바람막이 L" href="/product/222624226"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1c:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1c:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="나이키 리펠마일러 바람막이 L" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2025/12/05/1764920914423OLW_Iz6vG.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">나이키
-														리펠마일러 바람막이 L</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">70,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">1일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="나이키 우븐라인드 바람막이 자켓" href="/product/224370191"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1d:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1d:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="나이키 우븐라인드 바람막이 자켓" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/21/1768979135754yXA_cppcV.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">나이키
-														우븐라인드 바람막이 자켓</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">50,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">1일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="맥북 프로 13 M1 박스" href="/product/224038529"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1e:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1e:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="맥북 프로 13 M1 박스" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/12/17682209511414my_gBNsL.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">맥북
-														프로 13 M1 박스</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">8,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">1일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="브리츠 프로젝터 시계라디오 풀박스" href="/product/223720299"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1f:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1f:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="브리츠 프로젝터 시계라디오 풀박스" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/04/1767504842323M6G_d2duz.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">브리츠
-														프로젝터 시계라디오 풀박스</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">15,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">1일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="데이즈 스웨이드 자켓" href="/product/222839266"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1g:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1g:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="데이즈 스웨이드 자켓" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2025/12/11/1765427246937Jqk_Zue6y.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">데이즈
-														스웨이드 자켓</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">34,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">1일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="커버낫 어센틱 맨투맨 L" href="/product/223720087"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1h:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1h:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="커버낫 어센틱 맨투맨 L" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/04/1767504542631Xxy_yhfUy.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">커버낫
-														어센틱 맨투맨 L</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">10,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">2일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="파텍스 전자 벽시계" href="/product/224038427"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1i:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1i:" type="checkbox" class="a11yHidden">
-													</div>
+								<div id="output" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5 gap-x-3 lg:gap-x-5 xl:gap-x-7 gap-y-3 xl:gap-y-5 2xl:gap-y-8 ">
+									
+									<th:block th:each="prodcutDomain : ${allProduct}" th:object="${prodcutDomain}">
+										<div  class="relative">
+											<div class="relative">
+												<a class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
+												th:title="*{productName}" th:href="@{/product/{productNum}(productNum=*{productNum})}">
+												<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+													
 													<img alt="파텍스 전자 벽시계" referrerpolicy="no-referrer"
 														loading="lazy" decoding="async" data-nimg="fill"
 														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/12/1768220803936ku3_xatAv.jpg?impolicy=thumb&amp;size=150"
+														th:src="@{/images/thumbnail/{file}(file=*{thumbnail})}"
 														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
+
+													<!-- 판매상태 -->
+													<th:block th:if="*{sellStateCode == 1}">
+													<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
+													</th:block>
+													
+													<th:block th:if="*{sellStateCode == 2}">
+													<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
+														<span class="font-semibold text-base lg:text-lg text-center text-white">예약중</span>
+													</div>
+													</th:block>
+													
+													<th:block th:if="*{sellStateCode == 3}">
+													<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
+														<span class="font-semibold text-base lg:text-lg text-center text-white">판매완료</span>
+													</div>
+													</th:block>
+	
+													
+													<!-- 찜버튼 -->
+													<div class="absolute bottom-2 z-20 right-2 w-6 h-6" >
+														<label th:for="|btn_*{productNum}|" class="relative cursor-pointer">
+															<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="pointer-events-none w-6 h-6">
+			
+																<th:block th:if="*{bookmarkFlag eq 'N'}">
+																	<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z" 
+																		stroke-width="1.5" stroke="white" fill="#9ca3afb4">
+																	</path>
+																</th:block>
+																<th:block th:if="*{bookmarkFlag eq 'Y'}">
+																	<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z" 
+																		stroke-width="1.5" stroke="#dc2626" fill="#dc2626">
+																	</path>
+																</th:block>
+																
+															</svg>
+														</label>
+														<input th:id="|btn_*{productNum}|" type="button" class="a11yHidden">
+													</div>	
+													
+													
+													
 												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">파텍스
+												<div class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
+													<h2 th:text="*{productName}" class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">파텍스
 														전자 벽시계</h2>
-													<div
+													<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
 														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">25,000원</div>
 													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">4일 전</span>
+														<th:block th:if="*{tradingArea ne null}">
+														<span th:tect="*{tradingArea}" class="text-sm text-gray-400">성포동</span>
+														<span class="text-sm text-gray-400 mx-1">|</span>
+														</th:block>
+														<span th:text="*{timeString}" class="text-sm text-gray-400">4일 전</span>
 													</div>
 													<div class="flex items-center justify-start "></div>
 												</div></a>
+											</div>
 										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="세븐셀라 카고 조거팬츠 30" href="/product/222839208"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1j:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1j:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="세븐셀라 카고 조거팬츠 30" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2025/12/11/1765427175710LIJ_6ZOcS.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">세븐셀라
-														카고 조거팬츠 30</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">20,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">4일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="BCBG 구스다운 경량패딩" href="/product/224038199"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1k:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1k:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="BCBG 구스다운 경량패딩" referrerpolicy="no-referrer"
-														loading="lazy" decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/12/1768220471393GXi_rQ6HT.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
-														<span
-															class="font-semibold text-base lg:text-lg text-center text-white">판매완료</span>
-													</div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">BCBG
-														구스다운 경량패딩</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">20,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">7일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
-									</div>
-									<div class="relative">
-										<div class="relative">
-											<a
-												class="group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-												title="8bitdo 얼티밋 닌텐도스위치 버전 풀박스" href="/product/224103604"><div
-													class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-													<div class="absolute right-2 bottom-2 z-30 w-6 h-6">
-														<label for=":r1l:" class="relative cursor-pointer"><svg
-																width="32" height="32" viewBox="0 0 32 32" fill="none"
-																xmlns="http://www.w3.org/2000/svg"
-																class="pointer-events-none w-6 h-6">
-																<path
-																	d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z"
-																	stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input
-															id=":r1l:" type="checkbox" class="a11yHidden">
-													</div>
-													<img alt="8bitdo 얼티밋 닌텐도스위치 버전 풀박스"
-														referrerpolicy="no-referrer" loading="lazy"
-														decoding="async" data-nimg="fill"
-														class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-														src="https://img2.joongna.com/media/original/2026/01/14/1768373239942LRY_73qO2.jpg?impolicy=thumb&amp;size=150"
-														style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-													<div
-														class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
-														<span
-															class="font-semibold text-base lg:text-lg text-center text-white">판매완료</span>
-													</div>
-												</div>
-												<div
-													class="w-full overflow-hidden p-0 md:p-0 lg:p-0 xl:p-0 2xl:p-0">
-													<h2
-														class="line-clamp-2 min-h-[2lh] text-sm md:text-base text-heading">8bitdo
-														얼티밋 닌텐도스위치 버전 풀박스</h2>
-													<div
-														class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5">29,000원</div>
-													<div class="mt-1 mb-2">
-														<span class="text-sm text-gray-400">성포동</span><span
-															class="text-sm text-gray-400 mx-1">|</span><span
-															class="text-sm text-gray-400">7일 전</span>
-													</div>
-													<div class="flex items-center justify-start "></div>
-												</div></a>
-										</div>
+									</th:block>
+									 
 									</div>
 								</div>
-								<div class="py-8 text-center xl:pt-14">
-									<button class="text-[13px] md:text-sm leading-4 inline-flex items-center justify-center font-semibold rounded-md h-11 md:h-12 px-5 bg-gray-600 text-white transition-colors duration-300 hover:bg-black hover:text-white">
-    								더보기
-									</button>
+								
+								<div id="moreBtnWrapper">
+									<th:block th:if="${hasNext}">
+									<div id="moreBtn" class="py-8 text-center xl:pt-14">
+										<button onclick="moreBtn()" class="text-[13px] md:text-sm leading-4 inline-flex items-center justify-center font-semibold rounded-md h-11 md:h-12 px-5 bg-gray-600 text-white transition-colors duration-300 hover:bg-black hover:text-white">
+	    								더보기
+										</button>
+									</div>
+									</th:block>
 								</div>
 							</div>
 						</div>
