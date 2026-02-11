@@ -68,19 +68,21 @@ public class AskController {
     // 상세
     @GetMapping("/detail")
     public String askDetail(@RequestParam int askNum, Model model) {
-
+        // 1. 문의 본문 데이터 가져오기
         AskDomain ask = as.getAskDetail(askNum);
+        
+        // 2. 해당 문의에 등록된 이미지 파일명 리스트 가져오기
         List<String> imgList = as.getAskImages(askNum);
 
         model.addAttribute("ask", ask);
-        model.addAttribute("imgList", imgList);
+        model.addAttribute("imgList", imgList); // 리스트가 비어있어도 타임리프에서 처리 가능
 
+        // 메뉴 활성화용 (기존 유지)
         model.addAttribute("menu", "customer");
         model.addAttribute("subMenu", "ask");
 
         return "manage/ask/askDetail";
     }
-
 
     // 답변 처리
     @PostMapping("/answerProcess")
@@ -90,7 +92,7 @@ public class AskController {
         return "redirect:/manage/ask/detail?askNum=" + dto.getAskNum();
     }
 
-    // 페이지바 (BoardController 로직 거의 동일)
+    
     private String buildPageBar(String baseUrl, AskDTO dto, int totalCount, int pageSize, int blockSize) {
 
         int totalPage = (int) Math.ceil((double) totalCount / pageSize);

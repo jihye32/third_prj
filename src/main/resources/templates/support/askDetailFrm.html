@@ -35,38 +35,98 @@
 								class="text-2xl font-semibold text-jnGray-900 mt-8 text-center">고객센터</h2>
 							<div class="h-[1px] bg-jnGray-900 my-5 "></div>
 						</div>
+
 						<div
 							class="flex items-center mt-8 mb-4 border-t border-b border-solid border-jnGray-300"
 							style="border-top: 0; margin-top: 0; margin-bottom: 30px">
-							<button>
+
+							<a th:href="@{/support/askFrm}">
 								<svg width="20" height="20" viewBox="0 0 20 20" fill="none"
 									xmlns="http://www.w3.org/2000/svg"
 									class="rotate-90 rotate-[0deg]">
 									<g clip-path="url(#clip0_2224_69059)">
-									<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
-										stroke-width="1.5" stroke-linecap="round"
-										stroke-linejoin="round"></path></g>
+										<path d="M4.25 7L10 12.75L15.75 7" stroke="currentColor"
+											stroke-width="1.5" stroke-linecap="round"
+											stroke-linejoin="round"></path>
+									</g>
 									<defs>
-									<clipPath id="clip0_2224_69059">
-									<rect width="20" height="20" fill="white"></rect></clipPath></defs></svg>
-							</button>
-							<div
-								class="flex flex-col flex-1 justify-between items-start px-5 py-4 mr-2 w-full" style="margin: 10px 0">
-								<span
-									class="text-sm font-normal text-left text-jnGray-900 text-start md:tracking-tight">[판매자]
-									안심결제로 물건을 판매했는데 판매대금은 언제 입금되나요?</span>
-								<span class="mt-1 text-xs font-medium text-jnGray-500">거래문의</span>
+										<clipPath id="clip0_2224_69059">
+											<rect width="20" height="20" fill="white"></rect>
+										</clipPath>
+									</defs>
+								</svg>
+							</a>
+
+							<div class="flex flex-col flex-1 justify-between items-start px-5 py-4 mr-2 w-full"
+							     style="margin: 10px 0">
+
+								<span class="text-sm font-normal text-left text-jnGray-900 text-start md:tracking-tight"
+								      th:text="${detail != null ? detail.askTitle : '존재하지 않는 문의입니다.'}">
+									문의 제목
+								</span>
+
+								<div th:if="${detail != null}" class="flex items-center gap-2 mt-1">
+									<span class="text-xs font-medium text-jnGray-500"
+									      th:text="${detail.askTypeText}">문의유형</span>
+									<span class="text-xs font-medium text-jnGray-400">·</span>
+									<span class="text-xs font-medium text-jnGray-500"
+									      th:text="${#dates.format(detail.askDate,'yyyy-MM-dd')}">2026-02-10</span>
+									<span class="text-xs font-medium text-jnGray-400">·</span>
+									<span class="text-xs font-medium"
+									      th:text="${detail.answerStatus}">미답변</span>
+								</div>
 							</div>
 						</div>
-						<p>판매대금은 아래 기준에 따라 입금됩니다.</p>
-						<p>&nbsp;</p>
-						<p>1. 구매자가 직접 ‘구매확정’을 하면, 1시간 이내에 판매대금이 정산됩니다.&nbsp;&nbsp;</p>
-						<p>2. 구매확정 없이 일정 기간(배송 완료 후 3일)이 지나면 자동으로 구매확정 처리되어
-							정산됩니다.&nbsp;&nbsp;</p>
-						<p>3. 입금 계좌는 판매자 등록 계좌로 지급되며, 은행 영업일 기준으로 반영됩니다.&nbsp;&nbsp;</p>
-						<p>&nbsp;</p>
-						<p>** 분쟁 발생, 정산 기준에 따라 정산 시점이 달라질 수 있습니다. **</p>
-						<p>&nbsp;</p>
+
+						<div th:if="${detail != null}">
+							<div class="text-[15px] text-jnGray-900 leading-relaxed whitespace-pre-line"
+							     th:text="${detail.askText}">
+								문의내용
+							</div>
+
+				<div th:if="${detail != null and detail.imgList != null and !#lists.isEmpty(detail.imgList)}"
+							     class="mt-6">
+							  <div class="grid grid-cols-2 gap-3">
+							    <img th:each="img : ${detail.imgList}"
+							         th:src="@{'/upload/ask/' + ${img}}"
+							         alt="문의이미지"
+							         class="w-full rounded border border-jnGray-300" />
+							  </div>
+							</div>
+
+
+
+							<!-- 답변 -->
+							<div class="mt-8 pt-6 border-t border-jnGray-300"
+							     th:if="${detail.answerText != null}">
+								<div class="text-sm font-semibold text-jnGray-900">관리자 답변</div>
+								<div class="mt-1 text-xs font-medium text-jnGray-500"
+								     th:text="${#dates.format(detail.answerDate,'yyyy-MM-dd')}">2026-02-10</div>
+								<div class="mt-3 text-[15px] text-jnGray-900 leading-relaxed whitespace-pre-line"
+								     th:text="${detail.answerText}">
+									답변내용
+								</div>
+							</div>
+
+							<div class="mt-8 pt-6 border-t border-jnGray-300 text-jnGray-500"
+							     th:if="${detail.answerText == null}">
+								아직 답변이 등록되지 않았습니다.
+							</div>
+						</div>
+						
+						<div th:if="${detail != null}" class="mt-8 flex justify-end">
+    <div th:if="${detail.answerText == null}">
+        <a th:href="@{/support/askUpdateFrm(askNum=${detail.askNum})}" 
+           class="inline-block px-6 py-2 bg-black text-white rounded-md text-sm">
+            문의 수정
+        </a>
+    </div>
+</div>
+
+						<div th:if="${detail == null}" class="px-5 py-10 text-center text-jnGray-500">
+							삭제되었거나 존재하지 않는 문의입니다.
+						</div>
+
 					</article>
 				</div>
 			</main>
