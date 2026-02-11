@@ -40,14 +40,18 @@ public class ChatController {
 	public String chat(@PathVariable String otherId, @RequestParam(required = false) Integer pnum, HttpSession session, Model model) {
 		String uid = (String)session.getAttribute("uid");
 		
+		ProductDomain pd = null;
 		
 		Integer room = cs.searchChatRoom(otherId, uid);
 		if(room != null) {
 			//이전에 대화한 기록 가져오기
 			List<ChatDomain> chatList = cs.searchChat(room, uid);
 			model.addAttribute("chatList", chatList);
+			
+			if(pnum == null) {
+				pnum = cs.searchProductNum(room);
+			}
 		}
-		ProductDomain pd = null;
 		if(pnum != null) {
 			pd=cs.searchProduct(pnum);
 		}
@@ -64,14 +68,14 @@ public class ChatController {
 		
 		String uid = (String)session.getAttribute("uid");
 		cDTO.setWriterId(uid);
+		
+		if(cDTO.getProductNum()==null) {
+			cDTO.setProductNum(cs.searchProductNum(cDTO.getRoomNum()));
+		}
 		ChatDTO cc= cs.sendMessage(cDTO);
-		System.out.println("[CHAT] saved roomNum=" + cc.getRoomNum()
-	    + " writerId=" + cc.getWriterId()
-	    + " otherId=" + cDTO.getOtherId());
 
 		messagingTemplate.convertAndSend("/topic/room/" + cc.getRoomNum(), cc);
 
-	System.out.println("[CHAT] broadcast to /topic/room/" + cc.getRoomNum());
 
 	    return cc;
 	}

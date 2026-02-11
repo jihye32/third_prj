@@ -13,8 +13,7 @@
 </head>
 <body>
 <th:block th:fragment="chatContentsForm">
-<div id="chat-root">
-<div class="h-full overflow-auto">
+<div id="chat-root" class="h-full overflow-auto">
 	<div class="flex flex-col justify-between w-full h-full bg-[#e9edef]">
 		<input type="hidden" id="user-id" th:value="${session.uid}">
 		<div class="relative" th:if="${product != null}" th:object="${product}">
@@ -35,7 +34,7 @@
 			</div>
 		</div>
 		<div class="overflow-auto p-5 h-full">
-			<div class="flex flex-col gap-2 h-full w-inherit" id="chat-messages">
+			<div class="flex flex-col gap-2 w-inherit" id="chat-messages">
 			<input type="hidden" id="room-num" th:value="${roomNum}">
 			<input type="hidden" id="other-id" th:value="${otherId}">
 				<th:block th:if="${roomNum != null}">
@@ -67,7 +66,7 @@
 	<textarea id="chat-input" title="채팅" autocomplete="off" maxlength="1000"
 		class="shrink-0 bg-transparent placeholder:text-[#9CA3AF] outline-none resize-none text-md h-16 w-full pre-wrap"
 		placeholder="메시지를 입력해주세요" name="chat"></textarea>
-	<div class="flex justify-between mt-3">
+	<div class="flex justify-between">
 		<div class="flex gap-2" id="chat-input-action-button-container">
 			<div>
 				<div class="block">
@@ -94,7 +93,6 @@
 		</div>
 	</div>
 </form>
-</div>
 <template id="my-message">
 <div type="textMessage">
 	<div class="flex items-end w-auto mb-2 flex-start space-x-1 flex-row-reverse space-x-reverse">
