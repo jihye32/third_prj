@@ -12,6 +12,7 @@ import lombok.ToString;
 public class JoinDTO {
 
 	private String id, pass, userName, storeName, emailLocal, emailDomain, email, ip;
+	private int storeNum;
 	private LocalDate birth;
 	
 }// class
