@@ -50,7 +50,7 @@ where product_num = #{productnum}
 </select>
 
 <select id="selectProductChat" parameterType="int" resultType="int">
-select count(distinct chatroom_num)
+select count(chatroom_num)
 from room_product
 where product_num = #{productnum}
 </select>
