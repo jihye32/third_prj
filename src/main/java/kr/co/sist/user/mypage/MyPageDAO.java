@@ -69,7 +69,7 @@ public class MyPageDAO {
 		if(ss != null) {ss.close();}// end if
 	}// updateProfile
 	
-	public List<BuyProductDomain> selectBuyProduct(String myId){
+	public List<BuyProductDomain> selectBuyProduct(String myId) throws PersistenceException{
 		List<BuyProductDomain> list =null;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
 		list = ss.selectList("kr.co.sist.user.myPage.selectBuyProduct", myId);
@@ -77,5 +77,16 @@ public class MyPageDAO {
 		return list;
 	}// selectBuyProduct
 	
+	public void updateReceive(ReviewDTO rDTO) throws PersistenceException {
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		ss.update("kr.co.sist.user.myPage.updateReceive", rDTO);
+		if(ss != null) {ss.close();}// end if
+	}// updateReceive
+	
+	public void insertReview(ReviewDTO rDTO) throws PersistenceException {
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		ss.insert("kr.co.sist.user.myPage.insertReview", rDTO);
+		if(ss != null) {ss.close();}// end if
+	}// insertReview
 	
 }// class

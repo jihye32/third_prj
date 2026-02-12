@@ -57,6 +57,7 @@ public class MainController {
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("uid");
+		session.removeAttribute("snum");
 		session.invalidate();
 		return "redirect:/";
 	}

@@ -9,10 +9,8 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.sist.user.ProductDomain;
-import kr.co.sist.user.sellerpage.SellerPageRangeDTO;
 
 @Service
 public class MyPageService {
@@ -105,6 +103,28 @@ public class MyPageService {
 		}// end catch
 		return list;
 	}// searchBuyProdcut
+	
+	public boolean modifyReceive(ReviewDTO rDTO) {
+		boolean flag = false;
+		try {
+			mpDAO.updateReceive(rDTO);
+			flag = true;
+		} catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}// end catch
+		return flag;
+	}// modifyReceive
+	
+	public boolean addReview(ReviewDTO rDTO) {
+		boolean flag = false;
+		try {
+			mpDAO.insertReview(rDTO);
+			flag = true;
+		} catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}// end catch
+		return flag;
+	}// addReview
 	
 	
 	/**

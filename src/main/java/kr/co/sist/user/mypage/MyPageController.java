@@ -25,10 +25,16 @@ public class MyPageController {
 	private MyPageService mps;
 	
 	@GetMapping("/myPageFrm")
-	public String myPageFrm(Model model, MyPageRangeDTO mprDTO) {
+	public String myPageFrm(Model model, MyPageRangeDTO mprDTO, HttpSession session) {
 		mprDTO.setPage(1);
-		mprDTO.setMyStoreNum(2);// 내 상점 번호
-
+//		mprDTO.setMyStoreNum(2);// 내 상점 번호
+		int storeNum = 0; 
+		if(session.getAttribute("snum") == null || "".equals(session.getAttribute("snum"))) {
+			return "redirect:/user/login/loginFrm";
+		}// end if
+		storeNum = (Integer)session.getAttribute("snum");
+		mprDTO.setMyStoreNum(storeNum);
+		
 		int pageScale = mps.pageScale();
 		int page = 1;
 		int totalCnt = mps.totalCnt(mprDTO);
@@ -40,7 +46,7 @@ public class MyPageController {
 		boolean hasNext = endNum < totalCnt;
 		
 		
-		model.addAttribute("MyPageDomain", mps.searchMyPageInfo(2));
+		model.addAttribute("MyPageDomain", mps.searchMyPageInfo(storeNum));
 		model.addAttribute("tempData", mps.searchMySellProdcut(mprDTO));
 		model.addAttribute("cnt", totalCnt);// 물품 수
 		model.addAttribute("hasNext", hasNext);
@@ -49,13 +55,17 @@ public class MyPageController {
 	}// myPageFrm 
 	
 	@ResponseBody
-	@PostMapping("/myPageFrm/more")
+	@GetMapping("/myPageFrm/more")
 	public MyPageSearchDTO searchProduct( 
-			@RequestBody MyPageRangeDTO mprDTO,
+			MyPageRangeDTO mprDTO,
 			HttpSession session
 			){
-		
-		mprDTO.setMyStoreNum(2);// 내 상점 번호
+		int storeNum = 0; 
+		if(session.getAttribute("snum") == null || "".equals(session.getAttribute("snum"))) {
+			return null;
+		}// end if
+		storeNum = (Integer)session.getAttribute("snum");
+		mprDTO.setMyStoreNum(storeNum);
 
 		int pageScale = mps.pageScale();
 		int page = mprDTO.getPage();
@@ -91,7 +101,7 @@ public class MyPageController {
 	
 	@PostMapping("/modifyProfile")
 	public String modifyProfile(ProfileDTO pfDTO, HttpSession session) {
-		pfDTO.setUserId("user02");// ======== 가데이터
+//		pfDTO.setUserId("user02");// ======== 가데이터
 		
 		if(session.getAttribute("uid") == null) {
 			return "redirect:/user/login/loginFrm";
@@ -105,12 +115,53 @@ public class MyPageController {
 	}
 	
 	@GetMapping("/myPageFrm/purchased")
-	public String purchased(Model model) {
+	public String purchased(Model model, HttpSession session) {
 		
-		List<BuyProductDomain> list = mps.searchBuyProdcut("user02");
+		String id  = "";
+		if(session.getAttribute("uid") == null) {
+			return "redirect:/user/login/loginFrm";
+		} else {
+			id = (String)session.getAttribute("uid");
+		}// end else
+		List<BuyProductDomain> list = mps.searchBuyProdcut(id);
+		boolean flag = false;
+		if(!list.isEmpty()) {
+			flag = true;
+		}
 		model.addAttribute("list", list);
+		model.addAttribute("flag", flag);
 		
 		return "myPage/wrapper_purchased :: fragmentPurchased";
 	}// purchased
+	
+	@ResponseBody
+	@GetMapping("/receive")
+	public ReviewDTO receiveProduct(ReviewDTO rDTO, HttpSession session) {
+		String id  = "";
+		if(session.getAttribute("uid") == null) {
+			return rDTO;
+		} else {
+			id = (String)session.getAttribute("uid");
+		}// end else
+		rDTO.setReviewerId(id);
+		boolean flag = mps.modifyReceive(rDTO);
+		rDTO.setReceiveFlag(flag);
+		return rDTO;
+	}// receiveProduct
+	
+	@ResponseBody
+	@PostMapping("/review/insert")
+	public ReviewDTO addReview(ReviewDTO rDTO, HttpSession session) {
+		int myStroeNum  = 0;
+		if(session.getAttribute("snum") == null) {
+			return rDTO;
+		} else {
+			myStroeNum = (Integer)session.getAttribute("snum");
+		}// end else
+		rDTO.setMyStoreNum(myStroeNum);
+		boolean flag = mps.addReview(rDTO);
+		rDTO.setReviewAddFlag(flag);
+		return rDTO;
+	}// addReview
 	
 }// class

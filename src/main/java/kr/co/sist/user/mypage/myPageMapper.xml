@@ -118,7 +118,7 @@ where store_num = #{myStoreNum}
 <update id="updateProfile" parameterType="kr.co.sist.user.mypage.ProfileDTO">
 update store
 set introduce = #{intro}, profile_img = #{newImg}
-where user_id = #{myId}
+where user_id = #{userId}
 </update>
 
 
@@ -133,7 +133,11 @@ select
     case
         when r.product_num is not null then r.review_text
         else null
-    end as review
+    end as review,
+    CASE
+        WHEN r.product_num IS NOT NULL THEN r.review_rate
+        ELSE null
+    END AS reviewRate
 from product pd
 join product_order po
     on pd.product_num = po.product_num
@@ -141,5 +145,17 @@ left join review r
     on pd.product_num = r.product_num
 where po.buyer_id = #{myid}
 </select>
+
+
+<update id="updateReceive" parameterType="kr.co.sist.user.mypage.ReviewDTO">
+update product_order
+set DELIVERED_DATE = sysdate
+where product_num = #{productNum} and buyer_id=#{reviewerId}
+</update>
+
+<insert id="insertReview" parameterType="kr.co.sist.user.mypage.ReviewDTO">
+insert into review(PRODUCT_NUM, STORE_NUM, REVIEW_TEXT, REVIEW_DATE, REVIEW_RATE)
+values(#{productNum},#{myStoreNum},#{review},sysdate,#{reviewRate})
+</insert>
 
 </mapper>

@@ -11,6 +11,6 @@ import lombok.ToString;
 @ToString
 public class BuyProductDomain {
 	private String productName, thumbnail, review;
-	private int productNum, price;
+	private int productNum, price, reviewRate;
 	private Date createdDate, deliverdDate;
 }// class

@@ -23,6 +23,55 @@ function openPurchasedListForm() {
         });
 }// openPurchasedListForm
 
+function toggleBookmark(productNum, $input) {
+    //console.log("찜 클릭됨:", productNum);
+
+    // label 내부 svg path 선택
+    var $svgPath = $input.prev('label').find('path');
+    // 찜 상태 토글
+    if ($svgPath.attr('fill') === '#dc2626') {
+    	$.ajax({
+    		url:"/bookmark/"+productNum,
+    		type:"DELETE",
+    		contentType:"application/JSON",
+    		data:{productNum,productNum},
+    		dataType:"JSON",
+    		error:function(xhr){
+    			alert(xhr.status)
+    			},// error
+    		success:function(jsonObj){
+    			if(jsonObj.resultFlag){
+    				// 비활성화
+    	            $svgPath.attr('fill', '#9ca3afb4');
+    	            $svgPath.attr('stroke', 'white');
+    			}// end if
+    		}// success
+    	});// ajax
+        
+    } else {
+    	$.ajax({
+    		url:"/bookmark/"+productNum,
+    		type:"POST",
+    		contentType:"application/JSON",
+    		data:{productNum,productNum},
+    		dataType:"JSON",
+    		error:function(xhr){
+    			alert(xhr.status)
+    			},// error
+    		success:function(jsonObj){
+    			if(jsonObj.resultFlag){
+    				// 활성화
+    	            $svgPath.attr('fill', '#dc2626');
+    	            $svgPath.attr('stroke', '#dc2626');
+    			}else{
+    				alert("로그인이 필요한 서비스입니다.");
+    			}// end else
+    		}// success
+    	});// ajax
+        
+    }// end else
+}// toggleBookmark
+
 function deleteCount(){
 	location.href='/myPage/deleteCount';
 }// deleteCount
@@ -43,13 +92,13 @@ function searchProductList() {
 
     $.ajax({
         url: '/myPage/myPageFrm/more',
-        type: "POST",
+        type: "GET",
         contentType: "application/json",
-        data: JSON.stringify({
+        data: {
             page: page,
             searchCode: searchCode,
             sortBy: sortKeyword
-        }),
+        },
         dataType: "json",
         error: function (xhr) {
             alert(xhr.status);
@@ -196,28 +245,102 @@ function searchProductList() {
 
                 var productNum = $(this).attr('id').replace('btn_', '');
                 toggleBookmark(productNum, $(this));
-            });
+            });// on click
 
-        }
-    });
-}
+        }// success
+    });// ajax
+}// searchProductList
 
 
 
-// 리뷰 쓰기
+// 리뷰 쓰기 폼 열기
 function toggleReview(button) {
 	const reviewBox = button.closest("li").querySelector("div.hidden");
 	reviewBox.classList.toggle("hidden");
 }// toggleReview
 
+// 수령 확인
+function toggleReceive(button) {
+	const receiveProductNum = button.closest("li").id
+	//location.href=('/myPage/receive?productNum='+receiveProductNum);
+	$.ajax({
+        url: '/myPage/receive',
+        type: "get",
+        contentType: "application/json",
+        data: {
+            productNum : receiveProductNum
+        },
+        dataType: "json",
+        error: function (xhr) {
+            alert(xhr.status);
+        },
+        success: function (jsonObj) {
+        	if(jsonObj.receiveFlag){
+        		alert('수령완료');
+        		openPurchasedListForm();
+        	}else{
+        		alert('문제발생');
+        	}// end else
+        }// success
+	});// ajax
+	
+}// toggleReview
+
 // 별점
 function setRating(el, rating) {
-	const stars = el.parentElement.querySelectorAll(".star");
+	const container = el.closest(".rating-box");
+	const stars = container.querySelectorAll(".star");
+
 	stars.forEach((star, index) => {
 		star.classList.toggle("text-yellow-400", index < rating);
 		star.classList.toggle("text-gray-300", index >= rating);
-	});
+	});// forEach
+
+	container.setAttribute("data-rating", rating);
 }// setRating
+
+function addReview(btn){
+	
+	const reviewProductNum = btn.closest("li").id
+	
+	// hidden이 아니라 review-box 기준으로 찾기
+	const reviewBox = $(btn).closest(".review-box");
+	// 별점 가져오기
+	const rating = reviewBox.find(".rating-box").data("rating") || 0;
+
+	// 리뷰 내용 가져오기
+	const reviewText = reviewBox.find("textarea").val();
+
+	if (rating === 0) {
+		alert("별점을 선택해주세요.");
+		return;
+	}// end if
+
+	if (reviewText === "") {
+		alert("리뷰 내용을 입력해주세요.");
+		return;
+	}// end if
+
+	console.log("별점:", rating);
+	console.log("리뷰내용:", reviewText);
+
+	$.ajax({
+		url: "/myPage/review/insert",
+		type: "POST",
+		data: {
+			reviewRate: rating,
+			review: reviewText,
+			productNum : reviewProductNum
+		},
+		error: function (xhr) {
+            alert(xhr.status);
+        },
+		success: function(res){
+			alert("등록 완료");
+			openPurchasedListForm();
+		}// success
+	});// ajax
+}// addReview
 
 function profileSubmit() {
 	$("#profileFrm").submit();
@@ -247,6 +370,9 @@ $(function(){
 	});// change
 })// ready
 
+function goToSell(){
+	location.href="/sell/sellFrm";
+}// goToSell
 </script>
 
 <link rel="stylesheet"
@@ -334,14 +460,14 @@ $(function(){
 										<dl class="flex justify-between items-center text-center text-jnGray-600 w-full m-0 [&amp;_div]:w-full [&amp;_div]:before:right-0 [&amp;_div]:before:top-1/2 [&amp;_div]:before:-translate-y-1/2 [&amp;_div]:before:absolute [&amp;_div]:before:w-[1px] [&amp;_div]:before:h-[40px] [&amp;_div]:before:bg-gray-300 [&amp;_div_dt]:text-[12px] [&amp;_div_dd]:text-[16px] lg:[&amp;_div_dt]:text-[14px] lg:[&amp;_div_dd]:text-[22px]">
 											<div class="relative">
 												<dt class="justify-center mt-0">판매 상품 수</dt>
-												<dd th:text="${MyPageDomain.sellProductCnt}" class="font-semibold text-jnblack">0</dd>
+												<dd th:text="${cnt}" class="font-semibold text-jnblack">0</dd>
 											</div>
 											<div class="relative cursor-pointer">
 												<dt class="justify-center mt-0">거래후기</dt>
 												<dd th:text="${MyPageDomain.reviewCnt}" class="font-semibold underline text-jnblack">0</dd>
 											</div>
 											<div class="relative">
-												<div id="infoChangeBtn" class="flex items-center justify-center gap-2
+												<div onclick="goToSell()" class="flex items-center justify-center gap-2
 											       px-3.5 xl:px-4 text-sm font-semibold
 											       text-white rounded-md cursor-pointer
 											       h-11 bg-black hover:bg-black">판매 등록
