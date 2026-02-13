@@ -17,27 +17,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   let currentIndex = 0;
-      const slider = document.getElementById('image-slider');
-      const currentText = document.getElementById('current-slide');
-      
-      if (slider && slider.children.length > 0) {
-          const totalSlides = slider.children.length;
+  const slider = document.getElementById('image-slider');
+  const currentText = document.getElementById('current-slide');
 
-          window.updateSlider = function() {
-              slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-              if (currentText) currentText.innerText = currentIndex + 1;
-          };
+  if (slider && slider.children.length > 0) {
+      const totalSlides = slider.children.length;
 
-          window.nextSlide = function() {
-              currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
-              updateSlider();
-          };
+      window.updateSlider = function() {
+          slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+          if (currentText) currentText.innerText = currentIndex + 1;
+      };
 
-          window.prevSlide = function() {
-              currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
-              updateSlider();
-          };
-      }
+      window.nextSlide = function() {
+          currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
+          updateSlider();
+      };
+
+      window.prevSlide = function() {
+          currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
+          updateSlider();
+      };
+  }
+ 
 });
 
 
