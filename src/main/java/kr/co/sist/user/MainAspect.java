@@ -28,7 +28,9 @@ public class MainAspect {
 //		System.out.println("Aspect 반환값 : " + list);
 		
 		for(ProductDomain pd : list) {
-			pd.setTradingArea(cutArea( pd.getTradingArea() ));
+			if(pd.getTradingArea() != null && !"".equals(pd.getTradingArea())) {
+				pd.setTradingArea(cutArea( pd.getTradingArea() ));
+			}// end if
 			pd.setTimeString(formatDate(pd.getTimDif(), pd.getLastModify()));
 		}// end for
 	}// afterReturning2
