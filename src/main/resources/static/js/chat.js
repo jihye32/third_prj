@@ -174,7 +174,7 @@ function appendOtherMessage(root, { content }) {
 function openChatForm(sellerId, store) { 
   const pnum = window.PageContext?.pnum ?? null;
   
- 	const url = `/chat/${sellerId}`;
+ 	let url = `/chat/${sellerId}`;
 	if(pnum !== null){
 		url+=`?pnum=${pnum}`;
 	}
