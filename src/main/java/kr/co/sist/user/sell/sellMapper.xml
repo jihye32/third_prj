@@ -23,6 +23,10 @@ insert into SELL_OPTION(PRODUCT_NUM, SELL_CODE)
 values (#{productNum}, #{sellCode})
 </insert>
 
+<insert id="insertTradeArea" parameterType="Map">
+insert into SELL_place(PRODUCT_NUM, ADDR)
+values (#{productNum}, #{tradeArea})
+</insert>
 </mapper>
 
 

@@ -36,6 +36,12 @@ public class SellDAO {
 		cnt = ss.insert("kr.co.sist.user.sell.insertTradeType", map);
 		return cnt;
 	}// insertTradeType
+	
+	public int insertTradeArea(Map<String, Object> map, SqlSession ss) throws PersistenceException {
+		int cnt = 0;
+		cnt = ss.insert("kr.co.sist.user.sell.insertTradeArea", map);
+		return cnt;
+	}// insertTradeArea
 		
 	
 }// class
