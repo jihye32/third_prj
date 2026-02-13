@@ -13,8 +13,7 @@ public class AdminLoginService {
 	AdminLoginDAO adminDAO;
 	
 	public boolean login(AdminLoginDTO ldto) throws SQLException {
-	    AdminLoginDomain adminDomain =
-	        adminDAO.selectAdminLogin(ldto.getAdminId());
+	    AdminLoginDomain adminDomain = adminDAO.selectAdminLogin(ldto.getAdminId());
 
 	    if (adminDomain == null) {
 	        return false;
@@ -22,7 +21,12 @@ public class AdminLoginService {
 	    BCryptPasswordEncoder bpe = new BCryptPasswordEncoder(10);
 
 	    boolean ok = bpe.matches(ldto.getAdminPass(), adminDomain.getAdminPass().trim());
+<<<<<<< HEAD
 	    if (ok) {//로그인 성공하면 로그인 최신일자 업데이트
+=======
+	    if (ok) {
+	        // 로그인 성공 시 최신일자 업데이트
+>>>>>>> main
 	        adminDAO.updateLastLogin(ldto.getAdminId());
 	    }
 

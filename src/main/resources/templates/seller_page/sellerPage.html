@@ -31,6 +31,7 @@ $(document).on("click", "#reportBtn", function(){
     $("#reportForm").submit();
 });
 
+<<<<<<< HEAD
   </script>	
   
 <script>
@@ -76,6 +77,26 @@ $(document).ready(function() {
 });
 </script>  	
 	
+=======
+  </script>		
+<script>
+$(document).on('change', '#upFile', function(e) {
+    const files = e.target.files; // 선택된 파일들
+    const list = $('#qna-image-list'); // 파일명 뿌려줄 곳
+    list.empty(); // 이전 선택 기록 삭제
+
+    // 파일명을 하나씩 꺼내서 추가
+    for (let i = 0; i < files.length; i++) {
+        const fileName = files[i].name;
+        list.append(`<span style="font-size:12px; color:#666; margin-right:10px;">${fileName}</span>`);
+    }
+
+    // 선택된 개수 표시 (0/10 부분)
+    $('.group span').text(files.length + '/10');
+});
+
+</script>	
+>>>>>>> main
 <script type="text/javascript">
 var storeId = "[[${storeNum}]]";
 function openReviewForm() {// 리뷰 페이지
