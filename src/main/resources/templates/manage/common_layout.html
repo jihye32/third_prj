@@ -11,51 +11,92 @@
 <aside class="menu_side" th:fragment="sidebar">
     <div class="menu_group">관리자 메뉴</div>
     <ul class="list_menu">
-        <li class="menu_item" th:classappend="${menu == 'dashboard' ? 'active' : ''}">
+        <li class="menu_item">
             <a th:href="@{/manage/dashboard}" class="menu_link">대시보드</a>
         </li>
         
-        <li class="menu_item" th:classappend="${menu == 'product' ? 'active' : ''}">
+        <li class="menu_item">
             <a th:href="@{/manage/product/product_main}" class="menu_link">물품관리</a>
         </li>
 
-        <li class="menu_item" th:classappend="${menu == 'member' ? 'active' : ''}">
+        <li class="menu_item">
             <a th:href="@{/manage/member/member_main}" class="menu_link">회원관리</a>
         </li>
         
-        <li class="menu_item" th:classappend="${menu == 'customer' ? 'active' : ''}">
+        <li class="menu_item">
             <div class="menu_title">고객센터관리</div>
             <ul class="sub_menu_list">
-                <li class="sub_menu_item" th:classappend="${subMenu == 'faq' ? 'sub_active' : ''}">
+                <li class="sub_menu_item">
                     <a th:href="@{/manage/faq/faq}">- FAQ 관리</a>
                 </li>
-                <li class="sub_menu_item" th:classappend="${subMenu == 'ask' ? 'sub_active' : ''}">
+                <li class="sub_menu_item">
                     <a th:href="@{/manage/ask/list}">- 1:1 문의관리</a>
-
                 </li>
-                <li class="sub_menu_item" th:classappend="${subMenu == 'notice' ? 'sub_active' : ''}">
+                <li class="sub_menu_item">
                     <a th:href="@{/manage/notice/notice}">- 공지사항관리</a>
                 </li>
             </ul>
         </li>
         
-        <li class="menu_item" th:classappend="${menu == 'report' ? 'active' : ''}">
+        <li class="menu_item">
             <a th:href="@{/manage/report/reportlist}" class="menu_link">신고관리</a>
         </li>
         
-        <li class="menu_item" th:classappend="${menu == 'sales' ? 'active' : ''}">
+        <li class="menu_item">
             <a th:href="@{/manage/sales}" class="menu_link">매출관리</a>
         </li>
     </ul>
 
-    <script>
+   <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname; // 현재 브라우저 주소
+        const menuItems = document.querySelectorAll('.menu_item');
+
+        menuItems.forEach(item => {
+            const mainLink = item.querySelector('.menu_link');
+            const subLinks = item.querySelectorAll('.sub_menu_item a');
+            let isActive = false;
+
+            // 1. 메인 메뉴 경로 체크 (하위 페이지 포함 로직)
+            if (mainLink) {
+                const href = mainLink.getAttribute('href');
+                
+                // [수정 포인트] 주소가 완전히 일치하거나, 해당 메뉴의 대분류 경로가 포함되면 active
+                // 예: /manage/member/member_detail 도 /manage/member 를 포함하므로 True
+                if (currentPath === href || 
+                   (href.includes('/manage/member') && currentPath.includes('/manage/member')) ||
+                   (href.includes('/manage/product') && currentPath.includes('/manage/product')) ||
+                   (href.includes('/manage/report') && currentPath.includes('/manage/report'))) {
+                    isActive = true;
+                }
+            }
+
+            // 2. 서브 메뉴 경로 체크 (고객센터 하위 페이지)
+            subLinks.forEach(sub => {
+                if (currentPath.includes(sub.getAttribute('href'))) {
+                    isActive = true;
+                    sub.parentElement.classList.add('sub_active');
+                }
+            });
+
+            // 3. 최종 클래스 부여
+            if (isActive) {
+                item.classList.add('active'); // 남색 바 출현
+                if (item.querySelector('.sub_menu_list')) {
+                    item.classList.add('open'); // 서브메뉴가 있으면 펼침
+                }
+            }
+        });
+
+        // 고객센터관리 클릭 시 아코디언 토글
         document.querySelectorAll('.menu_title').forEach(title => {
-            title.addEventListener('click', () => {
-                const parentLi = title.parentElement;
-                parentLi.classList.toggle('active');
+            title.addEventListener('click', function() {
+                const parentLi = this.parentElement;
+                parentLi.classList.toggle('open');
             });
         });
-    </script>
+    });
+</script>
 </aside>
 
 </html>
