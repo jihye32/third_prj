@@ -1,7 +1,5 @@
 package kr.co.sist.user.mypage;
 
-import java.sql.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,7 +8,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ReviewDTO {
-	private String reviewerId, reviewDetail, reviewerNickName;
-	private Date reviewDate;
+	private String reviewerId, review;
+	private int productNum, reviewRate, myStoreNum;
+	private boolean receiveFlag, reviewAddFlag;
 
 }

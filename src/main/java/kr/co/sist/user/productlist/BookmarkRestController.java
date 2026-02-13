@@ -26,7 +26,7 @@ public class BookmarkRestController {
 			return bDTO;
 		}// else
 		bDTO.setProductNum(productNum);
-		bDTO.setStoreNum(5);
+		bDTO.setStoreNum(storeNum);
 		boolean flag = pls.addBookmark(bDTO);
 		bDTO.setResultFlag(flag);
 		
@@ -42,6 +42,7 @@ public class BookmarkRestController {
 			storeNum = (Integer)session.getAttribute("snum");
 		}// end if
 		bDTO.setStoreNum(storeNum);
+		bDTO.setProductNum(productNum);
 		boolean flag = pls.removeBookmark(bDTO);
 		bDTO.setResultFlag(flag);
 		

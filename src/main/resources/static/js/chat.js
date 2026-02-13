@@ -181,8 +181,8 @@ function openChatForm(sellerId, store) {
   alert(pnum);
   
  	let url = `/chat/${sellerId}`;
-	if(pnum != null){
-		alert(url);
+
+	if(pnum !== null){
 		url+=`?pnum=${pnum}`;
 	}
 
