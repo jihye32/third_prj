@@ -1,6 +1,8 @@
 package kr.co.sist.admin.product;
 
 import java.util.Date;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +20,7 @@ public class AdminProductDomain {
     private int status_code;
     private String addr;              /* 발송지 (Origin) */
     private String thumbnail;
+    private List<String> product_images;
     private String store_name;
     private int category_code;
     private int view_count;
