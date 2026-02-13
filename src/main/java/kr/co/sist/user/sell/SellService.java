@@ -73,7 +73,7 @@ public class SellService {
 			queryCnt += sDAO.insertProduct(sDTO, ss);
 			standardCnt++;
 			
-			
+			// 상품 세부 이미지 db에 insert
 			Map<String, Object> map = null ;
 			for(String imgName : sDTO.getProductImgName()) {// 이미지명 DB에 저장
 				map = new HashMap<String, Object>();
@@ -83,6 +83,7 @@ public class SellService {
 				standardCnt++;
 			}// end for
 			
+			// 거래 유형 db에 insert
 			for(String tradeCode : sDTO.getTradeType()) {
 				map = new HashMap<String, Object>();
 				map.put("sellCode", tradeCode);
@@ -90,6 +91,14 @@ public class SellService {
 				queryCnt += sDAO.insertTradeType(map, ss);
 				standardCnt++;
 			}// end for
+			
+			// 거래 지역 db에 insert
+			map = new HashMap<String, Object>();
+			map.put("tradeArea", sDTO.getAddr());
+			map.put("productNum", sDTO.getProductNum());
+			queryCnt += sDAO.insertTradeArea(map, ss);
+			standardCnt++;
+			
 			if(standardCnt == queryCnt) {// 정상 시행인 경우
 				flag = true;
 				ss.commit();
