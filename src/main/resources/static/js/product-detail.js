@@ -130,10 +130,7 @@ function bumpDate(pnum) {
     .then(data => {
     	alert(data.msg); 
 		if(data.flag){
-			alert("현재 페이지 수정");
 			$("#timeAgo").text("방금");
-		}else{
-			alert("현재 페이지 유지");
 		}
     });
 }
@@ -149,8 +146,6 @@ function updateStatus(pnum, statusCode) {
     	alert(data.msg); 
 		if(data.flag){
 			alert("현재 페이지 수정");
-		}else{
-			alert("현재 페이지 유지");
 		}
     });
 }
@@ -170,9 +165,7 @@ function removeProduct(pnum) {
     .then(data => {
     	alert(data.msg); 
 		if(data.flag){
-			alert("마이페이지로 이동");
-		}else{
-			alert("현재 페이지 유지");
+			location.href="/store/"+data.snum;
 		}
     });
 }
@@ -188,8 +181,6 @@ function sendProduct(pnum){
 		alert(data.msg);
 		if(data.flag){
 			alert("현재 페이지에서 버튼 안보이게 하기");
-		}else{
-			alert("현재 페이지 유지");
 		}
     });
 }
