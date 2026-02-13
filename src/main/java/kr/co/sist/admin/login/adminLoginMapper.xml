@@ -13,7 +13,7 @@ where admin_id=#{adminId}
 </select>
 
 <update id="updateLastLogin" parameterType="String" >
-update admin
+update admin_login_history
 set login_date=sysdate
 where admin_id=#{adminId}
 
