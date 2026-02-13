@@ -2,9 +2,7 @@ package kr.co.sist.user.sell;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -52,13 +50,16 @@ public class SellService {
 		try {
 			sDTO.getThumbnail().transferTo(upFile);
 			
-			for(MultipartFile mf : sDTO.getProductImages()) {
-				prodcutDetailImg = UUID.randomUUID() + "-" + mf.getOriginalFilename();
-				sDTO.getProductImgName().add(prodcutDetailImg);// 세부 이미지명 DTO에 저장
-				tempUpFile = new File(productDetailUploadDir , prodcutDetailImg);
-				mf.transferTo(tempUpFile);
-				prodcutDetailImg = "";
-			}// end for
+			MultipartFile[] tempArr = sDTO.getProductImages();
+			if(tempArr != null) {
+				for(MultipartFile mf : sDTO.getProductImages()) {
+					prodcutDetailImg = UUID.randomUUID() + "-" + mf.getOriginalFilename();
+					sDTO.getProductImgName().add(prodcutDetailImg);// 세부 이미지명 DTO에 저장
+					tempUpFile = new File(productDetailUploadDir , prodcutDetailImg);
+					mf.transferTo(tempUpFile);
+					prodcutDetailImg = "";
+				}// end for
+			}// end if
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
