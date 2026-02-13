@@ -86,7 +86,6 @@ async function sendChatMessage(root) {
     if (!roomNum && data.roomNum) {
       root.querySelector("#room-num").value = data.roomNum;
       roomNum = data.roomNum;
-	  alert(roomNum);
 	  await ensureConnectedAndSubscribe(roomNum, root);
     }
 
@@ -178,7 +177,6 @@ function appendOtherMessage(root, { content }) {
 /* 채팅 방 열기 */
 function openChatForm(sellerId, store) { 
   const pnum = window.PageContext?.pnum ?? null;
-  alert(pnum);
   
  	let url = `/chat/${sellerId}`;
 

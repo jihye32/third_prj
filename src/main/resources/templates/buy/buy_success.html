@@ -134,7 +134,7 @@
 					class="outline-none flex flex-row justify-start items-stretch flex-nowrap rounded-lg overflow-hidden"
 					style="width: 64px; height: 64px;">
 					<img class="w-full h-full object-cover"
-						th:src="@{/assets/images/{file}(file=*{thumbnail})}">
+						th:src="@{/images/thumbnail/{thumbnail}(thumbnail=*{thumbnail})}">
 				</div>
 				<div
 					class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap flex-1">

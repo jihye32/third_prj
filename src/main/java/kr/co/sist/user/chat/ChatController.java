@@ -31,6 +31,12 @@ public class ChatController {
 		String uid = (String)session.getAttribute("uid");
 		
 		List<ChatListDomain> clDomain = cs.searchChatList(uid);  
+		for(ChatListDomain cld : clDomain) {
+			String content = cld.getContent();
+			if(content.length() > 20) {
+				cld.setContent(content.substring(0, 20)+"...");
+			}
+		}
 		model.addAttribute("list", clDomain);
 		
 		return "chat/chat_list :: chatListForm";

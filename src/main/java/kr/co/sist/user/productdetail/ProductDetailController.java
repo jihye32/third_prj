@@ -49,8 +49,6 @@ public class ProductDetailController {
     	
     	String uid = (ss.getAttribute("uid") != null) ? (String)ss.getAttribute("uid") : null;//현재 로그인한 유저의 store number 가져오기
     	boolean isMe = false; //본인확인
-    	System.out.println(uid);
-    	System.out.println(sid.getId());
     	//세션에서 로그인을 햇는지 확인할 것.
     	if(sid.getId().equals(uid)) {
     		isMe = true;
@@ -64,12 +62,10 @@ public class ProductDetailController {
     			BookmarkDTO bDTO = new BookmarkDTO();
     			bDTO.setPnum(pnum);
     			bDTO.setSnum((int)ss.getAttribute("snum"));
-    			System.out.println(ss.getAttribute("snum"));
     			boolean bookmark = (ps.searchBookmark(bDTO)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
     			model.addAttribute("bookmarkFlag", bookmark);
     		}
     	}
-    	System.out.println(isMe);
         model.addAttribute("storeCheck", isMe);
         model.addAttribute("Product", pdd);
         model.addAttribute("SellerInfo", sid);
