@@ -1,21 +1,5 @@
 @charset "UTF-8";
 
-/* 🔵 사이드바 강제 밀착 및 메인 컨테이너 영역 확보 */
-.wrapper {
-    display: flex !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding-left: 0 !important;
-}
-
-#main-container {
-    margin-left: 260px !important; /* 사이드바 가로폭만큼 정확히 이격 */
-    padding: 40px !important;
-    background-color: #fff;
-    min-height: calc(100vh - 60px);
-    width: calc(100% - 260px) !important; /* 남은 너비 전부 사용 */
-}
-
 /* [1] 검색바 및 돋보기 아이콘 */
 .search-bar-wrap { width: 100%; margin-bottom: 24px; }
 .search-input-box {
@@ -86,10 +70,3 @@
 .info-date { flex-shrink: 0; color: #888; }
 .info-split { color: #ddd; flex-shrink: 0; }
 .card-body { padding: 12px !important; }
-
-/* 사이드바 활성화 디자인 */
-.menu_item.active { 
-    background-color: #f8f9fa !important; 
-    border-right: 4px solid #0c193a !important; 
-}
-.menu_item.active > .menu_link { color: #0c193a !important; font-weight: bold !important; }
