@@ -29,6 +29,9 @@ public class ProductDetailService {
 			List<Integer> typeCode = pDAO.selectDealType(pnum);
 			for(int code : typeCode) {
 				type.add(DealType.fromCode(code));
+				if(code == 1) {
+					pdd.setDealAddress(pDAO.selectAddress(pnum));
+				}
 			}
 			pdd.setDealType(type);
 			pdd.setBookmarkCnt(pDAO.cntBookmark(pnum));

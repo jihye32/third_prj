@@ -24,6 +24,18 @@ public class ProductDetailDAO {
 		return pdd;
 	}//selectProduct
 	
+	//선택된 상품 번호로 상품의 정보 조회
+	public String selectAddress(int pnum) {
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		String addr=ss.selectOne("kr.co.sist.user.product.detail.selectAddress", pnum);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return addr;
+	}//selectProduct
+
 	//선택된 상품 번호에 등록한 태그들 가져옴
 	public List<String> selectTag(int pnum){
 		List<String> list = new ArrayList<String>();

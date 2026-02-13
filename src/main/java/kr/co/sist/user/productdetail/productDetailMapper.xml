@@ -17,12 +17,17 @@
 	<result column="status_code" property="sellStatusCode"/>
 	<result column="delete_flag" property="deleteFlag"/>
 	<result column="code_text" property="category"/>
-	<result column="addr" property="dealAddress"/>
 </resultMap>
 <select id="selectProduct" parameterType="int" resultMap="productDomain">
-select p.product_num, p.title, p.price, p.product_status, p.thumbnail, p.content,  p.up_date, p.view_count, p.store_num, p.status_code, p.delete_flag, c.code_text, s.addr
-from product p, category c, sell_place s
-where p.category_code = c.category_code and p.product_num = s.product_num and p.product_num = #{productNum}
+select p.product_num, p.title, p.price, p.product_status, p.thumbnail, p.content,  p.up_date, p.view_count, p.store_num, p.status_code, p.delete_flag, c.code_text
+from product p, category c
+where p.category_code = c.category_code and p.product_num = #{productNum}
+</select>
+
+<select id="selectAddress" parameterType="int" resultType="String">
+select addr
+from SELL_PLACE
+where product_num = #{productNum}
 </select>
 
 <select id="selectProductTag" parameterType="int" resultType="String">
