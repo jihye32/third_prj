@@ -68,7 +68,6 @@ let allFiles = []; // 선택된 모든 파일을 저장
 const MAX_FILES = 5; // 최대 파일 개수
 
 $(function(){
-	
 	// 세부이미지
     $("#productImages").change(function(evt) {
         const files = Array.from(evt.target.files); // 새로 선택된 파일들
@@ -81,41 +80,33 @@ $(function(){
             allFiles = allFiles.concat(files.slice(0, availableSlots));
         } else {
             allFiles = allFiles.concat(files);
-        }
+        }// end else
 
-        console.log("총 선택된 파일 개수:", allFiles.length);
-
-        // 미리보기 갱신
-        $("#previewProductImages").empty();// 미리보기 초기화
-        allFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function(e){
-                const selImg = `
-                <li class="relative">
-                    <div class="flex overflow-hidden mr-3 border border-solid border-jnGreen rounded lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
-                        <img alt="productImage-${index}" width="100" height="100" decoding="async" class="object-cover h-full bg-gray-200 rounded" src="${e.target.result}" style="color: transparent;">
-                        <button type="button" class="absolute -top-[10px] right-1" onclick="removeFile(${index})">
-                        <svg width="20px" height="20px" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class=""><path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" fill="white"></path><path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5V18.5C14.6944 18.5 18.5 14.6944 18.5 10H17.5ZM10 17.5C5.85786 17.5 2.5 14.1421 2.5 10H1.5C1.5 14.6944 5.30558 18.5 10 18.5V17.5ZM2.5 10C2.5 5.85786 5.85786 2.5 10 2.5V1.5C5.30558 1.5 1.5 5.30558 1.5 10H2.5ZM10 2.5C14.1421 2.5 17.5 5.85786 17.5 10H18.5C18.5 5.30558 14.6944 1.5 10 1.5V2.5Z" fill="#DADEE5"></path><path d="M7 7L13 13M13 7L7 13" stroke="#363C45" stroke-linecap="round"></path></svg>
-                        </button>
-                    </div>
-                </li>
-                `;
-                $("#previewProductImages").append(selImg);
-            }// on load
-            reader.readAsDataURL(file);
-        });// forEach
-
+     	// 미리보기 갱신
+        updatePreview();
+	
+    	// 선택 파일 개수 표시
+        updateFileCount();
+        
         // 선택 후 input 초기화 (같은 파일 다시 선택 가능)
-        //$(this).val('');
+        $(this).val('');
     });// change
 });// ready
 
 // 삭제 버튼 클릭 시 해당 파일 제거
 function removeFile(index) {
     allFiles.splice(index, 1);
-    $("#previewProductImages").empty();// 미리보기 초기화
+    
+ 	// 미리보기 갱신
+    updatePreview();
+    
+ 	// 선택 파일 개수 표시
+    updateFileCount();
+}// removeFile
 
-    allFiles.forEach((file, i) => {
+function updatePreview(){
+	$("#previewProductImages").empty();// 미리보기 초기화
+	allFiles.forEach((file, i) => {
         const reader = new FileReader();
         reader.onload = function(e){
             const selImg = `
@@ -131,9 +122,12 @@ function removeFile(index) {
             $("#previewProductImages").append(selImg);
         }
         reader.readAsDataURL(file);
-    });
-}// removeFile
+    });// end Each
+}// updatePreview
 
+function updateFileCount() {
+    $("#fileCount").text(`${allFiles.length}/${MAX_FILES}`);
+}// updateFileCount
 
 $(document).ready(function() {
 	  // li 클릭 이벤트
@@ -322,8 +316,42 @@ $(document).ready(function() {
 	    // 모든 검증 통과 시 제출
 	    if (confirm("상품을 등록하시겠습니까?")) {
 	        $("#sellFrm").submit();
-	    }
-	}
+	    }// end if
+	}// sellRegistration
+
+	
+	$(function(){
+	$("#sellFrm").submit(function(e){
+	    e.preventDefault(); // 기본 폼 제출 막기
+
+	    const formData = new FormData(this); // 폼 안의 일반 input, select, textarea 값 자동 포함
+
+	    // allFiles 배열에 담긴 파일 추가
+	    allFiles.forEach(file => {
+	        formData.append("productImages", file); // 서버에서 productImages로 받음
+	    });
+
+	    $.ajax({
+	        url: $(this).attr("action"),
+	        type: $(this).attr("method"),
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        success: function(res){
+	        	if(res.success){
+	                alert("등록 성공!");
+	                location.href = res.redirectUrl; // 직접 이동
+	            }else{
+	                alert(res.message);
+	            }// end else
+	        },
+	        error: function(err){
+	            console.error(err);
+	        }// end error
+	    });// ajax
+	});// submit
+
+	});// ready
 </script>
 <!-- 카카오 우편번호 api -->
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -407,7 +435,7 @@ $(document).ready(function() {
 										<div class="flex pb-1.5 max-lg:pb-0">
 										
 											<div class="pt-[10px]">
-												<input id="productImages" name="productImages" type="file" multiple="multiple" accept="image/png, image/jpeg, image/jpg" class="hidden">
+												<input id="productImages" type="file" multiple="multiple" accept="image/png, image/jpeg, image/jpg" class="hidden">
 												<div onclick="prodcutImageChose()" class="flex justify-center items-center mr-3 rounded bg-jnGray-200 lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
 													<div class="flex flex-col items-center">
 													  <svg xmlns="http://www.w3.org/2000/svg"
@@ -416,7 +444,7 @@ $(document).ready(function() {
 													    <path fill="color"
 													          d="M19.378 6c.38 0 .73.217.897.559l1.015 2.06q.03.06.05.123H26a2 2 0 0 1 2 2v13.259a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10.742a2 2 0 0 1 2-2h4.66q.02-.062.05-.123l1.016-2.06A1 1 0 0 1 12.622 6zM16 12.198a5 5 0 1 0 .002 10.002A5 5 0 0 0 16 12.198m-.001 1.667a3.334 3.334 0 1 1 0 6.67 3.334 3.334 0 0 1 0-6.67"></path>
 													  </svg>
-													  <p class="text-jnGray-600 lg:text-base text-xs">0/5</p>
+													  <p id="fileCount" class="text-jnGray-600 lg:text-base text-xs">0/5</p>
 													</div>
 												</div>
 											</div>

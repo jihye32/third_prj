@@ -15,7 +15,7 @@ import lombok.ToString;
 public class SellDTO {
 	private int productNum, categoryCode, price, storeNum;
 	private MultipartFile thumbnail;
-	private List<MultipartFile> productImages;
+	private MultipartFile[] productImages;
 	private String productTitle, content, productStatus, addr;
 	private List<String> tradeType = new ArrayList<String>();
 	private String thumbnailName;
