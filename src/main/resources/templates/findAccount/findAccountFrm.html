@@ -7,8 +7,64 @@
 <title>아이디/비밀번호 찾기</title>
 <link th:href="@{/css/user_findAccount.css}" rel="stylesheet">
 <!-- JQuery CDN -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		// 1. 서버로부터 넘어온 에러 메시지 처리 (인라인 자바스크립트 활용)
+		var errorMsg = "[[${errorMsg}]]";
+
+		if (errorMsg) {
+			alert(errorMsg);
+		}// end if
+
+		// 2. 아이디 찾기 유효성 검사 및 전송
+		$("#idBoardBtn").on("click", function() {
+			var name = $("#idBoardName").val().trim();
+			var email = $("#idBoardEmail").val().trim();
+
+			if (name === "") {
+				alert($("#idBoardName").data("value"));
+				$("#idBoardName").focus();
+				return;
+			}
+
+			if (email === "") {
+				alert($("#idBoardEmail").data("value"));
+				$("#idBoardEmail").focus();
+				return;
+			}
+
+			$("#idBoard").submit();
+		});
+
+		// 3. 비밀번호 찾기 유효성 검사 및 전송
+		$("#passBoardBtn").on("click", function() {
+			var name = $("#passBoardName").val().trim();
+			var id = $("#passBoardId").val().trim();
+			var email = $("#passBoardEmail").val().trim();
+
+			if (name === "") {
+				alert($("#passBoardName").data("value"));
+				$("#passBoardName").focus();
+				return;
+			}
+
+			if (id === "") {
+				alert($("#passBoardId").data("value"));
+				$("#passBoardId").focus();
+				return;
+			}
+
+			if (email === "") {
+				alert($("#passBoardEmail").data("value"));
+				$("#passBoardEmail").focus();
+				return;
+			}
+
+			$("#passBoard").submit();
+		});
+	});// ready
+</script>
 </head>
 <body>
 	<div class="programCon">
@@ -19,8 +75,7 @@
 				</p>
 				<div class="findCon_wrap no01">
 					<div>
-						<form name="board1" id="board1" method="post"
-							action="id_process.jsp" onsubmit="return loginCheck(this);">
+						<form th:action="@{/findAccount/findIdProcess}" name="idBoard" id="idBoard" method="get">
 							<div class="in_hei">
 								<div class="up_txt">
 									<p>아이디 찾기</p>
@@ -34,9 +89,8 @@
 													src="https://www.sist.co.kr/img/name_icon.png" alt=""></label>
 											</dt>
 											<dd>
-												<input data-value="아이디를 입력해주세요." type="text" id="name"
-													name="name" placeholder="이름"
-													onkeyup="javascript:if(event.keyCode == 13){$('#board1').submit();}">
+												<input data-value="이름을 입력해주세요." type="text" id="idBoardName"
+													name="name" placeholder="이름">
 											</dd>
 										</dl>
 										<dl>
@@ -45,24 +99,20 @@
 													src="https://www.sist.co.kr/img/email_icon.png" alt=""></label>
 											</dt>
 											<dd>
-												<input data-value="이메일을 입력해주세요." type="text" id="email"
-													name="email" placeholder="이메일"
-													onkeyup="javascript:if(event.keyCode == 13){$('#board1').submit();}">
+												<input data-value="이메일을 입력해주세요." type="text" id="idBoardEmail"
+													name="email" placeholder="이메일">
 											</dd>
 										</dl>
 									</li>
 								</ul>
 							</div>
 							<div class="under_btn">
-								<a class="login_btn" style="cursor: pointer;"
-									onclick="$('#board1').submit();">확인</a>
+								<a class="login_btn" id="idBoardBtn" style="cursor: pointer;">확인</a>
 							</div>
-							<input type="hidden" name="cmd" id="cmd" value="searchid">
 						</form>
 					</div>
 					<div>
-						<form name="board2" id="board2" method="post"
-							action="id_process.jsp" onsubmit="return loginCheck(this);">
+						<form th:action="@{/findAccount/findPassProcess}" name="passBoard" id="passBoard" method="post">
 							<div class="in_hei">
 								<div class="up_txt">
 									<p>비밀번호 찾기</p>
@@ -76,9 +126,8 @@
 													src="https://www.sist.co.kr/img/name_icon.png" alt=""></label>
 											</dt>
 											<dd>
-												<input data-value="이름을 입력해주세요." type="text" id="name"
-													name="name" placeholder="이름"
-													onkeyup="javascript:if(event.keyCode == 13){$('#board2').submit();}">
+												<input data-value="이름을 입력해주세요." type="text" id="passBoardName"
+													name="name" placeholder="이름">
 											</dd>
 										</dl>
 										<dl>
@@ -87,9 +136,8 @@
 													src="https://www.sist.co.kr/img/id_icon.png" alt=""></label>
 											</dt>
 											<dd>
-												<input data-value="아이디를 입력해주세요." type="text" id="id"
-													name="id" placeholder="아이디"
-													onkeyup="javascript:if(event.keyCode == 13){$('#board2').submit();}">
+												<input data-value="아이디를 입력해주세요." type="text" id="passBoardId"
+													name="id" placeholder="아이디">
 											</dd>
 										</dl>
 										<dl>
@@ -98,19 +146,16 @@
 													src="https://www.sist.co.kr/img/email_icon.png" alt=""></label>
 											</dt>
 											<dd>
-												<input data-value="이메일을 입력해주세요." type="text" id="email"
-													name="email" placeholder="이메일"
-													onkeyup="javascript:if(event.keyCode == 13){$('#board2').submit();}">
+												<input data-value="이메일을 입력해주세요." type="text" id="passBoardEmail"
+													name="email" placeholder="이메일">
 											</dd>
 										</dl>
 									</li>
 								</ul>
 							</div>
 							<div class="under_btn">
-								<a class="login_btn" style="cursor: pointer;"
-									onclick="$('#board2').submit();">확인</a>
+								<a class="login_btn" id="passBoardBtn" style="cursor: pointer;">확인</a>
 							</div>
-							<input type="hidden" name="cmd" id="cmd" value="searchpw">
 						</form>
 					</div>
 				</div>

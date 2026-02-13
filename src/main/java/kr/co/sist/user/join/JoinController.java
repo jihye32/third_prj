@@ -1,5 +1,6 @@
 package kr.co.sist.user.join;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,27 +28,44 @@ public class JoinController {
 	@ResponseBody
 	@GetMapping("/idDup")
 	public boolean idDup(@RequestParam String id) {
-		return js.searchId(id);
+		try {
+			return js.searchId(id);
+		} catch (PersistenceException pe) {
+			pe.printStackTrace();
+
+			return false;
+		} // end catch
 	}// idDup
 
 	@ResponseBody
 	@GetMapping("/storeNameDup")
 	public boolean storeNameDup(@RequestParam String storeName) {
-		return js.searchStoreName(storeName);
+		try {
+			return js.searchStoreName(storeName);
+		} catch (PersistenceException pe) {
+			pe.printStackTrace();
+
+			return false;
+		} // end catch
 	}// storeNameDup
 
 	@ResponseBody
 	@GetMapping("/sendVerifyCode")
-	public boolean sendVerifyCode(@RequestParam String emailLocal, @RequestParam String emailDomain, HttpSession session) {
-	    String email = emailLocal + emailDomain;
-	    String verifyCode = String.valueOf((int)(Math.random() * 900000) + 100000);
+	public boolean sendVerifyCode(@RequestParam String emailLocal, @RequestParam String emailDomain,
+			HttpSession session) {
+		String email = emailLocal + emailDomain;
+		String verifyCode = String.valueOf((int) (Math.random() * 900000) + 100000);
 
-	    session.setAttribute("verifyCode", verifyCode);
-	    session.setAttribute("verifyEmail", email);
+		session.setAttribute("verifyCode", verifyCode);
+		session.setAttribute("verifyEmail", email);
 
-	    boolean result = js.sendAuthEmail(email, verifyCode);
+		try {
+			return js.sendAuthEmail(email, verifyCode);
+		} catch (Exception e) {
+			e.printStackTrace();
 
-	    return result;
+			return false;
+		} // end catch
 	}// sendVerifyCode
 
 	@ResponseBody
@@ -56,25 +74,31 @@ public class JoinController {
 		String sessionCode = (String) session.getAttribute("verifyCode");
 
 		if (sessionCode == null) {
-	        return false; // 세션 만료
-	    }// end if
+			return false; // 세션 만료
+		} // end if
 
-	    return sessionCode.equals(inputCode);
+		return sessionCode.equals(inputCode);
 	}// verifyCodeChk
 
 	@PostMapping("/joinProcess")
 	public String joinProcess(JoinDTO jDTO, HttpServletRequest request, HttpSession session, RedirectAttributes ra) {
 		jDTO.setIp(request.getRemoteAddr());
-		boolean result = js.joinMember(jDTO);
+		boolean result = false;
+		
+		try {
+			result = js.joinMember(jDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} // end catch
 
 		if (result) {
 			session.setAttribute("uid", jDTO.getId());
-	        session.setAttribute("snum", jDTO.getStoreNum());
-	        
+			session.setAttribute("snum", jDTO.getStoreNum());
+
 			return "redirect:/join/joinSuccess";
 		} else {
 			ra.addFlashAttribute("joinFlag", "fail");
-			
+
 			return "redirect:/join/joinFrm";
 		} // end else
 	}// joinProcess
