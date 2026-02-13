@@ -36,21 +36,9 @@ public class ProductDetailController {
     	if(pdd == null) return "redirect:/";//메인화면으로 이동시키기
     	if("Y".equals(pdd.getDeleteFlag())) return "redirect:/";
     	
-    	List<String> imgList = new ArrayList<String>();
-    	imgList.add(pdd.getThumbnail());
-    	if(pdd.getImages()!=null) {
-    		for(String img : pdd.getImages()) {
-    			imgList.add(img);
-    		}
-    	}
-    	pdd.setImages(imgList);
-    	
     	SellerInfoDomain sid = ps.searchSeller(pdd.getSellerId());//판매자 상점 번호로 판매자 정보 가져오기
-    	
     	String uid = (ss.getAttribute("uid") != null) ? (String)ss.getAttribute("uid") : null;//현재 로그인한 유저의 store number 가져오기
     	boolean isMe = false; //본인확인
-    	System.out.println(uid);
-    	System.out.println(sid.getId());
     	//세션에서 로그인을 햇는지 확인할 것.
     	if(sid.getId().equals(uid)) {
     		isMe = true;
@@ -69,7 +57,6 @@ public class ProductDetailController {
     			model.addAttribute("bookmarkFlag", bookmark);
     		}
     	}
-    	System.out.println(isMe);
         model.addAttribute("storeCheck", isMe);
         model.addAttribute("Product", pdd);
         model.addAttribute("SellerInfo", sid);
