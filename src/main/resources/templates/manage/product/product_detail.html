@@ -10,79 +10,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <style>
-/* ✅ [추가] 사이드바 왼쪽 여백 및 밀림 방지 (Bootstrap 간섭 차단) */
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    overflow-x: hidden;
-}
 
-.wrapper {
-    display: flex !important;
-    margin-left: 0 !important;
-    padding-top: 60px !important;
-    width: 100% !important;
-}
-
-aside.menu_side {
-    left: 0 !important;
-    position: fixed !important;
-    width: 260px !important;
-}
-
-#main-container {
-    margin-left: 260px !important; /* 사이드바 너비만큼 고정 */
-    padding: 40px !important;
-    flex: 1;
-    min-width: 0;
-    background-color: #fff;
-}
-
-/* 삭제 버튼 비활성화 시 흑백 처리 디자인 */
-.btn-del-red:disabled {
-	background-color: #bdc3c7 !important;
-	border-color: #bdc3c7 !important;
-	color: #fff !important;
-	cursor: not-allowed;
-	filter: grayscale(100%);
-	opacity: 0.7;
-}
-
-/* 거래 정보 박스 스타일 유지 */
-.trans-info-box {
-	background-color: #f8f9fa;
-	border-radius: 8px;
-	padding: 25px;
-	border: 1px solid #eee;
-	margin: 10px 0 30px 0;
-}
-
-.trans-title {
-	font-size: 17px;
-	font-weight: bold;
-	margin-bottom: 20px;
-	color: #0c193a;
-	border-left: 5px solid #0c193a;
-	padding-left: 12px;
-}
-
-.trans-table {
-	width: 100%;
-}
-
-.trans-table th {
-	color: #888;
-	width: 120px;
-	padding: 8px 0;
-	font-size: 14px;
-}
-
-.trans-table td {
-	color: #333;
-	font-weight: 500;
-	font-size: 14px;
-}
 </style>
 </head>
 <body>
