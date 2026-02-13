@@ -1,5 +1,7 @@
 package kr.co.sist.user.join;
 
+import java.security.MessageDigest;
+
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,10 @@ public class JoinService {
 
 	@Autowired
 	private JoinDAO jDAO;
-	
+
 	@Autowired
-    private JavaMailSender mailSender;
-	
+	private JavaMailSender mailSender;
+
 	@Value("${spring.mail.username}")
 	private String senderEmail;
 
@@ -38,55 +40,71 @@ public class JoinService {
 	public boolean searchStoreName(String storeName) throws PersistenceException {
 		return jDAO.selectStoreName(storeName) == 0;
 	}// searchStoreName
-	
-	public boolean sendAuthEmail(String email, String verifyCode) {
+
+	public boolean sendAuthEmail(String email, String verifyCode) throws Exception {
 		boolean result = false;
-        MimeMessage message = mailSender.createMimeMessage();
+		MimeMessage message = mailSender.createMimeMessage();
 
-        try {
-            // UTF-8 설정
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            
-            helper.setFrom(senderEmail, "중고나라 이메일 인증");
-            helper.setTo(email);
-            helper.setSubject("회원가입 인증 번호");
+		// UTF-8 설정
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            StringBuilder body = new StringBuilder();
-            body.append("<div style='margin:20px; padding:40px; border:1px solid #E7FAEF; border-radius:40px; text-align:center; font-family:sans-serif;'>");
-            body.append("<h2 style='color:#222222; font-size:24px; font-weight:bold;'>인증번호</h2>");
-            body.append("<p style='color:#888888; font-size:16px; margin-top:20px;'>아래 번호를 입력하시고 <br>인증하기 버튼을 눌러주세요.</p>");
-            body.append("<div style='margin:40px auto; padding:20px; background-color:#F5F5F5; border-radius:20px; width:180px;'>");
-            body.append("<span style='font-size:32px; font-weight:bold; color:#0DCC5A; letter-spacing:5px;'>").append(verifyCode).append("</span>");
-            body.append("</div>");
-            body.append("<br>");
-            body.append("</div>");
+		helper.setFrom(senderEmail, "중고나라 이메일 인증");
+		helper.setTo(email);
+		helper.setSubject("회원가입 인증 번호");
 
-            helper.setText(body.toString(), true);
+		StringBuilder body = new StringBuilder();
+		body.append(
+				"<div style='margin:20px; padding:40px; border:1px solid #E7FAEF; border-radius:40px; text-align:center; font-family:sans-serif;'>");
+		body.append("<h2 style='color:#222222; font-size:24px; font-weight:bold;'>인증번호</h2>");
+		body.append("<p style='color:#888888; font-size:16px; margin-top:20px;'>아래 번호를 입력하시고 <br>인증하기 버튼을 눌러주세요.</p>");
+		body.append(
+				"<div style='margin:40px auto; padding:20px; background-color:#F5F5F5; border-radius:20px; width:180px;'>");
+		body.append("<span style='font-size:32px; font-weight:bold; color:#0DCC5A; letter-spacing:5px;'>")
+				.append(verifyCode).append("</span>");
+		body.append("</div>");
+		body.append("<br>");
+		body.append("</div>");
 
-            mailSender.send(message);
-            result = true;
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }// end catch
+		helper.setText(body.toString(), true);
 
-        return result;
+		mailSender.send(message);
+		result = true;
+
+		return result;
 	}// sendAuthEmail
 
-	public boolean joinMember(JoinDTO jDTO) throws PersistenceException {
+	private String getSha256(String source) throws Exception {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		byte[] bytes = md.digest(source.getBytes());
+
+		StringBuilder sb = new StringBuilder();
+		for (byte b : bytes) {
+			sb.append(String.format("%02x", b));
+		} // end for
+
+		return sb.toString();
+	}// getSha256
+
+	public boolean joinMember(JoinDTO jDTO) throws Exception {
 		boolean result = false;
 		SqlSession ss = null;
 
-		// 비밀번호 : 일방향 해시
+		// 비밀번호 : 일방향 암호화
 		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder(10);
 		jDTO.setPass(bpe.encode(jDTO.getPass()));
 
-		// 이름, 이메일 : 양방향
-		TextEncryptor te = Encryptors.text(key, salt);
-		jDTO.setUserName(te.encrypt(jDTO.getUserName()));
+		// 이름, 이메일 :
+		String rawUserName = jDTO.getUserName();
+		String rawEmail = jDTO.getEmailLocal() + jDTO.getEmailDomain();
 
-		String email = jDTO.getEmailLocal() + jDTO.getEmailDomain();
-		jDTO.setEmail(te.encrypt(email));
+		// 양방향 암호화
+		TextEncryptor te = Encryptors.text(key, salt);
+		jDTO.setUserName(te.encrypt(rawUserName));
+		jDTO.setEmail(te.encrypt(rawEmail));
+
+		// 아이디/비밀번호 찾기용 해시
+		jDTO.setNameHash(getSha256(rawUserName));
+		jDTO.setEmailHash(getSha256(rawEmail));
 
 		try {
 			ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
