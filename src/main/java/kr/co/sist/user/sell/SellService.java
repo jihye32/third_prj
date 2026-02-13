@@ -52,16 +52,13 @@ public class SellService {
 		try {
 			sDTO.getThumbnail().transferTo(upFile);
 			
-			MultipartFile[] tempArr = sDTO.getProductImages();
-			if(tempArr != null) {
-				for(MultipartFile mf : sDTO.getProductImages()) {
-					prodcutDetailImg = UUID.randomUUID() + "-" + mf.getOriginalFilename();
-					sDTO.getProductImgName().add(prodcutDetailImg);// 세부 이미지명 DTO에 저장
-					tempUpFile = new File(productDetailUploadDir , prodcutDetailImg);
-					mf.transferTo(tempUpFile);
-					prodcutDetailImg = "";
-				}// end for
-			}// end if
+			for(MultipartFile mf : sDTO.getProductImages()) {
+				prodcutDetailImg = UUID.randomUUID() + "-" + mf.getOriginalFilename();
+				sDTO.getProductImgName().add(prodcutDetailImg);// 세부 이미지명 DTO에 저장
+				tempUpFile = new File(productDetailUploadDir , prodcutDetailImg);
+				mf.transferTo(tempUpFile);
+				prodcutDetailImg = "";
+			}// end for
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
