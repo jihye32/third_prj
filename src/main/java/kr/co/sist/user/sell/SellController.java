@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,6 +56,21 @@ public class SellController {
 
 	    return result;
 	}// sellProcess
+	
+	@GetMapping("/modify/{productNum}")
+	public String modifyProductFrm(Model model, HttpSession session ,SellDTO sDTO) {
+//		System.out.println("productNum : " + productNum );
+//		System.out.println("SellDTO : " + sDTO );// productNum 알아서 들어가네;;
+		int storeNum = 0; 
+		if(session.getAttribute("snum") == null || "".equals(session.getAttribute("snum"))) {
+			return "redirect:/user/login/loginFrm";
+		}// end if
+		storeNum = (Integer)session.getAttribute("snum");
+		sDTO.setStoreNum(storeNum);
+		
+		
+		return "sell/modifySell";
+	}// modifyProductFrm
 
 	
 }// class

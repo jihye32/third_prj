@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>판매하기</title>
+<link th:href="@{/css/output.css}" rel="stylesheet">
+<link th:href="@{/css/test.css}" rel="stylesheet">
+<style type="text/css">
+#addr {
+border: 1px solid #DADEE5;
+border-radius: 1px;
+width: 250px;
+height: 35px;
+padding: 3px 0 3px 10px;
+margin-top: 10px
+}
+</style>
+<!-- JQuery CDN -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+
+	});
+function thumbnailImageChose(){
+	$("#thumbnail").click();	
+}// thumbnailImageChose
+
+function prodcutImageChose(){
+	$("#productImages").click();	
+}// thumbnailImageChose
+
+$(function(){
+	
+	// 썸네일
+	$("#thumbnail").change(function(evt) {
+		 // 미리 보기
+		 // 1.HTML File Control 접근
+		 var file = evt.target.files[0];// <input type="file"
+		 
+		 // 2.스트림 생성
+		 var reader = new FileReader();
+		 var selImg;
+		 // 3.File 객체의 onload 이벤트 핸들러를 설정하여 <img 태그에 src속성에 파일명을 설정
+		 reader.onload=function(evt){
+			 var selImg =`
+				<li class="relative">
+			 		<div class="flex overflow-hidden mr-3 border border-solid border-jnGreen rounded lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
+			 			<img alt="productImage-0" width="100" height="100" decoding="async" data-nimg="1" class="object-cover h-full bg-gray-200 rounded" 
+			 			src="${evt.target.result}" style="color: transparent;">
+			 		</div>
+			 	</li>
+			 `;
+			$("#previewThumbnail").empty();
+		 	$("#previewThumbnail").append(selImg);
+		 }// onload
+		 
+		 // 4.스트림을 사용하여 <img 태그 이미지를 로딩
+		 reader.readAsDataURL(file);
+	});// change
+	
+	
+})// ready
+
+let allFiles = []; // 선택된 모든 파일을 저장
+const MAX_FILES = 5; // 최대 파일 개수
+
+$(function(){
+	// 세부이미지
+    $("#productImages").change(function(evt) {
+        const files = Array.from(evt.target.files); // 새로 선택된 파일들
+
+        // 선택된 파일 중 최대 5개까지만 추가
+        if(allFiles.length + files.length > MAX_FILES){
+            alert(`최대 ${MAX_FILES}개까지 선택할 수 있습니다.`);
+            // 추가 가능한 개수만큼만 가져오기
+            const availableSlots = MAX_FILES - allFiles.length;
+            allFiles = allFiles.concat(files.slice(0, availableSlots));
+        } else {
+            allFiles = allFiles.concat(files);
+        }// end else
+
+     	// 미리보기 갱신
+        updatePreview();
+	
+    	// 선택 파일 개수 표시
+        updateFileCount();
+        
+        // 선택 후 input 초기화 (같은 파일 다시 선택 가능)
+        $(this).val('');
+    });// change
+});// ready
+
+// 삭제 버튼 클릭 시 해당 파일 제거
+function removeFile(index) {
+    allFiles.splice(index, 1);
+    
+ 	// 미리보기 갱신
+    updatePreview();
+    
+ 	// 선택 파일 개수 표시
+    updateFileCount();
+}// removeFile
+
+function updatePreview(){
+	$("#previewProductImages").empty();// 미리보기 초기화
+	allFiles.forEach((file, i) => {
+        const reader = new FileReader();
+        reader.onload = function(e){
+            const selImg = `
+            <li class="relative">
+                <div class="flex overflow-hidden mr-3 border border-solid border-jnGreen rounded lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
+                    <img alt="productImage-${i}" width="100" height="100" decoding="async" class="object-cover h-full bg-gray-200 rounded" src="${e.target.result}" style="color: transparent;">
+                    <button type="button" class="absolute -top-[10px] right-1" onclick="removeFile(${i})">
+                    <svg width="20px" height="20px" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class=""><path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" fill="white"></path><path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5V18.5C14.6944 18.5 18.5 14.6944 18.5 10H17.5ZM10 17.5C5.85786 17.5 2.5 14.1421 2.5 10H1.5C1.5 14.6944 5.30558 18.5 10 18.5V17.5ZM2.5 10C2.5 5.85786 5.85786 2.5 10 2.5V1.5C5.30558 1.5 1.5 5.30558 1.5 10H2.5ZM10 2.5C14.1421 2.5 17.5 5.85786 17.5 10H18.5C18.5 5.30558 14.6944 1.5 10 1.5V2.5Z" fill="#DADEE5"></path><path d="M7 7L13 13M13 7L7 13" stroke="#363C45" stroke-linecap="round"></path></svg>
+                    </button>
+                </div>
+            </li>
+            `;
+            $("#previewProductImages").append(selImg);
+        }
+        reader.readAsDataURL(file);
+    });// end Each
+}// updatePreview
+
+function updateFileCount() {
+    $("#fileCount").text(`${allFiles.length}/${MAX_FILES}`);
+}// updateFileCount
+
+$(document).ready(function() {
+	  // li 클릭 이벤트
+	  $('#category-depth-1 li').click(function() {
+	    // 1. 기존 선택 해제
+	    $('#category-depth-1 li').removeClass('font-bold bg-jnGray-200');
+
+	    // 2. 클릭한 li에 클래스 추가
+	    $(this).addClass('font-bold bg-jnGray-200');
+
+	    // 3. 카테고리 번호 가져오기
+	    var categoryId = $(this).attr('id').split('-')[1]; // 'category-3' → '3'
+	    //console.log('선택된 카테고리 번호:', categoryId);
+		
+	    $('#category').val(categoryId);
+	  });// click
+	});// ready
+	
+	$(document).ready(function() {
+	    const $textarea = $("#productDescription");
+	    const $counter = $("span.font-medium.text-gray-400 span"); // 0 부분
+		
+	    function updateCount() {
+	        const currentLength = $textarea.val().length;
+	        const maxLength = $textarea.attr("maxlength");
+	        $counter.text(currentLength);
+
+	        // (선택) 최대 글자수 도달 시 색상 변경
+	        if (currentLength >= maxLength) {
+	            $counter.css("color", "red");
+	        } else {
+	            $counter.css("color", "");
+	        }// end else
+	    }// updateCount
+	    
+	    // 입력할 때마다 실행
+	    $textarea.on("input", function() {
+	        updateCount();
+	    });
+
+	    // 페이지 로드시 1회 실행 (기존 값이 있을 경우 대비)
+	    updateCount();
+	});// ready
+	
+	
+	
+	$(document).ready(function () {
+
+	    function updateColor($checkbox) {
+	        const $svg = $checkbox.closest('label').find('svg');
+
+	        if ($checkbox.is(':checked')) {
+	            $svg.attr('color', '#0DCC5A');
+	        } else {
+	            $svg.attr('color', '#C2C6CE');
+	        }
+	    }
+
+	    function toggleMeetUI() {
+	    	if ($('#isMeet').is(':checked')) {
+
+	            $('#addrBtn')
+	                .prop('disabled', false)
+	                .removeClass('bg-gray-300 text-gray-500 cursor-not-allowed')
+	                .addClass('bg-black text-white cursor-pointer hover:bg-gray-800');
+
+	        } else {
+
+	            $('#addrBtn')
+	                .prop('disabled', true)
+	                .removeClass('bg-black text-white cursor-pointer hover:bg-gray-800')
+	                .addClass('bg-gray-300 text-gray-500 cursor-not-allowed');
+
+	            $('#addr').val('');
+	        }
+	    }
+
+	    // 체크박스 변경
+	    $('input[name="tradeType"]').on('change', function () {
+	        updateColor($(this));
+	        toggleMeetUI();
+	    });
+
+	    // 초기 실행
+	    $('input[name="tradeType"]').each(function () {
+	        updateColor($(this));
+	    });
+	    toggleMeetUI();
+
+	    // ✅ 지역등록 버튼 클릭 → 카카오 주소 API 실행
+	    $('#addrBtn').on('click', function () {
+
+	        if (!$('#isMeet').is(':checked')) return;
+
+	        new daum.Postcode({
+	            oncomplete: function(data) {
+
+	                // 시/구/동까지만 사용
+	                let region = data.sido + " " + data.sigungu;
+
+	                if (data.bname !== '') {
+	                    region += " " + data.bname;
+	                }
+
+	                $('#addr')
+	                    .val(region)
+	                    .prop('disabled', false)
+	                    .removeClass('bg-gray-100')
+	                    .addClass('bg-white');
+
+	            }
+	        }).open();
+
+	    });
+
+	});// ready
+	
+	function sellRegistration() {
+	    // 1. 썸네일 이미지 체크
+	    if ($("#thumbnail")[0].files.length === 0) {
+	        alert("썸네일 이미지를 등록해 주세요.");
+	        thumbnailImageChose(); // 업로드 창 띄우기
+	        return;
+	    }
+
+	    // 2. 상세 이미지 체크 (allFiles 배열 사용)
+	    if (allFiles.length === 0) {
+	        alert("상품 이미지를 최소 1개 이상 등록해 주세요.");
+	        prodcutImageChose();
+	        return;
+	    }
+
+	    // 3. 상품명 공백 체크
+	    const productTitle = $("#productTitle").val().trim();
+	    if (productTitle === "") {
+	        alert("상품명을 입력해 주세요.");
+	        $("#productTitle").focus();
+	        return;
+	    }
+
+	    // 4. 카테고리 선택 체크
+	    if ($("#category").val() === "") {
+	        alert("카테고리를 선택해 주세요.");
+	        // 카테고리 영역으로 스크롤 이동
+	        $('html, body').animate({ scrollTop: $("#category-depth-1").offset().top - 100 }, 500);
+	        return;
+	    }
+
+	    // 5. 가격 숫자 체크
+	    const price = $("input[name='price']").val().trim();
+	    const priceReg = /^[0-9]+$/; // 숫자만 허용하는 정규식
+	    if (price === "") {
+	        alert("가격을 입력해 주세요.");
+	        $("input[name='price']").focus();
+	        return;
+	    }
+	    if (!priceReg.test(price.replace(/,/g, ''))) { // 콤마가 있을 경우 제거 후 체크
+	        alert("가격은 숫자만 입력 가능합니다.");
+	        $("input[name='price']").focus();
+	        return;
+	    }
+
+	    // 6. 상품 설명 공백 체크
+	    if ($("#productDescription").val().trim() === "") {
+	        alert("상품 설명을 입력해 주세요.");
+	        $("#productDescription").focus();
+	        return;
+	    }
+
+	    // 7. 거래 방법 체크박스 (최소 하나 선택)
+	    const tradeTypeChecked = $("input[name='tradeType']:checked").length;
+	    if (tradeTypeChecked === 0) {
+	        alert("거래 방법(택배 또는 직거래)을 최소 하나 이상 선택해 주세요.");
+	        return;
+	    }
+
+/* 	    // 8. 직거래 선택 시 지역 등록 여부 체크
+	    if ($("#isMeet").is(":checked")) {
+	        if ($("#addr").val().trim() === "") {
+	            alert("직거래를 원하시면 지역을 등록해 주세요.");
+	            $("#addrBtn").click(); // 주소 검색창 띄우기
+	            return;
+	        }
+	    }
+ */
+	    // 모든 검증 통과 시 제출
+	    if (confirm("상품을 등록하시겠습니까?")) {
+	        $("#sellFrm").submit();
+	    }// end if
+	}// sellRegistration
+
+	
+	$(function(){
+	$("#sellFrm").submit(function(e){
+	    e.preventDefault(); // 기본 폼 제출 막기
+
+	    const formData = new FormData(this); // 폼 안의 일반 input, select, textarea 값 자동 포함
+
+	    // allFiles 배열에 담긴 파일 추가
+	    allFiles.forEach(file => {
+	        formData.append("productImages", file); // 서버에서 productImages로 받음
+	    });
+
+	    $.ajax({
+	        url: $(this).attr("action"),
+	        type: $(this).attr("method"),
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        success: function(res){
+	        	if(res.success){
+	                alert("등록 성공!");
+	                location.href = res.redirectUrl; // 직접 이동
+	            }else{
+	                alert(res.message);
+	            }// end else
+	        },
+	        error: function(err){
+	            console.error(err);
+	        }// end error
+	    });// ajax
+	});// submit
+
+	});// ready
+</script>
+<!-- 카카오 우편번호 api -->
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body>
+	<div id="__next">
+		<div class="flex flex-col min-h-screen bg-white">
+			<div th:replace="~{template/header :: headerImgFragment}"></div>
+			<div th:replace="~{template/header :: headerFragment}"></div>
+
+			<main class="relative flex-grow border-b-2"
+				style="min-height: 0px !important; height: auto !important; padding-bottom: 100px">
+				<div class="mx-auto max-w-[1280px] md:px-8 2xl:px-16 box-content max-lg:overflow-x-hidden px-0">
+					<form class="pt-6 mx-auto w-full max-w-[1020px] lg:pt-[72px] max-lg:overflow-x-hidden" id="sellFrm" action="/sell/sellProcess" method="post"  enctype="multipart/form-data">
+					
+						<section class="px-5">
+							<div class="flex flex-col space-y-4 lg:space-y-8 mb-[76px] lg:mb-[72px]">
+							
+								<!-- 썸네일 등록 세션 -->
+								<section class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mb-8">
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 pt-[10px]">썸네일
+										이미지</h2>
+									<div class="col-span-5">
+										<div class="flex pb-1.5 max-lg:pb-0">
+										
+											<!-- 썸네일 사진 등록 부분 -->
+											<div class="pt-[10px]">
+												<input id="thumbnail" name="thumbnail" type="file" accept="image/png, image/jpeg, image/jpg" class="hidden">
+												<div onclick="thumbnailImageChose()" class="flex justify-center items-center mr-3 rounded bg-jnGray-200 lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
+													<div class="flex flex-col">
+														<svg xmlns="http://www.w3.org/2000/svg"
+															fill="currentColor" color="#787E89" viewBox="0 0 32 32"
+															class="w-8 h-8 lg:w-12 lg:h-12">
+															<path fill="color"
+																d="M19.378 6c.38 0 .73.217.897.559l1.015 2.06q.03.06.05.123H26a2 2 0 0 1 2 2v13.259a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10.742a2 2 0 0 1 2-2h4.66q.02-.062.05-.123l1.016-2.06A1 1 0 0 1 12.622 6zM16 12.198a5 5 0 1 0 .002 10.002A5 5 0 0 0 16 12.198m-.001 1.667a3.334 3.334 0 1 1 0 6.67 3.334 3.334 0 0 1 0-6.67"></path></svg>
+													</div>
+												</div>
+											</div>
+											
+											<!-- 등록한 썸네일 이미지 미리보기 부분 -->
+											<div class="overflow-hidden">
+												<div class="os-host os-host-foreign os-theme-dark os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden os-host-transition">
+													<div class="os-padding">
+														<div class="os-viewport os-viewport-native-scrollbars-invisible os-viewport-native-scrollbars-overlaid">
+															<div class="os-content" style="padding: 0px; height: auto; width: 100%; float: left;">
+																
+																<!-- ul 아래 li로 선택한 이미지 미리보기 추가하는 듯? -->
+																<ul id="previewThumbnail" class="flex items-center pt-[10px]"></ul>
+															</div>
+														</div>
+													</div>
+													
+													
+													<!-- 여기부턴 스크롤바 관련인듯? -->
+													<div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">
+														<div class="os-scrollbar-track os-scrollbar-track-off">
+															<div class="os-scrollbar-handle"
+																style="transform: translate(0px, 0px);"></div>
+														</div>
+													</div>
+													
+													<div class="os-scrollbar os-scrollbar-vertical os-scrollbar-unusable os-scrollbar-auto-hidden">
+														<div class="os-scrollbar-track os-scrollbar-track-off">
+															<div class="os-scrollbar-handle" style="height: 100%; transform: translate(0px, 0px);"></div>
+														</div>
+													</div>
+													
+													<div class="os-scrollbar-corner"></div>
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+								
+								<!-- 세부 사진 등록 세션 -->
+								<section class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mb-8">
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 pt-[10px]">상품
+										이미지</h2>
+									<div class="col-span-5">
+										<div class="flex pb-1.5 max-lg:pb-0">
+										
+											<div class="pt-[10px]">
+												<input id="productImages" type="file" multiple="multiple" accept="image/png, image/jpeg, image/jpg" class="hidden">
+												<div onclick="prodcutImageChose()" class="flex justify-center items-center mr-3 rounded bg-jnGray-200 lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
+													<div class="flex flex-col items-center">
+													  <svg xmlns="http://www.w3.org/2000/svg"
+													       fill="currentColor" color="#787E89" viewBox="0 0 32 32"
+													       class="w-8 h-8 lg:w-12 lg:h-12">
+													    <path fill="color"
+													          d="M19.378 6c.38 0 .73.217.897.559l1.015 2.06q.03.06.05.123H26a2 2 0 0 1 2 2v13.259a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10.742a2 2 0 0 1 2-2h4.66q.02-.062.05-.123l1.016-2.06A1 1 0 0 1 12.622 6zM16 12.198a5 5 0 1 0 .002 10.002A5 5 0 0 0 16 12.198m-.001 1.667a3.334 3.334 0 1 1 0 6.67 3.334 3.334 0 0 1 0-6.67"></path>
+													  </svg>
+													  <p id="fileCount" class="text-jnGray-600 lg:text-base text-xs">0/5</p>
+													</div>
+												</div>
+											</div>
+											
+											<div class="overflow-x-auto">
+												<div class="os-host os-host-foreign os-theme-dark os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden os-host-transition">
+													
+													
+													<div class="os-padding">
+														<div class="os-viewport os-viewport-native-scrollbars-invisible os-viewport-native-scrollbars-overlaid">
+															
+															<div class="os-content" style="padding: 0px; height: auto; width: 100%; float: left;">
+																<!-- ul 안에 li로 선택한 이미지 미리보기 추가 -->
+																<ul id="previewProductImages" class="flex items-center pt-[10px]">
+																</ul>
+															</div>
+														</div>
+													</div>
+													
+													<!-- 스크롤 관련? -->
+													<div class="os-scrollbar os-scrollbar-horizontal ">
+														<div class="os-scrollbar-track os-scrollbar-track-off">
+															<div class="os-scrollbar-handle" style="transform: translate(0px, 0px); width: 89.9235%;">
+															</div>
+														</div>
+													</div>
+													
+													<div class="os-scrollbar os-scrollbar-vertical os-scrollbar-unusable os-scrollbar-auto-hidden">
+														<div class="os-scrollbar-track os-scrollbar-track-off">
+															<div class="os-scrollbar-handle"
+																style="height: 100%; transform: translate(0px, 0px);"></div>
+														</div>
+													</div>
+													<div class="os-scrollbar-corner"></div>
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+								
+								<!-- 상품명 입력 세션 -->
+								<section class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">상품명</h2>
+									<div class="col-span-5">
+										<div class="relative">
+											<div class="relative">
+												<input id="productTitle" name="productTitle" type="text"
+													placeholder="상품명을 입력해 주세요."
+													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+													autocomplete="off" spellcheck="false" aria-invalid="false">
+											</div>
+										</div>
+									</div>
+								</section>
+								
+								<!-- 카테고리 선택 세션 -->
+								<section class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1">카테고리</h2>
+									<div class="col-span-5">
+										<section name="productCategory">
+											<div class="flex overflow-hidden flex-row w-full h-60 text-sm font-medium">
+											<input type="text" id="category" name="categoryCode" style="display: none">
+												<div id="category-depth-1"
+													class="overflow-y-auto w-1/3 h-full rounded border border-solid border-jnGray-300">
+													<ul class="flex flex-col border-solid border-jnGray-300">
+														<li class="p-3 h-10" id="category-1">
+															<p class="truncate break-keep">노트북/PC</p>
+														</li>
+														<li class="p-3 h-10" id="category-2">
+															<p class="truncate break-keep">패션의류</p>
+														</li>
+														<li class="p-3 h-10" id="category-3">
+															<p class="truncate break-keep">패션잡화</p>
+														</li>
+														<li class="p-3 h-10" id="category-4">
+															<p class="truncate break-keep">게임</p>
+														</li>
+														<li class="p-3 h-10" id="category-5">
+															<p class="truncate break-keep">뷰티</p>
+														</li>
+														<li class="p-3 h-10" id="category-6">
+															<p class="truncate break-keep">리빙/생활</p>
+														</li>
+														<li class="p-3 h-10" id="category-7">
+															<p class="truncate break-keep">스포츠</p>
+														</li>
+														<li class="p-3 h-10" id="category-8">
+															<p class="truncate break-keep">티켓/쿠폰</p>
+														</li>
+														<li class="p-3 h-10" id="category-9">
+															<p class="truncate break-keep">레저/여행</p>
+														</li>
+														<li class="p-3 h-10" id="category-10">
+															<p class="truncate break-keep">가전제품</p>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</section>
+									</div>
+								</section>
+								
+								<!-- 가격 입력 세션 -->
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1">판매
+										가격</h2>
+									<div class="col-span-5">
+										<div class="flex flex-col w-full">
+											<div class="flex relative flex-row-reverse flex-wrap-reverse gap-4 items-center sm:flex-nowrap sm:flex-row sm:translate-y-0">
+												<div class="relative p-3 w-full h-11 rounded border border-gray-300 border-solid lg:h-12"
+													style="display: flex; flex-flow: row; justify-content: space-between; align-items: center;">
+													<label for="search"
+														class="flex items-center w-full text-sm lg:text-base">
+														<span
+														class="body-medium-14 text-jnGray-500 lg:body-medium-16">₩</span>
+														<input
+														name="price" type="text" inputmode="numeric"
+														class="ml-1 w-full bg-white body-medium-14 lg:body-medium-16 focus:outline-none disabled:opacity-100 placeholder:text-jnGray-500"
+														placeholder="판매가격" value="">
+													</label>
+												</div>
+											</div>
+											
+											<!-- 안심 결제 가능 금액 안내용 div -->
+											<div class="sm:mt-2.5 h-4 sm:h-5 detail-medium-12 sm:body-regular-14">
+												<p class="text-green-700"></p>
+											</div>
+											
+										</div>
+									</div>
+								</section>
+								
+								<!-- 상품 설명 입력 세션 -->
+								<section class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1">상품
+										설명</h2>
+									<div class="col-span-5">
+										<div class="gap-1 maxCount"
+											style="display: flex; flex-flow: column; justify-content: flex-start; align-items: stretch;">
+											<div class="relative rounded border min-h-[265px] gap-3 p-3 lg:p-5 lg:min-h-[284px] border-jnGray-300 focus-within:border-heading"
+												style="display: flex; flex-flow: column; justify-content: space-between; align-items: stretch;">
+												<div class="flex-1"
+													style="display: flex; flex-flow: row; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+													<div class="w-full h-[220px]">
+														<textarea id="productDescription"
+															name="content"
+															class="items-center w-full rounded transition duration-300 ease-in-out text-heading text-sm focus:ring-0 bg-white border border-gray-300 focus:shadow focus:outline-none focus:border-heading placeholder-body break-all inline-block outline-none align-middle appearance-none border-none body-medium-14_reading lg:body-medium-16 px-0 py-0 placeholder:text-jnGray-500 [field-sizing:content] resize-none max-h-full h-full"
+															autocomplete="off" spellcheck="false"
+															placeholder="- 상품명(브랜드)
+- 구매 시기 (년, 월, 일)
+- 사용 기간
+- 하자 여부
+* 실제 촬영한 사진과 함께 상세 정보를 입력해주세요.
+* 카카오톡 아이디 첨부 시 게시물 삭제 및 이용제재 처리될 수 있어요.
+ 
+안전하고 건전한 거래환경을 위해 과학기술정보통신부, 한국인터넷진흥원, 중고나라가 함께합니다."
+															maxlength="500"></textarea>
+													</div>
+												</div>
+												<div class="self-end"
+													style="display: flex; flex-flow: row; justify-content: flex-start; align-items: stretch;">
+													<span class="font-medium text-gray-400 text-[14px]"><span
+														class="">0</span> / 500</span>
+												</div>
+											</div>
+											
+										</div>
+									</div>
+								</section>
+								
+								
+								<!-- 상품 상태 선택 세션 -->
+								<section
+									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
+									<h2
+										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1">상품
+										상태</h2>
+									<div class="col-span-5">
+										<ul class="flex">
+											<li class="flex items-center mr-4 contents-center">
+												<label for="used" class="flex items-start">
+													<input type="radio" id="used" name="productStatus"
+													class="appearance-none rounded-full w-5 h-5 mt-0.5 mr-2 border-1.5 border-solid border-jnGray-500 transition-all duration-100 ease-linear cursor-pointer checked:border-6 checked:border-jngreen disabled:border-jnGray-400 disabled:bg-jnGray-300 disabled:cursor-not-allowed"
+													value="U" checked="">
+													<div class="flex flex-col space-y-2 [&amp;&gt;span]:text-sm lg:[&amp;&gt;span]:text-base [&amp;&gt;span:nth-child(2)]:text-xs lg:[&amp;&gt;span:nth-child(2)]:text-sm">
+														<span class="text-base font-semibold leading-6 cursor-pointer text-jnGray-900">중고</span>
+													</div>
+												</label>
+											</li>
+											<li class="flex items-center mr-4 contents-center">
+												<label for="new" class="flex items-start">
+													<input type="radio" id="new" name="productStatus"
+														class="appearance-none rounded-full w-5 h-5 mt-0.5 mr-2 border-1.5 border-solid border-jnGray-500 transition-all duration-100 ease-linear cursor-pointer checked:border-6 checked:border-jngreen disabled:border-jnGray-400 disabled:bg-jnGray-300 disabled:cursor-not-allowed"
+														value="N">
+													<div class="flex flex-col space-y-2 [&amp;&gt;span]:text-sm lg:[&amp;&gt;span]:text-base [&amp;&gt;span:nth-child(2)]:text-xs lg:[&amp;&gt;span:nth-child(2)]:text-sm">
+														<span class="text-base font-semibold leading-6 cursor-pointer text-jnGray-900">새상품</span>
+													</div>
+												</label>
+											</li>
+										</ul>
+									</div>
+								</section>
+								
+							</div>
+						</section>
+						
+						
+						<!-- 거래 방법 선택 세션 -->
+						<section class="px-5 lg:mb-[100px]" style="padding-top: 50px !important; margin-bottom: 80px !important">
+							<div
+								class="relative pb-2 mb-3 text-lg font-semibold lg:pb-2.5 lg:mb-5 lg:text-2xl before:content-[''] before:absolute before:left-0 before:bottom-0 before:w-full before:h-[1px] before:bg-jnGray-900 !text-jnGray-900">
+								<h1>거래 방법</h1>
+								<p class="text-sm font-normal text-jnGray-600 max-lg:text-xs lg:text-base mt-1">구매자가
+									결제한 이후에는 거래 방법을 변경할 수 없어요</p>
+							</div>
+							<div class="flex flex-col pb-5 space-y-5">
+								<div>
+									<ul class="[&amp;&gt;*:first-child]:my-4">
+										<section class="lg:grid lg:grid-cols-6 !text-jnGray-900">
+											<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1">택배거래</h2>
+											<div class="col-span-5">
+												<li class="relative text-sm font-medium truncate break-keep mr-3.5 last:mr-0">
+													<div class="flex justify-between items-center">
+														<label for="isPost" class="flex items-center gap-1">
+															<div class="hidden appearance-none">
+																<input id="isPost" name="tradeType" type="checkbox" value="2"
+																	class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body min-h-12 transition duration-200 ease-in-out bg-gray-100 border-gray-300 focus:shadow focus:bg-white focus:border-primary rounded"
+																	autocomplete="off" spellcheck="false"
+																	aria-invalid="false">
+															</div>
+															<svg xmlns="http://www.w3.org/2000/svg" fill="none"
+																viewBox="0 0 20 20" class="w-6 h-6" color="#0DCC5A">
+																<path fill="currentColor" fill-rule="evenodd"
+																	d="M17.5 10a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0m-3.636-1.97a.75.75 0 1 0-1.061-1.06L8.75 11.023 7.197 9.47a.75.75 0 0 0-1.06 1.06l2.083 2.084a.75.75 0 0 0 1.06 0z"
+																	clip-rule="evenodd"></path></svg>
+															<div class="flex flex-col ml-1 space-y-2 text-base font-medium">
+																<span class="text-base font-semibold leading-6 cursor-pointer text-jnGray-900">택배거래</span>
+															</div>
+														</label>
+													</div>
+												</li>
+											</div>
+										</section>
+										
+										<hr class="bg-jnGray-200 h-[1px] w-full my-6">
+										<section class="lg:grid lg:grid-cols-6 !text-jnGray-900">
+											<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1">직거래</h2>
+											<div class="col-span-5">
+												<li class="relative text-sm font-medium truncate break-keep mr-3.5 last:mr-0">
+													<div class="flex justify-between items-center">
+														<label for="isMeet" class="flex items-center gap-1">
+															<div class="hidden appearance-none">
+																<input id="isMeet" name="tradeType" type="checkbox" value="1"
+																	class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body min-h-12 transition duration-200 ease-in-out bg-gray-100 border-gray-300 focus:shadow focus:bg-white focus:border-primary rounded"
+																	autocomplete="off" spellcheck="false"
+																	aria-invalid="false">
+															</div>
+															<svg xmlns="http://www.w3.org/2000/svg" fill="none"
+																viewBox="0 0 20 20" class="w-6 h-6" color="#C2C6CE">
+																<path fill="currentColor" fill-rule="evenodd"
+																	d="M17.5 10a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0m-3.636-1.97a.75.75 0 1 0-1.061-1.06L8.75 11.023 7.197 9.47a.75.75 0 0 0-1.06 1.06l2.083 2.084a.75.75 0 0 0 1.06 0z"
+																	clip-rule="evenodd"></path></svg>
+															<div class="flex flex-col ml-1 space-y-2 text-base font-medium">
+																<span class="text-base font-semibold leading-6 cursor-pointer text-jnGray-900">만나서
+																	직거래</span>
+															</div>
+														</label>
+													</div>
+													
+													<div class="flex flex-row items-center text-xs font-medium mt-2.5 gap-2">
+    
+												    <input type="text" name="addr" id="addr"
+												        placeholder="거래 지역을 선택해주세요."
+												        class="border px-3 py-2 rounded bg-gray-100 w-64"
+												        readonly
+												        disabled>
+												
+												    <button type="button" id="addrBtn"
+												        class="px-4 py-2 rounded bg-gray-300 text-white cursor-not-allowed"
+												        disabled>
+												        지역 등록
+												    </button>
+												
+												</div>
+
+
+													</li>
+											</div>
+										</section>
+										
+										<section class="lg:grid lg:grid-cols-6 !text-jnGray-900">
+											<h2
+												class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 opacity-0 hidden lg:block"></h2>
+											<div class="col-span-5"></div>
+										</section>
+										<hr class="bg-jnGray-200 h-[1px] w-full my-6">
+									</ul>
+								</div>
+							</div>
+						</section>
+						
+						
+						<div class="flex fixed bottom-0 left-0 z-10 flex-col items-center w-full bg-white lg:relative">
+							<p class="flex items-center px-5 w-full border-t border-b border-jnGray-200 py-[10px] justify-center text-[11px] sm:text-sm max-w-[1020px] text-jnGray-600">판매
+								정보가 실제 상품과 다를 경우, 책임은 판매자에게 있음을 동의합니다.</p>
+							<div class="w-full px-5 py-3 max-w-[1020px]">
+								<div data-variant="flat" onclick="sellRegistration()"
+									class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md bg-heading text-white px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-gray-600 hover:shadow-cart w-full break-keep"
+									>판매하기</div>
+							</div>
+						</div>
+						
+						
+					</form>
+				</div>
+				
+				<!-- 자동 전송 막기 -->
+				<form action=""></form>
+				
+			</main>
+
+			<div th:replace="~{template/footer :: footerFragment}"></div>
+		</div>
+	</div>
+	<div th:replace="~{template/wrapper_frm :: drawerFrame}"></div>
+</body>
+</html>

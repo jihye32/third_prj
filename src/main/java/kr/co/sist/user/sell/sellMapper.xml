@@ -27,6 +27,31 @@ values (#{productNum}, #{sellCode})
 insert into SELL_place(PRODUCT_NUM, ADDR)
 values (#{productNum}, #{tradeArea})
 </insert>
+
+<select id="selectSellProductInfo" parameterType="kr.co.sist.user.sell.SellDTO">
+select title, price, content, thumbnail, category_code, addr, product_status
+from product p
+left join (
+    select product_num,
+           listagg(addr, ', ') within group (order by addr) as addr
+    from sell_place
+    group by product_num
+) sp on p.product_num = sp.product_num
+where p.product_num = #{productNum} and p.store_num = #{storeNum}
+</select>
+
+<select id="selectSellCode" parameterType="kr.co.sist.user.sell.SellDTO">
+select sell_code
+from sell_option
+where product_num = #{productNum}
+</select>
+
+<select id="selectProductImg" parameterType="kr.co.sist.user.sell.SellDTO">
+select product_img
+from product_img
+where product_num = #{productNum}
+</select>
+
 </mapper>
 
 
