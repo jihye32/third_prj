@@ -31,7 +31,50 @@ $(document).on("click", "#reportBtn", function(){
     $("#reportForm").submit();
 });
 
-  </script>		
+  </script>	
+  
+<script>
+$(document).ready(function() {
+    // 1. 파일 선택 시 목록 생성
+    $(document).on('change', 'input[name="upFile"]', function(e) {
+        const files = e.target.files;
+        const $iframeContents = $(e.target).closest('html'); 
+        const $listContainer = $iframeContents.find('#qna-image-list');
+        const $countDisplay = $iframeContents.find('.text-xs.text-gray-400.mt-1');
+
+        $listContainer.empty();
+
+        if (files.length > 0) {
+            $countDisplay.text(files.length + '/10');
+            $.each(files, function(index, file) {
+                const nameTag = `
+                    <div class="file-item" style="display: flex; align-items: center; background-color: #eff6ff; color: #1d4ed8; padding: 4px 8px; border-radius: 4px; border: 1px solid #dbeafe; font-size: 10px; margin-bottom: 4px; margin-right: 4px;">
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;">${file.name}</span>
+                        <button type="button" class="remove-file-btn" data-index="${index}" style="margin-left: 8px; color: #9ca3af; cursor: pointer; border: none; background: none; font-weight: bold;">×</button>
+                    </div>`;
+                $listContainer.append(nameTag);
+            });
+        }
+    });
+
+    // 2. X 버튼 클릭 시 해당 항목 삭제 (이벤트 위임)
+    $(document).on('click', '.remove-file-btn', function() {
+        const $iframeContents = $(this).closest('html');
+        const $fileInput = $iframeContents.find('input[name="upFile"]');
+        const $countDisplay = $iframeContents.find('.text-xs.text-gray-400.mt-1');
+        
+        // 화면에서 해당 아이템 제거
+        $(this).closest('.file-item').remove();
+
+        const currentCount = $iframeContents.find('.file-item').length;
+        $countDisplay.text(currentCount + '/10');
+        
+        if(currentCount === 0) {
+            $fileInput.val('');
+        }
+    });
+});
+</script>  	
 	
 <script type="text/javascript">
 var storeId = "[[${storeNum}]]";

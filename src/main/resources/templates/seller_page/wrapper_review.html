@@ -39,7 +39,9 @@
         <div th:each="review : ${reviews}" class="border-b border-gray-50 pb-6 last:border-0">
             <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-3">
-                    <img th:src="${review.writerProfile != null ? review.writerProfile : 'https://img2.joongna.com/common/Profile/Default/profile_m.png'}" 
+                    <img th:src="${review.writerProfile != null} 
+            ? |/images/profile/${review.writerProfile}| 
+            : @{/images/profile/default.jpg}"
                          class="w-10 h-10 rounded-full border border-gray-100" alt="profile">
                     <div>
                         <div class="flex items-center gap-2">
@@ -81,4 +83,6 @@
         </div>
     </div>
 </body>
+
+
 </html>

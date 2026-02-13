@@ -3,6 +3,7 @@ package kr.co.sist.admin.login;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,13 +16,12 @@ public class AdminLoginService {
 	    AdminLoginDomain adminDomain =
 	        adminDAO.selectAdminLogin(ldto.getAdminId());
 
-	    if (adminDomain == null) {return false;}
+	    if (adminDomain == null) {
+	        return false;
+	    }
+	    BCryptPasswordEncoder bpe = new BCryptPasswordEncoder(10);
 
-	    System.out.println("입력비번: [" + ldto.getAdminPass() + "]");
-	    System.out.println("DB비번: [" + adminDomain.getAdminPass() + "]");
-	    
-	    boolean ok = ldto.getAdminPass().equals(adminDomain.getAdminPass());
-
+	    boolean ok = bpe.matches(ldto.getAdminPass(), adminDomain.getAdminPass().trim());
 	    if (ok) {//로그인 성공하면 로그인 최신일자 업데이트
 	        adminDAO.updateLastLogin(ldto.getAdminId());
 	    }
