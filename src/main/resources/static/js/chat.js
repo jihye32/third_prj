@@ -103,6 +103,8 @@ async function sendChatMessage(root) {
   }
 }
 
+
+/* 소켓을 이용한 메시지 실시간 확인 */
 let stompClient = null;
 let currentRoom = null;
 
@@ -128,20 +130,22 @@ async function ensureConnectedAndSubscribe(roomNum, root) {
 
   const myId = root.querySelector("#user-id")?.value;
 
-  const sub = stompClient.subscribe(`/topic/room/${roomNum}`, (frame) => {
+  stompClient.subscribe(`/topic/room/${roomNum}`, (frame) => {
     
     const msg = JSON.parse(frame.body);
 
     if (myId && msg.writerId === myId) {
       return;
     }
-
+	
+	//상대방 메시지가 보여지는 거 + 읽음 처리하는 위치
     appendOtherMessage(root, msg);
+	
   });
 
 }
 
-
+/* 메시지 폼 생성 */
 function appendMyMessage(root, { content }) {
   const box = root.querySelector("#chat-messages");
   const tpl = root.querySelector("#my-message");
@@ -171,11 +175,14 @@ function appendOtherMessage(root, { content }) {
 }
 
 
+/* 채팅 방 열기 */
 function openChatForm(sellerId, store) { 
   const pnum = window.PageContext?.pnum ?? null;
+  alert(pnum);
   
- 	const url = `/chat/${sellerId}`;
-	if(pnum !== null){
+ 	let url = `/chat/${sellerId}`;
+	if(pnum != null){
+		alert(url);
 		url+=`?pnum=${pnum}`;
 	}
 
