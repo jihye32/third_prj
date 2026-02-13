@@ -21,12 +21,151 @@
 }
 </style>
 <!-- JQuery CDN -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-	$(function() {
+$(function() {
+    // 기존 데이터 저장 (수정 여부 비교용)
+    const originStoreName = $("#storeName").val().trim();
+    const originEmailLocal = $("#emailLocal").val().trim();
+    const originEmailDomain = $("#emailDomain").val();
 
-	});
+    // 플래그 설정 (기존 값과 같으면 이미 인증된 것으로 간주)
+    let isStoreNameChecked = true; 
+    let isEmailVerified = true;
+
+    // 1. 가게명 수정 감지 및 중복 확인
+    $("#storeName").on("input", function() {
+        const currentStoreName = $(this).val().trim();
+        if (currentStoreName === originStoreName) {
+            isStoreNameChecked = true;
+            $("#storeNameChkMsg").text("기존 가게명입니다.").css("color", "blue");
+        } else {
+            isStoreNameChecked = false;
+            $("#storeNameChkMsg").text("가게명 중복 확인이 필요합니다.").css("color", "orange");
+        }
+    });
+
+    $("#storeNameChkBtn").click(function() {
+        const storeName = $("#storeName").val().trim();
+        if (storeName === "") {
+            alert("가게명을 입력해주세요.");
+            return;
+        }
+        if (storeName === originStoreName) {
+            alert("기존 가게명과 동일합니다.");
+            return;
+        }
+
+        $.ajax({
+            url: "/join/storeNameDup", // 기존 회원가입 컨트롤러 재사용
+            type: "GET",
+            data: { storeName: storeName },
+            success: function(isAvailable) {
+                if (isAvailable) {
+                    $("#storeNameChkMsg").text("사용 가능한 가게명입니다.").css("color", "#0DCC5A");
+                    isStoreNameChecked = true;
+                } else {
+                    $("#storeNameChkMsg").text("이미 사용 중인 가게명입니다.").css("color", "red");
+                    isStoreNameChecked = false;
+                }
+            }
+        });
+    });
+
+    // 2. 이메일 수정 감지 및 인증
+    $("#emailLocal, #emailDomain").on("input change", function() {
+        const currentEmailLocal = $("#emailLocal").val().trim();
+        const currentEmailDomain = $("#emailDomain").val();
+
+        if (currentEmailLocal === originEmailLocal && currentEmailDomain === originEmailDomain) {
+            isEmailVerified = true;
+            $("#sendVerifyCodeMsg").text("기존 이메일입니다.").css("color", "blue");
+        } else {
+            isEmailVerified = false;
+            $("#sendVerifyCodeMsg").text("이메일 변경 시 재인증이 필요합니다.").css("color", "orange");
+        }
+    });
+
+    // 인증번호 전송
+    $("#sendVerifyCodeBtn").click(function() {
+        const emailLocal = $("#emailLocal").val().trim();
+        const emailDomain = $("#emailDomain").val();
+
+        if (emailLocal === "") {
+            alert("이메일을 입력해주세요.");
+            return;
+        }
+
+        $("#sendVerifyCodeMsg").text("인증번호 발송 중...").css("color", "black");
+
+        $.ajax({
+            url: "/join/sendVerifyCode",
+            type: "GET",
+            data: { emailLocal: emailLocal, emailDomain: emailDomain },
+            success: function(result) {
+                if (result) {
+                    $("#sendVerifyCodeMsg").text("인증번호가 발송되었습니다.").css("color", "#0DCC5A");
+                } else {
+                    $("#sendVerifyCodeMsg").text("발송 실패. 다시 시도해주세요.").css("color", "red");
+                }
+            }
+        });
+    });
+
+    // 인증번호 확인
+    $("#verifyCodeChkBtn").click(function() {
+        const inputCode = $("input[name='inputCode']").val().trim(); // name 속성 확인 필요
+        if (inputCode === "") {
+            alert("인증번호를 입력해주세요.");
+            return;
+        }
+
+        $.ajax({
+            url: "/join/verifyCodeChk",
+            type: "POST",
+            data: { inputCode: inputCode },
+            success: function(isMatch) {
+                if (isMatch) {
+                    $("#verifyCodeChkMsg").text("인증 성공!").css("color", "#0DCC5A");
+                    isEmailVerified = true;
+                } else {
+                    $("#verifyCodeChkMsg").text("인증번호 불일치").css("color", "red");
+                    isEmailVerified = false;
+                }
+            }
+        });
+    });
+
+    // 3. 최종 수정하기 버튼
+    $("#changeInfoBtn").click(function() {
+        // 필수 체크
+        if (!isStoreNameChecked) {
+            alert("가게명 중복 확인을 진행해주세요.");
+            return;
+        }
+        if (!isEmailVerified) {
+            alert("이메일 인증을 완료해주세요.");
+            return;
+        }
+
+        // 비밀번호 변경 시 일치 여부 확인
+        const pass = $("#pass").val();
+        const passChk = $("#passChk").val();
+        if (pass !== "" || passChk !== "") {
+            if (pass !== passChk) {
+                alert("새 비밀번호가 일치하지 않습니다.");
+                return;
+            }
+        }
+
+        if (confirm("정보를 수정하시겠습니까?")) {
+            // 폼 제출 로직 (id가 없으므로 closest 사용하거나 id 추가 권장)
+            $("form").attr("action", "/mypage/updateProcess");
+            $("form").attr("method", "POST");
+            $("form").submit();
+        }
+    });
+});// ready
 </script>
 </head>
 <body>
@@ -48,171 +187,115 @@
 								style="margin-bottom: 50px">
 								<h1>내 정보</h1>
 							</div>
-							<div
-								class="flex flex-col space-y-4 lg:space-y-8 mb-[76px] lg:mb-[72px]">
+							<div class="flex flex-col space-y-4 lg:space-y-8 mb-[76px] lg:mb-[72px]">
+								<!-- 아이디 -->
 								<section
 									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
-									<h2
-										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">아이디</h2>
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">아이디</h2>
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input id="productTitle" name="productTitle" type="text"
-													placeholder=""
-													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+												<input id="id" name="id" type="text" th:value="${md.user_id}" disabled class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-												<button class="absolute right-2 h-11 hidden">
-													<svg width="20px" height="20px" viewBox="0 0 20 20"
-														fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd" clip-rule="evenodd"
-															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
-															fill="#9CA3AF"></path></svg>
-												</button>
 											</div>
 										</div>
 									</div>
 								</section>
+								<!-- 비밀번호 -->
 								<section
 									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
-									<h2
-										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새
 										비밀번호</h2>
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input id="productTitle" name="productTitle" type="text"
-													placeholder=""
+												<input id="pass" name="pass" type="text"
 													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-												<button class="absolute right-2 h-11 hidden">
-													<svg width="20px" height="20px" viewBox="0 0 20 20"
-														fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd" clip-rule="evenodd"
-															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
-															fill="#9CA3AF"></path></svg>
-												</button>
 											</div>
 										</div>
 									</div>
 								</section>
+								<!-- 비밀번호 확인 -->
 								<section
 									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
-									<h2
-										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새
 										비밀번호 확인</h2>
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input id="productTitle" name="productTitle" type="text"
-													placeholder=""
+												<input id="passChk" name="passChk" type="text" 
 													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-												<button class="absolute right-2 h-11 hidden">
-													<svg width="20px" height="20px" viewBox="0 0 20 20"
-														fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd" clip-rule="evenodd"
-															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
-															fill="#9CA3AF"></path></svg>
-												</button>
 											</div>
 										</div>
 									</div>
 								</section>
+								<!-- 이름 -->
 								<section
 									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
-									<h2
-										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">이름</h2>
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">이름</h2>
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input id="productTitle" name="productTitle" type="text"
-													placeholder=""
-													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+												<input id="name" name="name" type="text" th:value="${md.name}" disabled class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-												<button class="absolute right-2 h-11 hidden">
-													<svg width="20px" height="20px" viewBox="0 0 20 20"
-														fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd" clip-rule="evenodd"
-															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
-															fill="#9CA3AF"></path></svg>
-												</button>
 											</div>
 										</div>
 									</div>
 								</section>
+								<!-- 가게명 -->
 								<section
 									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
-									<h2
-										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새 가게명</h2>
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새 가게명</h2>
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input style="width: 600px;" id="productTitle" name="productTitle" type="text"
-													placeholder=""
-													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+												<input style="width: 600px;" id="storeName" name="storeName" type="text" th:value="${md.store_name}" class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-									        	<input type="button" value="중복확인" class="chkBtn">
-												<button class="absolute right-2 h-11 hidden">
-													<svg width="20px" height="20px" viewBox="0 0 20 20"
-														fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd" clip-rule="evenodd"
-															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
-															fill="#9CA3AF"></path></svg>
-												</button>
+									        	<input type="button" value="중복확인" class="chkBtn" id="storeNameChkBtn">
+									        	<!-- 가게명 중복확인 메시지 -->
+												<div id="storeNameChkMsg" style="font-size: 0.8em; margin-top: 5px;"></div>
 											</div>
 										</div>
 									</div>
 								</section>
+								<!-- 생년월일 -->
 								<section
 									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
-									<h2
-										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">생년월일</h2>
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">생년월일</h2>
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input id="productTitle" name="productTitle" type="text"
-													placeholder=""
-													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
+												<input id="birthday" name="birthday" type="text" th:value="${md.birthday}" disabled class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-												<button class="absolute right-2 h-11 hidden">
-													<svg width="20px" height="20px" viewBox="0 0 20 20"
-														fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd" clip-rule="evenodd"
-															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
-															fill="#9CA3AF"></path></svg>
-												</button>
 											</div>
 										</div>
 									</div>
 								</section>
+								<!-- 이메일 -->
 								<section
 									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
-									<h2
-										class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새 이메일</h2>
+									<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1 flex items-center justify-between gap-0.5 lg:block">새 이메일</h2>
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input style="width: 345px;" id="productTitle" name="productTitle" type="text"
+												<input style="width: 345px;" id="emailLocal" name="emailLocal" type="text" th:value="${#strings.substringBefore(md.email, '@')}"
 													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-												<select style="width: 250px;" id="productTitle" name="productTitle"
-													class="py-2 px-4 md:px-5 w-full border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded">
-												<option value="@naver.com">@naver.com</option>
-												<option value="@gmail.com">@gmail.com</option>
-												<option value="@daum.net">@daum.net</option>
+												<select style="width: 250px;" id="emailDomain" name="emailDomain" class="py-2 px-4 md:px-5 w-full border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded">
+													<option value="@naver.com" th:selected="${#strings.substringAfter(md.email, '@') == 'naver.com'}">@naver.com</option>
+													<option value="@gmail.com" th:selected="${#strings.substringAfter(md.email, '@') == 'gmail.com'}">@gmail.com</option>
+													<option value="@daum.net" th:selected="${#strings.substringAfter(md.email, '@') == 'daum.net'}">@daum.net</option>
 												</select>
-												<input type="button" value="인증번호 전송" class="chkBtn">
-												<button class="absolute right-2 h-11 hidden">
-													<svg width="20px" height="20px" viewBox="0 0 20 20"
-														fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd" clip-rule="evenodd"
-															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
-															fill="#9CA3AF"></path></svg>
-												</button>
+												<input type="button" value="인증번호 전송" class="chkBtn" id="sendVerifyCodeBtn">
+												<!-- 이메일 인증번호 전송 확인 메시지 -->
+												<div id="sendVerifyCodeMsg" style="font-size: 0.8em; margin-top: 5px;"></div>
 											</div>
 										</div>
 									</div>
 								</section>
+								<!-- 이메일 인증번호 -->
 								<section
 									class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mt-0 max-lg:!mb-8">
 									<h2
@@ -224,14 +307,9 @@
 													placeholder=""
 													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-									        	<input type="button" value="인증하기" class="chkBtn">
-												<button class="absolute right-2 h-11 hidden">
-													<svg width="20px" height="20px" viewBox="0 0 20 20"
-														fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd" clip-rule="evenodd"
-															d="M18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10ZM7.44194 6.55806C7.19786 6.31398 6.80214 6.31398 6.55806 6.55806C6.31398 6.80214 6.31398 7.19786 6.55806 7.44194L9.11612 10L6.55806 12.5581C6.31398 12.8021 6.31398 13.1979 6.55806 13.4419C6.80214 13.686 7.19786 13.686 7.44194 13.4419L10 10.8839L12.5581 13.4419C12.8021 13.686 13.1979 13.686 13.4419 13.4419C13.686 13.1979 13.686 12.8021 13.4419 12.5581L10.8839 10L13.4419 7.44194C13.686 7.19786 13.686 6.80214 13.4419 6.55806C13.1979 6.31398 12.8021 6.31398 12.5581 6.55806L10 9.11612L7.44194 6.55806Z"
-															fill="#9CA3AF"></path></svg>
-												</button>
+									        	<input type="button" value="인증하기" class="chkBtn" id="verifyCodeChkBtn">
+									        	<!-- 이메일 인증번호 인증 확인 메시지 -->
+												<div id="verifyCodeChkMsg" style="font-size: 0.8em; margin-top: 5px;"></div>
 											</div>
 										</div>
 									</div>
@@ -243,7 +321,7 @@
 							<div class="w-full px-5 py-3 max-w-[1020px]">
 								<button data-variant="flat"
 									class="text-[13px] md:text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-body text-center justify-center border-0 border-transparent placeholder-white focus-visible:outline-none focus:outline-none rounded-md bg-heading text-white px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-gray-600 hover:shadow-cart w-full break-keep"
-									type="submit">수정하기</button>
+									type="button" id="changeInfoBtn">수정하기</button>
 							</div>
 						</div>
 					</form>
