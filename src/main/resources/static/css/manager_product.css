@@ -31,12 +31,52 @@
 .divider { color: #eee; font-size: 11px; margin: 0 8px; }
 
 /* [3] 카드 및 상태 오버레이 */
-.card { transition: transform 0.2s, border-color 0.2s; border: 1px solid #e2e5e8; background-color: #fff; overflow: hidden; border-radius: 8px; height: 100%; }
+.card { 
+    transition: transform 0.2s, border-color 0.2s; 
+    border: 1px solid #e2e5e8; 
+    background-color: #fff; 
+    overflow: hidden; 
+    border-radius: 8px; 
+    height: 100%; 
+}
 .card:hover { transform: translateY(-5px); border-color: #0c193a; }
-.card-img-wrap { position: relative; aspect-ratio: 1/1; background-color: #f8f9fa; overflow: hidden; }
-.card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-.status-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 5; }
-.status-overlay span { color: #fff; font-size: 1.4rem; font-weight: 800; }
+
+/* 🔵 이미지 컨테이너: 배경을 흰색으로 하고 중앙 정렬 */
+.card-img-wrap { 
+    position: relative; 
+    aspect-ratio: 1/1; 
+    background-color: #fff; /* contain 적용 시 여백을 깔끔하게 처리 */
+    overflow: hidden; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #f2f2f2; /* 이미지와 텍스트 영역 구분 */
+}
+
+/* 🔵 이미지: 전체가 다 보이도록 contain 적용 */
+.card-img-wrap img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain !important; /* 확대/잘림 방지 핵심 */
+}
+
+.status-overlay { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.4); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 5; 
+}
+.status-overlay span { 
+    color: #fff; 
+    font-size: 1.2rem; /* 목록에 맞춰 크기 살짝 조정 */
+    font-weight: 800; 
+}
 
 /* [4] 삭제된 상품 효과 */
 .is-deleted { pointer-events: none; opacity: 0.95; border: 2px solid #ff000033 !important; }

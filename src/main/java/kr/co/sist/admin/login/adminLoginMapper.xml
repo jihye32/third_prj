@@ -6,7 +6,7 @@
 
 <select id="selectAdminLogin" parameterType="String" resultType="kr.co.sist.admin.login.AdminLoginDomain">
 
-select admin_id as adminId,admin_pass as adminPass
+select admin_id,admin_pass
 from admin
 where admin_id=#{adminId}
 
