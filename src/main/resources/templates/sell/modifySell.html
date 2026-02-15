@@ -67,7 +67,12 @@ $(function(){
 let allFiles = []; // 선택된 모든 파일을 저장
 const MAX_FILES = 5; // 최대 파일 개수
 
+existingImages = [];// 기존 이미지 (DB에 있는 것)
+let deletedImageIds = [];     // 삭제된 기존 이미지 id
+let newFiles = [];            // 새로 추가한 파일
+	
 $(function(){
+	updateFileCount();// 기존 이미지 개수 반영
 	// 세부이미지
     $("#productImages").change(function(evt) {
         const files = Array.from(evt.target.files); // 새로 선택된 파일들
@@ -93,6 +98,17 @@ $(function(){
     });// change
 });// ready
 
+function removeExistingImage(imageId){
+    // 1. 삭제 목록에 추가
+    deletedImageIds.push(imageId);
+    existingImages = existingImages.filter(name => name !== imageId);
+	//alert('deletedImageIds : '+deletedImageIds);
+	//alert('existingImages : ' + existingImages);
+    // 2. 화면에서 제거
+    $(`li[data-id='${imageId}']`).remove();
+}// removeExistingImage
+
+
 // 삭제 버튼 클릭 시 해당 파일 제거
 function removeFile(index) {
     allFiles.splice(index, 1);
@@ -106,6 +122,28 @@ function removeFile(index) {
 
 function updatePreview(){
 	$("#previewProductImages").empty();// 미리보기 초기화
+	
+	// 기존 이미지 먼저 렌더링
+    existingImages.forEach((imgName) => {
+
+        const existingImg = `
+        <li class="relative" data-id="${imgName}">
+            <div class="flex overflow-hidden mr-3 border border-solid border-jnGreen rounded lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
+                <img src="/upload/product_detail/${imgName}"
+                     class="object-cover h-full bg-gray-200 rounded">
+
+                <button type="button"
+                        class="absolute -top-[10px] right-1"
+                        onclick="removeExistingImage('${imgName}')">
+                <svg width="20px" height="20px" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class=""><path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" fill="white"></path><path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5V18.5C14.6944 18.5 18.5 14.6944 18.5 10H17.5ZM10 17.5C5.85786 17.5 2.5 14.1421 2.5 10H1.5C1.5 14.6944 5.30558 18.5 10 18.5V17.5ZM2.5 10C2.5 5.85786 5.85786 2.5 10 2.5V1.5C5.30558 1.5 1.5 5.30558 1.5 10H2.5ZM10 2.5C14.1421 2.5 17.5 5.85786 17.5 10H18.5C18.5 5.30558 14.6944 1.5 10 1.5V2.5Z" fill="#DADEE5"></path><path d="M7 7L13 13M13 7L7 13" stroke="#363C45" stroke-linecap="round"></path></svg>
+                </button>
+            </div>
+        </li>
+        `;
+
+        $("#previewProductImages").append(existingImg);
+    });// end forEach
+	
 	allFiles.forEach((file, i) => {
         const reader = new FileReader();
         reader.onload = function(e){
@@ -126,7 +164,8 @@ function updatePreview(){
 }// updatePreview
 
 function updateFileCount() {
-    $("#fileCount").text(`${allFiles.length}/${MAX_FILES}`);
+	const totalCount = existingImages.length + allFiles.length;
+	$("#fileCount").text(`${totalCount}/${MAX_FILES}`);
 }// updateFileCount
 
 $(document).ready(function() {
@@ -144,78 +183,58 @@ $(document).ready(function() {
 		
 	    $('#category').val(categoryId);
 	  });// click
+	  
+	// 페이지 로드 시 전달된 categoryCode 값으로 미리 선택 표시
+    var selectedCategory = $('#category').val();
+    if(selectedCategory) {
+        $('#category-depth-1 li#category-' + selectedCategory).addClass('font-bold bg-jnGray-200');
+    }// end if
+	  
 	});// ready
 	
+	function updateCount() {
+        const currentLength = $textarea.val().length;
+        const maxLength = $textarea.attr("maxlength");
+        $counter.text(currentLength);
+
+        // (선택) 최대 글자수 도달 시 색상 변경
+        if (currentLength >= maxLength) {
+            $counter.css("color", "red");
+        } else {
+            $counter.css("color", "");
+        }// end else
+    }// updateCount
+    
+	// 상품 설명 글자수 표기 및 최대 글자 도달 시 색깔 변경
 	$(document).ready(function() {
 	    const $textarea = $("#productDescription");
 	    const $counter = $("span.font-medium.text-gray-400 span"); // 0 부분
 		
-	    function updateCount() {
-	        const currentLength = $textarea.val().length;
-	        const maxLength = $textarea.attr("maxlength");
-	        $counter.text(currentLength);
-
-	        // (선택) 최대 글자수 도달 시 색상 변경
-	        if (currentLength >= maxLength) {
-	            $counter.css("color", "red");
-	        } else {
-	            $counter.css("color", "");
-	        }// end else
-	    }// updateCount
-	    
 	    // 입력할 때마다 실행
 	    $textarea.on("input", function() {
 	        updateCount();
-	    });
+	    });// input event
 
 	    // 페이지 로드시 1회 실행 (기존 값이 있을 경우 대비)
 	    updateCount();
 	});// ready
 	
-	
-	
+	// 거래 방법
 	$(document).ready(function () {
-
-	    function updateColor($checkbox) {
-	        const $svg = $checkbox.closest('label').find('svg');
-
-	        if ($checkbox.is(':checked')) {
-	            $svg.attr('color', '#0DCC5A');
-	        } else {
-	            $svg.attr('color', '#C2C6CE');
-	        }
-	    }
-
-	    function toggleMeetUI() {
-	    	if ($('#isMeet').is(':checked')) {
-
-	            $('#addrBtn')
-	                .prop('disabled', false)
-	                .removeClass('bg-gray-300 text-gray-500 cursor-not-allowed')
-	                .addClass('bg-black text-white cursor-pointer hover:bg-gray-800');
-
-	        } else {
-
-	            $('#addrBtn')
-	                .prop('disabled', true)
-	                .removeClass('bg-black text-white cursor-pointer hover:bg-gray-800')
-	                .addClass('bg-gray-300 text-gray-500 cursor-not-allowed');
-
-	            $('#addr').val('');
-	        }
-	    }
-
+		
 	    // 체크박스 변경
 	    $('input[name="tradeType"]').on('change', function () {
 	        updateColor($(this));
 	        toggleMeetUI();
-	    });
+	    });// change
 
+	    
 	    // 초기 실행
 	    $('input[name="tradeType"]').each(function () {
 	        updateColor($(this));
 	    });
 	    toggleMeetUI();
+	    
 
 	    // ✅ 지역등록 버튼 클릭 → 카카오 주소 API 실행
 	    $('#addrBtn').on('click', function () {
@@ -230,20 +249,45 @@ $(document).ready(function() {
 
 	                if (data.bname !== '') {
 	                    region += " " + data.bname;
-	                }
+	                }// end if
 
 	                $('#addr')
 	                    .val(region)
 	                    .prop('disabled', false)
 	                    .removeClass('bg-gray-100')
 	                    .addClass('bg-white');
+	            }// function
+	        }).open();// Postcode
 
-	            }
-	        }).open();
-
-	    });
+	    });// click
 
 	});// ready
+	
+	function updateColor($checkbox) {
+        const $svg = $checkbox.closest('label').find('svg');
+
+        if ($checkbox.is(':checked')) {
+            $svg.attr('color', '#0DCC5A');
+        } else {
+            $svg.attr('color', '#C2C6CE');
+        }// end else
+    }// updateColor
+	
+	function toggleMeetUI() {
+    	if ($('#isMeet').is(':checked')) {
+            $('#addrBtn')
+                .prop('disabled', false)
+                .removeClass('bg-gray-300 text-gray-500 cursor-not-allowed')
+                .addClass('bg-black text-white cursor-pointer hover:bg-gray-800');
+        } else {
+            $('#addrBtn')
+                .prop('disabled', true)
+                .removeClass('bg-black text-white cursor-pointer hover:bg-gray-800')
+                .addClass('bg-gray-300 text-gray-500 cursor-not-allowed');
+
+            $('#addr').val('');
+        }// else
+    }// toggleMeetUI
 	
 	function sellRegistration() {
 	    // 1. 썸네일 이미지 체크
@@ -362,13 +406,13 @@ $(document).ready(function() {
 			<div th:replace="~{template/header :: headerImgFragment}"></div>
 			<div th:replace="~{template/header :: headerFragment}"></div>
 
-			<main class="relative flex-grow border-b-2"
+			<main class="relative flex-grow border-b-2" th:object="${SellDomain}"
 				style="min-height: 0px !important; height: auto !important; padding-bottom: 100px">
 				<div class="mx-auto max-w-[1280px] md:px-8 2xl:px-16 box-content max-lg:overflow-x-hidden px-0">
 					<form class="pt-6 mx-auto w-full max-w-[1020px] lg:pt-[72px] max-lg:overflow-x-hidden" id="sellFrm" action="/sell/sellProcess" method="post"  enctype="multipart/form-data">
 					
 						<section class="px-5">
-							<div class="flex flex-col space-y-4 lg:space-y-8 mb-[76px] lg:mb-[72px]">
+							<div  class="flex flex-col space-y-4 lg:space-y-8 mb-[76px] lg:mb-[72px]">
 							
 								<!-- 썸네일 등록 세션 -->
 								<section class="lg:grid lg:grid-cols-6 !text-jnGray-900 max-lg:!mb-8">
@@ -399,7 +443,14 @@ $(document).ready(function() {
 															<div class="os-content" style="padding: 0px; height: auto; width: 100%; float: left;">
 																
 																<!-- ul 아래 li로 선택한 이미지 미리보기 추가하는 듯? -->
-																<ul id="previewThumbnail" class="flex items-center pt-[10px]"></ul>
+																<ul id="previewThumbnail" class="flex items-center pt-[10px]">
+																	<li class="relative">
+																 		<div class="flex overflow-hidden mr-3 border border-solid border-jnGreen rounded lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
+																 			<img alt="productImage-0" width="100" height="100" decoding="async" data-nimg="1" class="object-cover h-full bg-gray-200 rounded" 
+																 			th:src="@{/images/thumbnail/{file}(file=*{thumbnail})}" style="color: transparent;">
+																 		</div>
+																 	</li>
+																</ul>
 															</div>
 														</div>
 													</div>
@@ -434,6 +485,9 @@ $(document).ready(function() {
 									<div class="col-span-5">
 										<div class="flex pb-1.5 max-lg:pb-0">
 										
+										<script th:inline="javascript">
+									    existingImages = [[*{productImgName}]];
+									    </script>
 											<div class="pt-[10px]">
 												<input id="productImages" type="file" multiple="multiple" accept="image/png, image/jpeg, image/jpg" class="hidden">
 												<div onclick="prodcutImageChose()" class="flex justify-center items-center mr-3 rounded bg-jnGray-200 lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
@@ -459,6 +513,21 @@ $(document).ready(function() {
 															<div class="os-content" style="padding: 0px; height: auto; width: 100%; float: left;">
 																<!-- ul 안에 li로 선택한 이미지 미리보기 추가 -->
 																<ul id="previewProductImages" class="flex items-center pt-[10px]">
+																
+																 <li th:each="imgName, iterStat : *{productImgName}" class="relative"  th:data-id="${imgName}">
+															        <div class="flex overflow-hidden mr-3 border border-solid border-jnGreen rounded lg:w-[100px] lg:h-[100px] w-[68px] h-[68px]">
+															            <img th:src="@{/images/product_detail/{file}(file=${imgName})}" 
+															                 th:alt="'productImage-' + ${iterStat.index}" 
+															                 width="100" height="100" 
+															                 class="object-cover h-full bg-gray-200 rounded" 
+															                 style="color: transparent;">
+															        </div>
+															        <button type="button" class="absolute -top-[10px] right-1" th:onclick="removeExistingImage([[${imgName}]])">
+												                    <svg width="20px" height="20px" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class=""><path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" fill="white"></path><path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5V18.5C14.6944 18.5 18.5 14.6944 18.5 10H17.5ZM10 17.5C5.85786 17.5 2.5 14.1421 2.5 10H1.5C1.5 14.6944 5.30558 18.5 10 18.5V17.5ZM2.5 10C2.5 5.85786 5.85786 2.5 10 2.5V1.5C5.30558 1.5 1.5 5.30558 1.5 10H2.5ZM10 2.5C14.1421 2.5 17.5 5.85786 17.5 10H18.5C18.5 5.30558 14.6944 1.5 10 1.5V2.5Z" fill="#DADEE5"></path><path d="M7 7L13 13M13 7L7 13" stroke="#363C45" stroke-linecap="round"></path></svg>
+												                    </button>
+															    </li>
+																
+																
 																</ul>
 															</div>
 														</div>
@@ -492,7 +561,7 @@ $(document).ready(function() {
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input id="productTitle" name="productTitle" type="text"
+												<input id="productTitle" name="productTitle" type="text" th:field="*{productTitle}"
 													placeholder="상품명을 입력해 주세요."
 													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
@@ -507,7 +576,7 @@ $(document).ready(function() {
 									<div class="col-span-5">
 										<section name="productCategory">
 											<div class="flex overflow-hidden flex-row w-full h-60 text-sm font-medium">
-											<input type="text" id="category" name="categoryCode" style="display: none">
+											<input type="hidden" id="category" name="categoryCode"  th:field="*{categoryCode}">
 												<div id="category-depth-1"
 													class="overflow-y-auto w-1/3 h-full rounded border border-solid border-jnGray-300">
 													<ul class="flex flex-col border-solid border-jnGray-300">
@@ -563,7 +632,7 @@ $(document).ready(function() {
 														<span
 														class="body-medium-14 text-jnGray-500 lg:body-medium-16">₩</span>
 														<input
-														name="price" type="text" inputmode="numeric"
+														name="price" type="text" inputmode="numeric" th:field="*{price}"
 														class="ml-1 w-full bg-white body-medium-14 lg:body-medium-16 focus:outline-none disabled:opacity-100 placeholder:text-jnGray-500"
 														placeholder="판매가격" value="">
 													</label>
@@ -591,7 +660,7 @@ $(document).ready(function() {
 												<div class="flex-1"
 													style="display: flex; flex-flow: row; justify-content: flex-start; align-items: flex-start; gap: 10px;">
 													<div class="w-full h-[220px]">
-														<textarea id="productDescription"
+														<textarea id="productDescription" th:field="*{content}"
 															name="content"
 															class="items-center w-full rounded transition duration-300 ease-in-out text-heading text-sm focus:ring-0 bg-white border border-gray-300 focus:shadow focus:outline-none focus:border-heading placeholder-body break-all inline-block outline-none align-middle appearance-none border-none body-medium-14_reading lg:body-medium-16 px-0 py-0 placeholder:text-jnGray-500 [field-sizing:content] resize-none max-h-full h-full"
 															autocomplete="off" spellcheck="false"
@@ -628,9 +697,9 @@ $(document).ready(function() {
 										<ul class="flex">
 											<li class="flex items-center mr-4 contents-center">
 												<label for="used" class="flex items-start">
-													<input type="radio" id="used" name="productStatus"
+													<input type="radio" id="used" name="productStatus" th:field="*{productStatus}"
 													class="appearance-none rounded-full w-5 h-5 mt-0.5 mr-2 border-1.5 border-solid border-jnGray-500 transition-all duration-100 ease-linear cursor-pointer checked:border-6 checked:border-jngreen disabled:border-jnGray-400 disabled:bg-jnGray-300 disabled:cursor-not-allowed"
-													value="U" checked="">
+													value="U">
 													<div class="flex flex-col space-y-2 [&amp;&gt;span]:text-sm lg:[&amp;&gt;span]:text-base [&amp;&gt;span:nth-child(2)]:text-xs lg:[&amp;&gt;span:nth-child(2)]:text-sm">
 														<span class="text-base font-semibold leading-6 cursor-pointer text-jnGray-900">중고</span>
 													</div>
@@ -638,7 +707,7 @@ $(document).ready(function() {
 											</li>
 											<li class="flex items-center mr-4 contents-center">
 												<label for="new" class="flex items-start">
-													<input type="radio" id="new" name="productStatus"
+													<input type="radio" id="new" name="productStatus" th:field="*{productStatus}" 
 														class="appearance-none rounded-full w-5 h-5 mt-0.5 mr-2 border-1.5 border-solid border-jnGray-500 transition-all duration-100 ease-linear cursor-pointer checked:border-6 checked:border-jngreen disabled:border-jnGray-400 disabled:bg-jnGray-300 disabled:cursor-not-allowed"
 														value="N">
 													<div class="flex flex-col space-y-2 [&amp;&gt;span]:text-sm lg:[&amp;&gt;span]:text-base [&amp;&gt;span:nth-child(2)]:text-xs lg:[&amp;&gt;span:nth-child(2)]:text-sm">
@@ -672,13 +741,13 @@ $(document).ready(function() {
 													<div class="flex justify-between items-center">
 														<label for="isPost" class="flex items-center gap-1">
 															<div class="hidden appearance-none">
-																<input id="isPost" name="tradeType" type="checkbox" value="2"
+																<input id="isPost" name="tradeType" type="checkbox" value="2" th:field="*{tradeType}"
 																	class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body min-h-12 transition duration-200 ease-in-out bg-gray-100 border-gray-300 focus:shadow focus:bg-white focus:border-primary rounded"
 																	autocomplete="off" spellcheck="false"
 																	aria-invalid="false">
 															</div>
 															<svg xmlns="http://www.w3.org/2000/svg" fill="none"
-																viewBox="0 0 20 20" class="w-6 h-6" color="#0DCC5A">
+																viewBox="0 0 20 20" class="w-6 h-6" color="#C2C6CE">
 																<path fill="currentColor" fill-rule="evenodd"
 																	d="M17.5 10a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0m-3.636-1.97a.75.75 0 1 0-1.061-1.06L8.75 11.023 7.197 9.47a.75.75 0 0 0-1.06 1.06l2.083 2.084a.75.75 0 0 0 1.06 0z"
 																	clip-rule="evenodd"></path></svg>
@@ -690,7 +759,6 @@ $(document).ready(function() {
 												</li>
 											</div>
 										</section>
-										
 										<hr class="bg-jnGray-200 h-[1px] w-full my-6">
 										<section class="lg:grid lg:grid-cols-6 !text-jnGray-900">
 											<h2 class="col-span-1 mb-3 text-base font-semibold lg:text-lg max-lg:py-1">직거래</h2>
@@ -698,12 +766,10 @@ $(document).ready(function() {
 												<li class="relative text-sm font-medium truncate break-keep mr-3.5 last:mr-0">
 													<div class="flex justify-between items-center">
 														<label for="isMeet" class="flex items-center gap-1">
-															<div class="hidden appearance-none">
-																<input id="isMeet" name="tradeType" type="checkbox" value="1"
+																<input id="isMeet" name="tradeType" type="checkbox" value="1" th:field="*{tradeType}"
 																	class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body min-h-12 transition duration-200 ease-in-out bg-gray-100 border-gray-300 focus:shadow focus:bg-white focus:border-primary rounded"
 																	autocomplete="off" spellcheck="false"
-																	aria-invalid="false">
-															</div>
+																	aria-invalid="false" style="display: none;">
 															<svg xmlns="http://www.w3.org/2000/svg" fill="none"
 																viewBox="0 0 20 20" class="w-6 h-6" color="#C2C6CE">
 																<path fill="currentColor" fill-rule="evenodd"
@@ -718,7 +784,7 @@ $(document).ready(function() {
 													
 													<div class="flex flex-row items-center text-xs font-medium mt-2.5 gap-2">
     
-												    <input type="text" name="addr" id="addr"
+												    <input type="text" name="addr" id="addr" th:field="*{addr}"
 												        placeholder="거래 지역을 선택해주세요."
 												        class="border px-3 py-2 rounded bg-gray-100 w-64"
 												        readonly
@@ -763,8 +829,6 @@ $(document).ready(function() {
 					</form>
 				</div>
 				
-				<!-- 자동 전송 막기 -->
-				<form action=""></form>
 				
 			</main>
 

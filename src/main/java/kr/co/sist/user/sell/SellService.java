@@ -3,6 +3,7 @@ package kr.co.sist.user.sell;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -114,5 +115,30 @@ public class SellService {
 		
 		return flag;
 	}// addProdcut
+	
+	public SellDomain searchModifyProdcut(SellDTO sDTO) {
+		SellDomain sDomain = null;
+		
+		try {
+			sDomain = sDAO.selectSellProductInfo(sDTO);// 상품 정보 조회
+			sDomain.setTradeType(sDAO.selectSellCode(sDTO.getProductNum()));// 거래 방법 조회
+			sDomain.setProductImgName(sDAO.selectProductImg(sDTO.getProductNum()));// 세부 이미지명 저장
+			for(int temp : sDomain.getTradeType()) {
+				if(temp == 1) {
+					sDomain.setDirectFlag(true);
+				}// end if
+				if(temp == 2) {
+					sDomain.setPackageFlag(true);
+				}// end if
+			}// end for
+			
+			
+		} catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}// end catch
+		
+		return sDomain;
+	}// searchModifyProdcut
+
 	
 }// class

@@ -28,8 +28,8 @@ insert into SELL_place(PRODUCT_NUM, ADDR)
 values (#{productNum}, #{tradeArea})
 </insert>
 
-<select id="selectSellProductInfo" parameterType="kr.co.sist.user.sell.SellDTO">
-select title, price, content, thumbnail, category_code, addr, product_status
+<select id="selectSellProductInfo" parameterType="kr.co.sist.user.sell.SellDTO" resultType="kr.co.sist.user.sell.SellDomain">
+select title productTitle, price, content, thumbnail, category_code categoryCode, addr, product_status productStatus
 from product p
 left join (
     select product_num,
@@ -40,13 +40,13 @@ left join (
 where p.product_num = #{productNum} and p.store_num = #{storeNum}
 </select>
 
-<select id="selectSellCode" parameterType="kr.co.sist.user.sell.SellDTO">
+<select id="selectSellCode" parameterType="int" resultType="int">
 select sell_code
 from sell_option
 where product_num = #{productNum}
 </select>
 
-<select id="selectProductImg" parameterType="kr.co.sist.user.sell.SellDTO">
+<select id="selectProductImg" parameterType="int" resultType="String">
 select product_img
 from product_img
 where product_num = #{productNum}

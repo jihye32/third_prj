@@ -1,5 +1,6 @@
 package kr.co.sist.user.sell;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -42,6 +43,29 @@ public class SellDAO {
 		cnt = ss.insert("kr.co.sist.user.sell.insertTradeArea", map);
 		return cnt;
 	}// insertTradeArea
+	
+	public SellDomain selectSellProductInfo(SellDTO sDTO) throws PersistenceException{
+		SellDomain resultDomain = null; 
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		resultDomain = ss.selectOne("kr.co.sist.user.sell.selectSellProductInfo", sDTO);
+		if(ss != null) {ss.close();}// end if
+		return resultDomain;
+	}// selectSellProductInfo
 		
+	public List<Integer> selectSellCode(int prodcutNum) throws PersistenceException{
+		List<Integer> imgNameList = null; 
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		imgNameList = ss.selectList("kr.co.sist.user.sell.selectSellCode", prodcutNum);
+		if(ss != null) {ss.close();}// end if
+		return imgNameList;
+	}// selectSellCode
+	
+	public List<String> selectProductImg(int prodcutNum) throws PersistenceException{
+		List<String> imgNameList = null; 
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		imgNameList = ss.selectList("kr.co.sist.user.sell.selectProductImg", prodcutNum);
+		if(ss != null) {ss.close();}// end if
+		return imgNameList;
+	}// selectProductImg
 	
 }// class

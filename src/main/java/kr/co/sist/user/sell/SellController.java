@@ -68,6 +68,12 @@ public class SellController {
 		storeNum = (Integer)session.getAttribute("snum");
 		sDTO.setStoreNum(storeNum);
 		
+		SellDomain sellDomain = ss.searchModifyProdcut(sDTO);
+		sellDomain.setProductNum(sDTO.getProductNum());
+		
+		System.out.println("sDTO : " + sDTO);
+		System.out.println("조회된 데이터 : " + sellDomain);
+		model.addAttribute("SellDomain", sellDomain);
 		
 		return "sell/modifySell";
 	}// modifyProductFrm
