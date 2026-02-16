@@ -2,15 +2,18 @@ package kr.co.sist.user;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -20,7 +23,7 @@ public class MainController {
 	private MainService ms;
 
 	@RequestMapping(value = "/", method = {GET, POST})
-	public String testIndex(Model model, HttpSession session) {
+	public String testIndex(Model model, HttpSession session, HttpServletRequest request) {
 		int modelCnt = 1;
 		List<ProductDomain> list = ms.searchMostViewProdcut(1);
 		List<ProductDomain> temp = null;
@@ -41,6 +44,13 @@ public class MainController {
 			model.addAttribute("MostLike" + modelCnt, temp);
 			modelCnt++;
 		}// end for
+		
+		// history 추가
+		if(session.getAttribute("history")== null) {
+			session.setAttribute("history", true);
+			ms.addHistory(request.getRemoteAddr());
+		}// end if
+		
 		
 //		session.setAttribute("uid", "1234");
 		if(session.getAttribute("uid")!=null) {
