@@ -68,4 +68,28 @@ public class SellDAO {
 		return imgNameList;
 	}// selectProductImg
 	
+	public int updateSellProduct(SellDTO sDTO, SqlSession ss) {
+		int cnt = 0;
+		cnt = ss.update("kr.co.sist.user.sell.updateSellProduct", sDTO);
+		return cnt;
+	}// updateSellProduct
+	
+	public int deleteDetailImg(String productImgName, SqlSession ss) {
+		int cnt = 0;
+		cnt = ss.update("kr.co.sist.user.sell.deleteDetailImg", productImgName);
+		return cnt;
+	}// deleteDetailImg
+	
+	public int deleteTradeType(int productNum, SqlSession ss) {
+		int cnt = 0;
+		cnt = ss.update("kr.co.sist.user.sell.deleteTradeType", productNum);
+		return cnt;
+	}// deleteTradeType
+	
+	public int deleteTradeArea(int productNum, SqlSession ss) {
+		int cnt = 0;
+		cnt = ss.update("kr.co.sist.user.sell.deleteTradeArea", productNum);
+		return cnt;
+	}// deleteTradeType
+	
 }// class

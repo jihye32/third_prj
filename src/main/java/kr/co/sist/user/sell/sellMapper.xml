@@ -52,6 +52,38 @@ from product_img
 where product_num = #{productNum}
 </select>
 
+<update id="updateSellProduct" parameterType="kr.co.sist.user.sell.SellDTO">
+update product
+set     category_code = #{categoryCode},
+        title = #{productTitle},
+        price = #{price},
+        product_status = #{productStatus},
+        thumbnail = #{thumbnailName},
+        content = #{content},
+        modify_date = sysdate,
+        up_date = CASE 
+                    WHEN ABS(SYSDATE - up_date) >= 1
+                    THEN SYSDATE
+                    ELSE up_date
+                  END
+where   product_num = #{productNum} and store_num = #{storeNum}
+</update>
+
+<delete id="deleteDetailImg" parameterType="String">
+delete from product_img
+where product_img = #{productImgName} 
+</delete>
+
+<delete id="deleteTradeType" parameterType="int">
+delete from sell_option
+where product_num = #{product_num}
+</delete>
+
+<delete id="deleteTradeArea" parameterType="int">
+delete from sell_place
+where product_num = #{product_num}
+</delete>
+
 </mapper>
 
 

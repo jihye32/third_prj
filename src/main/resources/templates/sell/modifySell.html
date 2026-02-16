@@ -106,6 +106,7 @@ function removeExistingImage(imageId){
 	//alert('existingImages : ' + existingImages);
     // 2. 화면에서 제거
     $(`li[data-id='${imageId}']`).remove();
+    updateFileCount();
 }// removeExistingImage
 
 
@@ -165,6 +166,7 @@ function updatePreview(){
 
 function updateFileCount() {
 	const totalCount = existingImages.length + allFiles.length;
+	//alert('existingImages.length : ' + existingImages.length + ' / allFiles.length : '+ allFiles.length);
 	$("#fileCount").text(`${totalCount}/${MAX_FILES}`);
 }// updateFileCount
 
@@ -290,20 +292,24 @@ $(document).ready(function() {
     }// toggleMeetUI
 	
 	function sellRegistration() {
+    	/*
 	    // 1. 썸네일 이미지 체크
 	    if ($("#thumbnail")[0].files.length === 0) {
 	        alert("썸네일 이미지를 등록해 주세요.");
 	        thumbnailImageChose(); // 업로드 창 띄우기
 	        return;
 	    }
-
+		*/
+		
+		/*
 	    // 2. 상세 이미지 체크 (allFiles 배열 사용)
 	    if (allFiles.length === 0) {
 	        alert("상품 이미지를 최소 1개 이상 등록해 주세요.");
 	        prodcutImageChose();
 	        return;
 	    }
-
+		*/
+		
 	    // 3. 상품명 공백 체크
 	    const productTitle = $("#productTitle").val().trim();
 	    if (productTitle === "") {
@@ -373,7 +379,9 @@ $(document).ready(function() {
 	    // allFiles 배열에 담긴 파일 추가
 	    allFiles.forEach(file => {
 	        formData.append("productImages", file); // 서버에서 productImages로 받음
-	    });
+	    });// end forEach
+	    
+	    formData.append("deletedImageIds",deletedImageIds);// 삭제되지 않은 기존 이미지명
 
 	    $.ajax({
 	        url: $(this).attr("action"),
@@ -409,7 +417,7 @@ $(document).ready(function() {
 			<main class="relative flex-grow border-b-2" th:object="${SellDomain}"
 				style="min-height: 0px !important; height: auto !important; padding-bottom: 100px">
 				<div class="mx-auto max-w-[1280px] md:px-8 2xl:px-16 box-content max-lg:overflow-x-hidden px-0">
-					<form class="pt-6 mx-auto w-full max-w-[1020px] lg:pt-[72px] max-lg:overflow-x-hidden" id="sellFrm" action="/sell/sellProcess" method="post"  enctype="multipart/form-data">
+					<form class="pt-6 mx-auto w-full max-w-[1020px] lg:pt-[72px] max-lg:overflow-x-hidden" id="sellFrm" action="/sell/modifyProcess" method="post"  enctype="multipart/form-data">
 					
 						<section class="px-5">
 							<div  class="flex flex-col space-y-4 lg:space-y-8 mb-[76px] lg:mb-[72px]">
