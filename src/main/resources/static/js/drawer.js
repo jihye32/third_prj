@@ -12,8 +12,13 @@ const loadDrawerContent = (url, callback) => {
 };
 
 function closeDrawer() {
+	const drawer = document.getElementById('drawer');
+	const mode = drawer?.dataset?.mode;
+
+  	drawer.dataset.mode = "";
+	
  	// 서랍 닫기
- 	document.getElementById('drawer').classList.add('translate-x-full');
+ 	drawer.classList.add('translate-x-full');
 
  	// 배경 숨기기
  	const overlay = document.getElementById('overlay');
@@ -22,4 +27,11 @@ function closeDrawer() {
 
  	// 뒷배경 스크롤 허용
  	document.body.style.overflow = '';
+	
+	if (mode === "chat") {
+    	if (typeof window.resetSubscript === "function") {
+      		window.resetSubscript();
+			openChatDrawer();
+    	}
+  	}
 } 

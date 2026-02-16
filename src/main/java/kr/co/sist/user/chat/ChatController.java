@@ -86,4 +86,12 @@ public class ChatController {
 	    return cc;
 	}
 	
+	@PostMapping("/chat/read")
+	public void modifyMessage(@RequestBody ChatDTO cDTO, HttpSession session) {
+		String uid = (String)session.getAttribute("uid");
+		cDTO.setWriterId(uid);
+		
+		cs.modifyRead(cDTO);
+	}
+	
 }
