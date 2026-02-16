@@ -12,7 +12,74 @@
 <!-- JQuery CDN -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+$(document).on("click", "#reportBtn", function(){
+
+    const select = $("#report_code").val();
+    const content = $("#report_content").val();
+
+    if(!select){
+        alert("신고 사유를 선택해주세요.");
+        return;
+    }
+
+    if(!content || content.trim() === ""){
+        alert("신고 내용을 입력해주세요.");
+        return;
+    }
+
+    $("#reportForm").submit();
+});
+
+</script>		
+<script>
+$(document).on('change', '#upFile', function(e) {
+    const files = e.target.files; // 선택된 파일들
+    const list = $('#qna-image-list'); // 파일명 뿌려줄 곳
+    list.empty(); // 이전 선택 기록 삭제
+
+    // 파일명을 하나씩 꺼내서 추가
+    for (let i = 0; i < files.length; i++) {
+        const fileName = files[i].name;
+        list.append(`<span style="font-size:12px; color:#666; margin-right:10px;">${fileName}</span>`);
+    }
+
+    // 선택된 개수 표시 (0/10 부분)
+    $('.group span').text(files.length + '/10');
+});
+
+</script>	
 <script type="text/javascript">
+var storeId = "[[${storeNum}]]";
+function openReviewForm() {// 리뷰 페이지
+    fetch('/seller_page/review?storeId='+storeId) // @/seller_page/review
+        .then(res => res.text()) 
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('후기'); // 서랍 여는 공통 함수 실행
+        });
+}// openReviewForm
+
+function openReportForm(reviewerId) {// 신고 페이지
+	
+	console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍힘
+	    
+	    if(!reviewerId) {
+	        alert("신고 대상자 ID가 없습니다.");
+	        return;
+	    }
+		
+	    fetch('/store/report/review?reviewerId='+reviewerId) // 
+	        .then(res => res.text()) 
+	        .then(html => {
+	            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+	            document.getElementById('drawerContent').innerHTML = html;
+	            openDrawer('신고'); // 서랍 여는 공통 함수 실행
+	        });
+	}// openReviewForm
+
+
 function openPurchasedListForm() {
     fetch('/myPage/myPageFrm/purchased')
         .then(res => res.text())
@@ -466,7 +533,7 @@ function goToInfo(){
 												<dt class="justify-center mt-0">판매 상품 수</dt>
 												<dd th:text="${cnt}" class="font-semibold text-jnblack">0</dd>
 											</div>
-											<div class="relative cursor-pointer">
+											<div class="relative cursor-pointer" onclick="openReviewForm()">
 												<dt class="justify-center mt-0">거래후기</dt>
 												<dd th:text="${MyPageDomain.reviewCnt}" class="font-semibold underline text-jnblack">0</dd>
 											</div>

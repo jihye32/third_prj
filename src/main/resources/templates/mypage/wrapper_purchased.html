@@ -23,7 +23,7 @@
       <!-- 구매 상품 반복 -->
       <th:block th:each="BuyProductDomain : ${list}" th:object="${BuyProductDomain}">
         <li class="flex flex-col px-5 py-3 border-t border-gray-200 bg-white mb-2 rounded-md" th:id="*{productNum}">
-          
+          <a th:href="|/product/*{productNum}|">
           <div class="flex gap-5 justify-between w-full cursor-pointer">
             <div class="flex items-center">
               <div class="border border-gray-100 flex items-center justify-center rounded-md overflow-hidden w-[60px] h-[60px] bg-gray-300">
@@ -41,7 +41,7 @@
               </div>
             </div>
           </div>
-
+		</a>
           <!-- 수령 확인 버튼 -->
           <th:block th:if="*{deliverdDate eq null}">
             <button type="button"

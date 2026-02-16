@@ -48,4 +48,8 @@ from (
 where 30 >= rn
 </select>
 
+<insert id="insertHistory" parameterType="String">
+insert into user_history(ip, input_date)  values (#{ip}, sysdate) 
+</insert>
+
 </mapper>
