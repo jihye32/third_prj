@@ -144,9 +144,10 @@ function updateStatus(pnum, statusCode) {
         body: JSON.stringify({ pnum, sellStatusCode : statusCode })
 	}).then(res => res.json())
     .then(data => {
-    	alert(data.msg); 
 		if(data.flag){
-			alert("현재 페이지 수정");
+			location.reload();
+		}else{
+    		alert(data.msg); 
 		}
     });
 }
@@ -181,7 +182,7 @@ function sendProduct(pnum){
     .then(data => {
 		alert(data.msg);
 		if(data.flag){
-			alert("현재 페이지에서 버튼 안보이게 하기");
+			location.reload();
 		}
     });
 }
