@@ -1,6 +1,7 @@
 package kr.co.sist.user.chat;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -54,6 +55,8 @@ public class ChatController {
 			List<ChatDomain> chatList = cs.searchChat(room, uid);
 			model.addAttribute("chatList", chatList);
 			
+			messagingTemplate.convertAndSend("/topic/room/" + room, Map.of("type","READ","roomNum",room,"readerId",uid));
+			
 			if(pnum == null) {
 				pnum = cs.searchProductNum(room);
 			}
@@ -86,12 +89,16 @@ public class ChatController {
 	    return cc;
 	}
 	
-	@PostMapping("/chat/read")
+	
+	@ResponseBody
+	@PostMapping("/read")
 	public void modifyMessage(@RequestBody ChatDTO cDTO, HttpSession session) {
 		String uid = (String)session.getAttribute("uid");
 		cDTO.setWriterId(uid);
 		
 		cs.modifyRead(cDTO);
+		
+		messagingTemplate.convertAndSend("/topic/room/" + cDTO.getRoomNum(), Map.of("type","READ","roomNum",cDTO.getRoomNum(),"readerId",uid));
 	}
 	
 }

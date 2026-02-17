@@ -2,7 +2,7 @@
  * 채팅
  */
 function getChatRoot() {
-  return document.getElementById("drawerContent"); // ✅ 항상 drawer 기준
+  return document.getElementById("drawerContent");
 }
 
 /* 채팅 리스트 열기 */
@@ -24,6 +24,10 @@ let sub = null;
 
 /* 채팅 방 열기 */
 function openChatForm(sellerId, store) { 
+	
+	const drawer = document.getElementById("drawerContent");
+	 if (drawer) drawer.dataset.mode = "chat";
+	  
   const pnum = window.PageContext?.pnum ?? null;
   
  	let url = `/chat/${sellerId}`;
@@ -35,16 +39,75 @@ function openChatForm(sellerId, store) {
   loadDrawerContent(url, async () => {
     openDrawer(`${store}`);
 
-    const root = document.querySelector("#chat-root");
-    if (!root) return;
-
+	const root = getChatRoot();
+	if (root) scrollToBottom(root);
+	
     const roomNum = root.querySelector("#room-num")?.value;
     if (roomNum) {
-      await ensureConnectedAndSubscribe(roomNum, root);
+      await ensureConnectedAndSubscribe(roomNum, root); //함수를 연결시켜줌.
     }
   });
 }
 
+/* 소켓을 연결해주는 함수를 부르고 구도시켜 줌 */
+async function ensureConnectedAndSubscribe(roomNum, root) {
+  console.log("SUBSCRIBE TRY:", roomNum);
+  await ensureConnected();
+
+
+  if (currentRoom === String(roomNum)) {
+    return;
+  }
+
+  currentRoom = String(roomNum);
+
+
+  sub = stompClient.subscribe(`/topic/room/${roomNum}`, (frame) => {
+
+    
+	const myId = root.querySelector("#user-id")?.value; //로그인한 사람 아이디
+    //전송된 정보들을 가져옴.
+	const msg = JSON.parse(frame.body); //send로 인해 messagingTemplate.convertAndSend가 실행되어서 stampClient로 가져올 수 있음
+
+	if (msg.type === "READ") {
+	    // 내가 읽었다는 이벤트면 내 화면에서는 무시
+	    if (msg.readerId === myId) return;
+
+	    // 상대가 읽었다는 이벤트면 내 메시지 '읽음' 표시
+	    updateMyMessagesRead(root);
+	    return;
+	  }
+	
+    if (myId && msg.writerId === myId) {
+      return;
+    }
+	
+	//상대방 메시지가 보여지는 거 + 읽음 처리하는 위치
+    appendOtherMessage(root, msg);
+	
+	//내가 보고 있을 때만 읽음 처리
+	const drawer = document.getElementById("drawerContent");
+	if (
+	  drawer?.dataset?.mode === "chat" &&
+	  String(currentRoom) === String(roomNum) &&
+	  document.visibilityState === "visible"
+	) {
+	  markRoomRead(roomNum);
+	}
+  });
+
+}
+
+/* 소켓 연결 */
+function ensureConnected() {
+  return new Promise((resolve, reject) => {
+    if (stompClient?.connected) return resolve();
+
+    const socket = new SockJS("/ws");
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, () => resolve(), (err) => reject(err));
+  });
+}
 
 /* 입력하는 글자 수 확인 */
 document.addEventListener("input", (e) => {
@@ -145,46 +208,7 @@ async function sendChatMessage(root) {
   }
 }
 
-/* 소켓 연결 */
-function ensureConnected() {
-  return new Promise((resolve, reject) => {
-    if (stompClient?.connected) return resolve();
 
-    const socket = new SockJS("/ws");
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, () => resolve(), (err) => reject(err));
-  });
-}
-
-/* 소켓을 연결해주는 함수를 부르고 구도시켜 줌 */
-async function ensureConnectedAndSubscribe(roomNum, root) {
-  await ensureConnected();
-
-
-  if (currentRoom === String(roomNum)) {
-    return;
-  }
-
-  currentRoom = String(roomNum);
-
-  const myId = root.querySelector("#user-id")?.value;
-
-  sub = stompClient.subscribe(`/topic/room/${roomNum}`, (frame) => {
-    
-    const msg = JSON.parse(frame.body);
-
-    if (myId && msg.writerId === myId) {
-      return;
-    }
-	
-	//상대방 메시지가 보여지는 거 + 읽음 처리하는 위치
-    appendOtherMessage(root, msg);
-	
-	markRoomRead(roomNum);
-	
-  });
-
-}
 
 /* 실시간 읽음 처리 */
 let readInFlight = new Map();
@@ -211,8 +235,6 @@ async function markRoomRead(roomNum) {
 }
 
 
-
-
 /* 메시지 폼 생성 */
 function appendMyMessage(root, { content }) {
   const box = root.querySelector("#chat-messages");
@@ -222,15 +244,14 @@ function appendMyMessage(root, { content }) {
   const node = tpl.content.cloneNode(true);
   node.querySelector(".msg-text").textContent = content;
   node.querySelector(".msg-time").textContent =  formatChatTime()|| "";
-  node.querySelector(".msg-read").textContent = "" || "";
+  node.querySelector(".msg-read").textContent = "";
 
   box.appendChild(node);
-  box.scrollTop = box.scrollHeight;
+  scrollToBottom(root);
 }
 
 function appendOtherMessage(root, { content }) {
   const box = root.querySelector("#chat-messages");
-
   const tpl = root.querySelector("#other-message");
   if (!box || !tpl) return;
 
@@ -239,7 +260,18 @@ function appendOtherMessage(root, { content }) {
   node.querySelector(".msg-time").textContent =  formatChatTime()|| "";
 
   box.appendChild(node);
-  box.scrollTop = box.scrollHeight;
+  scrollToBottom(root);
+}
+
+/* 스크롤 처리 */
+function scrollToBottom(root) {
+  const scroller = root.querySelector("#chat-scroll"); // ✅ 스크롤되는 div
+  if (!scroller) return;
+
+  // DOM이 렌더된 다음에 내리기(안 그러면 높이 반영 전에 실행될 수 있음)
+  requestAnimationFrame(() => {
+    scroller.scrollTop = scroller.scrollHeight;
+  });
 }
 
 /*메시지 폼에 들어가는 시간 */ 
@@ -248,6 +280,13 @@ function formatChatTime(date = new Date()) {
     hour: "numeric",
     minute: "2-digit",
     hour12: true
+  });
+}
+
+/* 읽음 처리 */
+function updateMyMessagesRead(root) {
+  root.querySelectorAll(".my-msg .msg-read").forEach(el => {
+    el.textContent = "읽음";
   });
 }
 

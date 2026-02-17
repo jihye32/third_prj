@@ -13,9 +13,14 @@ const loadDrawerContent = (url, callback) => {
 
 function closeDrawer() {
 	const drawer = document.getElementById('drawer');
-	const mode = drawer?.dataset?.mode;
+	const drawerContent = document.getElementById('drawerContent');
 
-  	drawer.dataset.mode = "";
+	if (drawerContent?.dataset?.mode === "chat") {
+    	if (typeof window.resetSubscript === "function") {
+      		window.resetSubscript();
+    	}
+  	}
+  	drawerContent.dataset.mode = "";
 	
  	// 서랍 닫기
  	drawer.classList.add('translate-x-full');
@@ -28,10 +33,4 @@ function closeDrawer() {
  	// 뒷배경 스크롤 허용
  	document.body.style.overflow = '';
 	
-	if (mode === "chat") {
-    	if (typeof window.resetSubscript === "function") {
-      		window.resetSubscript();
-			openChatDrawer();
-    	}
-  	}
 } 

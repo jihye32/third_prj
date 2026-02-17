@@ -15,7 +15,6 @@
 <th:block th:fragment="chatContentsForm">
 <div id="chat-root" class="h-full overflow-auto">
 	<div class="flex flex-col justify-between w-full h-full bg-[#e9edef]">
-		<input type="hidden" id="user-id" th:value="${session.uid}">
 		<div class="relative" th:if="${product != null}" th:object="${product}">
 			<div class="flex items-center w-full gap-2 px-3 py-4 bg-white">
 				<a class="flex flex-grow h-10 gap-4 flex-1" href="/product/224062120">
@@ -33,8 +32,9 @@
 					</div></a>
 			</div>
 		</div>
-		<div class="overflow-auto p-5 h-full">
+		<div class="overflow-auto p-5 h-full" id="chat-scroll">
 			<div class="flex flex-col gap-2 w-inherit" id="chat-messages">
+			<input type="hidden" id="user-id" th:value="${session.uid}">
 			<input type="hidden" id="room-num" th:value="${roomNum}">
 			<input type="hidden" id="other-id" th:value="${otherId}">
 				<th:block th:if="${roomNum != null}">
@@ -94,7 +94,7 @@
 	</div>
 </form>
 <template id="my-message">
-<div type="textMessage">
+<div type="textMessage" class="my-msg">
 	<div class="flex items-end w-auto mb-2 flex-start space-x-1 flex-row-reverse space-x-reverse">
 		<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tr bg-[#363C45] text-white w-auto">
 			<p class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-jngreen [&amp;&gt;a]:underline"></p>
