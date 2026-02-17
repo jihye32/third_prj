@@ -49,8 +49,7 @@ public class OrderController {
 	   @PostMapping("/prepare")
 	   public OrderDomain order(@RequestBody OrderRequestDTO orDTO, HttpSession session) {
 		   //상품 정보 가져오기 및 주문 레코드 생성을 서비스에서 해줌.
-//		   String buyerId = (String)session.getAttribute("uid");
-		   String buyerId = "test";
+		   String buyerId = (String)session.getAttribute("uid");
 		   DealType dealType = orDTO.getDealType();
 		   AddressDTO address = orDTO.getAddress();
 
