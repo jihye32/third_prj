@@ -7,20 +7,6 @@
 </head>
 <body>
 	<div th:fragment="drawerFrame" id="drawerContainer">
-		<script type="text/javascript">
-			 function closeDrawer() {
-			 // 서랍 닫기
-			 document.getElementById('drawer').classList.add('translate-x-full');
-			
-			 // 배경 숨기기
-			 const overlay = document.getElementById('overlay');
-			 overlay.classList.add('opacity-0');
-			 setTimeout(() => overlay.classList.add('hidden'), 300); // 애니메이션 시간만큼 대기
-
-			 // 뒷배경 스크롤 허용
-			 document.body.style.overflow = '';
-			 } 
-		</script>
 		<div id="overlay"
 			class="fixed inset-0 bg-black/50 z-[9998] hidden opacity-0 transition-opacity duration-300"
 			onclick="closeDrawer()"></div>

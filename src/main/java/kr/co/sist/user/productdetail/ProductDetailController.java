@@ -50,11 +50,10 @@ public class ProductDetailController {
     		ps.modifyViewCnt(pnum);
     		if(uid != null) {//로그인 한 상태이므로 북마크 확인
     			BookmarkDTO bDTO = new BookmarkDTO();
-    			bDTO.setPnum(pnum);
-    			bDTO.setSnum((int)ss.getAttribute("snum"));
-    			System.out.println(ss.getAttribute("snum"));
-    			boolean bookmark = (ps.searchBookmark(bDTO)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
-    			model.addAttribute("bookmarkFlag", bookmark);
+//    			bDTO.setPnum(pnum);
+//    			bDTO.setSnum((int)ss.getAttribute("snum"));
+//    			boolean bookmark = (ps.searchBookmark(bDTO)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
+//    			model.addAttribute("bookmarkFlag", bookmark);
     		}
     	}
         model.addAttribute("storeCheck", isMe);
