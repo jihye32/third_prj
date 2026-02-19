@@ -59,28 +59,49 @@ window.PageContext = Object.freeze({
 								<div class="swiper swiper-initialized swiper-horizontal swiper-pointer-events" dir="ltr">
 									<!-- 이미지 들어가는 곳!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 									<div id="image-slider" class="flex transition-transform duration-500 ease-out" style="transform: translateX(0%);">
-										<div th:each="img : *{images}" class="swiper-slide w-full flex-shrink-0">
+										<div class="swiper-slide w-full flex-shrink-0">
 											<div class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
-												<img alt="파나소닉 루믹스 S9 18-40mm 렌즈킷 (신품급)--0"
+												<img th:alt="*{title}"
 													referrerpolicy="no-referrer" fetchpriority="high"
 													decoding="async" data-nimg="fill"
 													class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
-													th:src="@{/assets/images/{file}(file=${img})}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+													th:src="@{/images/thumbnail/{file}(file=*{thumbnail})}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
 												<div th:unless="*{sellStatus == SellStatus.ON_SALE}" class="absolute top-0 left-0 bg-black/[0.5] w-full h-full z-[1] rounded-lg">
 													<div th:if="*{sellStatus == SellStatus.RESERVED}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
-														<img alt="예약 중" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" src="/assets/images/minus-circle-white.svg">예약 중
+														<img alt="예약 중" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" 
+														th:src="@{/css/minus-circle-white.svg}">예약 중
 													</div>
 													<div th:if="*{sellStatus == SellStatus.SOLD_OUT}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
-														<img alt="판매 완료" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" src="/assets/images/minus-circle-white.svg">판매 완료
+														<img alt="판매 완료" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" 
+														th:src="@{/css/minus-circle-white.svg}">판매 완료
+													</div>
+												</div>
+											</div>
+										</div>
+										<div th:each="img : *{images}" class="swiper-slide w-full flex-shrink-0">
+											<div class="relative overflow-hidden rounded-2xl bg-white min-w-[200px] min-h-[200px] w-full pt-[100%]">
+												<img th:alt="*{title}"
+													referrerpolicy="no-referrer" fetchpriority="high"
+													decoding="async" data-nimg="fill"
+													class="object-contain bg-gray-50 lg:w-[520px] lg:h-[520px] w-[335px] h-[335px]"
+													th:src="@{/images/product_detail/{file}(file=${img})}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+												<div th:unless="*{sellStatus == SellStatus.ON_SALE}" class="absolute top-0 left-0 bg-black/[0.5] w-full h-full z-[1] rounded-lg">
+													<div th:if="*{sellStatus == SellStatus.RESERVED}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
+														<img alt="예약 중" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" 
+														th:src="@{/css/minus-circle-white.svg}">예약 중
+													</div>
+													<div th:if="*{sellStatus == SellStatus.SOLD_OUT}" class="flex justify-center items-center text-2xl text-white font-bold w-full h-full flex-col">
+														<img alt="판매 완료" loading="lazy" width="80" height="80" decoding="async" data-nimg="1" class="m-4" style="color:transparent" 
+														th:src="@{/css/minus-circle-white.svg}">판매 완료
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<th:block th:unless="*{images.size() eq 1}">
+								<th:block th:unless="*{images.size() eq 0}">
 								<button onclick="prevSlide()" class="w-7 h-7 text-black flex items-center justify-center absolute z-10 transition duration-250 transform -translate-y-1/2 top-1/2 focus:outline-none rounded-full text-sm md:text-base lg:w-9 lg:h-9 lg:text-xl xl:w-10 xl:h-10 3xl:w-12 3xl:h-12 3xl:text-2xl max-[1023px]:hidden left-4 bg-transparent shadow-transparent hover:bg-transparent hover:text-black !text-white !text-6xl swiper-button-disabled"
-										id="product-gallery-slider-prev" aria-label="prev-button" disabled="">
+										id="product-gallery-slider-prev" aria-label="prev-button">
 									<svg width="26" height="28" viewBox="0 0 26 28" fill="none"
 										xmlns="http://www.w3.org/2000/svg" class="rotate-0">
 										<g filter="url(#filter0_d_19461_8348)">
@@ -133,9 +154,9 @@ window.PageContext = Object.freeze({
 								</button>
 								</th:block>
 							</div>
-							<th:block th:unless="*{images.size() eq 1}">
+							<th:block th:unless="*{images.size() eq 0}">
 							<div class="absolute z-10 px-2 py-1 text-sm text-white bg-black bg-opacity-50 rounded-full pointer-events-none top-6 right-6">
-								<span id="current-slide">1</span> / <span th:text="*{#lists.size(images)}">전체 사진 개수</span>
+								<span id="current-slide">1</span> / <span th:text="*{#lists.size(images)+1}">전체 사진 개수</span>
 							</div>
 							</th:block>
 						</div>
@@ -413,7 +434,7 @@ window.PageContext = Object.freeze({
 									</div>
 									<div class="text-xs whitespace-pre-wrap text-gray-900 leading-[18px] [&amp;_br]:hidden"><span 
 									th:if=${storeCheck}>안전한 거래를 위해 <font color="#009F1F" style="font-weight: 600;">계좌번호·연락처 등 개인정보 공유는 금지되며,</font> <b>위반 시 제재될 수 있습니다.</b></span><span 
-									th:unless=${storeCheck}><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <a href="jnapps3://?applink=report&amp;targetType=&amp;reportedStore=1250491&amp;reportedProductSeq=224185769" target="_blank" rel="noopener noreferrer" style="color: rgb(20, 19, 19); font-weight: 600;">중고나라로 신고</a>해 주세요</span></div>
+									th:unless=${storeCheck}><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <a href="jnapps3://?applink=report&amp;targetType=&amp;reportedStore=1250491&amp;reportedProductSeq=224185769" target="_blank" rel="noopener noreferrer" style="color: rgb(20, 19, 19); font-weight: 600;">중고마켓로 신고</a>해 주세요</span></div>
 								</div>
 								<article class="flex flex-col flex-1">
 									<p th:text="${Product.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
@@ -443,7 +464,7 @@ window.PageContext = Object.freeze({
 											<img alt="프로파일" loading="lazy" width="48" height="48"
 												decoding="async" data-nimg="1"
 												class="box-content max-w-none h-12 rounded-full border-4 border-white -translate-x-4"
-												th:src="@{/상위경로/{profile}(profile=*{sellerProfile})}"
+												th:src="@{/images/profile/{profile}(profile=*{sellerProfile})}"
 												style="color: transparent;">
 										</div>
 									</a>

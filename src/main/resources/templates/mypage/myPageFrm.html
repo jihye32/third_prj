@@ -12,7 +12,74 @@
 <!-- JQuery CDN -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+$(document).on("click", "#reportBtn", function(){
+
+    const select = $("#report_code").val();
+    const content = $("#report_content").val();
+
+    if(!select){
+        alert("신고 사유를 선택해주세요.");
+        return;
+    }
+
+    if(!content || content.trim() === ""){
+        alert("신고 내용을 입력해주세요.");
+        return;
+    }
+
+    $("#reportForm").submit();
+});
+
+</script>		
+<script>
+$(document).on('change', '#upFile', function(e) {
+    const files = e.target.files; // 선택된 파일들
+    const list = $('#qna-image-list'); // 파일명 뿌려줄 곳
+    list.empty(); // 이전 선택 기록 삭제
+
+    // 파일명을 하나씩 꺼내서 추가
+    for (let i = 0; i < files.length; i++) {
+        const fileName = files[i].name;
+        list.append(`<span style="font-size:12px; color:#666; margin-right:10px;">${fileName}</span>`);
+    }
+
+    // 선택된 개수 표시 (0/10 부분)
+    $('.group span').text(files.length + '/10');
+});
+
+</script>	
 <script type="text/javascript">
+var storeId = "[[${storeNum}]]";
+function openReviewForm() {// 리뷰 페이지
+    fetch('/seller_page/review?storeId='+storeId) // @/seller_page/review
+        .then(res => res.text()) 
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('후기'); // 서랍 여는 공통 함수 실행
+        });
+}// openReviewForm
+
+function openReportForm(reviewerId) {// 신고 페이지
+	
+	console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍힘
+	    
+	    if(!reviewerId) {
+	        alert("신고 대상자 ID가 없습니다.");
+	        return;
+	    }
+		
+	    fetch('/store/report/review?reviewerId='+reviewerId) // 
+	        .then(res => res.text()) 
+	        .then(html => {
+	            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+	            document.getElementById('drawerContent').innerHTML = html;
+	            openDrawer('신고'); // 서랍 여는 공통 함수 실행
+	        });
+	}// openReviewForm
+
+
 function openPurchasedListForm() {
     fetch('/myPage/myPageFrm/purchased')
         .then(res => res.text())
@@ -21,56 +88,362 @@ function openPurchasedListForm() {
             document.getElementById('drawerContent').innerHTML = html;
             openDrawer('구매내역'); // 서랍 여는 공통 함수 실행
         });
-}
-$(function () {
-	
-    function resetTabs() {
-        $('.tab-item')
-            .removeClass('border-b-[2px] border-black text-black')
-            .addClass('text-[#9CA3AF]');
-    }// resetTabs
+}// openPurchasedListForm
 
-    // 판매상품
-    $('#tab-sell').on('click', function () {
-        resetTabs();
-        $(this)
-            .addClass('border-b-[2px] border-black text-black')
-            .removeClass('text-[#9CA3AF]');
+function toggleBookmark(productNum, $input) {
+    //console.log("찜 클릭됨:", productNum);
 
-        $('#sellList').show();
-        $('#likeList').hide();
-    });
-
-    // 찜
-    $('#tab-like').on('click', function () {
-        resetTabs();
-        $(this)
-            .addClass('border-b-[2px] border-black text-black')
-            .removeClass('text-[#9CA3AF]');
+    // label 내부 svg path 선택
+    var $svgPath = $input.prev('label').find('path');
+    // 찜 상태 토글
+    if ($svgPath.attr('fill') === '#dc2626') {
+    	$.ajax({
+    		url:"/bookmark/"+productNum,
+    		type:"DELETE",
+    		contentType:"application/JSON",
+    		data:{productNum,productNum},
+    		dataType:"JSON",
+    		error:function(xhr){
+    			alert(xhr.status)
+    			},// error
+    		success:function(jsonObj){
+    			if(jsonObj.resultFlag){
+    				// 비활성화
+    	            $svgPath.attr('fill', '#9ca3afb4');
+    	            $svgPath.attr('stroke', 'white');
+    			}// end if
+    		}// success
+    	});// ajax
         
-        $('#likeList').show();
-        $('#sellList').hide();
-    });
-	
-    // 구매 상품
-    $("#tab-buy").on('click', function () {
-    	openPurchasedListForm();
-	});// click
-});// ready
-</script>
-<script>
-	function toggleReview(button) {
-		const reviewBox = button.closest("li").querySelector("div.hidden");
-		reviewBox.classList.toggle("hidden");
-	}
+    } else {
+    	$.ajax({
+    		url:"/bookmark/"+productNum,
+    		type:"POST",
+    		contentType:"application/JSON",
+    		data:{productNum,productNum},
+    		dataType:"JSON",
+    		error:function(xhr){
+    			alert(xhr.status)
+    			},// error
+    		success:function(jsonObj){
+    			if(jsonObj.resultFlag){
+    				// 활성화
+    	            $svgPath.attr('fill', '#dc2626');
+    	            $svgPath.attr('stroke', '#dc2626');
+    			}else{
+    				alert("로그인이 필요한 서비스입니다.");
+    			}// end else
+    		}// success
+    	});// ajax
+        
+    }// end else
+}// toggleBookmark
 
-	function setRating(el, rating) {
-		const stars = el.parentElement.querySelectorAll(".star");
-		stars.forEach((star, index) => {
-			star.classList.toggle("text-yellow-400", index < rating);
-			star.classList.toggle("text-gray-300", index >= rating);
-		});
-	}
+function deleteCount(){
+	location.href='/myPage/deleteCount';
+}// deleteCount
+
+var pageByStatus =  [1, 1];
+var searchCode= 0;
+var sortKeyword='update';
+
+function moreBtn(){
+	pageByStatus[searchCode]++;
+	//alert(page + ' / ' + sellStateCode + ' / ' + sortKeyword); 
+	searchProductList();
+}// moreBtn
+
+function searchProductList() {
+
+    var page = pageByStatus[searchCode];
+
+    $.ajax({
+        url: '/myPage/myPageFrm/more',
+        type: "GET",
+        contentType: "application/json",
+        data: {
+            page: page,
+            searchCode: searchCode,
+            sortBy: sortKeyword
+        },
+        dataType: "json",
+        error: function (xhr) {
+            alert(xhr.status);
+        },
+        success: function (jsonObj) {
+
+            var cntMsg = "총 " + jsonObj.cnt + " 개";
+            $("#cntDiv").text(cntMsg);
+
+            // 첫 페이지면 리스트 초기화
+            if (page == 1) {
+                $("#output ul").empty();
+            }
+
+            $.each(jsonObj.list, function (index, item) {
+
+                /* ---------------- 판매상태 ---------------- */
+                let sellStateHtml = "";
+
+                if (item.sellStateCode == 1) {
+                    sellStateHtml =
+                        `<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>`;
+                } else if (item.sellStateCode == 2) {
+                    sellStateHtml =
+                        `<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
+                            <span class="font-semibold text-base lg:text-lg text-center text-white">예약중</span>
+                        </div>`;
+                } else if (item.sellStateCode == 3) {
+                    sellStateHtml =
+                        `<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
+                            <span class="font-semibold text-base lg:text-lg text-center text-white">판매완료</span>
+                        </div>`;
+                }
+
+                /* ---------------- 지역 ---------------- */
+                let tradingAreaHtml = "";
+                if (item.tradingArea) {
+                    tradingAreaHtml =
+                        `<span class="text-sm text-gray-400">${item.tradingArea}</span>
+                         <span class="text-sm text-gray-400 mx-1">|</span>`;
+                }
+
+                /* ---------------- 찜 버튼 ---------------- */
+                let bookmarkHtml = "";
+
+                if (searchCode == 1) {
+
+                    bookmarkHtml = `
+                        <div class="absolute bottom-2 z-20 right-2 w-6 h-6">
+                            <label for="btn_${item.productNum}"
+                                   class="relative cursor-pointer bookmark-btn"
+                                   data-product-num="${item.productNum}">
+                                <svg width="32" height="32" viewBox="0 0 32 32"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     class="pointer-events-none w-6 h-6">
+                                    <path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 
+                                             15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 
+                                             16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 
+                                             16.7436 26.3341L26.058 17.9925C28.8244 15.5151 
+                                             29.1565 11.3015 26.8124 8.42125L26.5675 8.12029 
+                                             C23.8495 4.78056 18.5906 5.35863 16.663 9.20902 
+                                             C16.3896 9.75505 15.6104 9.75505 15.337 9.20902 
+                                             C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028 
+                                             L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 
+                                             5.94197 17.9925Z"
+                                          stroke-width="1.5"
+                                          stroke="${item.bookmarkFlag === 'Y' ? '#dc2626' : 'white'}"
+                                          fill="${item.bookmarkFlag === 'Y' ? '#dc2626' : '#9ca3afb4'}">
+                                    </path>
+                                </svg>
+                            </label>
+                            <input id="btn_${item.productNum}" 
+                                   type="button" 
+                                   class="a11yHidden">
+                        </div>
+                    `;
+                }
+
+                /* ---------------- 최종 HTML (li 구조로 맞춤) ---------------- */
+                let html = `
+                    <li>
+                        <a class="relative group box-border overflow-hidden flex rounded-md cursor-pointer 
+                                  pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 
+                                  ease-in-out transform bg-white"
+                           href="/product/${item.productNum}">
+                            
+                            <div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
+                                <div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
+
+                                <img alt="${item.productName}"
+                                     src="/images/thumbnail/${item.thumbnail}"
+                                     class="bg-gray-300 object-cover h-full group-hover:scale-105 
+                                            w-full transition duration-200 ease-in rounded-md"
+                                     style="position:absolute; inset:0;">
+
+                                ${sellStateHtml}
+                                ${bookmarkHtml}
+                            </div>
+
+                            <div class="w-full overflow-hidden p-2 px-0">
+                                <h2 class="line-clamp-2 min-h-[2lh] text-sm md:text-base">
+                                    ${item.productName}
+                                </h2>
+
+                                <div class="font-semibold mt-0.5 text-heading lg:text-lg lg:mt-1.5">
+                                    ${item.price.toLocaleString()}원
+                                </div>
+
+                                <div class="mt-1 mb-2">
+                                    ${tradingAreaHtml}
+                                    <span class="text-sm text-gray-400">${item.timeString}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                `;
+
+                $("#output ul").append(html);
+
+            });
+
+            /* ---------------- 더보기 버튼 ---------------- */
+            $("#moreBtn").remove();
+
+            if (jsonObj.hasNext) {
+                $("#moreBtnWrapper").append(`
+                    <div id="moreBtn" class="py-8 text-center xl:pt-14">
+                        <button onclick="moreBtn()"
+                            class="text-[13px] md:text-sm inline-flex items-center justify-center 
+                                   font-semibold rounded-md h-11 md:h-12 px-5 bg-gray-600 
+                                   text-white transition-colors duration-300 
+                                   hover:bg-black">
+                            더보기
+                        </button>
+                    </div>
+                `);
+            }
+
+            /* ---------------- 찜 클릭 이벤트 ---------------- */
+            $('input.a11yHidden[type="button"]').off('click').on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                var productNum = $(this).attr('id').replace('btn_', '');
+                toggleBookmark(productNum, $(this));
+            });// on click
+
+        }// success
+    });// ajax
+}// searchProductList
+
+
+
+// 리뷰 쓰기 폼 열기
+function toggleReview(button) {
+	const reviewBox = button.closest("li").querySelector("div.hidden");
+	reviewBox.classList.toggle("hidden");
+}// toggleReview
+
+// 수령 확인
+function toggleReceive(button) {
+	const receiveProductNum = button.closest("li").id
+	//location.href=('/myPage/receive?productNum='+receiveProductNum);
+	$.ajax({
+        url: '/myPage/receive',
+        type: "get",
+        contentType: "application/json",
+        data: {
+            productNum : receiveProductNum
+        },
+        dataType: "json",
+        error: function (xhr) {
+            alert(xhr.status);
+        },
+        success: function (jsonObj) {
+        	if(jsonObj.receiveFlag){
+        		alert('수령완료');
+        		openPurchasedListForm();
+        	}else{
+        		alert('문제발생');
+        	}// end else
+        }// success
+	});// ajax
+	
+}// toggleReview
+
+// 별점
+function setRating(el, rating) {
+	const container = el.closest(".rating-box");
+	const stars = container.querySelectorAll(".star");
+
+	stars.forEach((star, index) => {
+		star.classList.toggle("text-yellow-400", index < rating);
+		star.classList.toggle("text-gray-300", index >= rating);
+	});// forEach
+
+	container.setAttribute("data-rating", rating);
+}// setRating
+
+function addReview(btn){
+	
+	const reviewProductNum = btn.closest("li").id
+	
+	// hidden이 아니라 review-box 기준으로 찾기
+	const reviewBox = $(btn).closest(".review-box");
+	// 별점 가져오기
+	const rating = reviewBox.find(".rating-box").data("rating") || 0;
+
+	// 리뷰 내용 가져오기
+	const reviewText = reviewBox.find("textarea").val();
+
+	if (rating === 0) {
+		alert("별점을 선택해주세요.");
+		return;
+	}// end if
+
+	if (reviewText === "") {
+		alert("리뷰 내용을 입력해주세요.");
+		return;
+	}// end if
+
+	console.log("별점:", rating);
+	console.log("리뷰내용:", reviewText);
+
+	$.ajax({
+		url: "/myPage/review/insert",
+		type: "POST",
+		data: {
+			reviewRate: rating,
+			review: reviewText,
+			productNum : reviewProductNum
+		},
+		error: function (xhr) {
+            alert(xhr.status);
+        },
+		success: function(res){
+			alert("등록 완료");
+			openPurchasedListForm();
+		}// success
+	});// ajax
+}// addReview
+
+function profileSubmit() {
+	$("#profileFrm").submit();
+}// profileSubmit
+
+function previewImg(){
+	$("#profileImg").click();
+}// previewImg
+
+$(function(){
+	$("#profileImg").change(function(evt) {
+		 // 미리 보기
+		 // 1.HTML File Control 접근
+		 var file = evt.target.files[0];// <input type="file"
+		 
+		 // 2.스트림 생성
+		 var reader = new FileReader();
+		 
+		 // 3.File 객체의 onload 이벤트 핸들러를 설정하여 <img 태그에 src속성에 파일명을 설정
+		 reader.onload=function(evt){
+			 $("#profile").prop("src",evt.target.result);
+		 }// onload
+		 
+		 // 4.스트림을 사용하여 <img 태그 이미지를 로딩
+		 reader.readAsDataURL(file);
+		 
+	});// change
+})// ready
+
+function goToSell(){
+	location.href="/sell/sellFrm";
+}// goToSell
+
+function goToInfo(){
+	location.href="/info/passChkFrm";
+}// goToSell
 </script>
 
 <link rel="stylesheet"
@@ -98,62 +471,81 @@ $(function () {
 							<div class="block mt-8 lg:mt-[72px] mb-8 lg:mb-0">
 								<div class="relative col-span-2 w-full h-full text-black grid grid-cols-1 gap-x-0 gap-y-4 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5 lg:min-w-[800px]">
 									<div class="flex flex-col justify-start order-1 mx-5 sm:mx-0 row-span-2">
+										<form action="/myPage/modifyProfile" method="post" id="profileFrm" enctype="multipart/form-data">
+										
+										
 										<div class="flex order-1 gap-3 items-center">
+											
 											<div class="flex items-center translate-x-3">
-												<img alt="profile-image" width="60" height="60"
-													decoding="async" data-nimg="1"
-													class="rounded-full w-[48px] h-[48px] lg:w-[60px] lg:h-[60px] hidden"
-													style="color: transparent" src=""><img
-													alt="profile-image" loading="lazy" width="60" height="60"
+												<img
+													alt="profile-image" loading="lazy" width="60" height="60"  onclick="previewImg()" id="profile"
 													decoding="async" data-nimg="1"
 													class="rounded-full w-[48px] h-[48px] lg:w-[60px] lg:h-[60px] box-content border-4 border-white -translate-x-3"
 													style="color: transparent"
-													src="https://img2.joongna.com/common/Profile/Default/profile_m.png">
-											</div>
-											<div class="flex-1">
-												<div
-													class="flex justify-between items-center mb-0 w-full sm:mb-2">
-													<h2 class="flex gap-1 items-center mr-3 font-semibold cursor-pointer text-[18px] lg:text-[24px] leading-[39px] lg:gap-2">
-													상점명
-													</h2>
-														<div id="deleteCountBtn" class="flex items-center justify-center gap-2
-											       px-3.5 xl:px-4 text-sm font-semibold
-											       text-white rounded-md cursor-pointer
-											       h-11 bg-red-300 hover:bg-red-500">회원 탈퇴
+													th:src="@{/images/profile/{profileImg}(profileImg=${MyPageDomain.profileImg})}">
+											
+												<input type="file" name="profileImg" id="profileImg" style="display: none;">
+												<input type="hidden" name="oldImg" th:value="${MyPageDomain.profileImg}">
+												<div class="flex-1">
+													<div
+														class="flex justify-between items-center mb-0 w-full sm:mb-2">
+														<h2 th:text="${MyPageDomain.storeName}" 
+														class="flex gap-1 items-center mr-3 font-semibold cursor-pointer text-[18px] lg:text-[24px] leading-[39px] lg:gap-2">
+														상점명
+														</h2>
+															
 													</div>
+													<div class="min-[480px]:relative flex space-x-[6px] text-[#787E89] text-[12px] mb-[1px] flex-auto"></div>
 												</div>
-												<div class="min-[480px]:relative flex space-x-[6px] text-[#787E89] text-[12px] mb-[1px] flex-auto"></div>
+												
+												
 											</div>
+											
+											
+											<div class="flex-2">
+													<div onclick="deleteCount()" class="flex items-center justify-center gap-2
+												       px-3.5 xl:px-4 text-sm font-semibold
+												       text-white rounded-md cursor-pointer
+												       h-11 bg-red-300 hover:bg-red-500">회원 탈퇴
+														</div>
+														<div class="min-[480px]:relative flex space-x-[6px] text-[#787E89] text-[12px] mb-[1px] flex-auto"></div>
+												</div>
+											
 										</div>
+										
+										
 										<div class="flex order-2 items-start mt-5 lg:mt-8 lg:order-3">
-												<input th:text="${info}" id="search-box" placeholder="소개글을 작성해주세요" class="flex-auto text-sm text-heading bg-transparent placeholder-[#9CA3AF] overflow-hidden text-ellipsis whitespace-nowrap outline-none">
-											<div id="deleteCountBtn" class="flex items-center justify-center gap-2
+											<input th:value="${MyPageDomain.intro}" name="intro" placeholder="소개글을 작성해주세요" class="flex-auto text-sm text-heading bg-transparent placeholder-[#9CA3AF] overflow-hidden text-ellipsis whitespace-nowrap outline-none">
+										
+										<div id="modifyProfileBtn" onclick="profileSubmit()" class="flex items-center justify-center gap-2
 											       px-3.5 xl:px-4 text-sm font-semibold
 											       text-white rounded-md cursor-pointer
 											       h-11 bg-gray-500/50 hover:bg-black">프로필 수정
 													</div>
 										</div>
+										</form>
+										
 									</div>
 									
 									<div class=" flex relative justify-evenly py-4 rounded-lg border border-gray-300 pl-[8px] pr-[15px] lg:py-6 order-2 w-auto lg:order-3">
 										<dl class="flex justify-between items-center text-center text-jnGray-600 w-full m-0 [&amp;_div]:w-full [&amp;_div]:before:right-0 [&amp;_div]:before:top-1/2 [&amp;_div]:before:-translate-y-1/2 [&amp;_div]:before:absolute [&amp;_div]:before:w-[1px] [&amp;_div]:before:h-[40px] [&amp;_div]:before:bg-gray-300 [&amp;_div_dt]:text-[12px] [&amp;_div_dd]:text-[16px] lg:[&amp;_div_dt]:text-[14px] lg:[&amp;_div_dd]:text-[22px]">
 											<div class="relative">
 												<dt class="justify-center mt-0">판매 상품 수</dt>
-												<dd class="font-semibold text-jnblack">0</dd>
+												<dd th:text="${cnt}" class="font-semibold text-jnblack">0</dd>
 											</div>
-											<div class="relative cursor-pointer">
+											<div class="relative cursor-pointer" onclick="openReviewForm()">
 												<dt class="justify-center mt-0">거래후기</dt>
-												<dd class="font-semibold underline text-jnblack">0</dd>
+												<dd th:text="${MyPageDomain.reviewCnt}" class="font-semibold underline text-jnblack">0</dd>
 											</div>
 											<div class="relative">
-												<div id="infoChangeBtn" class="flex items-center justify-center gap-2
+												<div onclick="goToSell()" class="flex items-center justify-center gap-2
 											       px-3.5 xl:px-4 text-sm font-semibold
 											       text-white rounded-md cursor-pointer
 											       h-11 bg-black hover:bg-black">판매 등록
 													</div>
 											</div>
 											<div class="relative">
-												<div id="infoChangeBtn" class="flex items-center justify-center gap-2
+												<div onclick="goToInfo()" class="flex items-center justify-center gap-2
 											       px-3.5 xl:px-4 text-sm font-semibold
 											       text-white rounded-md cursor-pointer
 											       h-11 bg-black hover:bg-black">개인 정보 변경
@@ -169,116 +561,146 @@ $(function () {
 									<h3 class="text-lg font-bold md:text-[22px] text-jnBlack">내
 										상품</h3>
 									<div class="mt-3 mr-0 mb-9 lg:mt-2">
-										<ul
-											class="colors flex flex-nowrap justify-between lg:justify-start -me-3 border-b border-[#DADEE5]">
-											<li id="tab-sell" class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-black border-b-[2px] border-black">판매상품</li>
-											<li id="tab-like" class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">찜</li>
-											<li id="tab-buy" class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">구매상품</li>
+										<ul class="searchCode colors flex flex-nowrap justify-between lg:justify-start -me-3 border-b border-[#DADEE5]">
+											<li value="0"  class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-black border-b-[2px] border-black">판매상품</li>
+											<li value="1"  class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">찜</li>
+											<li value="2"  class="tab-item shrink grow lg:grow-0 cursor-pointer py-4 basis-[84px] lg:basis-[160px] flex justify-center items-center font-medium transition duration-200 ease-in-out text-[#9CA3AF]">구매상품</li>
 										</ul>
 									</div>
+									
+									<script type="text/javascript">
+									$(document).ready(function() {
+										  // 클릭된 li 요소에 'selected' 클래스를 추가하고, 나머지 li 요소에서 'selected' 클래스를 제거
+										  $('ul.searchCode li').on('click', function() {
+										    // 모든 li 요소에서 선택, 미선택 css 클래스 초기화 후 미선택 css 추가
+										    $('ul.searchCode li').removeClass('text-black border-b-[2px] border-black');
+										    $('ul.searchCode li').removeClass('text-[#9CA3AF]');
+										    $('ul.searchCode li').addClass('text-[#9CA3AF]');
+										    
+										    // 클릭된 li 요소에 미선택 css 삭제후 선택 css 클래스 추가
+										    $(this).addClass('text-black border-b-[2px] border-black');
+										    $(this).removeClass('text-[#9CA3AF]');
+										    if($(this).val() != 2){
+										    	searchCode=$(this).val();
+											    pageByStatus[searchCode]=1;
+											    //alert(sellStateCode);
+											    searchProductList();
+										    } else{
+										    	openPurchasedListForm();
+										    }
+										  });// onclick
+										  
+										});// ready
+									</script>
+									
+									
 									<div class="flex flex-wrap justify-between items-center">
-										<div
+										<div id="cntDiv" th:text="|총 ${cnt} 개|"
 											class="flex-shrink-0 mb-1 text-sm text-body md:text-base pe-4 md:me-6 lg:block">
 											총
-											<!-- -->
 											0
-											<!-- -->
 											개
 										</div>
 										<ul class="flex space-x-3">
-											<li><button class="text-sm font-medium text-[#141313]">최신순</button></li>
+											<li><button onclick="sort('update')" class="text-sm font-medium text-[#141313]">최신순</button></li>
 											<li><span
 												class="inline-block mb-0 w-[1px] h-[10px] border border-[#DADEE5]"></span></li>
-											<li><button class="text-sm font-medium text-[#787E89]">낮은가격순</button></li>
+											<li><button onclick="sort('asc')" class="text-sm font-medium text-[#787E89]">낮은가격순</button></li>
 											<li><span
 												class="inline-block mb-0 w-[1px] h-[10px] border border-[#DADEE5]"></span></li>
-											<li><button class="text-sm font-medium text-[#787E89]">높은가격순</button></li>
+											<li><button onclick="sort('desc')" class="text-sm font-medium text-[#787E89]">높은가격순</button></li>
 										</ul>
+										<script type="text/javascript">
+											function sort(sortBy){
+												sortKeyword = sortBy;
+												$('ul.flex li button').removeClass('text-[#141313]').addClass('text-[#787E89]');
+												if(sortBy === 'update') {
+											        $('button[onclick="sort(\'update\')"]').removeClass('text-[#787E89]').addClass('text-[#141313]');
+											    } else if(sortBy === 'asc') {
+											        $('button[onclick="sort(\'asc\')"]').removeClass('text-[#787E89]').addClass('text-[#141313]');
+											    } else if(sortBy === 'desc') {
+											        $('button[onclick="sort(\'desc\')"]').removeClass('text-[#787E89]').addClass('text-[#141313]');
+											    }// end else
+											    pageByStatus[searchCode]=1;
+												searchProductList();
+											}// sort
+										</script>
+										
 									</div>
 								</div>
 								
 								
 								
-								<div id="sellList">
-								<th:block th:if="${tempData eq null}">
-								<p class="py-12 text-center">선택된 조건에 해당하는 상품이 없습니다.</p>
-								</th:block>
+								<div id="output">
+									<th:block th:if="${tempData eq null}">
+									<p class="py-12 text-center">선택된 조건에 해당하는 상품이 없습니다.</p>
+									</th:block>
+								
 								<ul class="grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5 lg:gap-x-5 xl:gap-x-7 xl:gap-y-5 2xl:gap-y-8 search-results [&amp;_div]:ps-0">
 								<li th:each="temp : ${tempData}" th:object="${temp}" class="">
 									<a class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-								href="/product/224445272">
+								 th:href="@{/product/{productNum}(productNum=*{productNum})}">
 										<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
 										<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
 										<img alt="아이폰 16 화이트 128기가 배터리96" referrerpolicy="no-referrer"
 											loading="lazy" decoding="async" data-nimg="fill"
 											class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-											src="https://img2.joongna.com/media/original/2026/01/23/1769150260008UR5_G085D.jpg?impolicy=thumb&amp;size=150"
+											th:src="@{/images/thumbnail/{file}(file=*{thumbnail})}"
 											style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+									
+									
+									<!-- 판매상태 -->
+									<th:block th:if="*{sellStateCode == 1}">
+									<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-[3%]"></div>
+									</th:block>
+									
+									<th:block th:if="*{sellStateCode == 2}">
+									<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
+										<span class="font-semibold text-base lg:text-lg text-center text-white">예약중</span>
 									</div>
+									</th:block>
+									
+									<th:block th:if="*{sellStateCode == 3}">
+									<div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-60">
+										<span class="font-semibold text-base lg:text-lg text-center text-white">판매완료</span>
+									</div>
+									</th:block>
+									
+									</div>
+								
 									<div class="w-full overflow-hidden p-2 px-0">
 										<h2 th:text="*{productName}" class="line-clamp-2 min-h-[2lh] text-sm md:text-base max-lg:!min-h-[20px]">상품명</h2>
 										<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
 											class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5 max-lg:mt-1">가격</div>
 										<div class="mt-1 mb-2 min-h-6 max-lg:mb-0 max-lg:mt-1.5">
-											<span th:text="*{tradingArea}" class="text-sm text-gray-400 max-lg:text-xs">강일동</span>
-											<span class="mx-1 text-sm text-gray-400">|</span>
-											<span class="text-sm text-gray-400 max-lg:text-xs">방금 전</span>
-										</div>
-										<div
-											class="flex lg:justify-between max-lg:flex-col max-lg:gap-2 max-lg:mt-3">
-											<div class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5 max-lg:hidden"></div>
-											<div class="text-xs text-gray-400 text-muted">찜 0 ∙ 채팅 0</div>
+											<th:block th:if="*{tradingArea ne null}">
+												<span th:text="*{tradingArea}" class="text-sm text-gray-400">성포동</span>
+												<span class="text-sm text-gray-400 mx-1">|</span>
+											</th:block>
+											<span th:text="*{timeString}" class="text-sm text-gray-400 max-lg:text-xs">방금 전</span>
 										</div>
 									</div></a></li>
 								</ul>
 								</div>
 								
 								
-								<div id="likeList" style="display:none;">
-								<th:block th:if="${tempData2 == null or #lists.isEmpty(tempData2)}">
-      							  <p class="py-12 text-center">찜한 상품이 없습니다.</p>
-    							</th:block>
-								<ul class="grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-3 xl:grid-cols-4 min-[1600px]:grid-cols-5 lg:gap-x-5 xl:gap-x-7 xl:gap-y-5 2xl:gap-y-8 search-results [&amp;_div]:ps-0">
-								<li th:each="temp : ${tempData2}" th:object="${temp}" class="">
-									<a class="relative group box-border overflow-hidden flex rounded-md cursor-pointer pe-0 pb-2 lg:pb-3 flex-col items-start transition duration-200 ease-in-out transform bg-white"
-								href="/product/224445272">
-										<div class="relative w-full rounded-md overflow-hidden dim pt-[100%] mb-3 md:mb-3.5">
-										<div class="absolute inset-0 z-10 bg-opacity-[3%]"></div>
-										<img alt="아이폰 16 화이트 128기가 배터리96" referrerpolicy="no-referrer"
-											loading="lazy" decoding="async" data-nimg="fill"
-											class="bg-gray-300 object-cover h-full group-hover:scale-105 w-full transition duration-200 ease-in rounded-md"
-											src="https://img2.joongna.com/media/original/2026/01/23/1769150260008UR5_G085D.jpg?impolicy=thumb&amp;size=150"
-											style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
-										
-										<div class="absolute bottom-2 z-20 right-2 w-6 h-6">
-											<label for=":rg:" class="relative cursor-pointer"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="pointer-events-none w-6 h-6">
-													<path d="M5.94197 17.9925L15.2564 26.334C15.3282 26.3983 15.3641 26.4305 15.3975 26.4557C15.7541 26.7249 16.2459 26.7249 16.6025 26.4557C16.6359 26.4305 16.6718 26.3983 16.7436 26.3341L26.058 17.9925C28.8244 15.5151 29.1565 11.3015 26.8124 8.42125L26.5675 8.12029C23.8495 4.78056 18.5906 5.35863 16.663 9.20902C16.3896 9.75505 15.6104 9.75505 15.337 9.20902C13.4094 5.35863 8.1505 4.78056 5.43249 8.12028L5.18755 8.42125C2.84352 11.3015 3.17564 15.5151 5.94197 17.9925Z" stroke-width="1.5" stroke="white" fill="#9ca3afb4"></path></svg></label><input id=":rg:" type="checkbox" class="a11yHidden">
-										</div>
-
-									</div>
-									<div class="w-full overflow-hidden p-2 px-0">
-										<h2 th:text="*{productName}" class="line-clamp-2 min-h-[2lh] text-sm md:text-base max-lg:!min-h-[20px]">상품명</h2>
-										<div th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}"
-											class="font-semibold space-s-2 mt-0.5 text-heading lg:text-lg lg:mt-1.5 max-lg:mt-1">가격</div>
-										<div class="mt-1 mb-2 min-h-6 max-lg:mb-0 max-lg:mt-1.5">
-											<span th:text="*{tradingArea}" class="text-sm text-gray-400 max-lg:text-xs">강일동</span>
-											<span class="mx-1 text-sm text-gray-400">|</span>
-											<span class="text-sm text-gray-400 max-lg:text-xs">방금 전</span>
-										</div>
-										<div
-											class="flex lg:justify-between max-lg:flex-col max-lg:gap-2 max-lg:mt-3">
-											<div class="flex items-center flex-wrap [&amp;&gt;*:not(:first-child)]:ml-1.5 [&amp;&gt;*]:mb-0.5 max-lg:hidden"></div>
-											<div class="text-xs text-gray-400 text-muted">찜 0 ∙ 채팅 0</div>
-										</div>
-									</div></a></li>
-								</ul>
-								</div>
+								<div id="moreBtnWrapper">
+								<th:block th:if="${hasNext}">
+								 <div id="moreBtn" class="py-8 text-center xl:pt-14">
+					                <button onclick="moreBtn()" 
+					                    class="text-[13px] md:text-sm leading-4 inline-flex items-center justify-center 
+					                           font-semibold rounded-md h-11 md:h-12 px-5 bg-gray-600 text-white 
+					                           transition-colors duration-300 hover:bg-black hover:text-white">
+					                    더보기
+					                </button>
+					            </div>
+					            </th:block>
+					            </div>
 								
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="Toastify"></div>
 			</main>
 
 			<div th:replace="~{template/footer :: footerFragment}"></div>

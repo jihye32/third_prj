@@ -8,6 +8,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class MyPageDomain {
-	private String nickName, selfText, profileImg; 
+	private String storeName, intro, profileImg; 
 	private int reviewCnt, sellProductCnt; 
 }

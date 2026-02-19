@@ -10,35 +10,29 @@ import kr.co.sist.dao.MyBatisHandler;
 public class LoginDAO {
 
 	public MemberDomain selectMember(String id) throws PersistenceException {
-		MemberDomain md = null;
 		SqlSession ss = null;
 
 		try {
 			ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-			md = ss.selectOne("kr.co.sist.user.login.selectMember", id);
+			return ss.selectOne("kr.co.sist.user.login.selectMember", id);
 		} finally {
 			if (ss != null) {
 				ss.close();
 			} // end if
 		} // end finally
-
-		return md;
 	}// selectMember
 
 	public SuspensionDomain selectSuspension(String id) throws PersistenceException {
-		SuspensionDomain sd = null;
 		SqlSession ss = null;
 
 		try {
 			ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-			sd = ss.selectOne("kr.co.sist.user.login.selectSuspension", id);
+			return ss.selectOne("kr.co.sist.user.login.selectSuspension", id);
 		} finally {
 			if (ss != null) {
 				ss.close();
 			} // end if
 		} // end finally
-
-		return sd;
 	}// selectSuspension
 	
 	public int updateSuspension(String id) throws PersistenceException {

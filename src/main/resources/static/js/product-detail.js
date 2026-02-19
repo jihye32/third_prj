@@ -17,27 +17,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   let currentIndex = 0;
-      const slider = document.getElementById('image-slider');
-      const currentText = document.getElementById('current-slide');
-      
-      if (slider && slider.children.length > 0) {
-          const totalSlides = slider.children.length;
+  const slider = document.getElementById('image-slider');
+  const currentText = document.getElementById('current-slide');
 
-          window.updateSlider = function() {
-              slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-              if (currentText) currentText.innerText = currentIndex + 1;
-          };
+  if (slider && slider.children.length > 0) {
+      const totalSlides = slider.children.length;
 
-          window.nextSlide = function() {
-              currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
-              updateSlider();
-          };
+      window.updateSlider = function() {
+          slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+          if (currentText) currentText.innerText = currentIndex + 1;
+      };
 
-          window.prevSlide = function() {
-              currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
-              updateSlider();
-          };
-      }
+      window.nextSlide = function() {
+          currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
+          updateSlider();
+      };
+
+      window.prevSlide = function() {
+          currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
+          updateSlider();
+      };
+  }
+ 
 });
 
 
@@ -130,10 +131,7 @@ function bumpDate(pnum) {
     .then(data => {
     	alert(data.msg); 
 		if(data.flag){
-			alert("현재 페이지 수정");
 			$("#timeAgo").text("방금");
-		}else{
-			alert("현재 페이지 유지");
 		}
     });
 }
@@ -146,11 +144,10 @@ function updateStatus(pnum, statusCode) {
         body: JSON.stringify({ pnum, sellStatusCode : statusCode })
 	}).then(res => res.json())
     .then(data => {
-    	alert(data.msg); 
 		if(data.flag){
-			alert("현재 페이지 수정");
+			location.reload();
 		}else{
-			alert("현재 페이지 유지");
+    		alert(data.msg); 
 		}
     });
 }
@@ -170,9 +167,7 @@ function removeProduct(pnum) {
     .then(data => {
     	alert(data.msg); 
 		if(data.flag){
-			alert("마이페이지로 이동");
-		}else{
-			alert("현재 페이지 유지");
+			location.href="/store/"+data.snum;
 		}
     });
 }
@@ -187,9 +182,7 @@ function sendProduct(pnum){
     .then(data => {
 		alert(data.msg);
 		if(data.flag){
-			alert("현재 페이지에서 버튼 안보이게 하기");
-		}else{
-			alert("현재 페이지 유지");
+			location.reload();
 		}
     });
 }

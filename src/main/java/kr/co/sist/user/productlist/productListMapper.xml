@@ -49,7 +49,7 @@ from
 	        SELECT
 	            product_num,
 	            COUNT(*) AS chat_cnt
-	        FROM chat
+	        FROM room_product
 	        GROUP BY product_num
 	    ) chat_cnt
 	        ON pv.productNum = chat_cnt.product_num
@@ -101,14 +101,14 @@ r between #{startNum} and #{endNum}
 <select id="selectProdcutCnt" 
 		parameterType="kr.co.sist.user.productlist.ProductRangeDTO" 
 		resultType="int">
-select count(*) cnt from product
+select count(*) cnt from product_view
 	<where>
-	DELETE_FLAG='N' AND STATUS_CODE=1
+	sellStateCode=1
 		<if test="keyword neq null and keyword neq ''">
-		and instr( title, #{keyword} ) != 0
+		and instr( productName, #{keyword} ) != 0
 		</if>
 		<if test="category != 0">
-		and category_code = #{category}
+		and category = #{category}
 		</if>
 		<if test="startPrice != 0 and endPrice != 0">
 		price between #{startPrice} and #{endPrice}

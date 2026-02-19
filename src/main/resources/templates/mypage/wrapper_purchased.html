@@ -8,118 +8,105 @@
 <body>
 
 	<!-- fragment 이름 바꿔주세요 -->
-	<div th:fragment="fragmentPurchased">
+	<div th:fragment="fragmentPurchased" class="flex flex-col h-screen overflow-auto bg-gray-50">
 
-		<div class="h-full overflow-auto">
-			<div class="flex flex-col h-full pb-[85px] sm:pb-0">
-				<ul class="flex flex-col h-full overflow-auto bg-white overscroll-contain">
-				
-					<li class="flex gap-5 justify-between px-5 w-full cursor-pointer bg-white">
-						<div class="flex py-3 border-t-[1px] border-gray-200 w-[100%]">
-							<div class="border border-gray-100 relative flex flex-shrink-0 items-center justify-center bg-gray-300 rounded-md overflow-hidden">
-								<img alt="프로필" loading="lazy" width="60" height="60"
-									decoding="async" data-nimg="1"
-									class="rounded-md max-w-none h-[60px] object-cover"
-									th:src="@{/images/thumbnail/{imageName}(imageName='default.jpg')}"
-									style="color: transparent;">
-							</div>
-							<div
-								class="flex w-[calc(100%-56px)] flex-col justify-around ml-4">
-								<div class="flex flex-wrap items-center gap-x-2">
-									<div class="flex gap-2">
-										<h4 class="font-semibold">상품제목</h4>
-									</div>
-									<p class="text-[12px]">거래일자</p>
-								</div>
-								<span
-									class="text-sm text-ellipsis overflow-hidden whitespace-nowrap min-[1024px]:max-w-[300px]">
-									00,000원</span>
-							</div>
-						</div>
-						<!-- 후기 쓰기 버튼 -->
-						<button
-							type="button"
-							class="self-center text-sm px-3 py-1.5 border rounded-md text-blue-600 border-blue-500 hover:bg-blue-50"
-							onclick="toggleReview(this)">
-							후기 쓰기
-						</button>
-						</li>
-					<div class="min-h-[5px]"></div>
-					
-					
-					
-					
-					<li class="flex flex-col px-5 w-full bg-white">
-	<div class="flex gap-5 justify-between w-full cursor-pointer">
-		<div class="flex py-3 border-t-[1px] border-gray-200 w-full">
-			<div
-				class="border border-gray-100 relative flex flex-shrink-0 items-center justify-center bg-gray-300 rounded-md overflow-hidden">
-				<img alt="프로필" loading="lazy" width="60" height="60"
-					class="rounded-md max-w-none h-[60px] object-cover"
-					th:src="@{/images/thumbnail/{imageName}(imageName='default.jpg')}">
-			</div>
+  <!-- 상단 공간이 필요하면 여기에 header 넣기 가능 -->
+  
+  <div class="flex-1 overflow-auto">
+    <ul class="flex flex-col w-full">
+      
+      <!-- 구매한 상품이 없는 경우 -->
+      <th:block th:if="${!flag}">
+        <li class="p-5 text-center text-gray-500">구매한 상품이 없습니다.</li>
+      </th:block>
 
-			<div class="flex w-[calc(100%-56px)] flex-col justify-around ml-4">
-				<div class="flex flex-wrap items-center gap-x-2">
-					<h4 class="font-semibold">상품제목</h4>
-					<p class="text-[12px]">거래일자</p>
-				</div>
-				<span class="text-sm">00,000원</span>
-			</div>
-		</div>
+      <!-- 구매 상품 반복 -->
+      <th:block th:each="BuyProductDomain : ${list}" th:object="${BuyProductDomain}">
+        <li class="flex flex-col px-5 py-3 border-t border-gray-200 bg-white mb-2 rounded-md" th:id="*{productNum}">
+          <a th:href="|/product/*{productNum}|">
+          <div class="flex gap-5 justify-between w-full cursor-pointer">
+            <div class="flex items-center">
+              <div class="border border-gray-100 flex items-center justify-center rounded-md overflow-hidden w-[60px] h-[60px] bg-gray-300">
+                <img th:src="@{/images/thumbnail/{imageName}(imageName=*{thumbnail})}" 
+                     alt="프로필" class="object-cover w-full h-full rounded-md" loading="lazy">
+              </div>
 
-	</div>
-		<!-- 후기 쓰기 버튼 -->
-	<div class="mt-2 flex justify-end">
-		<button
-			type="button"
-			class="text-sm px-3 py-1.5 border rounded-md text-blue-600 border-blue-500 hover:bg-blue-50 review-toggle"
-			data-action="toggle-review"
-			style="color: rgb(13, 204, 90); border-color: rgb(13, 204, 90);"
-			onclick="toggleReview(this)">
-			후기 쓰기
-		</button>
-	</div>
-	
+              <div class="ml-4 flex flex-col justify-around w-[calc(100%-64px)]">
+                <div class="flex flex-wrap items-center gap-x-2">
+                  <h4 class="font-semibold" th:text="*{productName}">상품제목</h4>
+                  <p class="text-[12px]" th:text="*{createdDate}">거래일자</p>
+                </div>
+                <span class="text-sm text-ellipsis overflow-hidden whitespace-nowrap"
+                      th:text="*{#numbers.formatInteger({price}, 3, 'COMMA') + '원'}">00,000원</span>
+              </div>
+            </div>
+          </div>
+		</a>
+          <!-- 수령 확인 버튼 -->
+          <th:block th:if="*{deliverdDate eq null}">
+            <button type="button"
+                    class="mt-2 text-sm px-3 py-1.5 border rounded-md bg-white text-black hover:text-white hover:bg-gray-600 hover:shadow-cart"
+                    onclick="toggleReceive(this)">
+              수령 확인
+            </button>
+          </th:block>
 
-	<!-- ⭐ 후기 작성 영역 (숨김) -->
-	<div class="hidden mt-3 p-4 border rounded-md bg-gray-50">
-		<!-- 별점 -->
-		<div class="flex items-center gap-1 mb-3">
-			<span class="text-sm mr-2">별점</span>
-			<div class="flex gap-1">
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,1)">★</button>
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,2)">★</button>
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,3)">★</button>
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,4)">★</button>
-				<button class="star text-gray-300 text-xl" onclick="setRating(this,5)">★</button>
-			</div>
-		</div>
+          <!-- 후기 버튼 & 작성 영역 -->
+          <th:block th:if="*{deliverdDate ne null}">
+            <th:block th:if="*{review eq null}">
+              <button type="button"
+                      class="mt-2 text-sm px-3 py-1.5 border rounded-md bg-white text-black hover:text-white hover:bg-gray-600 hover:shadow-cart"
+                      onclick="toggleReview(this)">
+                후기 쓰기
+              </button>
 
-		<!-- 후기 입력 -->
-		<textarea
-			class="w-full border rounded-md p-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
-			rows="3"
-			placeholder="후기를 작성해주세요"></textarea>
+              <div class="hidden review-box mt-3 p-4 border rounded-md bg-gray-50">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="text-sm mr-2">별점</span>
+                  <div class="flex gap-1 rating-box">
+                    <button class="star text-gray-300 text-xl" onclick="setRating(this,1)">★</button>
+                    <button class="star text-gray-300 text-xl" onclick="setRating(this,2)">★</button>
+                    <button class="star text-gray-300 text-xl" onclick="setRating(this,3)">★</button>
+                    <button class="star text-gray-300 text-xl" onclick="setRating(this,4)">★</button>
+                    <button class="star text-gray-300 text-xl" onclick="setRating(this,5)">★</button>
+                  </div>
+                </div>
 
-		<!-- 등록 버튼 -->
-		<div class="flex justify-end mt-3">
-			<button
-				class="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
-				등록
-			</button>
-		</div>
-	</div>
-</li>
+                <textarea class="w-full border rounded-md p-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          rows="3" placeholder="후기를 작성해주세요"></textarea>
 
-					
-					
-					
-				</ul>
-			</div>
-		</div>
+                <div class="flex justify-end mt-3">
+                  <button onclick="addReview(this)"
+                          class="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    등록
+                  </button>
+                </div>
+              </div>
+            </th:block>
 
-	</div>
+            <th:block th:if="*{review ne null}">
+              <div class="mt-3 p-4 border rounded-md bg-gray-50">
+                <div class="flex items-center gap-1 mb-3">
+                  <span class="text-sm mr-2">별점</span>
+                  <div class="flex gap-1">
+                    <th:block th:each="i : *{#numbers.sequence(1, reviewRate)}">
+                      <span class="star text-yellow-400 text-xl">★</span>
+                    </th:block>
+                  </div>
+                </div>
+                <textarea th:text="*{review}" readonly
+                          class="w-full border rounded-md p-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          rows="3"></textarea>
+              </div>
+            </th:block>
+          </th:block>
+
+        </li>
+      </th:block>
+
+    </ul>
+  </div>
+</div>
 
 </body>
 </html>

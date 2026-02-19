@@ -36,23 +36,11 @@ public class ProductDetailController {
     	if(pdd == null) return "redirect:/";//메인화면으로 이동시키기
     	if("Y".equals(pdd.getDeleteFlag())) return "redirect:/";
     	
-    	List<String> imgList = new ArrayList<String>();
-    	imgList.add(pdd.getThumbnail());
-    	if(pdd.getImages()!=null) {
-    		for(String img : pdd.getImages()) {
-    			imgList.add(img);
-    		}
-    	}
-    	pdd.setImages(imgList);
-    	
     	SellerInfoDomain sid = ps.searchSeller(pdd.getSellerId());//판매자 상점 번호로 판매자 정보 가져오기
-    	
-    	//    	int snum = (ss.getAttribute("snum") != null) ? (int) ss.getAttribute("snum") : -1;//현재 로그인한 유저의 store number 가져오기
-    	int snum = 3;//현재 로그인한 유저의 store number 가져오기
+    	String uid = (ss.getAttribute("uid") != null) ? (String)ss.getAttribute("uid") : null;//현재 로그인한 유저의 store number 가져오기
     	boolean isMe = false; //본인확인
-    	
     	//세션에서 로그인을 햇는지 확인할 것.
-    	if(snum == pdd.getSellerId()) {
+    	if(sid.getId().equals(uid)) {
     		isMe = true;
     		if(pdd.getSellStatusCode()==3) {//판매완료인 상태일 때 발송 확인
     			boolean sendFlag = ps.searchSendFlag(pnum); //발송 완료/null false, 발송 안함 true
@@ -60,10 +48,10 @@ public class ProductDetailController {
     		}
     	}else {
     		ps.modifyViewCnt(pnum);
-    		if(snum > 0) {//로그인 한 상태이므로 북마크 확인
+    		if(uid != null) {//로그인 한 상태이므로 북마크 확인
     			BookmarkDTO bDTO = new BookmarkDTO();
     			bDTO.setPnum(pnum);
-    			bDTO.setSnum(snum);
+    			bDTO.setSnum((int)ss.getAttribute("snum"));
     			boolean bookmark = (ps.searchBookmark(bDTO)!=null?true:false);//해당 상품(pnum)에 대해 로그인한 사람(snum)이 북마크를 해놨는지 확인
     			model.addAttribute("bookmarkFlag", bookmark);
     		}
@@ -85,15 +73,15 @@ public class ProductDetailController {
 	@PostMapping("/bookmark")
 	@ResponseBody
     public void addBookmark(@RequestBody BookmarkDTO bDTO, HttpSession session) {
-		//int snum = (int)session.getAttribute("snum");
-		bDTO.setSnum(1);
+		int snum = (int)session.getAttribute("snum");
+		bDTO.setSnum(snum);
 		ps.addBookmark(bDTO);
 	}
 	@DeleteMapping("/bookmark")
 	@ResponseBody
 	public void removeBookmark(@RequestBody BookmarkDTO bDTO, HttpSession session) {
-		//int snum = (int)session.getAttribute("snum");
-		bDTO.setSnum(1);
+		int snum = (int)session.getAttribute("snum");
+		bDTO.setSnum(snum);
 		ps.removeBookmark(bDTO);
 	}
 
@@ -109,7 +97,7 @@ public class ProductDetailController {
     		flag = true;
     		ps.modifyUpDate(pnum);
     	}
-    	String resultMsg = flag ? "끌올됨" : "끌올안됨";
+    	String resultMsg = flag ? "끌올 되었습니다." : "끌올 되지 못했습니다. 잠시 후 다시 시도해주세요.";
 	    
 	    response.put("msg", resultMsg);
 	    response.put("flag", flag);
@@ -125,14 +113,12 @@ public class ProductDetailController {
 	@ResponseBody
     public Map<String, Object> updateStatus(@RequestBody SellStatusDTO ssDTO) {
 		Map<String, Object> response = new HashMap<>();
-		System.out.println(ssDTO.getPnum());
-		System.out.println(ssDTO.getSellStatusCode());
 		boolean flag = false;
 		flag = ps.modifyProductStatus(ssDTO);
 		if(flag && ssDTO.getSellStatusCode()==3) {
 			ps.modifyProductOver(ssDTO.getPnum());
 		}
-		String resultMsg = flag ? "상태 변경됨" : "상태 변경 안됨";
+		String resultMsg = flag ? "" : "상태 변경 안됨";
 		response.put("msg", resultMsg);
 	    response.put("flag", flag);
 	   
@@ -142,7 +128,7 @@ public class ProductDetailController {
 	//상품 삭제
 	@PostMapping("/deleteProduct")
 	@ResponseBody // 리턴값을 JSON으로 변환해줍니다.
-	public Map<String, Object> removeProduct(@RequestBody int pnum) {
+	public Map<String, Object> removeProduct(@RequestBody int pnum, HttpSession session) {
 		Map<String, Object> response = new HashMap<>();
 		boolean flag = ps.modifyDeleteFlag(pnum);
 		
@@ -151,6 +137,7 @@ public class ProductDetailController {
 	    response.put("msg", resultMsg);
 	    response.put("flag", flag);
 		//삭제이 완료되면 마이페이지로, 아니면 화면 유지
+	    response.put("snum", session.getAttribute("snum"));
 		return response;
 	}
 	

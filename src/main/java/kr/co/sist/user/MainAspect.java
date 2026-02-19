@@ -18,6 +18,8 @@ public class MainAspect {
 			pointcut = 
 	        "execution(* kr.co.sist.user.MainService.searchMostViewProdcut(..)) || " +
 	        "execution(* kr.co.sist.user.sellerpage.SellerPageService.searchProductList(..)) || " +
+	        "execution(* kr.co.sist.user.mypage.MyPageService.searchMySellProdcut(..)) || " +
+	        "execution(* kr.co.sist.user.mypage.MyPageService.searchMyBookmarkProdcut(..)) || " +
 	        "execution(* kr.co.sist.user.productlist.ProductListService.searchProductList(..))",
 			returning = "result")
 	public void afterReturning2(JoinPoint jp, Object result) {
@@ -26,7 +28,9 @@ public class MainAspect {
 //		System.out.println("Aspect 반환값 : " + list);
 		
 		for(ProductDomain pd : list) {
-			pd.setTradingArea(cutArea( pd.getTradingArea() ));
+			if(pd.getTradingArea() != null && !"".equals(pd.getTradingArea())) {
+				pd.setTradingArea(cutArea( pd.getTradingArea() ));
+			}// end if
 			pd.setTimeString(formatDate(pd.getTimDif(), pd.getLastModify()));
 		}// end for
 	}// afterReturning2

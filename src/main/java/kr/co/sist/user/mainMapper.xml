@@ -3,72 +3,53 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sist.user.main">
-<!-- 
-<resultMap id="ProductResultMap" type="kr.co.sist.user.ProductDomain">
-    <result property="productNum" column="PRODUCTNUM" javaType="int"/>
-    <result property="productName" column="PRODUCTNAME" javaType="String"/>
-    <result property="price" column="PRICE" javaType="int"/>
-    <result property="thumbnail" column="THUMBNAIL" javaType="String"/>
-    <result property="timDif" column="TIMDIF" javaType="double"/>
-    <result property="sellStateCode" column="SELLSTATECODE"/>
-    <result property="tradingArea" column="TRADINGAREA" javaType="String"/>
-    <result property="lastModify" column="LASTMODIFY"/>
-    <result property="receiveFlag" column="RECEIVEFLAG" javaType="String"/>
-    <result property="bookmarkFlag" column="BOOKMARKFLAG" javaType="String"/>
-    <result property="sellState" column="SELLSTATE" javaType="String"/>
-</resultMap>
- -->
-<!-- <select id="selectMostViewProdcut" resultMap="ProductResultMap"> -->
+
 <select id="selectMostViewProdcut" resultType="kr.co.sist.user.ProductDomain">
-SELECT productNum, price, timDif, sellStateCode, tradingArea, lastModify, receiveFlag, bookmarkFlag, sellState, productName, thumbnail, timeString  
-FROM (
-	SELECT 
-			p.PRODUCT_NUM productNum, 
-			p.TITLE productName, 
-			p.PRICE price, 
-			p.THUMBNAIL thumbnail, 
-			sysdate-UP_DATE timDif, 
-			p.STATUS_CODE sellStateCode, 
-			sp.ADDR tradingArea, 
-			p.UP_DATE lastModify, 
-			ROW_NUMBER() OVER (ORDER BY p.VIEW_COUNT DESC) AS rn,
-			'' receiveFlag,
-			'' bookmarkFlag,
-			'' sellState,
-			'n초전' timeString
-	FROM PRODUCT p, SELL_PLACE sp
-	WHERE p.DELETE_FLAG='N' AND p.STATUS_CODE=1 and p.PRODUCT_NUM=sp.PRODUCT_NUM
+select productnum, price, timdif, sellstatecode, tradingarea, lastmodify, productname, thumbnail, timestring  
+from (
+	select 
+			productnum, 
+			productname, 
+			price, 
+			thumbnail, 
+			timdif, 
+			sellstatecode, 
+			tradingarea, 
+			lastmodify, 
+			row_number() over (order by view_count desc) as rn,
+			timestring
+	from product_view
 	)
-WHERE 30 >= rn
+where 30 >= rn
 </select>
 
 <select id="selectMostLikeProdcut" resultType="kr.co.sist.user.ProductDomain">
-SELECT productName,productNum, price, thumbnail, timDif, sellStateCode, tradingArea, lastModify, receiveFlag, bookmarkFlag, sellState, timeString
-FROM (
-    SELECT
-			d.PRODUCT_NUM productNum,
-			p.TITLE productName,
-			p.PRICE price,
-			p.THUMBNAIL thumbnail,
-			sysdate-UP_DATE timDif,
-			p.STATUS_CODE sellStateCode,
-			sp.ADDR tradingArea,
-			p.UP_DATE lastModify,
-			'' receiveFlag,
-			'' bookmarkFlag,
-			'' sellState,
-			'n초전' timeString,
-		  ROW_NUMBER() OVER (ORDER BY d.like_cnt DESC) AS rn
-    FROM (
-        SELECT PRODUCT_NUM, COUNT(PRODUCT_NUM) AS like_cnt
-        FROM BOOKMARK
-        GROUP BY PRODUCT_NUM
-    ) d, PRODUCT p, SELL_PLACE sp
+select productname,productnum, price, thumbnail, timdif, sellstatecode, tradingarea, lastmodify, timestring
+from (
+    select
+			pv.productnum productnum,
+			pv.productname productname,
+			pv.price price,
+			pv.thumbnail thumbnail,
+			pv.timdif timdif,
+			pv.sellstatecode sellstatecode,
+			pv.tradingarea tradingarea,
+			pv.lastmodify lastmodify,
+			pv.timestring timestring,
+		  row_number() over (order by d.like_cnt desc) as rn
+    from (
+        select product_num, count(product_num) as like_cnt
+        from bookmark
+        group by product_num
+    ) d, product_view pv
 
-    WHERE p.DELETE_FLAG = 'N' and d.PRODUCT_NUM = p.PRODUCT_NUM and p.PRODUCT_NUM=sp.PRODUCT_NUM
-      AND p.STATUS_CODE = 1
+    where d.product_num = pv.productnum
 ) subquery
-WHERE 30 >= rn
+where 30 >= rn
 </select>
+
+<insert id="insertHistory" parameterType="String">
+insert into user_history(ip, input_date)  values (#{ip}, sysdate) 
+</insert>
 
 </mapper>
