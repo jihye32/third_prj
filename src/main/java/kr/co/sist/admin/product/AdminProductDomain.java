@@ -25,6 +25,7 @@ public class AdminProductDomain {
     private int category_code;
     private int view_count;
     private int bookmark_count;
+    private String user_id;
     
     // 2. [추가] 삭제 관련 필드 (에러 해결 핵심)
     private String delete_flag;       /* 삭제 여부 (Y/N) */
