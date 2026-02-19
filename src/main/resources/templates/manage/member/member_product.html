@@ -18,8 +18,11 @@
 			<div class="container">
 				<div class="row shop-header align-items-center" th:if="${store != null}">
 					<div class="col-auto">
-						<img th:src="${store.profile_img != null and store.profile_img != '' ? '/images/profile/' + store.profile_img : '/images/profile/default.jpg'}"
-							class="shop-profile-img" onerror="this.src='/images/profile/default.jpg';">
+						 <img th:src="${store.profile_img != null and store.profile_img != ''} 
+                                     ? @{/images/profile/{img}(img=${store.profile_img})} 
+                                     : @{/images/profile/default.jpg}"
+                             alt="상점 프로필" class="shop-profile-img" 
+                             th:onerror="this.src=[[@{/images/profile/default.jpg}]]">
 					</div>
 					<div class="col">
 						<h4 class="fw-bold mb-1" th:text="${store.store_name}">상점명</h4>
