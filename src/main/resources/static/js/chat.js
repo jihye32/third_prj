@@ -8,7 +8,13 @@ function getChatRoot() {
 /* 채팅 리스트 열기 */
 function openChatDrawer() {
 	fetch('/chat/list')
-    .then(res => res.text())
+	.then(res => {
+		      if (res.status === 401) {
+		        window.top.location.href = "/user/login/loginFrm"; // 부모로 이동
+		        return null;
+		      }
+		      return res.text();
+		    })
     .then(html => {
        	// 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
        	document.getElementById('drawerContent').innerHTML = html;
