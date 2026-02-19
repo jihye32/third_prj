@@ -1,7 +1,13 @@
 /* 기준이 되는 틀 생성해줌 */
 const loadDrawerContent = (url, callback) => {
 	fetch(url)
-		.then(res => res.text())
+		.then(res => {
+	      if (res.status === 401) {
+	        window.top.location.href = "/user/login/loginFrm"; // 부모로 이동
+	        return null;
+	      }
+	      return res.text();
+	    })
 		.then(html => {
 		    const drawer = document.getElementById('drawerContent');
 		    drawer.innerHTML = html;
@@ -9,7 +15,28 @@ const loadDrawerContent = (url, callback) => {
 		    if (callback) callback();
 		})
 		.catch(err => console.error('Drawer Load Error:', err));
+		console.log("fetch is", fetch);
+		const res = fetch(url);
+		console.log("res is", res);
 };
+
+function openDrawer(title) {
+	const titleElement = document.getElementById('drawerTitle');
+	if (titleElement && title) {
+    	titleElement.innerText = title;
+	}
+
+	// 서랍 열기
+	document.getElementById('drawer').classList.remove('translate-x-full');
+
+	// 배경 보이기
+	const overlay = document.getElementById('overlay');
+	overlay.classList.remove('hidden');
+	setTimeout(() => overlay.classList.remove('opacity-0'), 10); // 부드러운 효과를 위해
+
+	// 뒷배경 스크롤 방지
+	document.body.style.overflow = 'hidden';
+}
 
 function closeDrawer() {
 	const drawer = document.getElementById('drawer');

@@ -50,8 +50,11 @@ public class SellerPageController {
 		List<ProductDomain> reserveProduct = sps.findReserve(allProduct);// 조회된 모든 물품에서 예약중인 것만 선택
 		List<ProductDomain> selledProduct = sps.findSelled(allProduct);// 조회된 모든 물품에서 판매완료인 것만 선택
 		
+		String storeId = sps.searchSellerId(storeNum);
+		
 		model.addAttribute("SellerPageDomain",sps.searchSeller(storeNum));// 판매자 정보
 		model.addAttribute("storeNum",storeNum);// 판매자 정보
+		model.addAttribute("storeId",storeId);// 판매자 정보
 		
 		model.addAttribute("allProduct", allProduct);// 전체 물품 리스트
 		model.addAttribute("allProductCnt", totalCnt);// 전체 물품 수

@@ -56,7 +56,9 @@ public class BuyController {
 		return "/buy/buy_success :: sellSuccessFrm";
 	}
 	@GetMapping("/fail/{orderId}")
-	public String buyFail(@PathVariable String orderId, Model model) {
+	public String buyFail(@PathVariable String orderId, @RequestParam String failMsg, Model model) {
+		//orderId로는 주문 내역 삭제
+		model.addAttribute("msg", failMsg);
 		return "/buy/buy_fail :: sellFailFrm";
 	}
 	

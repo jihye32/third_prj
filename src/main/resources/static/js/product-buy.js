@@ -28,6 +28,10 @@ document.addEventListener("click", (e) => {
 		    openPaymentForm(pnum, selectedType);
 		    return;
 		}
+		
+		case "my-page" : {
+			location.href="/myPage/myPageFrm";
+		}
 	}
   }
 });
