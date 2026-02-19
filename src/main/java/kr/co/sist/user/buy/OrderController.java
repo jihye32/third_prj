@@ -124,8 +124,7 @@ public class OrderController {
 	        	    Object msg = jsonObject.get("message");
 	        	    if (msg != null) failMsg = msg.toString();
 	        	}
-	        	model.addAttribute("failMsg", failMsg);
-	        	model.addAttribute("url", "/buy/fail/"+orderId);
+	        	model.addAttribute("url", "/buy/fail/"+orderId+"?msg="+failMsg);
 
 	        	return "/buy/bridge";
 	        }
