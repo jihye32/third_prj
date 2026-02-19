@@ -48,7 +48,7 @@ public class JoinService {
 		// UTF-8 설정
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-		helper.setFrom(senderEmail, "중고나라 이메일 인증");
+		helper.setFrom(senderEmail, "중고마켓 이메일 인증");
 		helper.setTo(email);
 		helper.setSubject("회원가입 인증 번호");
 

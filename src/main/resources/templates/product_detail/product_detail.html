@@ -483,15 +483,15 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 										<img alt="에러" loading="lazy" width="16" height="16" decoding="async" data-nimg="1"
 											src="https://img2.joongna.com/icon/information_filled_color.png" style="color: transparent;">
 									</div>
-									<div class="text-xs whitespace-pre-wrap text-gray-900 leading-[18px] [&amp;_br]:hidden"><span 
-									th:if=${storeCheck}>안전한 거래를 위해 <font color="#009F1F" style="font-weight: 600;">계좌번호·연락처 등 개인정보 공유는 금지되며,</font> <b>위반 시 제재될 수 있습니다.</b></span><span 
-									th:unless=${storeCheck}><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <button th:onclick="openReportForm([[${SellerInfo.id}]])" class="text-sm font-semibold text-black underline underline-offset-[3px]">중고마켓으로 신고</button>해 주세요</span></div>
+									<div class="text-xs text-gray-900 leading-[18px] [&amp;_br]:hidden">
+									<span th:if="${storeCheck}">안전한 거래를 위해 <font color="#009F1F" style="font-weight: 600;">계좌번호·연락처 등 개인정보 공유는 금지되며,</font> <b>위반 시 제재될 수 있습니다.</b></span><span 
+									th:unless="${storeCheck}"><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <button th:onclick="openReportForm([[${SellerInfo.id}]])" class="text-sm font-semibold text-black underline underline-offset-[3px]">중고마켓으로 신고</button>해 주세요</span></div> 
 								</div>
 								<article class="flex flex-col flex-1">
 									<p th:text="${Product.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
 									상품설명</p>
-								</article>
-							</div>
+								</article> 
+							</div>  
 						</div>
 					</div>
 					<div th:unless=${storeCheck} class="basis-[420px] max-lg:!mt-0 max-lg:pt-7">
@@ -526,7 +526,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 											<span th:text="*{productCnt}" class="block text-sm font-semibold text-black mt-1 ">0</span></li>
 										<li class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center">
 											<span class="text-xs font-normal text-jnGray-600 break-keep">거래후기</span>
-											<button th:text="*{reivewCnt}" class="block text-sm font-semibold text-jnblack mt-1 underline underline-offset-[3px]">0</button></li>
+											<button th:text="*{reivewCnt}" th:onclick="openReviewForm([[*{sellerId}]])" class="block text-sm font-semibold text-jnblack mt-1 underline underline-offset-[3px]">0</button></li>
 									</ul>
 								</div>
 							</div>

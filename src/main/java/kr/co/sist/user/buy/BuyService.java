@@ -78,7 +78,6 @@ public class BuyService {
 		if(aDTO != null) {
 			//배송지 추가
 			aDTO.setOrderId(orderId);
-			System.out.println(aDTO.toString());
 			bDAO.insertAddress(aDTO);
 		}
 		

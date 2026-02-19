@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,6 +71,9 @@ public class OrderController {
 				   
 				   if(name == null || "".equals(name)) {
 					   throw new IllegalArgumentException("이름이 입력되지 않았습니다.");
+				   }
+				   if(name.length() > 20) {
+					   throw new IllegalArgumentException("이름은 20자 이하만 가능합니다.");
 				   }
 				   if(tel == null || !tel.matches("^010\\d{8}$")) {
 					    throw new IllegalArgumentException("휴대폰 번호 형식이 올바르지 않습니다.");
@@ -221,5 +225,15 @@ public class OrderController {
         	model.addAttribute("url", "/buy/success/"+orderId);
 
         	return "/buy/bridge";
+	    }
+	    
+	    
+	    
+	    @ExceptionHandler(IllegalArgumentException.class)
+	    @ResponseBody
+	    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
+	        return ResponseEntity
+	                .badRequest()
+	                .body(e.getMessage());
 	    }
 }

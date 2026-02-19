@@ -90,14 +90,17 @@ public class SellService {
 				map.put("productNum", sDTO.getProductNum());
 				queryCnt += sDAO.insertTradeType(map, ss);
 				standardCnt++;
+				if("1".equals(tradeCode) && sDTO.getAddr() != null && !"".equals(sDTO.getAddr())) {// 직거래 선택하고, 지역명이 있는경우 
+					// 거래 지역 db에 insert
+					map = new HashMap<String, Object>();
+					map.put("tradeArea", sDTO.getAddr());
+					map.put("productNum", sDTO.getProductNum());
+					queryCnt += sDAO.insertTradeArea(map, ss);
+					standardCnt++;
+				}// end if
+				
 			}// end for
 			
-			// 거래 지역 db에 insert
-			map = new HashMap<String, Object>();
-			map.put("tradeArea", sDTO.getAddr());
-			map.put("productNum", sDTO.getProductNum());
-			queryCnt += sDAO.insertTradeArea(map, ss);
-			standardCnt++;
 			
 			if(standardCnt == queryCnt) {// 정상 시행인 경우
 				flag = true;

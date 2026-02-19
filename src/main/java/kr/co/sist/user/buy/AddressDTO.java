@@ -8,6 +8,5 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AddressDTO {
-	private int tel;
-	private String orderId, name, addr, addrDetail;
+	private String orderId, name, addr, addrDetail,tel;
 }

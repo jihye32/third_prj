@@ -47,13 +47,17 @@
 		m.user_id,
 		s.store_name,
 		m.name,
-		TO_CHAR(m.birthday, 'YYYY/MM/DD') AS birthday,
+		TO_CHAR(m.birthday,
+		'YYYY/MM/DD') AS birthday,
 		m.email,
-		NVL(sus.flag, 'N') as suspension_flag,
+		NVL(sus.flag, 'N') as
+		suspension_flag,
 		sus.end_date as suspension_end_date
 		FROM member m
-		LEFT OUTER JOIN store s ON m.user_id = s.user_id
-		LEFT OUTER JOIN suspension sus ON m.user_id = sus.user_id
+		LEFT
+		OUTER JOIN store s ON m.user_id = s.user_id
+		LEFT OUTER JOIN suspension
+		sus ON m.user_id = sus.user_id
 		WHERE m.user_id = #{userId}
 	</select>
 
@@ -66,7 +70,7 @@
 		flag = #{flag},
 		start_date = CASE WHEN #{flag} = 'Y' THEN
 		SYSDATE ELSE start_date END,
-		end_date = CASE WHEN #{flag} = 'Y' THEN 
+		end_date = CASE WHEN #{flag} = 'Y' THEN
 		SYSDATE + #{days} ELSE end_date END
 		WHEN NOT MATCHED THEN
 		INSERT (flag,
@@ -130,15 +134,14 @@
 	<select id="selectStoreReviews"
 		resultType="kr.co.sist.admin.member.AdminMemberPrdvDomain">
 		SELECT
-		r.review_text, r.review_rate,
-		TO_CHAR(r.review_date,
-		'YYYY-MM-DD') as review_date,
-		'구매자' as writer_id
-		FROM review r
-		WHERE
-		r.store_num = (SELECT store_num FROM
-		store WHERE user_id = #{userId})
-		ORDER BY r.review_date DESC
+		r.review_text,
+		r.review_rate,
+		TO_CHAR(r.review_date, 'YYYY-MM-DD') as review_date,
+		p.title, NVL(o.buyer_id, '익명') as writer_id FROM review r
+		INNER JOIN product p ON r.product_num = p.product_num LEFT JOIN
+		product_order o ON r.product_num = o.product_num WHERE p.store_num =
+		(SELECT store_num FROM store WHERE user_id = #{userId}) ORDER BY
+		r.review_date DESC
 	</select>
 
 	<select id="selectMemberStoreInfo"

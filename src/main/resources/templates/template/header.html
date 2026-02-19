@@ -29,25 +29,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 <script th:src="@{/js/chat.js}" defer></script>
-	<script type="text/javascript">
-	function openDrawer(title) {
-    	const titleElement = document.getElementById('drawerTitle');
-    	if (titleElement && title) {
-        	titleElement.innerText = title;
-    	}
-
-    	// 서랍 열기
-    	document.getElementById('drawer').classList.remove('translate-x-full');
-    
-    	// 배경 보이기
-    	const overlay = document.getElementById('overlay');
-    	overlay.classList.remove('hidden');
-    	setTimeout(() => overlay.classList.remove('opacity-0'), 10); // 부드러운 효과를 위해
-
-    	// 뒷배경 스크롤 방지
-    	document.body.style.overflow = 'hidden';
-	}
-	</script>
 	<div id="header_items_wrapper" class="px-4 md:px-8 lg:px-0 h-16 sm:h-20 lg:h-36 xl:h-40 w-full transition duration-200 ease-in-out border-b border-jnGray-300 fixed z-20 text-gray-700 bg-white innerSticky body-font">
 		<div class="h-full lg:h-20 xl:h-24 px-0 lg:px-8 2xl:px-16 max-w-[1024px] min-[1600px]:max-w-[1280px] flex items-center mx-auto box-content justify-between relative before:absolute before:w-screen before:bg-[#F1F1F1] before:bottom-0">
 			<div class="flex flex-1 lg:max-w-[200px]">

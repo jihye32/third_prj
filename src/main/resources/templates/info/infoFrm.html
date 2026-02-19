@@ -32,6 +32,10 @@ $(function() {
     // 플래그 설정 (기존 값과 같으면 이미 인증된 것으로 간주)
     let isStoreNameChecked = true; 
     let isEmailVerified = true;
+    
+ 	// 정규표현식 정의
+    const idReg = /^[a-zA-Z0-9]{6,12}$/;
+    const passReg = /^[a-zA-Z0-9!@#$%^&*()_+|<>?:{}]{8,15}$/;
 
     // 1. 가게명 수정 감지 및 중복 확인
     $("#storeName").on("input", function() {
@@ -57,17 +61,23 @@ $(function() {
         }
 
         $.ajax({
-            url: "/join/storeNameDup", // 기존 회원가입 컨트롤러 재사용
+            url: "/info/storeNameDup",
             type: "GET",
             data: { storeName: storeName },
             success: function(isAvailable) {
                 if (isAvailable) {
                     $("#storeNameChkMsg").text("사용 가능한 가게명입니다.").css("color", "#0DCC5A");
                     isStoreNameChecked = true;
+                    
+                    $("input[name='storeName']").attr("readonly", true).css("background-color", "#F5F5F5");
+                    $("#storeNameChkBtn").attr("disabled", true).css("opacity", "0.5").css("cursor", "default");
                 } else {
                     $("#storeNameChkMsg").text("이미 사용 중인 가게명입니다.").css("color", "red");
                     isStoreNameChecked = false;
                 }
+            },
+            error: function() {
+                alert("가게명 중복 확인 중 오류가 발생했습니다.");
             }
         });
     });
@@ -99,7 +109,7 @@ $(function() {
         $("#sendVerifyCodeMsg").text("인증번호 발송 중...").css("color", "black");
 
         $.ajax({
-            url: "/join/sendVerifyCode",
+            url: "/info/sendVerifyCode",
             type: "GET",
             data: { emailLocal: emailLocal, emailDomain: emailDomain },
             success: function(result) {
@@ -121,17 +131,26 @@ $(function() {
         }
 
         $.ajax({
-            url: "/join/verifyCodeChk",
+            url: "/info/verifyCodeChk",
             type: "POST",
             data: { inputCode: inputCode },
             success: function(isMatch) {
                 if (isMatch) {
-                    $("#verifyCodeChkMsg").text("인증 성공!").css("color", "#0DCC5A");
+                    $("#verifyCodeChkMsg").text("인증에 성공했습니다.").css("color", "#0DCC5A");
                     isEmailVerified = true;
+
+                    $("input[name='emailLocal']").attr("readonly", true).css("background-color", "#F5F5F5");
+                    $("select[name='emailDomain']").attr("disabled", true).css("background-color", "#F5F5F5");
+                    $("input[name='inputCode']").attr("readonly", true).css("background-color", "#F5F5F5");
+                    
+                    $("#sendVerifyCodeBtn, #verifyCodeChkBtn").attr("disabled", true).css("opacity", "0.5").css("cursor", "default");
                 } else {
-                    $("#verifyCodeChkMsg").text("인증번호 불일치").css("color", "red");
+                    $("#verifyCodeChkMsg").text("인증번호가 일치하지 않습니다.").css("color", "red");
                     isEmailVerified = false;
                 }
+            },
+            error: function() {
+                alert("인증 확인 중 오류가 발생했습니다.");
             }
         });
     });
@@ -156,13 +175,18 @@ $(function() {
                 alert("새 비밀번호가 일치하지 않습니다.");
                 return;
             }
+            
+         	// 비밀번호 유효성 검사 (8~15자, 영문/숫자/특수문자)
+            if(!passReg.test(pass)) {
+                alert("비밀번호는 영문 대소문자와 숫자, 특수문자를 사용하여 8~15자리로 입력해주세요.");
+                $("input[name='pass']").focus();
+                return;
+            }
         }
 
         if (confirm("정보를 수정하시겠습니까?")) {
-            // 폼 제출 로직 (id가 없으므로 closest 사용하거나 id 추가 권장)
-            $("form").attr("action", "/mypage/updateProcess");
-            $("form").attr("method", "POST");
-            $("form").submit();
+        	$("select[name='emailDomain']").attr("disabled", false);
+            $("#infoFrm").submit();
         }
     });
 });// ready
@@ -179,7 +203,7 @@ $(function() {
 				<div
 					class="mx-auto max-w-[1280px] md:px-8 2xl:px-16 box-content max-lg:overflow-x-hidden px-0">
 					<div></div>
-					<form
+					<form th:action="@{/info/changeInfoProcess}" method="post" id="infoFrm"
 						class="pt-6 mx-auto w-full max-w-[1020px] lg:pt-[72px] max-lg:overflow-x-hidden">
 						<section class="px-5">
 							<div
@@ -209,7 +233,7 @@ $(function() {
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input id="pass" name="pass" type="text"
+												<input id="pass" name="pass" type="password" placeholder="영문/숫자/특수문자 8~15자"
 													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
 											</div>
@@ -224,7 +248,7 @@ $(function() {
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input id="passChk" name="passChk" type="text" 
+												<input id="passChk" name="passChk" type="password" 
 													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
 											</div>
@@ -253,7 +277,7 @@ $(function() {
 											<div class="relative">
 												<input style="width: 600px;" id="storeName" name="storeName" type="text" th:value="${md.store_name}" class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-									        	<input type="button" value="중복확인" class="chkBtn" id="storeNameChkBtn">
+									        	<input type="button" value="중복확인" class="chkBtn cursor-pointer" id="storeNameChkBtn">
 									        	<!-- 가게명 중복확인 메시지 -->
 												<div id="storeNameChkMsg" style="font-size: 0.8em; margin-top: 5px;"></div>
 											</div>
@@ -288,7 +312,7 @@ $(function() {
 													<option value="@gmail.com" th:selected="${#strings.substringAfter(md.email, '@') == 'gmail.com'}">@gmail.com</option>
 													<option value="@daum.net" th:selected="${#strings.substringAfter(md.email, '@') == 'daum.net'}">@daum.net</option>
 												</select>
-												<input type="button" value="인증번호 전송" class="chkBtn" id="sendVerifyCodeBtn">
+												<input type="button" value="인증번호 전송" class="chkBtn cursor-pointer" id="sendVerifyCodeBtn">
 												<!-- 이메일 인증번호 전송 확인 메시지 -->
 												<div id="sendVerifyCodeMsg" style="font-size: 0.8em; margin-top: 5px;"></div>
 											</div>
@@ -303,11 +327,11 @@ $(function() {
 									<div class="col-span-5">
 										<div class="relative">
 											<div class="relative">
-												<input style="width: 600px;" id="productTitle" name="productTitle" type="text"
+												<input style="width: 600px;" id="inputCode" name="inputCode" type="text"
 													placeholder=""
 													class="py-2 px-4 md:px-5 w-full appearance-none border text-input text-xs lg:text-sm font-body placeholder-body transition duration-200 ease-in-out bg-white border-gray-300 focus:border-heading h-11 md:h-12 body-medium-14 !h-11 !p-3 !pr-8 overflow-x-scroll min-h-fit lg:body-medium-16 lg:!h-12 placeholder:text-jnGray-500 focus:outline-none rounded"
 													autocomplete="off" spellcheck="false" aria-invalid="false">
-									        	<input type="button" value="인증하기" class="chkBtn" id="verifyCodeChkBtn">
+									        	<input type="button" value="인증하기" class="chkBtn cursor-pointer" id="verifyCodeChkBtn" name="verifyCodeChkBtn">
 									        	<!-- 이메일 인증번호 인증 확인 메시지 -->
 												<div id="verifyCodeChkMsg" style="font-size: 0.8em; margin-top: 5px;"></div>
 											</div>
@@ -332,5 +356,6 @@ $(function() {
 			<div th:replace="~{template/footer :: footerFragment}"></div>
 		</div>
 	</div>
+	<div th:replace="~{template/wrapper_frm :: drawerFrame}"></div>
 </body>
 </html>

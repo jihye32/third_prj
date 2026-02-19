@@ -54,6 +54,11 @@ document.getElementById("heart-checkbox")?.addEventListener("change", async (e) 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pnum }),
     });
+	
+	if (res.status === 401) {
+	  location.href = "/user/login/loginFrm";
+	  return;
+	}
 
     if (!res.ok) throw new Error("bookmark failed");
   } catch (err) {
