@@ -130,10 +130,10 @@ function reset(){
 					<div class="w-full 2xl:-ms-9">
 						<div class="relative">
 							<div class="flex flex-col lg:flex-row lg:items-center gap-2 items-start mb-[10px]">
-							<th:block th:if="${param.keyword ne null}">
+							<th:block th:if="${param.keyword ne null and param.keyword ne ''}">
 								<h2 class="text-2xl lg:text-[28px] font-normal w-[calc(100%-30px)] lg:w-auto text-jnBlack">
 									<strong class="font-semibold">'<span th:text="${param.keyword}"></span>'</strong> 검색 결과</h2>
-								<p class="text-jnGray-700">총 12,472개</p>
+								<p class="text-jnGray-700" th:text="|총 ${#numbers.formatInteger({totalCnt}, 0, 'COMMA')}개|">총 n개</p>
 							</th:block>
 							</div>
 							<h1 class="a11yHidden">전체 카테고리 | 중고나라 - 안심되는 중고거래</h1>
@@ -225,9 +225,9 @@ function reset(){
 									<tr>
 										<td>가격</td>
 										<td class="price-filter">
-											<input id="startPrice" type="text" th:value="${param.startPrice != null} ? ${param.startPrice} : ''"
+											<input id="startPrice" type="number" th:value="${param.startPrice != null} ? ${param.startPrice} : ''"
 											class="w-[152px] border rounded border-jnGray-200 py-[10px] px-4 text-sm font-medium"
-											placeholder="최소 가격" data-idx="0">
+											placeholder="최소 가격" data-idx="0" min="0" step="1">
 											<span class="mx-[6px]">
 												<svg
 													xmlns="http://www.w3.org/2000/svg" width="10" height="4"
@@ -238,32 +238,56 @@ function reset(){
 												</svg>
 											</span>
 											<input id="endPrice" th:value="${param.endPrice != null} ? ${param.endPrice} : ''"
-											type="text" class="w-[152px] border rounded border-jnGray-200 py-[10px] px-4 text-sm font-medium"
-											placeholder="최대 가격" data-idx="1">
+											type="number" class="w-[152px] border rounded border-jnGray-200 py-[10px] px-4 text-sm font-medium"
+											placeholder="최대 가격" data-idx="1" min="0" step="1">
 										<button data-routerlink="true" id="submitBtn"
 												class="w-full mt-3 lg:mt-0 lg:w-auto bg-jnBlack py-[10px] px-4 m-0 lg:mx-2 rounded text-sm font-medium text-white">적용</button></td>
 									</tr>
 									<script type="text/javascript">
 									$('#submitBtn').click(function() {
-									    var url = new URL(window.location.href);  // 현재 URL
-									    var startPrice = $("#startPrice").val();
-									    var endPrice = $("#endPrice").val();
-									    // 유효성 검증 해야함
-									    
-									    
-									    // startPrice가 비어있지 않을 때만 URL에 추가
-									    if (startPrice !== null && startPrice !== '') {
-									        url.searchParams.set('startPrice', startPrice);
+									    var url = new URL(window.location.href);
+									    var startPrice = $("#startPrice").val().trim();
+									    var endPrice = $("#endPrice").val().trim();
+									
+									    // 공백 체크
+									    if (startPrice === '' || endPrice === '') {
+									        alert("가격 범위는 시작과 끝 모두 입력해야 합니다.");
+									        return;
 									    }
 									
-									    // endPrice가 비어있지 않을 때만 URL에 추가
-									    if (endPrice !== null && endPrice !== '') {
-									        url.searchParams.set('endPrice', endPrice);
+									    // 숫자만 입력 (정수만 허용)
+									    var numberRegex = /^[0-9]+$/;
+									
+									    if (!numberRegex.test(startPrice) || !numberRegex.test(endPrice)) {
+									        alert("가격은 숫자만 입력 가능합니다.");
+									        return;
 									    }
+									
+									    // 숫자로 변환
+									    startPrice = parseInt(startPrice, 10);
+									    endPrice = parseInt(endPrice, 10);
+									
+									    // 음수 방지 (정규식에서 이미 걸러지지만 안전하게 한번 더 체크)
+									    if (startPrice < 0 || endPrice < 0) {
+									        alert("가격은 음수를 입력할 수 없습니다.");
+									        return;
+									    }
+									
+									    // 시작 가격 < 끝 가격
+									    if (startPrice >= endPrice) {
+									        alert("시작 가격은 끝 가격보다 작아야 합니다.");
+									        return;
+									    }
+									
+									    // 조건 만족 시 URL 파라미터 설정
+									    url.searchParams.set('startPrice', startPrice);
+									    url.searchParams.set('endPrice', endPrice);
 									    url.searchParams.set('currentPage', 1);
-									    window.location.href = url.toString();    // 이동
+									
+									    window.location.href = url.toString();
 									});
 									</script>
+
 									<tr>
 										<td>선택한 필터</td>
 										<td><div

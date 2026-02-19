@@ -24,8 +24,6 @@ public class MainAspect {
 			returning = "result")
 	public void afterReturning2(JoinPoint jp, Object result) {
 		List<ProductDomain> list = (List<ProductDomain>) result;
-//		System.out.println("반환형이 있는 method가 호출" + jp.getSignature());
-//		System.out.println("Aspect 반환값 : " + list);
 		
 		for(ProductDomain pd : list) {
 			if(pd.getTradingArea() != null && !"".equals(pd.getTradingArea())) {

@@ -21,8 +21,12 @@ public class InfoController {
 	private InfoService is;
 
 	@GetMapping("/passChkFrm")
-	public String passChkFrm() {
-		return "/info/passChkFrm";
+	public String passChkFrm(HttpSession session) {
+		if(session.getAttribute("uid") != null) {
+			return "/info/passChkFrm";
+		} else {
+			return "redirect:/user/login/loginFrm";
+		}// end else
 	}// passChkFrm
 
 	@PostMapping("/passChkProcess")
@@ -31,7 +35,7 @@ public class InfoController {
 			iDTO.setId((String) session.getAttribute("uid"));
 			MemberDomain md = is.passChk(iDTO);
 
-			session.setAttribute("passChkResult", "success");
+			session.setAttribute("isVerified", true);
 			model.addAttribute("md", md);
 
 			return "/info/infoFrm";
@@ -45,14 +49,14 @@ public class InfoController {
 
 	@GetMapping("/infoFrm")
 	public String infoFrm(HttpSession session, Model model, RedirectAttributes ra) {
-		String id = (String) session.getAttribute("uid");
-
-		if (id == null) {
-			return "redirect:/user/login/loginFrm";
+		Boolean isVerified = (Boolean) session.getAttribute("isVerified");
+		
+		if (isVerified == null || !isVerified) {
+			return "redirect:/info/passChkFrm";
 		} // end if
 
 		try {
-			MemberDomain md = is.searchMember(id);
+			MemberDomain md = is.searchMember(session.getAttribute("uid").toString());
 			model.addAttribute("md", md);
 		} catch (PersistenceException pe) {
 			ra.addFlashAttribute("passChkFlag", "fail");
