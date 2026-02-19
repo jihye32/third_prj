@@ -19,6 +19,15 @@ public class ChatDAO {
 		
 		return list;
 	}
+	public String selectDelete(String other){
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		String flag=ss.selectOne("kr.co.sist.user.chat.selectDelete", other);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return flag;
+	}
 	
 	public ChatListInfoDomain selectStoreName(String otherId) {
 		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);

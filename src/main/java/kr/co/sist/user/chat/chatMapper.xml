@@ -59,15 +59,19 @@ select chatroom_num,
        case
          when user_low = #{uid} then user_high
          else user_low
-       end as other_id,
-       last_product_num,
-       last_talk,
-       last_talk_date
+       end as other_id, 
+       last_product_num, last_talk, last_talk_date
 from chat_list
 where user_low = #{uid}
    or user_high = #{uid}
 order by last_talk_date desc
 </select>
+<select id="selectDelete" parameterType="String" resultType="String">
+select delete_flag
+from member
+where user_id = #{other}
+</select>
+
 <resultMap type="kr.co.sist.user.chat.ChatListInfoDomain" id="infoDomain">
 	<result column="store_name" property="storeName"/>
 	<result column="profile_img" property="profile"/>

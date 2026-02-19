@@ -34,9 +34,13 @@ public class ChatController {
 		List<ChatListDomain> clDomain = cs.searchChatList(uid);  
 		for(ChatListDomain cld : clDomain) {
 			String content = cld.getContent();
-			if(content.length() > 20) {
-				cld.setContent(content.substring(0, 20)+"...");
+			if("Y".equals(cld.getDeleteFlag())) {
+				content = "탈퇴한 회원입니다.";
+			}else if(content.length() > 20) {
+				content = content.substring(0, 20)+"...";
 			}
+			cld.setContent(content);
+			
 		}
 		model.addAttribute("list", clDomain);
 		
@@ -65,6 +69,10 @@ public class ChatController {
 			pd=cs.searchProduct(pnum);
 			model.addAttribute("pnum", pnum);
 		}
+		
+		String deleteFlag = cs.searchDelete(otherId);
+		
+		model.addAttribute("deleteFlag", deleteFlag);
 		model.addAttribute("product", pd);
 		model.addAttribute("otherId", otherId);
 		model.addAttribute("roomNum", room);
