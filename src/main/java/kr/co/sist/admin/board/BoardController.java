@@ -17,6 +17,11 @@ public class BoardController {
     public BoardController(BoardService bs) {
         this.bs = bs;
     }
+    
+    private String getAdminId(HttpSession session) {
+        Object v = session.getAttribute("adminId");
+        return v == null ? null : v.toString();
+    }
 
     // FAQ 목록
     @GetMapping("/faq/faq")
@@ -110,7 +115,8 @@ public class BoardController {
         dto.setBoardType("F");
         //dto.setAdminId(getAdminId(session)); // 세션에서 관리자 아이디
 
-        dto.setAdminId("admin01");//임시 관리자 아이디
+        String adminId = getAdminId(session);   
+        dto.setAdminId(adminId);
         bs.addBoard(dto);
         System.out.println("adminId = " + dto.getAdminId());
 
@@ -140,7 +146,8 @@ public class BoardController {
         dto.setType("NOTICE");
         dto.setBoardType("N");
         //dto.setAdminId(getAdminId(session));
-        dto.setAdminId("admin01");//임시 관리자 아이디
+        String adminId = getAdminId(session);   
+        dto.setAdminId(adminId);
 
         bs.addBoard(dto);
 
@@ -200,7 +207,8 @@ public class BoardController {
         dto.setType("FAQ");
         //dto.setAdminId((String)session.getAttribute("adminId"));
 
-        dto.setAdminId("admin01");//임시 관리자 아이디
+        String adminId = getAdminId(session);   
+        dto.setAdminId(adminId);
         bs.modifyBoard(dto);
 
         return "redirect:/manage/faq/faq";
@@ -213,7 +221,8 @@ public class BoardController {
         dto.setType("NOTICE");
         //dto.setAdminId((String)session.getAttribute("adminId"));
 
-        dto.setAdminId("admin01");//임시 관리자 아이디
+        String adminId = getAdminId(session);   
+        dto.setAdminId(adminId);
         bs.modifyBoard(dto);
 
         return "redirect:/manage/notice/notice";
