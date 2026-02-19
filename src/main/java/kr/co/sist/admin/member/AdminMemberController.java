@@ -100,6 +100,7 @@ public class AdminMemberController {
         model.addAttribute("type", type);
         model.addAttribute("userId", userId); // 👈 탭 클릭 시 다시 사용하기 위해 필수!
         model.addAttribute("pagination", pagination);
+        model.addAttribute("totalCount", totalCount);
         
         return "manage/member/member_product"; 
     }

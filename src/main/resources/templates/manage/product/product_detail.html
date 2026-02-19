@@ -25,8 +25,9 @@
 		<main id="main-container">
 			<div class="detail-inner-wrap">
 				<div class="d-flex justify-content-between align-items-center mb-4">
-					<div
-						style="background: #f4f6f8; padding: 6px 16px; border-radius: 4px; font-weight: bold;">물품관리</div>
+					<button
+						style="background: #f4f6f8; padding: 6px 16px; border-radius: 4px; font-weight: bold;"
+						th:onclick="|location.href='/manage/product/product_main'|">돌아가기</button>
 
 					<div class="d-flex align-items-stretch">
 						<button class="btn-del-red" id="deleteBtn"
@@ -171,8 +172,10 @@
 								<div class="small text-muted">입점 상점</div>
 							</div>
 						</div>
-						<button class="btn-list-navy"
-							th:onclick="|location.href='/manage/product/product_main'|">목록으로</button>
+						<a
+							th:href="@{/manage/member/member_prdv(userId=${product.user_id})}"
+							class="btn-list-navy text-center d-inline-block text-decoration-none"
+							style="line-height: 35px;"> 상점으로 </a>
 					</div>
 				</div>
 			</div>
