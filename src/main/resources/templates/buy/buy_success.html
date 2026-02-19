@@ -59,62 +59,6 @@
 			</div>
 		</div>
 	</section>
-	<!-- <div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
-	<div
-		class="outline-none gap-4 flex flex-col justify-start items-stretch flex-nowrap py-6 px-5">
-		<div
-			class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap">
-			<div
-				class="outline-none flex flex-row justify-between items-center flex-nowrap">
-				<h2
-					class="whitespace-pre-line text-18 font-semibold text-gray-900">입금 정보</h2>
-			</div>
-		</div>
-		<div
-			class="outline-none gap-3 flex flex-col justify-start items-stretch flex-nowrap">
-			<section
-				class="outline-none flex flex-row justify-start items-stretch flex-nowrap">
-				<ul
-					class="outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap w-full">
-					<li
-						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">입금은행</h3>
-						<span class="z-auto rounded-none relative text-right break-all"><span
-							class="whitespace-pre-line" aria-hidden="false">국민은행</span></span></li>
-					<li
-						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">계좌번호</h3>
-						<span class="z-auto rounded-none relative text-right break-all"><span class="whitespace-pre-line">99449014101020</span>
-							<button type="button" class="cursor-pointer"
-									aria-label="계좌번호 복사">
-									<svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-										color="#787E89">
-										<rect x="3" y="4.44995" width="8.46154" height="9.75" rx="1"
-											stroke="#787E89"></rect>
-										<path
-											d="M5.53809 3.5483V3.39665V3.19995C5.53809 2.64767 5.9858 2.19995 6.53809 2.19995H12.9996C13.5519 2.19995 13.9996 2.64767 13.9996 3.19995V10.95C13.9996 11.5022 13.5519 11.95 12.9996 11.95H12.6445H12.4759"
-											stroke="#787E89"></path></svg>
-								</button></span></li>
-					<li
-						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">예금주</h3>
-						<span class="z-auto rounded-none relative text-right break-all"><span
-							class="whitespace-pre-line" aria-hidden="false">(주)중고나라</span></span></li>
-					<li
-						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">입금요청액</h3>
-						<span class="z-auto rounded-none relative text-right break-all"><span
-							class="whitespace-pre-line" aria-hidden="false">11,111원</span></span></li>
-					<li
-						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">입금기한</h3>
-						<span class="z-auto rounded-none relative text-right break-all"><span
-							class="whitespace-pre-line text-jnGreen-700"
-							aria-hidden="false">2026.01.20 15:55까지</span></span></li>
-				</ul>
-			</section>
-		</div>
-	</div> -->
 	<div class="h-[6px] w-full" style="background-color: rgb(241, 244, 246);"></div>
 	<div
 		class="outline-none gap-4 flex flex-col justify-start items-stretch flex-nowrap py-6 px-5">
@@ -134,7 +78,7 @@
 					class="outline-none flex flex-row justify-start items-stretch flex-nowrap rounded-lg overflow-hidden"
 					style="width: 64px; height: 64px;">
 					<img class="w-full h-full object-cover"
-						th:src="@{/assets/images/{file}(file=*{thumbnail})}">
+						th:src="@{/images/thumbnail/{thumbnail}(thumbnail=*{thumbnail})}">
 				</div>
 				<div
 					class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap flex-1">
@@ -237,7 +181,7 @@
 					<span
 						class="whitespace-pre-line font-medium text-inherit text-16">계속 쇼핑</span>
 				</button>
-				<button
+				<button data-action="my-page"
 					class="rounded inline-flex justify-center items-center gap-2 px-4 py-3.5 w-full h-13 text-white bg-gray-900 border active:border-gray-700 flex-1">
 					<span
 						class="whitespace-pre-line font-medium text-inherit text-16">구매내역</span>

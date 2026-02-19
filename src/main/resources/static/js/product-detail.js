@@ -54,6 +54,11 @@ document.getElementById("heart-checkbox")?.addEventListener("change", async (e) 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pnum }),
     });
+	
+	if (res.status === 401) {
+	  location.href = "/user/login/loginFrm";
+	  return;
+	}
 
     if (!res.ok) throw new Error("bookmark failed");
   } catch (err) {
@@ -90,6 +95,11 @@ document.addEventListener("click", (e) => {
 			const container = actionBtn.closest(".status-container");
 			const menu = container?.querySelector(".status-option");
 			menu?.classList.add("hidden");
+			return;
+		}
+		
+		case "modify-product":{
+			modifyProduct(pnum);
 			return;
 		}
 			
@@ -144,11 +154,16 @@ function updateStatus(pnum, statusCode) {
         body: JSON.stringify({ pnum, sellStatusCode : statusCode })
 	}).then(res => res.json())
     .then(data => {
-    	alert(data.msg); 
 		if(data.flag){
-			alert("현재 페이지 수정");
+			location.reload();
+		}else{
+    		alert(data.msg); 
 		}
     });
+}
+
+function modifyProduct(pnum){
+	location.href="/sell/modify/"+pnum;
 }
 
 //상품 삭제 함수
@@ -181,7 +196,7 @@ function sendProduct(pnum){
     .then(data => {
 		alert(data.msg);
 		if(data.flag){
-			alert("현재 페이지에서 버튼 안보이게 하기");
+			location.reload();
 		}
     });
 }

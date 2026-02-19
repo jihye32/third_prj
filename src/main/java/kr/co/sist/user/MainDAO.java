@@ -27,5 +27,11 @@ public class MainDAO {
 		return list;
 	}// selectMostViewProdcut
 	
+	public void insertHistory(String ip) throws PersistenceException{
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		ss.insert("kr.co.sist.user.main.insertHistory", ip);
+		if(ss != null) {ss.close();}// end if
+	}// insertHistory
+	
 	
 }// class

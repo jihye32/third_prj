@@ -50,6 +50,7 @@ public class MyPageController {
 		model.addAttribute("tempData", mps.searchMySellProdcut(mprDTO));
 		model.addAttribute("cnt", totalCnt);// 물품 수
 		model.addAttribute("hasNext", hasNext);
+		model.addAttribute("storeNum", storeNum);
 		
 		return "/mypage/myPageFrm";
 	}// myPageFrm 

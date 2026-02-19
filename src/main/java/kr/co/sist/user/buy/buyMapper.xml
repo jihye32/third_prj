@@ -38,8 +38,15 @@ where product_num = #{productnum}
 <!-- 결제할 때 -->
 <!-- 주문 정보 저장 -->
 <insert id="insertOrder" parameterType="orderDTO">
-insert into product_order(order_id,product_num,buyer_id,amount,charge,order_status,created_date,deal_type) 
-values (#{orderId},#{pnum},#{buyerId},#{amount},#{charge},#{orderStatus},sysdate,#{dealType})
+insert into product_order(order_id,product_num,buyer_id,amount,charge,order_status,created_date,deal_type
+<if test="dealType == 'DIRECT'">
+	, shipped_date, delivered_date
+</if>) 
+values (#{orderId},#{pnum},#{buyerId},#{amount},#{charge},#{orderStatus},sysdate,#{dealType}
+<if test="dealType == 'DIRECT'">
+	, sysdate, sysdate
+</if>
+)
 </insert>
 <!-- 배송 정보 저장 -->
 <insert id="insertAddress" parameterType="addressDTO">
@@ -92,7 +99,7 @@ where order_id = #{orderId}
 </select>
 <!-- 상품 상태 변경 -->
 <update id="updateProductStatus" parameterType="int">
-update product set status_code=3
+update product set status_code=3, over_selling_date=sysdate
 where product_num = #{productNum}
 </update>
 
@@ -110,5 +117,28 @@ where product_num = #{productNum}
 select p.order_id, p.payment_type, p.amount, p.approved_date, p.provider, po.deal_type, po.product_num, po.charge
 from payment p, product_order po 
 where p.order_id = po.order_id and p.order_id = #{orderId}
+</select>
+
+
+<!-- 결제 완료 후 정보 메시지로 보냄 -->
+<select id="selectSellerId" parameterType="Integer" resultType="String">
+select user_id
+from store
+where store_num=(
+select store_num
+from product
+where product_num = #{productNum}
+)
+</select>
+<resultMap type="addressDTO" id="aDTO">
+<result column="name" property="name"/>
+<result column="tell" property="tel"/>
+<result column="address" property="addr"/>
+<result column="address_detail" property="addrDetail"/>
+</resultMap>
+<select id="selectAddress" parameterType="String" resultMap="aDTO">
+select name, tell, address, address_detail 
+from address
+where order_id = #{orderId}
 </select>
 </mapper>

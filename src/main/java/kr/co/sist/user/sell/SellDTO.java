@@ -20,4 +20,5 @@ public class SellDTO {
 	private List<String> tradeType = new ArrayList<String>();
 	private String thumbnailName;
 	private List<String> productImgName = new ArrayList<String>();
+	private List<String> deletedImageIds;
 }

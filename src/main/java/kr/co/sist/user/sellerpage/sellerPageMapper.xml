@@ -76,4 +76,9 @@ and status_code = #{sellStateCode}
 
 </select>
 
+<select id="selectSellerId" resultType="String" parameterType="int">
+select user_id
+from store
+where store_num = #{storeNum}
+</select>
 </mapper>

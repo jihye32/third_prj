@@ -135,5 +135,26 @@ public class BuyDAO {
 		
 		return pd;
 	}
+
+	public String selectSellerId(int pnum) {
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		String sellerId = ss.selectOne("kr.co.sist.user.buy.selectSellerId", pnum);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return sellerId;
+	}
+	public AddressDTO selectAddress(String orderId) {
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		AddressDTO addressDTO = ss.selectOne("kr.co.sist.user.buy.selectAddress", orderId);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return addressDTO;
+	}
 	
 }
