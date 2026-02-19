@@ -44,13 +44,15 @@ public class SellerPageController {
 		sprDTO.setStartNum(startNum);
 		boolean hasNext = endNum < totalCnt;
 		
-		
 		List<ProductDomain> allProduct = sps.searchProductList(sprDTO);// 판매하는 모든 물품 db에서 조회
 		List<ProductDomain> sellingProduct = sps.findSelling(allProduct);// 조회된 모든 물품에서 판매중인 것만 선택
 		List<ProductDomain> reserveProduct = sps.findReserve(allProduct);// 조회된 모든 물품에서 예약중인 것만 선택
 		List<ProductDomain> selledProduct = sps.findSelled(allProduct);// 조회된 모든 물품에서 판매완료인 것만 선택
 		
 		String storeId = sps.searchSellerId(storeNum);
+		
+		int reviewCnt = sps.searchReviewCnt(storeNum);
+		model.addAttribute("reviewCnt", reviewCnt);
 		
 		model.addAttribute("SellerPageDomain",sps.searchSeller(storeNum));// 판매자 정보
 		model.addAttribute("storeNum",storeNum);// 판매자 정보

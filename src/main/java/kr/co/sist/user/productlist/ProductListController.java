@@ -19,7 +19,6 @@ public class ProductListController {
 	
 	@GetMapping("/searchList")
 	public String productList(Model model, ProductRangeDTO prDTO, HttpSession session) {
-//		System.out.println(prDTO);
 		
 		// pagenation 관련
 		if(session.getAttribute("snum") != null & !"".equals(session.getAttribute("snum"))) {
@@ -35,13 +34,9 @@ public class ProductListController {
 		prDTO.setStartNum(startNum);
 		prDTO.setEndNum(endNum);
 		prDTO.setTotalPage(totalPage);
-		
-//		System.out.println(prDTO);
-		
+		model.addAttribute("totalCnt",totalCnt);
 		
 		List<ProductDomain> list = pls.searchProductList(prDTO);
-//		System.out.println(list);
-//		System.out.println("조회 건수 : " + list.size());
 		model.addAttribute("tempData", list);
 		
 		

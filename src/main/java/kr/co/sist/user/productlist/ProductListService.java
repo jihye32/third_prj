@@ -28,7 +28,6 @@ public class ProductListService {
 			list = plDAO.selectProductList(prDTO);
 		} catch (PersistenceException pe) {
 		} // end catch
-//		System.out.println(list);
 		return list;
 	}// searchProductList
 	

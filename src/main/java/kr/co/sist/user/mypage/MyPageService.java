@@ -33,7 +33,6 @@ public class MyPageService {
 	
 	public List<ProductDomain> searchMySellProdcut(MyPageRangeDTO mprDTO){
 		List<ProductDomain> list = null;
-//		System.out.println(mprDTO);
 		try {
 			if(mprDTO.getSearchCode() == 0) {
 				list = mpDAO.selectMySellProduct(mprDTO);

@@ -19,7 +19,7 @@ SELECT
     ) AS reviewCnt,
     (	select count(product_num)
 			FROM PRODUCT
-			WHERE STORE_NUM = 2) as sellProductCnt
+			WHERE STORE_NUM = #{myStoreNum}) as sellProductCnt
 FROM STORE s
 WHERE s.STORE_NUM = #{myStoreNum}
 </select>
