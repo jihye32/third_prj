@@ -102,4 +102,8 @@ public class ChatService {
 	public Integer searchProductNum(int room) {
 		return cDAO.selectProductNum(room);
 	}
+	
+	public void modifyRead(ChatDTO chatDTO) {
+		cDAO.updateReadChat(chatDTO);
+	}
 }

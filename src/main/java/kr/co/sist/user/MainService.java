@@ -33,4 +33,12 @@ public class MainService {
 	 * (PersistenceException pe) { pe.printStackTrace(); }// end catch return list;
 	 * }// searchMostLikeProdcut
 	 */
+	
+	public void addHistory(String ip) {
+		try {
+			mDAO.insertHistory(ip);
+		} catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}// end catch
+	}// addHistory
 }// class

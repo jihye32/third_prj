@@ -27,6 +27,63 @@ values (#{productNum}, #{sellCode})
 insert into SELL_place(PRODUCT_NUM, ADDR)
 values (#{productNum}, #{tradeArea})
 </insert>
+
+<select id="selectSellProductInfo" parameterType="kr.co.sist.user.sell.SellDTO" resultType="kr.co.sist.user.sell.SellDomain">
+select title productTitle, price, content, thumbnail, category_code categoryCode, addr, product_status productStatus
+from product p
+left join (
+    select product_num,
+           listagg(addr, ', ') within group (order by addr) as addr
+    from sell_place
+    group by product_num
+) sp on p.product_num = sp.product_num
+where p.product_num = #{productNum} and p.store_num = #{storeNum}
+</select>
+
+<select id="selectSellCode" parameterType="int" resultType="int">
+select sell_code
+from sell_option
+where product_num = #{productNum}
+</select>
+
+<select id="selectProductImg" parameterType="int" resultType="String">
+select product_img
+from product_img
+where product_num = #{productNum}
+</select>
+
+<update id="updateSellProduct" parameterType="kr.co.sist.user.sell.SellDTO">
+update product
+set     category_code = #{categoryCode},
+        title = #{productTitle},
+        price = #{price},
+        product_status = #{productStatus},
+        thumbnail = #{thumbnailName},
+        content = #{content},
+        modify_date = sysdate,
+        up_date = CASE 
+                    WHEN ABS(SYSDATE - up_date) >= 1
+                    THEN SYSDATE
+                    ELSE up_date
+                  END
+where   product_num = #{productNum} and store_num = #{storeNum}
+</update>
+
+<delete id="deleteDetailImg" parameterType="String">
+delete from product_img
+where product_img = #{productImgName} 
+</delete>
+
+<delete id="deleteTradeType" parameterType="int">
+delete from sell_option
+where product_num = #{product_num}
+</delete>
+
+<delete id="deleteTradeArea" parameterType="int">
+delete from sell_place
+where product_num = #{product_num}
+</delete>
+
 </mapper>
 
 

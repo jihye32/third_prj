@@ -12,13 +12,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class SellDTO {
+public class SellDomain {
 	private int productNum, categoryCode, price, storeNum;
-	private MultipartFile thumbnail;
 	private MultipartFile[] productImages;
 	private String productTitle, content, productStatus, addr;
-	private List<String> tradeType = new ArrayList<String>();
-	private String thumbnailName;
+	private List<Integer> tradeType = new ArrayList<Integer>();
+	private String thumbnail;
 	private List<String> productImgName = new ArrayList<String>();
-	private List<String> deletedImageIds;
+	private boolean packageFlag, directFlag;
 }
