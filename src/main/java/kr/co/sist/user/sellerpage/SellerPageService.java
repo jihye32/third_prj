@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.co.sist.dao.MyBatisHandler;
 import kr.co.sist.user.ProductDomain;
 
 @Service
@@ -100,5 +102,8 @@ public class SellerPageService {
 		return resultList;
 	}// findSelling
 	
+	public String searchSellerId(int storeNum) {
+		return spDAO.selectSellerId(storeNum);
+	}
 	
 }// class

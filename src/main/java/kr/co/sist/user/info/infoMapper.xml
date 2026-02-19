@@ -26,9 +26,13 @@
 	<!-- member 업데이트 -->
 	<update id="updateMember" parameterType="kr.co.sist.user.info.InfoDTO">
 		update 	member
-		set 	user_pass = #{pass},
-				email = #{email},
-				email_hash = #{emailHash}
+		<set>
+	        <if test="pass != null and pass != ''">
+	            user_pass = #{pass},
+	        </if>
+        email = #{email},
+        email_hash = #{emailHash}
+    	</set>
 		where 	user_id = #{id}
 	</update>
 	

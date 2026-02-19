@@ -399,7 +399,7 @@ function searchProductList(){
 												class="text-[#787E89] text-[12px] lg:text-[14px] flex flex-col min-[1600px]:flex-row min-[1600px]:space-x-[6px] break-keep">상품에
 												대한 자세한 정보를 알고싶다면?</span>
 										</div>
-										<button
+										<button th:onclick="openChatForm([[${storeId}]], [[${SellerPageDomain.storeName}]])"
 											class="px-3 ml-2 h-8 font-medium text-white bg-gray-900 duration-500 ease-out text-[12px] lg:text-[14px] shrink-0 lg:h-9 min-w-[66px] lg:min-w-[74px] rounded-[100px] transition-color">채팅하기</button>
 									</div>
 									

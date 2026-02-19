@@ -49,7 +49,21 @@ public class InfoService {
 	}// passChk
 	
 	public MemberDomain searchMember(String id) {
-		return iDAO.selectMember(id);
+	    MemberDomain md = iDAO.selectMember(id);
+	    
+	    if (md != null) {
+	        TextEncryptor te = Encryptors.text(key, salt);
+	        
+	        if (md.getName() != null) {
+	            md.setName(te.decrypt(md.getName()));
+	        }// end if
+	        
+	        if (md.getEmail() != null) {
+	            md.setEmail(te.decrypt(md.getEmail()));
+	        }// end if
+	    }// end if
+	    
+	    return md;
 	}// searchMember
 
 	public boolean searchStoreName(String storeName) throws PersistenceException {
@@ -63,7 +77,7 @@ public class InfoService {
 		// UTF-8 설정
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-		helper.setFrom(senderEmail, "중고나라 이메일 인증");
+		helper.setFrom(senderEmail, "중고마켓 이메일 인증");
 		helper.setTo(email);
 		helper.setSubject("회원가입 인증 번호");
 
@@ -104,9 +118,12 @@ public class InfoService {
 		boolean result = false;
 		SqlSession ss = null;
 
-		// 비밀번호 : 일방향 암호화
-		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder(10);
-		iDTO.setPass(bpe.encode(iDTO.getPass()));
+		if (iDTO.getPass() != null && !iDTO.getPass().trim().isEmpty()) {
+	        BCryptPasswordEncoder bpe = new BCryptPasswordEncoder(10);
+	        iDTO.setPass(bpe.encode(iDTO.getPass()));
+	    } else {
+	        iDTO.setPass(null);
+	    }// else
 		
 		// 이메일 :
 		String rawEmail = iDTO.getEmailLocal() + iDTO.getEmailDomain();
