@@ -44,26 +44,46 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-	$(function() {
-		// 업로드 버튼 클릭 시 hidden file input 클릭
-		$(document).on("click", "#btnPickFiles", function(e){
-			e.preventDefault();
-			$("#files").click();
-		});
+$(function() {
 
-		// 파일 선택 시 카운트 표시
-		$(document).on("change", "#files", function(){
-			const cnt = this.files ? this.files.length : 0;
-			$("#fileCount").text(cnt + "/10");
-		});
+    // 업로드 버튼 클릭
+    $(document).on("click", "#btnPickFiles", function(e){
+        e.preventDefault();
+        $("#files").click();
+    });
 
-		// 수정 완료 버튼 클릭 -> 폼 submit
-		$(document).on("click", "#btnSubmit", function(){
-			if(confirm("수정하시겠습니까?")) {
-				$("#askForm").submit();
-			}
-		});
-	});
+    // 파일 선택 시 카운트
+    $(document).on("change", "#files", function(){
+        const cnt = this.files ? this.files.length : 0;
+        $("#fileCount").text(cnt + "/10");
+    });
+
+    // 수정 완료 버튼
+    $(document).on("click", "#btnSubmit", function(){
+
+        const title = ($("#askTitle").val() || "").trim();
+        const text  = ($("#askContent").val() || "").trim();
+
+        if (title.length === 0) {
+            alert("문의 제목을 입력해 주세요.");
+            $("#askTitle").focus();
+            return;
+        }
+
+        if (text.length === 0) {
+            alert("문의 내용을 입력해 주세요.");
+            $("#askContent").focus();
+            return;
+        }
+
+        if(confirm("수정하시겠습니까?")) {
+            $("#askForm").submit();
+        }
+    });
+
+});
+
+
 </script>
 </head>
 <body>
@@ -138,7 +158,9 @@
 													<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" color="#787E89" viewBox="0 0 32 32" class="w-8 h-8 lg:w-12 lg:h-12">
 														<path fill="color" d="M19.378 6c.38 0 .73.217.897.559l1.015 2.06q.03.06.05.123H26a2 2 0 0 1 2 2v13.259a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10.742a2 2 0 0 1 2-2h4.66q.02-.062.05-.123l1.016-2.06A1 1 0 0 1 12.622 6zM16 12.198a5 5 0 1 0 .002 10.002A5 5 0 0 0 16 12.198m-.001 1.667a3.334 3.334 0 1 1 0 6.67 3.334 3.334 0 0 1 0-6.67"></path>
 													</svg>
-													<p id="fileCount" class="text-jnGray-600 lg:text-base text-xs">0/10</p>
+													<p id="fileCount"
+   															th:text="${imgCount} + '/10'">0/10</p>
+
 												</div>
 											</button>
 										</div>
@@ -150,7 +172,7 @@
 							<br>
 
 							<input type="button" value="수정 완료" id="btnSubmit" class="ask">
-
+							
 						</form>
 
 					</article>

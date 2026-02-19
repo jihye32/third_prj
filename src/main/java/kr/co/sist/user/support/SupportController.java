@@ -97,25 +97,61 @@ public class SupportController {
     }
 
     @PostMapping("/askWriteProcess")
-    public String askWriteProcess(@ModelAttribute UserAskDTO dto, HttpSession session) throws Exception {
+    public String askWriteProcess(
+            @ModelAttribute UserAskDTO dto,
+            HttpSession session,
+            RedirectAttributes ra
+    ) throws Exception {
         String loginId = getLoginId(session);
         if (loginId == null) return "redirect:/user/login/loginFrm";
+
+        // ✅ 서버 유효성(공백 포함) 체크
+        String title = dto.getAskTitle() == null ? "" : dto.getAskTitle().trim();
+        String text  = dto.getAskText()  == null ? "" : dto.getAskText().trim();
+
+        if (title.isEmpty()) {
+            ra.addFlashAttribute("errorMsg", "문의 제목을 입력해 주세요.");
+            ra.addFlashAttribute("dto", dto); // 입력값 유지용(선택)
+            return "redirect:/support/askWriteFrm";
+        }
+        if (text.isEmpty()) {
+            ra.addFlashAttribute("errorMsg", "문의 내용을 입력해 주세요.");
+            ra.addFlashAttribute("dto", dto);
+            return "redirect:/support/askWriteFrm";
+        }
 
         service.writeAsk(loginId, dto);
         return "redirect:/support/askFrm";
     }
-    
+
     @PostMapping("/askUpdateProcess")
-    public String askUpdateProcess(@ModelAttribute UserAskDTO dto, HttpSession session) throws Exception {
+    public String askUpdateProcess(
+            @ModelAttribute UserAskDTO dto,
+            HttpSession session,
+            RedirectAttributes ra
+    ) throws Exception {
         String loginId = getLoginId(session);
         if (loginId == null) return "redirect:/user/login/loginFrm";
 
-      
+        // ✅ 서버 유효성(공백 포함) 체크
+        String title = dto.getAskTitle() == null ? "" : dto.getAskTitle().trim();
+        String text  = dto.getAskText()  == null ? "" : dto.getAskText().trim();
+
+        if (title.isEmpty()) {
+            ra.addFlashAttribute("errorMsg", "문의 제목을 입력해 주세요.");
+            ra.addFlashAttribute("dto", dto);
+            return "redirect:/support/askUpdateFrm?askNum=" + dto.getAskNum();
+        }
+        if (text.isEmpty()) {
+            ra.addFlashAttribute("errorMsg", "문의 내용을 입력해 주세요.");
+            ra.addFlashAttribute("dto", dto);
+            return "redirect:/support/askUpdateFrm?askNum=" + dto.getAskNum();
+        }
+
         service.modifyAsk(loginId, dto);
-        
-        
         return "redirect:/support/askDetailFrm?askNum=" + dto.getAskNum();
     }
+
     
     @GetMapping("/askUpdateFrm")
     public String askUpdateFrm(@RequestParam int askNum, HttpSession session, Model model) throws Exception {
@@ -123,15 +159,21 @@ public class SupportController {
         if (loginId == null) return "redirect:/user/login/loginFrm";
 
         UserAskDomain detail = service.getMyAskDetail(loginId, askNum);
-        
+
         // 보안 체크
         if (detail == null || detail.getAnswerText() != null) {
             return "redirect:/support/askDetailFrm?askNum=" + askNum;
         }
 
+        // ✅ 이미 detail 안에 imgList가 있음
+        int imgCount = (detail.getImgList() == null) ? 0 : detail.getImgList().size();
+
         model.addAttribute("detail", detail);
+        model.addAttribute("imgCount", imgCount);
+
         return "/support/askUpdateFrm";
     }
+
     
     @GetMapping("/testLogin")
     public String testLogin(HttpSession session,
