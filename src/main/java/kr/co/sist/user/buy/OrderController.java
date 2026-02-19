@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import kr.co.sist.user.buy.enums.PaymentStatus;
+import kr.co.sist.user.chat.ChatDTO;
+import kr.co.sist.user.chat.ChatService;
 import kr.co.sist.user.productdetail.enums.DealType;
 
 @RequestMapping("/order")
@@ -44,6 +47,10 @@ public class OrderController {
 
 	   @Autowired
 	   private BuyService bs;
+	   @Autowired
+	   private ChatService chatService;
+	   @Autowired
+	   private SimpMessagingTemplate messagingTemplate;
 	   
 	   @ResponseBody
 	   @PostMapping("/prepare")
@@ -53,8 +60,24 @@ public class OrderController {
 		   DealType dealType = orDTO.getDealType();
 		   AddressDTO address = orDTO.getAddress();
 
-		   if (dealType == DealType.DELIVERY && address == null) {
-		       throw new IllegalArgumentException("배송지 정보가 필요합니다.");
+		   if (dealType == DealType.DELIVERY) {
+			   if(address == null) {
+				   throw new IllegalArgumentException("배송지 정보가 필요합니다.");
+			   }else {
+				   String name = address.getName();
+				   String tel = String.valueOf(address.getTel());
+				   String addr = address.getAddr();
+				   
+				   if(name == null || "".equals(name)) {
+					   throw new IllegalArgumentException("이름이 입력되지 않았습니다.");
+				   }
+				   if(tel == null || !tel.matches("^010\\d{8}$")) {
+					    throw new IllegalArgumentException("휴대폰 번호 형식이 올바르지 않습니다.");
+				   }
+				   if(addr == null || "".equals(addr)) {
+					   throw new IllegalArgumentException("주소가 입력되지 않았습니다.");
+				   }
+			   }
 		   }
 
 		   OrderDomain od = bs.orderProduct(orDTO,buyerId);
@@ -64,7 +87,7 @@ public class OrderController {
 
 	    @GetMapping(value = "/toss")
 	    public String confirmPayment(@RequestParam String orderId, @RequestParam String paymentKey,
-	    		@RequestParam int amount,@RequestParam String paymentType, Model model ) throws Exception {
+	    		@RequestParam int amount,@RequestParam String paymentType, Model model, HttpSession session) throws Exception {
 
 	        
 	        //DB랑 값이 일치하는지 비교
@@ -124,8 +147,7 @@ public class OrderController {
 	        	    Object msg = jsonObject.get("message");
 	        	    if (msg != null) failMsg = msg.toString();
 	        	}
-	        	model.addAttribute("failMsg", failMsg);
-	        	model.addAttribute("url", "/buy/fail/"+orderId);
+	        	model.addAttribute("url", "/buy/fail/"+orderId+"?msg="+failMsg);
 
 	        	return "/buy/bridge";
 	        }
@@ -164,6 +186,37 @@ public class OrderController {
         	//상품상태 변경
         	int pnum = bs.searchProductNum(orderId);
         	bs.modifyProductStaus(pnum);
+        	
+        	//성공하면 주문에 대한 내용을 DB에 저장
+        	String buyerId = (String)session.getAttribute("uid");
+        	ChatDTO cDTO = new ChatDTO();
+        	cDTO.setProductNum(pnum);
+        	cDTO.setWriterId(buyerId);  // 또는 "SYSTEM"
+        	String sellerId = bs.searchSellerId(pnum);
+        	cDTO.setOtherId(sellerId); //판매자 아이디(찾아야함)
+        	AddressDTO address = bs.searchAddress(orderId); //주소 찾기
+        	
+        	StringBuilder msg = new StringBuilder();
+        	msg.append("구매가 완료되었습니다.");
+        	if(address != null) {
+        		msg.append("\n배송 정보\n").append("수령자 : ");
+        		msg.append(address.getName());
+        		msg.append("\n전화번호 : ");
+        		msg.append(address.getTel());
+        		msg.append("\n주소 : ");
+        		msg.append(address.getAddr());
+        		msg.append("\n상세주소 : ");
+        		msg.append(address.getAddrDetail());
+        	}
+        	cDTO.setContent(msg.toString());
+        	
+        	Integer roomNum = chatService.searchChatRoom(sellerId, buyerId);
+        	cDTO.setRoomNum(roomNum);
+
+        	//실시간 메시지 전달
+        	chatService.sendMessage(cDTO);
+        	
+            messagingTemplate.convertAndSend("/topic/room/" + roomNum, cDTO);
 	        
         	model.addAttribute("url", "/buy/success/"+orderId);
 

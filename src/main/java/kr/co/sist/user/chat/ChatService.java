@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service("UserChatService")
 public class ChatService {
 
-	@Autowired(required = false)
+	@Autowired
 	private ChatDAO cDAO;
 	
 	//채팅 리스트 확인

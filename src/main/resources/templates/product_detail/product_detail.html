@@ -11,26 +11,6 @@
 </style>
 <!-- JQuery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<!-- <script type="text/javascript">
-/**
- * 4. 게시글 수정 (JQuery)
- */
-$(function() {
-    $('#btnWrite').click(function() {
-        $.ajax({
-            url: "/product/modifyUpDate",
-            type: "POST",
-            dataType: "JSON",
-            success: function(res) {
-                alert(res.msg);
-                if (res.flag) location.href = "/product/1";
-            },
-            error: function(xhr) { console.error("Update Error:", xhr.status); }
-        });
-    });
-});
-</script>
- -->
 
 <script th:inline="javascript">
 window.PageContext = Object.freeze({
@@ -42,6 +22,77 @@ window.PageContext = Object.freeze({
 <script th:src="@{/js/product-detail.js}" defer></script>
 <script th:src="@{/js/product-buy.js}" defer></script>
 <script th:src="@{/js/api.js}" defer></script>
+<script>
+$(document).on("click", "#reportBtn", function(){
+
+    const select = $("#report_code").val();
+    const content = $("#report_content").val();
+
+    if(!select){
+        alert("신고 사유를 선택해주세요.");
+        return;
+    }
+
+    if(!content || content.trim() === ""){
+        alert("신고 내용을 입력해주세요.");
+        return;
+    }
+
+    $("#reportForm").submit();
+});
+
+  </script>		
+<script>
+$(document).on('change', '#upFile', function(e) {
+    const files = e.target.files; // 선택된 파일들
+    const list = $('#qna-image-list'); // 파일명 뿌려줄 곳
+    list.empty(); // 이전 선택 기록 삭제
+
+    // 파일명을 하나씩 꺼내서 추가
+    for (let i = 0; i < files.length; i++) {
+        const fileName = files[i].name;
+        list.append(`<span style="font-size:12px; color:#666; margin-right:10px;">${fileName}</span>`);
+    }
+
+    // 선택된 개수 표시 (0/10 부분)
+    $('.group span').text(files.length + '/10');
+});
+
+</script>	
+<script type="text/javascript">
+function openReviewForm(storeNum) {// 리뷰 페이지
+    fetch('/seller_page/review?storeId='+storeNum) // @/seller_page/review
+        .then(res => res.text()) 
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('후기'); // 서랍 여는 공통 함수 실행
+        });
+}// openReviewForm
+
+function openReportForm(reviewerId) {// 신고 페이지
+console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍힘
+    
+    if(!reviewerId) {
+        alert("신고 대상자 ID가 없습니다.");
+        return;
+    }
+	
+    fetch('/store/report/review?reviewerId='+reviewerId) // 
+    	.then(res => {
+	      if (res.status === 401) {
+	        window.top.location.href = "/user/login/loginFrm"; // 부모로 이동
+	        return null;
+	      }
+	      return res.text();
+	    })
+        .then(html => {
+            // 서랍 내부의 콘텐츠 영역(ID: drawerContent)에 서버가 보낸 HTML 주입
+            document.getElementById('drawerContent').innerHTML = html;
+            openDrawer('신고'); // 서랍 여는 공통 함수 실행
+        });
+}// openReviewForm
+</script>
 </head>
 <body>
 <div th:replace="~{template/header :: headerImgFragment}"></div>
@@ -376,7 +427,7 @@ window.PageContext = Object.freeze({
 									</button>
 								</li>
 								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-black min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button type="button" data-action="bump-date" class="flex flex-col items-center py-[6px]">
+									<button type="button" data-action="modify-product" class="flex flex-col items-center py-[6px]">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M12 21H21" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 											<path
@@ -413,7 +464,7 @@ window.PageContext = Object.freeze({
 										<p class="mt-1 text-xs font-medium text-center">삭제</p>
 									</button>
 								</li>
-							</ul>
+							</ul> 
 						</div>
 						<!-- 판매자와 아이디가 같은 경우(결제가 된 상태) -->
 						<div th:if="${sendFlag}" class="flex items-center mt-4">
@@ -434,7 +485,7 @@ window.PageContext = Object.freeze({
 									</div>
 									<div class="text-xs whitespace-pre-wrap text-gray-900 leading-[18px] [&amp;_br]:hidden"><span 
 									th:if=${storeCheck}>안전한 거래를 위해 <font color="#009F1F" style="font-weight: 600;">계좌번호·연락처 등 개인정보 공유는 금지되며,</font> <b>위반 시 제재될 수 있습니다.</b></span><span 
-									th:unless=${storeCheck}><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <a href="jnapps3://?applink=report&amp;targetType=&amp;reportedStore=1250491&amp;reportedProductSeq=224185769" target="_blank" rel="noopener noreferrer" style="color: rgb(20, 19, 19); font-weight: 600;">중고마켓로 신고</a>해 주세요</span></div>
+									th:unless=${storeCheck}><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <button th:onclick="openReportForm([[${SellerInfo.id}]])" class="text-sm font-semibold text-black underline underline-offset-[3px]">중고마켓으로 신고</button>해 주세요</span></div>
 								</div>
 								<article class="flex flex-col flex-1">
 									<p th:text="${Product.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">

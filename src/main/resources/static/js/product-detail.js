@@ -92,6 +92,11 @@ document.addEventListener("click", (e) => {
 			menu?.classList.add("hidden");
 			return;
 		}
+		
+		case "modify-product":{
+			modifyProduct(pnum);
+			return;
+		}
 			
 		case "remove-product": //상품 삭제
 	      	confirmRemove(pnum);
@@ -150,6 +155,10 @@ function updateStatus(pnum, statusCode) {
     		alert(data.msg); 
 		}
     });
+}
+
+function modifyProduct(pnum){
+	location.href="/sell/modify/"+pnum;
 }
 
 //상품 삭제 함수

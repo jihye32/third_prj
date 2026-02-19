@@ -124,4 +124,12 @@ public class BuyService {
 		pd.setPrice(bd.getPrice());
 		return pd;
 	}
+	
+	public String searchSellerId(int pnum) {
+		return bDAO.selectSellerId(pnum);
+	}
+	
+	public AddressDTO searchAddress(String orderId) {
+		return bDAO.selectAddress(orderId);
+	}
 }
