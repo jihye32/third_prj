@@ -63,8 +63,8 @@ public class ChatController {
 		}
 		if(pnum != null) {
 			pd=cs.searchProduct(pnum);
+			model.addAttribute("pnum", pnum);
 		}
-		
 		model.addAttribute("product", pd);
 		model.addAttribute("otherId", otherId);
 		model.addAttribute("roomNum", room);

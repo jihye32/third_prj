@@ -210,6 +210,9 @@ public class OrderController {
         		msg.append("\n주소 : ");
         		msg.append(address.getAddr());
         		msg.append("\n상세주소 : ");
+        		if(address.getAddrDetail() == null) {
+        			address.setAddrDetail(""); 
+        		}
         		msg.append(address.getAddrDetail());
         	}
         	cDTO.setContent(msg.toString());

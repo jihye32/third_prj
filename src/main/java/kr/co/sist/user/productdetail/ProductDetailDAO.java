@@ -24,7 +24,7 @@ public class ProductDetailDAO {
 		return pdd;
 	}//selectProduct
 	
-	//선택된 상품 번호로 상품의 정보 조회
+	//직거래 주소
 	public String selectAddress(int pnum) {
 		
 		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
@@ -237,13 +237,6 @@ public class ProductDetailDAO {
 		return cnt;
 	}//updateProductSend
 	
-	//게시글 수정
-	public int updateProductDetail(ProductModifyDTO pmDTO) {
-		int cnt =0;
-		
-		return cnt;
-	}//updateProductDetail
-	
 	//게시글 삭제
 	public int updateDeleteFlag(int pnum) {
 		int cnt =0;
@@ -254,4 +247,15 @@ public class ProductDetailDAO {
 		
 		return cnt;
 	}//deleteProduct
+	
+	public String selectBuyerId(int pnum) {
+		
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		String sellerId = ss.selectOne("kr.co.sist.user.product.detail.selectBuyerId", pnum);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return sellerId;
+	}
 }
