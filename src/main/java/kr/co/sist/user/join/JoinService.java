@@ -127,6 +127,6 @@ public class JoinService {
 		} // end finally
 
 		return result;
-	}// join
+	}// joinMember
 
 }// class
