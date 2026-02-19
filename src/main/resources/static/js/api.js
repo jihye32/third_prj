@@ -35,11 +35,20 @@ async function initTossPayments() {
 			const tel = document.querySelector('[name="deliveryUserPhoneNo"]')?.value.trim();
 			const addr = document.querySelector("#roadAddr")?.innerText.trim();
 			const addrDetail = document.querySelector('[name="deliveryAddressDetail"]')?.value.trim();
+		
+			const phoneRegex = /^010\d{8}$/;
 
+			if (!phoneRegex.test(tel)) {
+			    alert("전화번호는 -를 제외하고 숫자만 입력해주세요.");
+			    return;
+			}
+			
 		  if (!name || !tel || !addr) {
 		    alert("배송 정보를 입력해주세요.");
 		    return;
 		  }
+		  
+		  
 
 		  address = { name, tel, addr, addrDetail };
 		}
