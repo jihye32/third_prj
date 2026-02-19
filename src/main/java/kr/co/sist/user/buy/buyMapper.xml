@@ -118,4 +118,27 @@ select p.order_id, p.payment_type, p.amount, p.approved_date, p.provider, po.dea
 from payment p, product_order po 
 where p.order_id = po.order_id and p.order_id = #{orderId}
 </select>
+
+
+<!-- 결제 완료 후 정보 메시지로 보냄 -->
+<select id="selectSellerId" parameterType="Integer" resultType="String">
+select user_id
+from store
+where store_num=(
+select store_num
+from product
+where product_num = #{productNum}
+)
+</select>
+<resultMap type="addressDTO" id="aDTO">
+<result column="name" property="name"/>
+<result column="tell" property="tel"/>
+<result column="address" property="addr"/>
+<result column="address_detail" property="addrDetail"/>
+</resultMap>
+<select id="selectAddress" parameterType="String" resultMap="aDTO">
+select name, tell, address, address_detail 
+from address
+where order_id = #{orderId}
+</select>
 </mapper>
