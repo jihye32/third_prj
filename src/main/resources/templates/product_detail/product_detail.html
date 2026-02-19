@@ -229,7 +229,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 											stroke-linejoin="round"></path></svg>
 								</li>
 								<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
-									<a th:text="*{category}" class="capitalize text-black" href="/search?category=172"></a>
+									<a th:text="*{category}" class="capitalize text-black" th:href="@{/searchList(category=*{categoryNum})}"></a>
 								</li>
 							</ol>
 						</div>
