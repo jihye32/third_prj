@@ -50,22 +50,131 @@ height: 50px;
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-	$(function() {
-		$(document).on("click", "#btnPickFiles", function(e){
-			e.preventDefault();
-			$("#files").click();
-		});
+$(function () {
+  const MAX = 10;
+  let selectedFiles = [];
 
-		$(document).on("change", "#files", function(){
-			const cnt = this.files ? this.files.length : 0;
-			$("#fileCount").text(cnt + "/10");
-		});
+  function updateCount() {
+    $("#fileCount").text(selectedFiles.length + "/10");
+  }
 
-		$(document).on("click", "#btnSubmit", function(){
-			$("#askForm").submit();
-		});
-	});
+  function fileKey(f) {
+    return `${f.name}_${f.size}_${f.lastModified}`;
+  }
+
+  function renderThumbs() {
+    const $list = $("#thumbList");
+    $list.empty();
+
+    selectedFiles.forEach((file, idx) => {
+      const $li = $(`
+        <li class="relative w-[68px] h-[68px] lg:w-[100px] lg:h-[100px] border border-jnGray-300 rounded overflow-hidden">
+          <img class="w-full h-full object-cover" alt="첨부 이미지 미리보기">
+          <button type="button"
+                  class="btnRemoveThumb absolute top-1 right-1 bg-black/60 text-white text-xs px-2 py-1 rounded"
+                  data-idx="${idx}">X</button>
+        </li>
+      `);
+
+      const reader = new FileReader();
+      reader.onload = (e) => $li.find("img").attr("src", e.target.result);
+      reader.readAsDataURL(file);
+
+      $list.append($li);
+    });
+
+    updateCount();
+  }
+
+  function syncToInputOrFail() {
+    const input = document.getElementById("files");
+
+    if (typeof DataTransfer === "undefined") {
+      alert("현재 브라우저에서 누적 파일 업로드를 지원하지 않습니다.");
+      return false;
+    }
+
+    const dt = new DataTransfer();
+    selectedFiles.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+
+    // ✅ 실제로 주입됐는지 검증
+    return input.files && input.files.length === selectedFiles.length;
+  }
+
+  // 업로드 버튼 클릭
+  $(document).on("click", "#btnPickFiles", function (e) {
+    e.preventDefault();
+    $("#files").click();
+  });
+
+  // 파일 선택(누적)
+  $(document).on("change", "#files", function () {
+    const picked = this.files ? Array.from(this.files) : [];
+    if (picked.length === 0) return;
+
+    if (selectedFiles.length + picked.length > MAX) {
+      alert("최대 " + MAX + "장까지 첨부할 수 있어요.");
+      this.value = "";
+      return;
+    }
+
+    // 중복 제거(선택)
+    const keys = new Set(selectedFiles.map(fileKey));
+    picked.forEach(f => {
+      const k = fileKey(f);
+      if (!keys.has(k)) {
+        selectedFiles.push(f);
+        keys.add(k);
+      }
+    });
+
+    // 같은 파일 다시 고를 수 있게 input 초기화
+    this.value = "";
+
+    renderThumbs();
+  });
+
+  // 썸네일 삭제(X)
+  $(document).on("click", ".btnRemoveThumb", function () {
+    const idx = parseInt($(this).data("idx"), 10);
+    if (!Number.isNaN(idx)) {
+      selectedFiles.splice(idx, 1);
+      renderThumbs();
+    }
+  });
+
+  // 등록 버튼
+  $(document).on("click", "#btnSubmit", function (e) {
+    e.preventDefault();
+
+    const title = ($("#askTitle").val() || "").trim();
+    const text  = ($("#askContent").val() || "").trim();
+
+    if (!title) { alert("문의 제목을 입력해 주세요."); $("#askTitle").focus(); return; }
+    if (!text)  { alert("문의 내용을 입력해 주세요."); $("#askContent").focus(); return; }
+
+    // ✅ submit 직전 파일 동기화
+    const ok = syncToInputOrFail();
+
+    console.log("selectedFiles=", selectedFiles.length,
+                "input.files=", document.getElementById("files").files.length,
+                "syncOK=", ok);
+
+    if (!ok) {
+      alert("첨부파일 동기화에 실패했습니다. 다시 선택해 주세요.");
+      return;
+    }
+
+    $("#askForm").submit();
+  });
+
+  updateCount();
+});
 </script>
+
+
+
 </head>
 <body>
 	<div id="__next">
@@ -154,7 +263,8 @@ height: 50px;
 												<div class="os-padding">
 													<div class="os-viewport os-viewport-native-scrollbars-invisible os-viewport-native-scrollbars-overlaid">
 														<div class="os-content" style="padding: 0px; height: auto; width: 100%; float: left;">
-															<ul class="flex items-center pt-[10px]"></ul>
+															<ul id="thumbList" class="flex items-center pt-[10px] gap-2 flex-wrap"></ul>
+
 														</div>
 													</div>
 												</div>
