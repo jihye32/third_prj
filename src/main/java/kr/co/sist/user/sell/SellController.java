@@ -61,8 +61,6 @@ public class SellController {
 	
 	@GetMapping("/modify/{productNum}")
 	public String modifyProductFrm(Model model, HttpSession session ,SellDTO sDTO) {
-//		System.out.println("productNum : " + productNum );
-//		System.out.println("SellDTO : " + sDTO );// productNum 알아서 들어가네;;
 		this.productNum = sDTO.getProductNum();
 		int storeNum = 0; 
 		if(session.getAttribute("snum") == null || "".equals(session.getAttribute("snum"))) {
@@ -75,8 +73,6 @@ public class SellController {
 		sellDomain.setProductNum(sDTO.getProductNum());
 		thumbnailName = sellDomain.getThumbnail();
 		
-		System.out.println("sDTO : " + sDTO);
-		System.out.println("조회된 데이터 : " + sellDomain);
 		
 		model.addAttribute("SellDomain", sellDomain);
 		
@@ -108,10 +104,6 @@ public class SellController {
 	        result.put("message", "등록 실패");
 	    }// end else
 		
-		System.out.println("수정하기 sDTO : " + sDTO);
-//		System.out.println("thumbnail : " + sDTO.getThumbnail());
-//		System.out.println("thumbnail name : " + thumbnailName);
-//		System.out.println("thumbnail null?? : " + sDTO.getThumbnail().isEmpty());
 		
 		
 		return result;

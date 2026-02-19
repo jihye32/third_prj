@@ -81,4 +81,16 @@ select user_id
 from store
 where store_num = #{storeNum}
 </select>
+
+<select id="selectCountReview" resultType="int" parameterType="int">
+SELECT COUNT(r.product_num)
+FROM REVIEW r
+WHERE r.PRODUCT_NUM IN (
+			         SELECT p.product_num
+			         FROM PRODUCT p
+			         WHERE p.STORE_NUM = #{storeNum}
+					     )
+</select>
+
+
 </mapper>

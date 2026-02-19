@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import kr.co.sist.dao.MyBatisHandler;
 import kr.co.sist.user.ProductDomain;
 
 @Service
@@ -36,6 +34,16 @@ public class SellerPageService {
 		}// end cathc
 		return list;
 	}// searchProductList
+	
+	public int searchReviewCnt(int storeNum) {
+		int cnt = 0;
+		try {
+			cnt = spDAO.selectCountReview(storeNum);
+		} catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}// end cathc
+		return cnt;
+	}// searchReviewCnt
 	
 	/**
 	 * 한 화면에 보여줄 게시글의 수

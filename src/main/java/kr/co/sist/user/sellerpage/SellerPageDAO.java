@@ -41,6 +41,13 @@ public class SellerPageDAO {
 		String id = ss.selectOne("kr.co.sist.user.sellerPage.selectSellerId", storeNum);
 		if(ss != null) {ss.close();}// end if
 		return id;
-	}
+	}// selectSellerId
+	
+	public int selectCountReview(int storeNum) {
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		int reviewCnt = ss.selectOne("kr.co.sist.user.sellerPage.selectCountReview", storeNum);
+		if(ss != null) {ss.close();}// end if
+		return reviewCnt;
+	}// selectCountReview
 	
 }// class
