@@ -14,15 +14,19 @@ public class ChatService {
 	//채팅 리스트 확인
 	public List<ChatListDomain> searchChatList(String uid){
 		List<ChatListDomain> list = cDAO.selectChatList(uid);
-		if(list == null) return list;
+		
 		for(ChatListDomain cld : list) {
 			ChatListInfoDomain clid = cDAO.selectStoreName(cld.getOtherId());
 			
 			cld.setProfile(clid.getProfile());
 			cld.setStoreName(clid.getStoreName());
 			cld.setThumbnail(cDAO.selectProductProfile(cld.getPnum()));
+			cld.setDeleteFlag(cDAO.selectDelete(cld.getOtherId()));
 		}
 		return list;
+	}
+	public String searchDelete(String id) {
+		return cDAO.selectDelete(id);
 	}
 	
 	//거래하는 상품 정보
