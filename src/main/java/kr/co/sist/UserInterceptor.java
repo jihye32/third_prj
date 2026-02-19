@@ -15,8 +15,7 @@ public class UserInterceptor implements HandlerInterceptor{
 			throws Exception {
 		String uri = request.getRequestURI();
 		String ctx = request.getContextPath();
-		System.out.println("INTERCEPT: " + request.getRequestURI());
-		if(uri.matches("^" + ctx + "/product/\\d+$")) {
+		if(uri.matches("^" + ctx + "/product/\\d+")) {
 			return true;
 		}
 			
