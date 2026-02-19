@@ -136,7 +136,7 @@ public class SupportController {
     @GetMapping("/testLogin")
     public String testLogin(HttpSession session,
                             @RequestParam(defaultValue = "user01") String userId) {
-        session.setAttribute("userId", userId); // 우리가 쓰는 키
+        session.setAttribute("uid", userId); // 우리가 쓰는 키
         return "redirect:/support/askFrm";
     }
 
@@ -144,8 +144,14 @@ public class SupportController {
     private String getLoginId(HttpSession session) {
         Object v1 = session.getAttribute("userId");
         if (v1 != null) return String.valueOf(v1);
+
         Object v2 = session.getAttribute("id");
         if (v2 != null) return String.valueOf(v2);
+
+        Object v3 = session.getAttribute("uid");   // ✅ 로그인 컨트롤러와 키 맞추기
+        if (v3 != null) return String.valueOf(v3);
+
         return null;
     }
+
 }
