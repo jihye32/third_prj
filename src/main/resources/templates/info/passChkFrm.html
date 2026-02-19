@@ -8,10 +8,6 @@
 <link th:href="@{/css/output.css}" rel="stylesheet">
 <link th:href="@{/css/test.css}" rel="stylesheet">
 <style type="text/css">
-* {
-overflow: hidden;
-}
-
 #chkMain {
 	width: 100%;
 	min-height: 500px;
@@ -91,7 +87,7 @@ $(function() {
 </head>
 <body>
 	<div id="__next">
-		<div>
+		<div class="flex flex-col min-h-screen bg-white">
 			<div th:replace="~{template/header :: headerImgFragment}"></div>
 			<div th:replace="~{template/header :: headerFragment}"></div>
 
@@ -110,5 +106,6 @@ $(function() {
 			<div th:replace="~{template/footer :: footerFragment}"></div>
 		</div>
 	</div>
+	<div th:replace="~{template/wrapper_frm :: drawerFrame}"></div>
 </body>
 </html>
