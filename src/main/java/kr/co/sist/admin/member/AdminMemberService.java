@@ -188,7 +188,7 @@ public class AdminMemberService {
         sb.append("<nav><ul class='pagination justify-content-center'>");
         if (startPage > 1) {
             sb.append(String.format(
-                    "<li class='page-item'><a class='page-link' href='?userId=%s&sort=%s&currentPage=%d'>&laquo;</a></li>",
+            		"<li class='page-item'><a class='page-link' href='/manage/member/member_product?userId=%s&type=%s&currentPage=%d'>&laquo;</a></li>",
                     userId, sort, startPage - 1));
         }
         for (int i = startPage; i <= endPage; i++) {

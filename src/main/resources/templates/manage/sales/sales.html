@@ -189,18 +189,24 @@ function validateAndSubmit() {
   
     
 <script th:inline="javascript">
-const rawData = /*[[${lastYearChargeList}]]*/ [];
+const rawData = /*[[${lastYearChargeList}]]*/ [] || []; // 데이터가 없으면 빈 배열로 초기화
 
 const monthlyData = new Array(12).fill(0);
 
-rawData.forEach(item => {
-    const m = parseInt(item.MONTH); 
-    const s = item.TOTAL_SALES;
-    
-    if (!isNaN(m)) {
-        monthlyData[m - 1] = s; // 월은 1부터 시작하므로 인덱스는 -1
-    }
-});
+// 데이터가 있을 때만 루프 실행
+if (rawData && rawData.length > 0) {
+    rawData.forEach(item => {
+        // 대소문자 방어 코드: MONTH 또는 month 둘 다 체크
+        const mStr = item.MONTH || item.month;
+        const sVal = item.TOTAL_SALES || item.total_sales || 0;
+        
+        const m = parseInt(mStr); 
+        
+        if (!isNaN(m) && m >= 1 && m <= 12) {
+            monthlyData[m - 1] = sVal; 
+        }
+    });
+}
 
 // 4. Chart.js 설정
 const ctx = document.getElementById('lineChart');

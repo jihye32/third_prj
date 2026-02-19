@@ -46,12 +46,12 @@ public class UserReportController {
 	    
 	    List<String> savedFileNames = uploadFiles(files);
 
-	    System.out.println("=== 데이터 검증 시작 ===");
-		System.out.println("세션에서 뽑은 ID: " + reporterId);
-		System.out.println("DTO에 저장된 신고자 ID: " + urDTO.getReporter_id());
-		System.out.println("DTO에 저장된 피신고자 ID: " + urDTO.getReportee_id()); // 이게 null이면 400이나 500에러 유발
-		System.out.println("=== 데이터 검증 끝 ===");
-		
+//	    System.out.println("=== 데이터 검증 시작 ===");
+//		System.out.println("세션에서 뽑은 ID: " + reporterId);
+//		System.out.println("DTO에 저장된 신고자 ID: " + urDTO.getReporter_id());
+//		System.out.println("DTO에 저장된 피신고자 ID: " + urDTO.getReportee_id()); // 이게 null이면 400이나 500에러 유발
+//		System.out.println("=== 데이터 검증 끝 ===");
+//		
 	    
 	    
 	    urs.addCompleteReport(urDTO, savedFileNames);

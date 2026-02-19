@@ -17,7 +17,7 @@
 	<div class="flex flex-col justify-between w-full h-full bg-[#e9edef]">
 		<div class="relative" th:if="${product != null}" th:object="${product}">
 			<div class="flex items-center w-full gap-2 px-3 py-4 bg-white">
-				<a class="flex flex-grow h-10 gap-4 flex-1" href="/product/224062120">
+				<a class="flex flex-grow h-10 gap-4 flex-1" th:href="@{/product/{pnum}(pnum=${pnum})}">
 					<div class="relative w-10 h-10 aspect-square">
 						<img alt="상품 썸네일" loading="lazy" decoding="async"
 							data-nimg="fill" class="rounded-md"

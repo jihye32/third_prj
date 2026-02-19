@@ -95,10 +95,6 @@ public class ProductDetailService {
 		return pDAO.updateProductSend(pnum)==1;
 	}//modifyProductOver
 	
-	public boolean modifyProductDetail(ProductModifyDTO pmDTO) {
-		return pDAO.updateProductDetail(pmDTO)==1;
-	}//modifyUpDate
-	
 	public boolean modifyDeleteFlag(int pnum) {
 		return pDAO.updateDeleteFlag(pnum)==1;
 	}//removeProduct
@@ -113,4 +109,8 @@ public class ProductDetailService {
 	public boolean removeBookmark(BookmarkDTO bDTO) {
 		return pDAO.deleteBookmark(bDTO)==1;
 	}//removeBookmark
+	
+	public String searchBuyerId(int pnum) {
+		return pDAO.selectBuyerId(pnum);
+	}
 }

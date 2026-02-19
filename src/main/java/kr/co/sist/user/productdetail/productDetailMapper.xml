@@ -63,13 +63,13 @@ where product_num = #{productnum}
 
 <!-- 배송 완료 확인 쿼리문 -->
 <resultMap type="orderDomain" id="odDomain">
-	<result column="ORDER_ID" property="orderId"/>
-	<result column="DELIVERED_date" property="deliveredDate"/>
+	<result column="order_id" property="orderId"/>
+	<result column="shipped_date" property="deliveredDate"/>
 </resultMap>
 <select id="selectOrderInfo" parameterType="int" resultMap="odDomain">
-select order_id, delivered_date
+select order_id, shipped_date
 from product_order
-where product_num = #{pnum}
+where product_num = #{pnum} and order_status = 'PAID'
 </select>
 
 
@@ -147,8 +147,8 @@ where product_num=#{pnum}
 </update>
 <!-- 상품 발송 완료 -->
 <update id="updateDeliveryDate" parameterType="int">
-update product_order set delivered_date=sysdate
-where product_num = #{pnum}
+update product_order set shipped_date=sysdate, order_status='SHIPPED'
+where product_num = #{pnum} and order_status = 'PAID'
 </update>
 
 <!-- 상품 삭제 -->
@@ -156,4 +156,10 @@ where product_num = #{pnum}
 update product set delete_flag = 'Y'
 where product_num = #{productnum}
 </update>
+
+<select id="selectBuyerId" parameterType="int" resultType="String">
+select buyer_id 
+from product_order
+where product_num = #{productnum} and order_status='SHIPPED'
+</select>
 </mapper>

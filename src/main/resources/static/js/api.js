@@ -41,6 +41,15 @@ async function initTossPayments() {
 				return;
 			}
 			
+		  if (!name) {
+		    alert("이름을 입력해주세요.");
+		    return;
+		  }
+		  
+		  if (!tel) {
+		    alert("전화번호를 입력해주세요.");
+		    return;
+		  }
 			const phoneRegex = /^010\d{8}$/;
 
 			if (!phoneRegex.test(tel)) {
@@ -52,12 +61,6 @@ async function initTossPayments() {
 				alert("주소를 입력해주세요.");
 		    	return;				
 			}
-		  if (!name || !tel) {
-		    alert("배송 정보를 입력해주세요.");
-		    return;
-		  }
-		  
-		  
 
 		  address = { name, tel, addr, addrDetail };
 		}
