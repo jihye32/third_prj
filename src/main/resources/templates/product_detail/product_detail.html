@@ -11,26 +11,6 @@
 </style>
 <!-- JQuery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<!-- <script type="text/javascript">
-/**
- * 4. 게시글 수정 (JQuery)
- */
-$(function() {
-    $('#btnWrite').click(function() {
-        $.ajax({
-            url: "/product/modifyUpDate",
-            type: "POST",
-            dataType: "JSON",
-            success: function(res) {
-                alert(res.msg);
-                if (res.flag) location.href = "/product/1";
-            },
-            error: function(xhr) { console.error("Update Error:", xhr.status); }
-        });
-    });
-});
-</script>
- -->
 
 <script th:inline="javascript">
 window.PageContext = Object.freeze({
@@ -249,7 +229,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 											stroke-linejoin="round"></path></svg>
 								</li>
 								<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
-									<a th:text="*{category}" class="capitalize text-black" href="/search?category=172"></a>
+									<a th:text="*{category}" class="capitalize text-black" th:href="@{/searchList(category=*{categoryNum})}"></a>
 								</li>
 							</ol>
 						</div>
@@ -447,7 +427,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 									</button>
 								</li>
 								<li class="flex flex-1 border border-gray-300 basis-full items-center justify-center relative text-black min-[479px]:p-3 max-[479px]:h-16 min-[479px]:after:absolute min-[479px]:after:bg-gray-300 min-[479px]:after:h-9 min-[479px]:after:left-0 min-[479px]:[&amp;:not(:first-child)]:after:w-[1px] min-[479px]:[&amp;:not(:first-child)]:after:content-['']">
-									<button type="button" data-action="bump-date" class="flex flex-col items-center py-[6px]">
+									<button type="button" data-action="modify-product" class="flex flex-col items-center py-[6px]">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M12 21H21" stroke="#141313" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 											<path
@@ -484,7 +464,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 										<p class="mt-1 text-xs font-medium text-center">삭제</p>
 									</button>
 								</li>
-							</ul>
+							</ul> 
 						</div>
 						<!-- 판매자와 아이디가 같은 경우(결제가 된 상태) -->
 						<div th:if="${sendFlag}" class="flex items-center mt-4">

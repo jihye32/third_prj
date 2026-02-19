@@ -35,15 +35,24 @@ async function initTossPayments() {
 			const tel = document.querySelector('[name="deliveryUserPhoneNo"]')?.value.trim();
 			const addr = document.querySelector("#roadAddr")?.innerText.trim();
 			const addrDetail = document.querySelector('[name="deliveryAddressDetail"]')?.value.trim();
-		
+			
+			if(name.length > 20){
+				alert("이름은 20글자 이하만 입력해주세요.");
+				return;
+			}
+			
 			const phoneRegex = /^010\d{8}$/;
 
 			if (!phoneRegex.test(tel)) {
-			    alert("전화번호는 -를 제외하고 숫자만 입력해주세요.");
+				alert("전화번호는 -를 제외하고 숫자 11자 입력해주세요.");
 			    return;
 			}
 			
-		  if (!name || !tel || !addr) {
+			if(addr == "주소검색"){
+				alert("주소를 입력해주세요.");
+		    	return;				
+			}
+		  if (!name || !tel) {
 		    alert("배송 정보를 입력해주세요.");
 		    return;
 		  }
@@ -67,7 +76,7 @@ async function initTossPayments() {
 
 		if (!response.ok) {
 	      const msg = await response.text().catch(() => "");
-	      throw new Error(msg || "prepare failed");
+	      throw new Error(msg || "요청 처리 중 오류가 발생했습니다.");
 	    }
 	
 		//orderId랑 amount는 서버에서 가져와서 설정해줌
