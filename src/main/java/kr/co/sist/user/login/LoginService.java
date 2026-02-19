@@ -1,6 +1,7 @@
 package kr.co.sist.user.login;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,8 @@ public class LoginService {
 			if (sd.getEnd_date().isBefore(now)) {
 				lDAO.updateSuspension(lDTO.getId());
 			} else {
-				throw new PersistenceException("활동 정지된 회원입니다.");
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd a hh:mm");
+				throw new PersistenceException("["+sd.getEnd_date().format(dtf)+"]까지 활동 정지된 회원입니다.");
 			}// end else
 		}// end if
 
