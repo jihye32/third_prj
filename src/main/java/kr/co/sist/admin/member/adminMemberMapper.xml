@@ -136,11 +136,16 @@
 		SELECT
 		r.review_text,
 		r.review_rate,
-		TO_CHAR(r.review_date, 'YYYY-MM-DD') as review_date,
-		p.title, NVL(o.buyer_id, '익명') as writer_id FROM review r
-		INNER JOIN product p ON r.product_num = p.product_num LEFT JOIN
-		product_order o ON r.product_num = o.product_num WHERE p.store_num =
-		(SELECT store_num FROM store WHERE user_id = #{userId}) ORDER BY
+		TO_CHAR(r.review_date,
+		'YYYY-MM-DD') as review_date,
+		p.title, NVL(o.buyer_id, '익명') as
+		writer_id FROM review r
+		INNER JOIN product p ON r.product_num =
+		p.product_num LEFT JOIN
+		product_order o ON r.product_num =
+		o.product_num WHERE p.store_num =
+		(SELECT store_num FROM store WHERE
+		user_id = #{userId}) ORDER BY
 		r.review_date DESC
 	</select>
 
@@ -179,8 +184,15 @@
 		p.product_num,
 		p.title,
 		o.AMOUNT as price,
-		TO_CHAR(o.CREATED_date, 'YYYY.MM.DD') as
-		trade_date,
+		<choose>
+			<when test="type == 'purchase'">
+				TO_CHAR(o.CREATED_date, 'YYYY.MM.DD') as trade_date
+			</when>
+			<when test="type == 'sale'">
+				TO_CHAR(p.over_selling_date, 'YYYY.MM.DD') as trade_date
+			</when>
+		</choose>
+		,
 		o.ORDER_STATUS as status_text,
 		<if test="type == 'purchase'"> s.store_name as target_id </if>
 		<if test="type == 'sale'"> o.BUYER_ID as target_id </if>
@@ -191,10 +203,13 @@
 		<if test="type == 'purchase'"> o.BUYER_ID = #{id} </if>
 		<if test="type == 'sale'"> s.user_id = #{id} </if>
 		AND o.ORDER_STATUS != 'CANCELED'
-		ORDER BY o.CREATED_date DESC
+		ORDER BY
+		<choose>
+			<when test="type == 'purchase'"> o.CREATED_date DESC </when>
+			<when test="type == 'sale'"> p.over_selling_date DESC </when>
+		</choose>
 		) a
-		) WHERE
-		rnum BETWEEN #{start} AND #{end}
+		) WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 
 	<update id="updateMemberDeleteFlag" parameterType="String">
