@@ -26,5 +26,5 @@ public class SellerReviewService {
 		return srDAO.selectCountReview(storeId);
 	}
 
-
+	
 }
