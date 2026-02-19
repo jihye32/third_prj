@@ -53,8 +53,24 @@ public class OrderController {
 		   DealType dealType = orDTO.getDealType();
 		   AddressDTO address = orDTO.getAddress();
 
-		   if (dealType == DealType.DELIVERY && address == null) {
-		       throw new IllegalArgumentException("배송지 정보가 필요합니다.");
+		   if (dealType == DealType.DELIVERY) {
+			   if(address == null) {
+				   throw new IllegalArgumentException("배송지 정보가 필요합니다.");
+			   }else {
+				   String name = address.getName();
+				   String tel = String.valueOf(address.getTel());
+				   String addr = address.getAddr();
+				   
+				   if(name == null || "".equals(name)) {
+					   throw new IllegalArgumentException("이름이 입력되지 않았습니다.");
+				   }
+				   if(tel == null || !tel.matches("^010\\d{8}$")) {
+					    throw new IllegalArgumentException("휴대폰 번호 형식이 올바르지 않습니다.");
+				   }
+				   if(addr == null || "".equals(addr)) {
+					   throw new IllegalArgumentException("주소가 입력되지 않았습니다.");
+				   }
+			   }
 		   }
 
 		   OrderDomain od = bs.orderProduct(orDTO,buyerId);
