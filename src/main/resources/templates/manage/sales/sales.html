@@ -312,15 +312,17 @@ const myChart3 = new Chart(ctx3, {
     </div>
 <script th:inline="javascript">
   const pie = document.getElementById('circleChart');
-  const allPay = /*[[${allPayMethod}]]*/ 0;   
-  const safepay = /*[[${selectPayMethod}]]*/ 0;
+  const allPay = Number(/*[[${allPayMethod}]]*/ 0);   
+  const safepay = Number(/*[[${selectPayMethod}]]*/ 0);
+  const otherPay = allPay - safepay;
+  //console.log("전체:", allPay, "안전결제:", safepay, "기타:", otherPay);
   new Chart(pie, {
     type: 'pie',
     data: {
       labels: ['안전결제', '사용자 간 송금'],
       datasets: [{
         //label: '비율',
-        data: [safepay,allPay-safepay],
+        data: [safepay,otherPay],
         borderWidth: 1
       }]
     }
