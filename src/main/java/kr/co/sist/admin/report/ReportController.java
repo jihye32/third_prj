@@ -109,23 +109,24 @@ public class ReportController {
     @PostMapping("/reportprocess")
     public String reportProcess(ReportDTO dto) {
         rs.processReport(dto);
-        ReportDomain report = rs.getReportDetail(dto.getReportNum());
-        
-        ChatDTO cDTO = new ChatDTO();
-        cDTO.setWriterId("SYSTEM");
-        cDTO.setType("TEXT");
-        	
-        cDTO.setOtherId(report.getReporterId()); //구매자 아이디(찾아야함)
-        	
-        cDTO.setContent(dto.getAnswer());
-        	
-        Integer roomNum = chatService.searchChatRoom(cDTO.getWriterId(), cDTO.getOtherId());
-        cDTO.setRoomNum(roomNum);
 
-        //실시간 메시지 전달
-        chatService.sendMessage(cDTO);
-        	
-        messagingTemplate.convertAndSend("/topic/room/" + roomNum, cDTO);
+        // 
+        if (dto.getReportStateCode() == 3 && dto.getAnswer() != null && !dto.getAnswer().trim().isEmpty()) {
+
+            ReportDomain report = rs.getReportDetail(dto.getReportNum());
+
+            ChatDTO cDTO = new ChatDTO();
+            cDTO.setWriterId("SYSTEM");
+            cDTO.setType("TEXT");
+            cDTO.setOtherId(report.getReporterId());
+            cDTO.setContent(dto.getAnswer().trim());
+
+            Integer roomNum = chatService.searchChatRoom(cDTO.getWriterId(), cDTO.getOtherId());
+            cDTO.setRoomNum(roomNum);
+
+            chatService.sendMessage(cDTO);
+            messagingTemplate.convertAndSend("/topic/room/" + roomNum, cDTO);
+        }
 
         return "redirect:/manage/report/detail?reportNum=" + dto.getReportNum() + "&saved=1";
     }
