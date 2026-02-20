@@ -80,34 +80,43 @@ public class AdminProductController {
 	@PostMapping("/manage/product/delete_product")
 	@ResponseBody 
 	public String deleteProduct(AdminProductDTO pDTO) {
+	    AdminProductDomain product = ps.getProductDetail(pDTO.getProduct_num());
+	    if (product == null) {
+	        return "fail";
+	    }
+
 	    int result = ps.removeProduct(pDTO); 
 	    
-	    AdminProductDomain product = ps.getProductDetail(pDTO.getProductNo());
-    	ChatDTO cDTO = new ChatDTO();
-    	cDTO.setProductNum(pDTO.getProductNo());
-    	cDTO.setWriterId("SYSTEM");
-    	cDTO.setType("TEXT");
-    	//해당 상품의 판매자 아이디
-    	cDTO.setOtherId(product.getUser_id());
-    	String deleteMsg = "";
-    	switch (pDTO.getDeleteReason()) {
-    		case "1": deleteMsg = "사기로 의심됨"; break;
-    		case "2": deleteMsg = "부적절한 물품"; break;
-    		case "3": deleteMsg = "검색 노출 조작 및 도배"; break;
-    		case "4": deleteMsg = "현금 외 거래 유도"; break;
-    		default : deleteMsg = "기타 사유";
-    	}
-    	StringBuilder msg = new StringBuilder();
-    	msg.append("상품 ").append(product.getTitle()).append("이 ").append(deleteMsg).append("에 해당하여 삭제되었습니다.");
-    	cDTO.setContent(msg.toString());
-    	
-    	Integer roomNum = chatService.searchChatRoom(cDTO.getWriterId(), cDTO.getOtherId());
-    	cDTO.setRoomNum(roomNum);
-
-    	//실시간 메시지 전달
-    	chatService.sendMessage(cDTO);
-    	
-        messagingTemplate.convertAndSend("/topic/room/" + roomNum, cDTO);
+	    if (result > 0) {
+	        ChatDTO cDTO = new ChatDTO();
+	        cDTO.setProductNum(product.getProduct_num());
+	        cDTO.setWriterId("SYSTEM");
+	        cDTO.setType("TEXT");
+	        cDTO.setOtherId(product.getUser_id()); 
+	        String reasonStr = getDeleteReasonText(pDTO.getDelete_text());
+	        
+	        StringBuilder msg = new StringBuilder();
+	        msg.append("상품 [").append(product.getTitle()).append("]이 ")
+	           .append(reasonStr).append(" 사유로 삭제되었습니다.");
+	        cDTO.setContent(msg.toString());
+	        
+	        Integer roomNum = chatService.searchChatRoom(cDTO.getWriterId(), cDTO.getOtherId());
+	        cDTO.setRoomNum(roomNum);
+	        chatService.sendMessage(cDTO);
+	        messagingTemplate.convertAndSend("/topic/room/" + roomNum, cDTO);
+	    }
+	    
 	    return (result > 0) ? "success" : "fail";
+	}
+
+	private String getDeleteReasonText(int code) {
+	    return switch(code) {
+	        case 1 -> "사기로 의심됨";
+	        case 2 -> "부적절한 물품";
+	        case 3 -> "검색 노출 조작 및 도배";
+	        case 4 -> "현금 외 거래 유도";
+	        case 5 -> "기타 사유";
+	        default -> "운영정책 위반";
+	    };
 	}
 }
