@@ -57,7 +57,7 @@ SalesService ss;
     	model.addAttribute("date",LocalDate.now());
     	model.addAttribute("now",LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM월-dd일-HH시 mm분 ")));
     	
-    	return "/manage/sales/sales"; 
+    	return "manage/sales/sales"; 
     }
     
     @PostMapping("/insert-charge")
