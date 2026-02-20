@@ -82,16 +82,16 @@ public class AdminProductController {
 	public String deleteProduct(AdminProductDTO pDTO) {
 	    int result = ps.removeProduct(pDTO); 
 	    
-	    AdminProductDomain product = ps.getProductDetail(pDTO.getProduct_num());
+	    AdminProductDomain product = ps.getProductDetail(pDTO.getProductNo());
     	ChatDTO cDTO = new ChatDTO();
-    	cDTO.setProductNum(product.getProduct_num());
+    	cDTO.setProductNum(product.getProductNo());
     	cDTO.setWriterId("SYSTEM");
     	cDTO.setType("TEXT");
     	//해당 상품의 판매자 아이디
     	cDTO.setOtherId(product.getUser_id());
     	
     	StringBuilder msg = new StringBuilder();
-    	msg.append("상품 ").append(product.getTitle()).append("이 ").append(product.getDelete_text()).append("에 해당하여 삭제되었습니다.");
+    	msg.append("상품 ").append(product.getTitle()).append("이 운영정책 상 삭제되었습니다.\n문의사항이 있으시다면 1:1문의하기를 이용해주시기 바랍니다.");
     	cDTO.setContent(msg.toString());
     	
     	Integer roomNum = chatService.searchChatRoom(cDTO.getWriterId(), cDTO.getOtherId());
