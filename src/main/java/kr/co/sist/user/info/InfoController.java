@@ -23,7 +23,7 @@ public class InfoController {
 	@GetMapping("/passChkFrm")
 	public String passChkFrm(HttpSession session) {
 		if(session.getAttribute("uid") != null) {
-			return "/info/passChkFrm";
+			return "info/passChkFrm";
 		} else {
 			return "redirect:/user/login/loginFrm";
 		}// end else
@@ -38,7 +38,7 @@ public class InfoController {
 			session.setAttribute("isVerified", true);
 			model.addAttribute("md", md);
 
-			return "/info/infoFrm";
+			return "info/infoFrm";
 		} catch (PersistenceException pe) {
 			ra.addFlashAttribute("passChkFlag", "fail");
 			ra.addFlashAttribute("errorMsg", pe.getMessage());
@@ -65,7 +65,7 @@ public class InfoController {
 			return "redirect:/info/passChkFrm";
 		} // end catch
 
-		return "/info/infoFrm";
+		return "info/infoFrm";
 	}// infoFrm
 
 	@ResponseBody

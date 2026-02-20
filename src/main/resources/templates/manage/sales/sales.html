@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>쌍용장터 관리자센터 - 매출관리</title>
+    <title>중고마켓 관리자센터 - 매출관리</title>
 <!-- bootstrap CDN 시작 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
@@ -283,7 +283,7 @@ const myChart3 = new Chart(ctx3, {
     data: {
         labels: ['이번 달', '지난 달'],
         datasets: [{
-            label: '매출',
+            label: '매출액(원)',
             data: [chargeMonthNow, chargeMonthLast],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.6)',

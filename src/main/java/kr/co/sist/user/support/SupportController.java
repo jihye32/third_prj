@@ -42,7 +42,7 @@ public class SupportController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", list);
 
-        return "/support/supportFrm";
+        return "support/supportFrm";
     }
 
     @GetMapping("/supportDetailFrm")
@@ -57,7 +57,7 @@ public class SupportController {
         model.addAttribute("detail", detail);
         model.addAttribute("tab", "N".equals(boardType) ? "notice" : "faq");
 
-        return "/support/supportDetailFrm";
+        return "support/supportDetailFrm";
     }
 
     // ===== Ask(1:1 문의) =====
@@ -76,7 +76,7 @@ public class SupportController {
         model.addAttribute("list", list);
         model.addAttribute("keyword", keyword); // 검색창에 입력한 값 유지용
         
-        return "/support/askFrm";
+        return "support/askFrm";
     }
 
     @GetMapping("/askDetailFrm")
@@ -86,14 +86,14 @@ public class SupportController {
 
         UserAskDomain detail = service.getMyAskDetail(loginId, askNum);
         model.addAttribute("detail", detail);
-        return "/support/askDetailFrm";
+        return "support/askDetailFrm";
     }
 
     @GetMapping("/askWriteFrm")
     public String askWriteFrm(HttpSession session) {
         String loginId = getLoginId(session);
         if (loginId == null) return "redirect:/user/login/loginFrm";
-        return "/support/askWriteFrm";
+        return "support/askWriteFrm";
     }
 
     @PostMapping("/askWriteProcess")
@@ -171,7 +171,7 @@ public class SupportController {
         model.addAttribute("detail", detail);
         model.addAttribute("imgCount", imgCount);
 
-        return "/support/askUpdateFrm";
+        return "support/askUpdateFrm";
     }
 
     

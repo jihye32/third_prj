@@ -55,10 +55,11 @@ function chkNull() {
 	<div id="__next" style="height: auto !important;">
 		<div
 			class="md:px-8 2xl:px-16 flex flex-col gap-8 justify-center items-center px-0 mx-auto min-h-[100vh] sm:w-full sm:my-auto w-full max-w-full box-border [&amp;&gt;*]:z-[1]">
+			<!-- 상단 로고 -->
 			<a class="inline-flex focus:outline-none relative" href="/"
-				style="width: 200px; height: 30px;"><img alt="Joonggonara"
+				style="width: 200px; height: 30px;"><img alt="logo"
 				loading="eager" decoding="async" data-nimg="fill"
-				src="https://web.joongna.com/main-web/assets/images/custom-logo.svg"
+				src="/images/main_logo.png"
 				style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></a>
 			<div>
 				<div type="default">
@@ -76,10 +77,6 @@ function chkNull() {
 										<h2 class="headline-semibold-20 sm:headline-semibold-24">
 											로그인<br>
 										</h2>
-										<img alt="hang-out-box" loading="lazy" width="160"
-											height="160" decoding="async" data-nimg="1"
-											src="https://web.joongna.com/main-web/_next/static/media/hang-over-box.35c81335.png"
-											style="color: transparent;">
 									</div>
 								</div>
 								<form th:action="@{/user/login/loginProcess}" method="post"
@@ -116,7 +113,7 @@ function chkNull() {
 										<span class="flex-1 mr-[22px]" style="color: white !important">로그인</span>
 									</button>
 									<div class="flex justify-center items-center h-12 mt-2.5"
-										style="margin-top: 1rem !important">
+										style="margin-top: 2.5rem !important">
 										<span style="display: contents; cursor: pointer;"><a
 											href="/findAccount/findAccountFrm"><button type="button"
 													class="inline-flex p-0.5 rounded relative justify-start items-center gap-0.5 text-jnGray-900 hover:bg-jnGray-900/5 active:bg-jnGray-900/10">
