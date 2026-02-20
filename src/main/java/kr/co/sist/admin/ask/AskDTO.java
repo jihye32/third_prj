@@ -12,6 +12,7 @@ public class AskDTO {
     // detail/answerProcess 용
     private int askNum;
     private String answerText;
+    private String adminId;
 
     // 검색
     private String searchType; // all | title | user | content
