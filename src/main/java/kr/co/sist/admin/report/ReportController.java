@@ -126,6 +126,7 @@ public class ReportController {
 
             chatService.sendMessage(cDTO);
             messagingTemplate.convertAndSend("/topic/room/" + roomNum, cDTO);
+            
         }
 
         return "redirect:/manage/report/detail?reportNum=" + dto.getReportNum() + "&saved=1";

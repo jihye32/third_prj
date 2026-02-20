@@ -82,9 +82,9 @@ public class AdminProductController {
 	public String deleteProduct(AdminProductDTO pDTO) {
 	    int result = ps.removeProduct(pDTO); 
 	    
-	    AdminProductDomain product = ps.getProductDetail(pDTO.getProduct_num());
+	    AdminProductDomain product = ps.getProductDetail(pDTO.getProductNo());
     	ChatDTO cDTO = new ChatDTO();
-    	cDTO.setProductNum(product.getProduct_num());
+    	cDTO.setProductNum(product.getProductNo());
     	cDTO.setWriterId("SYSTEM");
     	cDTO.setType("TEXT");
     	//해당 상품의 판매자 아이디
