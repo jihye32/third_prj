@@ -34,7 +34,7 @@ public class ProductDetailController {
 	@Autowired
 	private ChatService chatService;
 	@Autowired
-   private SimpMessagingTemplate messagingTemplate;
+	private SimpMessagingTemplate messagingTemplate;
 	   
 
 	//상품 상세 화면 생성 및 상품 정보 가져오기

@@ -36,6 +36,8 @@ public class ChatController {
 			String content = cld.getContent();
 			if("Y".equals(cld.getDeleteFlag())) {
 				content = "탈퇴한 회원입니다.";
+			}else if("Y".equals(cld.getSusFlag())) {
+				content="정지된 회원입니다.";
 			}else if(content.length() > 20) {
 				content = content.substring(0, 20)+"...";
 			}
@@ -71,7 +73,9 @@ public class ChatController {
 		}
 		
 		String deleteFlag = cs.searchDelete(otherId);
+		String susFlag = cs.searchSuspension(otherId);
 		
+		model.addAttribute("suspensionFlag", susFlag);
 		model.addAttribute("deleteFlag", deleteFlag);
 		model.addAttribute("product", pd);
 		model.addAttribute("otherId", otherId);

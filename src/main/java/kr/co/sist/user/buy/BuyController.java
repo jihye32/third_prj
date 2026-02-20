@@ -24,7 +24,7 @@ public class BuyController {
 		model.addAttribute("BuyDomain", bd);
 		model.addAttribute("DealType", DealType.class);
 		
-		return "/buy/delivery_type :: deliveryType";
+		return "buy/delivery_type :: deliveryType";
 	}
 	
 	@GetMapping("/payment/{pnum}")
@@ -34,7 +34,7 @@ public class BuyController {
 
 		model.addAttribute("type", type);
 		model.addAttribute("BuyDomain", bd);
-		return "/buy/payment_form :: paymentFrm";
+		return "buy/payment_form :: paymentFrm";
 	}
 	
 	@GetMapping("/success/{orderId}")
@@ -53,13 +53,13 @@ public class BuyController {
 		
 		model.addAttribute("PaymentDomain", pd);
 		
-		return "/buy/buy_success :: sellSuccessFrm";
+		return "buy/buy_success :: sellSuccessFrm";
 	}
 	@GetMapping("/fail/{orderId}")
 	public String buyFail(@PathVariable String orderId, @RequestParam String failMsg, Model model) {
 		//orderId로는 주문 내역 삭제
 		model.addAttribute("msg", failMsg);
-		return "/buy/buy_fail :: sellFailFrm";
+		return "buy/buy_fail :: sellFailFrm";
 	}
 	
 }

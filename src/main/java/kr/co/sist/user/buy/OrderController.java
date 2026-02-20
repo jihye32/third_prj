@@ -227,7 +227,7 @@ public class OrderController {
 	        
         	model.addAttribute("url", "/buy/success/"+orderId);
 
-        	return "/buy/bridge";
+        	return "buy/bridge";
 	    }
 	    
 	    

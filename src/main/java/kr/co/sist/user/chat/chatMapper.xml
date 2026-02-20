@@ -71,6 +71,11 @@ select delete_flag
 from member
 where user_id = #{other}
 </select>
+<select id="selectSuspension" parameterType="String" resultType="String">
+select flag 
+from suspension 
+where user_id=#{other}
+</select>
 
 <resultMap type="kr.co.sist.user.chat.ChatListInfoDomain" id="infoDomain">
 	<result column="store_name" property="storeName"/>
