@@ -363,8 +363,9 @@ $(document).ready(function() {
 	        }
 	    }
  */
+ 		
 	    // 모든 검증 통과 시 제출
-	    if (confirm("상품을 등록하시겠습니까?")) {
+	    if (confirm("상품을 수정하시겠습니까?")) {
 	        $("#sellFrm").submit();
 	    }// end if
 	}// sellRegistration
@@ -373,9 +374,9 @@ $(document).ready(function() {
 	$(function(){
 	$("#sellFrm").submit(function(e){
 	    e.preventDefault(); // 기본 폼 제출 막기
-
+		
 	    const formData = new FormData(this); // 폼 안의 일반 input, select, textarea 값 자동 포함
-
+	    
 	    // allFiles 배열에 담긴 파일 추가
 	    allFiles.forEach(file => {
 	        formData.append("productImages", file); // 서버에서 productImages로 받음
@@ -391,7 +392,7 @@ $(document).ready(function() {
 	        contentType: false,
 	        success: function(res){
 	        	if(res.success){
-	                alert("등록 성공!");
+	                alert("수정 성공!");
 	                location.href = res.redirectUrl; // 직접 이동
 	            }else{
 	                alert(res.message);
@@ -795,8 +796,7 @@ $(document).ready(function() {
 												    <input type="text" name="addr" id="addr" th:field="*{addr}"
 												        placeholder="거래 지역을 선택해주세요."
 												        class="border px-3 py-2 rounded bg-gray-100 w-64"
-												        readonly
-												        disabled>
+												        readonly>
 												
 												    <button type="button" id="addrBtn"
 												        class="px-4 py-2 rounded bg-gray-300 text-white cursor-not-allowed"
