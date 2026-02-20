@@ -24,9 +24,10 @@ public class WebConfig implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/upload/**")
-		.addResourceLocations("file:///"+uploadDir);
-	}// addResourceHandlers
+	    String dir = uploadDir.endsWith("/") ? uploadDir : uploadDir + "/";
+	    registry.addResourceHandler("/images/**")
+	            .addResourceLocations("file:" + dir);
+	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

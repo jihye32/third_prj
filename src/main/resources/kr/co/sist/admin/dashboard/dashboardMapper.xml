@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.admin.dashboard">
+
+ <!-- 회원가입 통계 -->
+  <select id="selectJoinStats" resultType="map">
+    SELECT
+      SUM(CASE WHEN input_date >= TRUNC(SYSDATE) AND input_date &lt; TRUNC(SYSDATE)+1 THEN 1 ELSE 0 END) AS joinToday,
+      SUM(CASE WHEN input_date >= TRUNC(SYSDATE, 'MM') AND input_date &lt; ADD_MONTHS(TRUNC(SYSDATE, 'MM'), 1) THEN 1 ELSE 0 END) AS joinMonth,
+      SUM(CASE WHEN input_date >= TRUNC(SYSDATE, 'YYYY') AND input_date &lt; ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), 12) THEN 1 ELSE 0 END) AS joinYear
+    FROM member
+  </select>
+
+  <!-- 방문 통계 -->
+  <select id="selectVisitStats" resultType="map">
+    SELECT
+      SUM(CASE WHEN input_date >= TRUNC(SYSDATE) AND input_date &lt; TRUNC(SYSDATE)+1 THEN 1 ELSE 0 END) AS visitToday,
+      SUM(CASE WHEN input_date >= TRUNC(SYSDATE, 'MM') AND input_date &lt; ADD_MONTHS(TRUNC(SYSDATE, 'MM'), 1) THEN 1 ELSE 0 END) AS visitMonth,
+      SUM(CASE WHEN input_date >= TRUNC(SYSDATE, 'YYYY') AND input_date &lt; ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), 12) THEN 1 ELSE 0 END) AS visitYear
+    FROM user_history
+  </select>
+
+  <!-- 판매 통계 -->
+  <select id="selectSoldStats" resultType="map">
+    SELECT
+      SUM(CASE WHEN over_selling_date >= TRUNC(SYSDATE) AND over_selling_date &lt; TRUNC(SYSDATE)+1 THEN 1 ELSE 0 END) AS soldToday,
+      SUM(CASE WHEN over_selling_date >= TRUNC(SYSDATE, 'MM') AND over_selling_date &lt; ADD_MONTHS(TRUNC(SYSDATE, 'MM'), 1) THEN 1 ELSE 0 END) AS soldMonth,
+      SUM(CASE WHEN over_selling_date >= TRUNC(SYSDATE, 'YYYY') AND over_selling_date &lt; ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), 12) THEN 1 ELSE 0 END) AS soldYear
+    FROM product
+  </select>
+
+  <!-- 최근 15일 업로드 그래프 -->
+  <select id="selectUpload" resultType="map">
+    SELECT input_date_day AS day, COUNT(*) AS cnt
+    FROM (
+      SELECT TRUNC(input_date) AS input_date_day
+      FROM product
+      WHERE input_date >= TRUNC(SYSDATE)-14
+    )
+    GROUP BY input_date_day
+    ORDER BY day
+  </select>
+
+  <!-- 최근 15일 판매 그래프 -->
+  <select id="selectSoldItem" resultType="map">
+    SELECT over_selling_date_day AS day, COUNT(*) AS cnt
+    FROM (
+      SELECT TRUNC(over_selling_date) AS over_selling_date_day
+      FROM product
+      WHERE over_selling_date >= TRUNC(SYSDATE)-14
+    )
+    GROUP BY over_selling_date_day
+    ORDER BY day
+  </select>
+
+  <!-- 연령대 통계 -->
+  <select id="selectAgeStats" resultType="map">
+    SELECT
+      SUM(CASE WHEN birthday &gt;= ADD_MONTHS(TRUNC(SYSDATE), -20*12) THEN 1 ELSE 0 END) AS ten,
+      SUM(CASE WHEN birthday BETWEEN ADD_MONTHS(TRUNC(SYSDATE), -29*12) AND ADD_MONTHS(TRUNC(SYSDATE), -20*12) THEN 1 ELSE 0 END) AS twenty,
+      SUM(CASE WHEN birthday BETWEEN ADD_MONTHS(TRUNC(SYSDATE), -39*12) AND ADD_MONTHS(TRUNC(SYSDATE), -30*12) THEN 1 ELSE 0 END) AS thirty,
+      SUM(CASE WHEN birthday BETWEEN ADD_MONTHS(TRUNC(SYSDATE), -49*12) AND ADD_MONTHS(TRUNC(SYSDATE), -40*12) THEN 1 ELSE 0 END) AS forty,
+      SUM(CASE WHEN birthday BETWEEN ADD_MONTHS(TRUNC(SYSDATE), -59*12) AND ADD_MONTHS(TRUNC(SYSDATE), -50*12) THEN 1 ELSE 0 END) AS fifty,
+      SUM(CASE WHEN birthday &lt;= ADD_MONTHS(TRUNC(SYSDATE), -60*12) THEN 1 ELSE 0 END) AS sixty
+    FROM member
+  </select>
+
+
+<select id="selectBestseller" resultType="map">
+SELECT 
+    c.code_text, 
+    COUNT(p.over_selling_date) AS sales_count
+FROM category c
+JOIN product p ON c.category_code = p.category_code
+GROUP BY c.category_code, c.code_text
+ORDER BY sales_count DESC
+
+</select>
+
+
+
+</mapper>
