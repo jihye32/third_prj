@@ -8,14 +8,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AdminMemberDetailDomain {
-    private String user_id;      // 아이디
-    private String store_name;    // 상점이름
-    private String name;        // 이름
-    private String birthday;   // 생년월일 (2000.01.01 형식)
-    private String email;       // 이메일
+    private String user_id;     
+    private String store_name;  
+    private String name;      
+    private String birthday;   
+    private String email;      
     
     private long open_days;
     
-    private String suspension_flag;    // 'Y' 또는 'N'
+    private String suspension_flag;    
     private java.util.Date suspension_end_date;
 }

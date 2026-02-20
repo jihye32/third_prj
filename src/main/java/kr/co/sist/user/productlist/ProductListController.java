@@ -58,7 +58,7 @@ public class ProductListController {
 		model.addAttribute("pagination", pls.pagination(prDTO));
 		
 		
-		return "/product_list/productList";
+		return "product_list/productList";
 	}// productList
 	
 }// class

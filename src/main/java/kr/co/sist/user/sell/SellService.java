@@ -142,7 +142,6 @@ public class SellService {
 	}// searchModifyProdcut
 	
 	public boolean modifyProduct(SellDTO sDTO) {
-		System.out.println("수정하기 서비스에 입력된 sDTO : " + sDTO);
 		boolean flag = false;
 		int queryCnt = 0;
 		int standardCnt = 0;
@@ -178,8 +177,6 @@ public class SellService {
 					removeFile.delete();// 이미지 삭제
 					queryCnt += sDAO.deleteDetailImg(removeFileName, ss);// db에서 이미지 삭제
 					standardCnt++;
-					System.out.println("db에서 이미지 삭제 standardCnt : " + standardCnt);
-					System.out.println("db에서 이미지 삭제 queryCnt : " + queryCnt);
 				}// end for
 			}// end if
 			
@@ -196,8 +193,6 @@ public class SellService {
 						map.put("imageName", tempProductImgName);// 값 넣고
 						queryCnt += sDAO.insertImages(map, ss);// db에 새로운 세부 이미지명 추가
 						standardCnt++;
-						System.out.println("db에 새로운 세부 이미지명 추가 standardCnt : " + standardCnt);
-						System.out.println("db에 새로운 세부 이미지명 추가 queryCnt : " + queryCnt);
 						try {
 							mf.transferTo(upProductImg);// 이미지 업로드 하기
 						} catch (IllegalStateException e) {
@@ -213,8 +208,6 @@ public class SellService {
 			// 거래 유형 초기화
 			sDAO.deleteTradeType(sDTO.getProductNum(), ss);
 			
-//			System.out.println("거래 유형 초기화 standardCnt : " + standardCnt);
-//			System.out.println("거래 유형 초기화 queryCnt : " + queryCnt);
 			
 			// 거래 유형 db에 insert
 			for(String tradeCode : sDTO.getTradeType()) {
@@ -223,8 +216,6 @@ public class SellService {
 				map.put("productNum", sDTO.getProductNum());
 				queryCnt += sDAO.insertTradeType(map, ss);
 				standardCnt++;
-//				System.out.println("standardCnt : " + standardCnt);
-//				System.out.println("queryCnt : " + queryCnt);
 			}// end for
 			
 				
