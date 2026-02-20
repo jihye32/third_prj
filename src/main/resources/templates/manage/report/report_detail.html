@@ -98,15 +98,13 @@
 </div>
 
 <script th:inline="javascript">
-/*<![CDATA[*/
-  // URL 파라미터 ?saved=1 을 안전하게 읽어옴
-  // IDE 빨간 줄 방지를 위해 주석 문법 사용
-  const saved = /*[[${param.saved}]]*/ null; 
+
+  const saved = null; 
 
   if (saved != null && saved.length > 0 && saved[0] === '1') {
     alert('저장되었습니다.');
   }
-/*]]>*/
+
 </script>
 
 <script>
@@ -134,7 +132,7 @@
   syncAnswerEnable();
 
   function openMemberPopup(url) {
-    const w = 1000; const h = 900;
+    const w = 1150; const h = 900;
     const left = Math.max(0, (window.screen.width - w) / 2);
     const top = Math.max(0, (window.screen.height - h) / 2);
     const win = window.open(url, 'memberDetailPopup', `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`);
