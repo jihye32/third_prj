@@ -1,15 +1,26 @@
 package kr.co.sist.admin.report;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import kr.co.sist.user.chat.ChatDTO;
+import kr.co.sist.user.chat.ChatService;
 
 @Controller
 @RequestMapping("/manage/report")
 public class ReportController {
 
     private final ReportService rs;
+    
+    @Autowired
+	private ChatService chatService;
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
 
     public ReportController(ReportService rs) {
         this.rs = rs;
@@ -78,6 +89,23 @@ public class ReportController {
     @PostMapping("/reportprocess")
     public String reportProcess(ReportDTO dto) {
         rs.processReport(dto);
+        ReportDomain report = rs.getReportDetail(dto.getReportNum());
+        
+        ChatDTO cDTO = new ChatDTO();
+        cDTO.setWriterId("SYSTEM");
+        	
+        cDTO.setOtherId(report.getReporterId()); //구매자 아이디(찾아야함)
+        	
+        cDTO.setContent(dto.getAnswer());
+        	
+        Integer roomNum = chatService.searchChatRoom(cDTO.getWriterId(), cDTO.getOtherId());
+        cDTO.setRoomNum(roomNum);
+
+        //실시간 메시지 전달
+        chatService.sendMessage(cDTO);
+        	
+        messagingTemplate.convertAndSend("/topic/room/" + roomNum, cDTO);
+
         return "redirect:/manage/report/detail?reportNum=" + dto.getReportNum() + "&saved=1";
     }
 
