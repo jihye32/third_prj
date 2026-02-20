@@ -17,7 +17,7 @@ public class FindAccountController {
 
 	@GetMapping("/findAccountFrm")
 	public String findAccountFrm() {
-		return "/findAccount/findAccountFrm";
+		return "findAccount/findAccountFrm";
 	}// findAccountFrm
 
 	@GetMapping("/findIdProcess")
@@ -29,20 +29,20 @@ public class FindAccountController {
 			if (id == null || id.isEmpty()) {
 				model.addAttribute("errorMsg", "일치하는 회원정보가 없습니다.");
 
-				return "/findAccount/findAccountFrm";
+				return "findAccount/findAccountFrm";
 			} // end if
 
 			model.addAttribute("name", faDTO.getName());
 			model.addAttribute("flag", flag);
 			model.addAttribute("result", id);
 
-			return "/findAccount/findAccountResult";
+			return "findAccount/findAccountResult";
 		} catch (Exception e) {
 			e.printStackTrace();
 
 			model.addAttribute("errorMsg", "아이디 찾기 중 오류가 발생하였습니다.");
 
-			return "/findAccount/findAccountFrm";
+			return "findAccount/findAccountFrm";
 		} // end catch
 	}// findIdProcess
 
@@ -79,7 +79,7 @@ public class FindAccountController {
 	
 	@GetMapping("/findAccountResult")
 	public String findAccountResult() {
-		return "/findAccount/findAccountResult";
+		return "findAccount/findAccountResult";
 	}// findAccountResult
 
 }// class
