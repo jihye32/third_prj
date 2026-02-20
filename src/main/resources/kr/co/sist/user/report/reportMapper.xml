@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.user.report">
+
+<insert id="insertReviewReport" parameterType="kr.co.sist.user.report.UserReportDTO">
+    <selectKey keyProperty="report_num" resultType="int" order="BEFORE">
+        SELECT seq_report_num.NEXTVAL FROM dual
+    </selectKey>
+
+    INSERT INTO report (
+        report_num, report_code, report_content, report_date, 
+        reporter_id, reportee_id, report_state_code, report_deleteflag
+    )
+    VALUES (
+        #{report_num}, #{report_code}, #{report_content}, sysdate, #{reporter_id}, #{reportee_id}, '1', 'N'
+    )
+</insert>
+
+<insert id="insertReportImg" parameterType="kr.co.sist.user.report.UserReportDTO">
+    INSERT INTO report_img (report_num, report_img)
+    VALUES (
+        #{report_num}, #{reviewImgFilename}
+    )
+</insert>
+
+</mapper>

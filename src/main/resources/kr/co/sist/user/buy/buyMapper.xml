@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.user.buy">
+<!-- 구매 페이지에서 사용할 정보 -->
+<!-- 상품 정보 받는 쿼리문 -->
+<resultMap type="buyDomain" id="bDomain">
+	<result column="product_num" property="pnum"/>
+	<result column="title" property="title"/>
+	<result column="price" property="price"/>
+	<result column="thumbnail" property="thumbnail"/>
+	<result column="addr" property="dealAddress"/>
+</resultMap>
+<select id="selectProduct" parameterType="int" resultMap="bDomain">
+select p.product_num, p.title, p.price,p.thumbnail, s.addr
+from product p, sell_place s
+where p.product_num = s.product_num and p.product_num = #{productNum}
+</select>
+
+<!-- 수수료 정보 받는 쿼리문 -->
+<select id="selectCharge" resultType="BigDecimal">
+select charge
+from (
+select charge from charge order by update_date desc
+)
+where rownum =1
+</select>
+
+<!-- 거래 방법 코드 받는 쿼리문 -->
+<select id="selectProductSellCode" parameterType="int" resultType="Integer">
+select sell_code
+from sell_option
+where product_num = #{productnum}
+</select>
+
+
+<!-- 결제할 때 -->
+<!-- 주문 정보 저장 -->
+<insert id="insertOrder" parameterType="orderDTO">
+insert into product_order(order_id,product_num,buyer_id,amount,charge,order_status,created_date,deal_type
+<if test="dealType == 'DIRECT'">
+	, shipped_date, delivered_date
+</if>) 
+values (#{orderId},#{pnum},#{buyerId},#{amount},#{charge},#{orderStatus},sysdate,#{dealType}
+<if test="dealType == 'DIRECT'">
+	, sysdate, sysdate
+</if>
+)
+</insert>
+<!-- 배송 정보 저장 -->
+<insert id="insertAddress" parameterType="addressDTO">
+insert into address(order_id,name,tell,address,address_detail) 
+values (#{orderId},#{name},#{tel},#{addr},#{addrDetail})
+</insert>
+
+<!-- DB에 저장된 금액 -->
+<select id="selectAmount" parameterType="String" resultType="Integer">
+select amount
+from product_order
+where order_id = #{orderId}
+</select>
+
+<!-- 결제 정보 저장 -->
+<!-- <insert id="insertPayment" parameterType="kr.co.sist.user.buy.PaymentDTO">
+insert into payment(order_id,payment_key,payment_type,amount,payment_status,approved_date,provider) 
+values (#{orderId},#{paymentKey},#{method},#{amount},#{paymentStatus},#{approvedDate},#{provider})
+</insert> -->
+<insert id="insertPayment" parameterType="paymentDTO">
+  MERGE INTO payment p
+  USING (SELECT #{orderId} AS order_id FROM dual) s
+  ON (p.order_id = s.order_id)
+  WHEN MATCHED THEN
+    UPDATE SET
+      p.payment_key = #{paymentKey},
+      p.payment_type = #{method},
+      p.amount = #{amount},
+      p.payment_status = #{paymentStatus},
+      p.approved_date = #{approvedDate},
+      p.provider = #{provider}
+  WHEN NOT MATCHED THEN
+    INSERT (order_id, payment_key, payment_type, amount, payment_status, approved_date, provider)
+    VALUES (#{orderId}, #{paymentKey}, #{method}, #{amount}, #{paymentStatus}, #{approvedDate}, #{provider})
+</insert>
+
+
+<!-- 결제 완료 시 주문 정보 상태 변경 -->
+<!-- PAID로 고정하지 말것! -->
+<update id="updateOrderStatus" parameterType="String">
+update product_order set order_status='PAID', created_date=sysdate
+where order_id = #{orderId}
+</update>
+
+<!-- 주문번호를 이용해서 상품번호 가져오기 -->
+<select id="selectProductNum" parameterType="String" resultType="Integer">
+select product_num
+from product_order
+where order_id = #{orderId}
+</select>
+<!-- 상품 상태 변경 -->
+<update id="updateProductStatus" parameterType="int">
+update product set status_code=3, over_selling_date=sysdate
+where product_num = #{productNum}
+</update>
+
+<!-- 결제 완료 시 결제 정보 가져오기 -->
+<resultMap type="PaymentDomain" id="paymentDomain">
+<result column="product_num" property="pnum"/>
+<result column="charge" property="charge"/>
+<result column="amount" property="amount"/>
+<result column="provider" property="provider"/>
+<result column="payment_type" property="method"/>
+<result column="approved_date" property="approvedDate"/>
+<result column="deal_type" property="dealType"/>
+</resultMap>
+<select id="selectPaymnet" parameterType="String" resultMap="paymentDomain">
+select p.order_id, p.payment_type, p.amount, p.approved_date, p.provider, po.deal_type, po.product_num, po.charge
+from payment p, product_order po 
+where p.order_id = po.order_id and p.order_id = #{orderId}
+</select>
+
+
+<!-- 결제 완료 후 정보 메시지로 보냄 -->
+<select id="selectSellerId" parameterType="Integer" resultType="String">
+select user_id
+from store
+where store_num=(
+select store_num
+from product
+where product_num = #{productNum}
+)
+</select>
+<resultMap type="addressDTO" id="aDTO">
+<result column="name" property="name"/>
+<result column="tell" property="tel"/>
+<result column="address" property="addr"/>
+<result column="address_detail" property="addrDetail"/>
+</resultMap>
+<select id="selectAddress" parameterType="String" resultMap="aDTO">
+select name, tell, address, address_detail 
+from address
+where order_id = #{orderId}
+</select>
+</mapper>

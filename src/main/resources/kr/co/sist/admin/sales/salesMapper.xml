@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.admin.sales">
+<!-- 안전결제 건 수 -->
+<select id="selectSafepayToday" resultType="int">
+select count(order_id) 
+from payment
+where trunc(approved_date)=trunc(sysdate)
+</select>
+<select id="selectSafepayYesterday" resultType="int">
+select count(order_id) 
+from payment
+where trunc(approved_date)=TRUNC(SYSDATE) - 1
+</select>
+<select id="selectSafepayMonth" resultType="int">
+select count(order_id) 
+from payment
+where trunc(approved_date, 'MM') = trunc(sysdate, 'MM')
+</select>
+
+
+<!-- 월별매출통계-안전결제 건 수 -->
+<select id="selectSafepayMonthNow" resultType="int" parameterType="String">
+select count(order_id) 
+  from payment
+  where trunc(approved_date, 'MM') = TO_DATE(#{safepayMonth}, 'YYYY-MM')
+</select>
+<select id="selectSafepayLastMonth" resultType="int" parameterType="String">
+select count(order_id) 
+  from payment
+  where trunc(approved_date, 'MM') = add_months(TO_DATE(#{safepayMonth}, 'YYYY-MM'), -1)
+</select>
+
+<!-- 매출(수수료ㅛ) -->
+<select id="selectChargeToday" resultType="int">
+select nvl(sum(charge),0)
+from product_order
+where trunc(created_date)=trunc(sysdate)
+
+</select>
+<select id="selectChargeYesterday" resultType="int">
+select nvl(sum(charge),0)
+from product_order
+where trunc(created_date)=trunc(sysdate)-1
+
+</select>
+<select id="selectChargeMonth" resultType="int">
+select nvl(sum(charge),0)
+from product_order
+where trunc(created_date, 'MM') = trunc(sysdate, 'MM')
+
+</select>
+<select id="selectChargeMonthNow" resultType="int" parameterType="String">
+select nvl(sum(charge), 0)
+  from product_order
+  where trunc(created_date, 'MM') = TO_DATE(#{chargeMonth}, 'YYYY-MM')
+
+</select>
+<select id="selectChargeLastMonth" resultType="int" parameterType="String">
+select nvl(sum(charge), 0)
+  from product_order
+  where trunc(created_date, 'MM') = add_months(TO_DATE(#{chargeMonth}, 'YYYY-MM'), -1)
+
+</select>
+
+<insert id="insertCharge" parameterType="double">
+    INSERT INTO charge (charge, update_date)
+    VALUES (#{newCharge}, SYSDATE)
+</insert>
+
+<select id="selectCharge" resultType="double">
+SELECT charge
+FROM (
+    SELECT charge
+    FROM charge
+    ORDER BY update_date DESC
+)
+WHERE ROWNUM = 1
+</select>
+
+<select id="allPayMethod" resultType="int">
+select count(product_num)
+from product
+where over_selling_date is not null
+
+</select>
+
+<!-- 판매완료면서 주문테이블(안전결제로 거래된 것)에 있으면 안전결제 건!-->
+<select id="selectPayMethod" resultType="int">
+SELECT count(product_num)
+FROM product
+WHERE over_selling_date IS NOT NULL    
+  AND product_num IN (               
+      SELECT product_num FROM product_order
+  )
+
+
+</select>
+
+<!-- 지난해 월별 수수료 -->
+<select id="selectLastYearCharges" resultType="map">
+SELECT
+    TO_CHAR(created_date, 'MM') AS month,
+    SUM(charge) AS total_sales
+FROM product_order
+WHERE created_date >= ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), -12)
+  AND created_date &lt;  TRUNC(SYSDATE, 'YYYY')
+GROUP BY TO_CHAR(created_date, 'MM')
+ORDER BY month
+
+</select>
+
+<!-- 카테고리 목록 -->
+<select id="selectCategory" resultType="String">
+select code_text
+from category
+
+</select>
+
+
+
+
+
+
+
+
+
+
+</mapper>
