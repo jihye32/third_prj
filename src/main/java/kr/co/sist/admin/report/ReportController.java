@@ -1,18 +1,49 @@
 package kr.co.sist.admin.report;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import kr.co.sist.user.chat.ChatDTO;
+import kr.co.sist.user.chat.ChatService;
+
 
 @Controller
 @RequestMapping("/manage/report")
 public class ReportController {
 
     private final ReportService rs;
+    
+    @Autowired
+	private ChatService chatService;
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
 
     public ReportController(ReportService rs) {
         this.rs = rs;
+    }
+    
+    @ModelAttribute
+    public void checkAdminLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+        if (session == null || session.getAttribute("loginAdmin") == null) {
+            
+            String loginUrl = request.getContextPath() + "/manage";
+            
+            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            } else {
+                response.sendRedirect(loginUrl);
+            }
+        }
     }
 
     @GetMapping("/reportlist")
@@ -78,6 +109,26 @@ public class ReportController {
     @PostMapping("/reportprocess")
     public String reportProcess(ReportDTO dto) {
         rs.processReport(dto);
+
+        // 
+        if (dto.getReportStateCode() == 3 && dto.getAnswer() != null && !dto.getAnswer().trim().isEmpty()) {
+
+            ReportDomain report = rs.getReportDetail(dto.getReportNum());
+
+            ChatDTO cDTO = new ChatDTO();
+            cDTO.setWriterId("SYSTEM");
+            cDTO.setType("TEXT");
+            cDTO.setOtherId(report.getReporterId());
+            cDTO.setContent(dto.getAnswer().trim());
+
+            Integer roomNum = chatService.searchChatRoom(cDTO.getWriterId(), cDTO.getOtherId());
+            cDTO.setRoomNum(roomNum);
+
+            chatService.sendMessage(cDTO);
+            messagingTemplate.convertAndSend("/topic/room/" + roomNum, cDTO);
+            
+        }
+
         return "redirect:/manage/report/detail?reportNum=" + dto.getReportNum() + "&saved=1";
     }
 

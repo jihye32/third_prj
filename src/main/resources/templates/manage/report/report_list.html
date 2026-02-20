@@ -21,7 +21,7 @@
             <form th:action="@{/manage/report/reportlist}" method="get" style="display:flex; gap:8px;">
 
                 <select name="reportCode">
-                    <option value="">신고 종류</option>
+                    <option value="">--신고 종류--</option>
                     <option th:each="t : ${typeList}"
                             th:value="${t.reportCode}"
                             th:text="${t.reportText}"
@@ -31,7 +31,7 @@
 
                 <!-- ✅ 처리 상태 -->
                 <select name="reportStateCode">
-                    <option value="">처리 상태</option>
+                    <option value="">--처리 상태--</option>
                     <option th:each="s : ${stateList}"
                             th:value="${s.reportStateCode}"
                             th:text="${s.reportStateText}"
@@ -41,7 +41,7 @@
 
                 <!-- ✅ 검색 타입 -->
                 <select name="searchType">
-                    <option value="all" th:selected="${dto == null or dto.searchType == 'all'}">전체</option>
+                    <option value="all" th:selected="${dto == null or dto.searchType == 'all'}">--전체--</option>
                     <option value="reporter" th:selected="${dto != null and dto.searchType == 'reporter'}">신고자</option>
                     <option value="reportee" th:selected="${dto != null and dto.searchType == 'reportee'}">피신고자</option>
                     <option value="content" th:selected="${dto != null and dto.searchType == 'content'}">내용</option>

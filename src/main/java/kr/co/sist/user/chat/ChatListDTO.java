@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class ChatListDTO {
 	private Integer pnum;
-	private String lowId, highId, content;
+	private String lowId, highId, content, contentType;
 }

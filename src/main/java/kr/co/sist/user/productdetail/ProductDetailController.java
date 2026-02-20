@@ -34,7 +34,7 @@ public class ProductDetailController {
 	@Autowired
 	private ChatService chatService;
 	@Autowired
-   private SimpMessagingTemplate messagingTemplate;
+	private SimpMessagingTemplate messagingTemplate;
 	   
 
 	//상품 상세 화면 생성 및 상품 정보 가져오기
@@ -160,7 +160,8 @@ public class ProductDetailController {
     		String sellerId = (String)session.getAttribute("uid");
         	ChatDTO cDTO = new ChatDTO();
         	cDTO.setProductNum(pnum);
-        	cDTO.setWriterId(sellerId);  // 또는 "SYSTEM"
+        	cDTO.setWriterId(sellerId);
+        	cDTO.setType("TEXT");
         	
         	//주문이 완료된 구매자 아이디 가져오기
         	String buyerId = ps.searchBuyerId(pnum);

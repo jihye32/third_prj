@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ChatDomain {
-	private String content, writerId;
+	private String content, writerId, type;
 	private int chatNum, roomNum;
 	private Timestamp chatDate, readDate;
 }

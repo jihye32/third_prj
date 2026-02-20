@@ -4,9 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>sample</title>
+<title th:text="${Product.title}"></title>
 
 <link th:href="@{/css/output.css}" rel="stylesheet">
+<link th:href="@{/css/test.css}" rel="stylesheet">
 <style>
 </style>
 <!-- JQuery CDN -->
@@ -217,8 +218,8 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 						<div class="flex items-center w-full chawkbazarBreadcrumb mt-5 mb-4 sm:mb-2 sm:mt-0">
 							<ol class="flex flex-wrap items-center w-full mt-0 lg:mt-0">
 								<li class="flex-shrink-0 px-0 mt-0 text-sm break-all transition duration-200 ease-in text-body first:ps-0 last:pe-0 hover:text-heading">
-									<a class="text-gray-500" href="/">홈</a></li>
-								<li class="pl-0 mx-2 mt-0 text-sm leading-5 text-jnGray-500 lg:mt-0">
+									<a class="text-gray-400" href="/">홈</a></li>
+								<li class="pl-0 mx-2 mt-0 text-sm leading-5 text-gray-400 lg:mt-0">
 									<svg
 										width="17" height="17" viewBox="0 0 17 17" fill="none"
 										xmlns="http://www.w3.org/2000/svg" class=""
@@ -245,7 +246,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 								제품가격</div>
 							</div>
 							<div class="flex items-center justify-between mb-4 text-xs font-normal text-gray-400">
-								<span class="text-gray-500 leading-[15px]">
+								<span class="text-gray-400 leading-[15px]">
 								<span id="timeAgo" th:text="*{timeAgo}"></span> 전 ·
 								조회 <span th:text="*{viewCnt}"></span> ·
 								채팅 <span th:text="*{chatCnt}"></span> ·
@@ -315,7 +316,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 						      </div>
 						      <dl class="flex flex-col gap-y-3">
 						        <div class="flex justify-between items-center">
-						          <dt class="whitespace-nowrap text-gray-500">만나서 직거래</dt>
+						          <dt class="whitespace-nowrap text-gray-400">만나서 직거래</dt>
 						          <dd class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
 						            <!-- 아이콘 그대로 -->
 						            <svg width="16" height="16" viewBox="0 0 10 10" fill="none"
@@ -355,7 +356,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 						
 						      <div class="flex flex-col gap-y-3">
 						        <div class="flex justify-between items-center">
-						          <div class="whitespace-nowrap text-gray-500">만나서 직거래</div>
+						          <div class="whitespace-nowrap text-gray-400">만나서 직거래</div>
 						          <div class="flex flex-wrap gap-2 justify-end items-center font-medium text-gray-400">
 						            <!-- 아이콘 그대로 -->
 						            <svg width="16" height="16" viewBox="0 0 10 10" fill="none"
@@ -488,7 +489,7 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 									th:unless="${storeCheck}"><font color="#009F1F" style="font-weight: 600;">개인정보(거래정보)를 받는 행위는 사기에 노출</font>될 수 있으므로 즉시 <button th:onclick="openReportForm([[${SellerInfo.id}]])" class="text-sm font-semibold text-black underline underline-offset-[3px]">중고마켓으로 신고</button>해 주세요</span></div> 
 								</div>
 								<article class="flex flex-col flex-1">
-									<p th:text="${Product.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-500 [&amp;&gt;em]:not-italic">
+									<p th:text="${Product.content}" class="flex-1 py-5 text-base font-normal whitespace-pre-line break-words break-all text-jnGray-900 [&amp;&gt;em]:text-gray-400 [&amp;&gt;em]:not-italic">
 									상품설명</p>
 								</article> 
 							</div>  
@@ -519,13 +520,13 @@ console.log("전달받은 ID:", reviewerId); // 브라우저 콘솔(F12)에 찍�
 												style="color: transparent;">
 										</div>
 									</a>
-									<div class="text-sm break-all text-gray-500"></div>
+									<div class="text-sm break-all text-gray-400"></div>
 									<ul class="box-border flex text-center border border-gray-300 rounded items-center py-[18px] mt-5">
 										<li class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center">
 											<span class="text-xs font-normal text-gray-600 break-keep">판매상품</span>
 											<span th:text="*{productCnt}" class="block text-sm font-semibold text-black mt-1 ">0</span></li>
 										<li class="flex flex-col flex-1 basis-[33%] px-3 sm:px-4 relative after:absolute [&amp;:not(:first-child)]:after:content-['']  after:bg-gray-300 after:h-[20px] [&amp;:not(:first-child)]:after:w-[1px] after:left-0 justify-center items-center">
-											<span class="text-xs font-normal text-jnGray-600 break-keep">거래후기</span>
+											<span class="text-xs font-normal text-gray-600 break-keep">거래후기</span>
 											<button th:text="*{reivewCnt}" th:onclick="openReviewForm([[*{sellerId}]])" class="block text-sm font-semibold text-jnblack mt-1 underline underline-offset-[3px]">0</button></li>
 									</ul>
 								</div>

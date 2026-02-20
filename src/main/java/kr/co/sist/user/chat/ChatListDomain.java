@@ -11,6 +11,6 @@ import lombok.ToString;
 @ToString
 public class ChatListDomain {
 	private int roomNum, pnum;
-	private String otherId, content, thumbnail,storeName, profile, deleteFlag;
+	private String otherId, content, thumbnail,storeName, profile, deleteFlag, susFlag, contentType;
 	private Timestamp sendDate;
 }

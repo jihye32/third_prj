@@ -83,13 +83,19 @@ async function ensureConnectedAndSubscribe(roomNum, root) {
 	    updateMyMessagesRead(root);
 	    return;
 	  }
+	  
 	
     if (myId && msg.writerId === myId) {
       return;
     }
 	
 	//상대방 메시지가 보여지는 거 + 읽음 처리하는 위치
-    appendOtherMessage(root, msg);
+	if(msg.type === "TEXT"){
+	    appendOtherMessage(root, msg);
+	}
+	if (msg.type === "IMAGE") {
+		appendOtherImageMessage(root, msg);
+	}
 	
 	//내가 보고 있을 때만 읽음 처리
 	const drawer = document.getElementById("drawerContent");
@@ -214,6 +220,32 @@ async function sendChatMessage(root) {
   }
 }
 
+/* 사진 보내기 */
+document.addEventListener("change", async (e) => {
+  const input = e.target.closest("#chat-image-upload");
+  if (!input) return;
+
+  const root = getChatRoot?.() || document.getElementById("chat-root");
+  if (!root) return;
+
+  const files = Array.from(input.files || []);
+  if (files.length === 0) return;
+
+  try {
+    for (const file of files) {
+      // 간단 검증(서버에서도 꼭 검증해야 함)
+      if (!/^image\/(png|jpeg|jpg)$/i.test(file.type)) continue;
+
+      await sendChatImage(root, file); // ✅ /chat/upload로 보내는 함수
+    }
+  } catch (err) {
+    console.error(err);
+    alert("이미지 전송 실패");
+  } finally {
+    // 같은 파일 다시 선택 가능하도록 초기화
+    input.value = "";
+  }
+});
 
 
 /* 실시간 읽음 처리 */
@@ -268,6 +300,75 @@ function appendOtherMessage(root, { content }) {
   box.appendChild(node);
   scrollToBottom(root);
 }
+
+/* 이미지 전송 */
+async function sendChatImage(root, file) {
+  const productNum = window.PageContext?.pnum ?? null;
+  let roomNum = root.querySelector("#room-num")?.value || null;
+  const otherId = root.querySelector("#other-id")?.value;
+
+  const fd = new FormData();
+  fd.append("file", file);
+  if (roomNum) fd.append("roomNum", roomNum);
+  if (productNum) fd.append("productNum", productNum);
+  fd.append("otherId", otherId);
+
+  const res = await fetch("/chat/upload", {
+    method: "POST",
+    body: fd
+  });
+  if (!res.ok) throw new Error("upload failed");
+
+  const data = await res.json();
+
+  //roomNum이 없었고 서버가 생성했다면 반영 + 구독
+  if (!roomNum && data.roomNum) {
+    root.querySelector("#room-num").value = data.roomNum;
+    roomNum = data.roomNum;
+    await ensureConnectedAndSubscribe(roomNum, root);
+  }
+
+  //내 화면에 이미지 메시지 붙이기
+  appendMyImageMessage(root, data);
+}
+
+
+/* 이미지 폼 처리 */
+function appendMyImageMessage(root, { content }) {
+  const box = root.querySelector("#chat-messages");
+  const tpl = root.querySelector("#my-img-message");
+  if (!box || !tpl) return;
+
+  const node = tpl.content.cloneNode(true);
+
+  const img = node.querySelector("img.msg-img");
+  img.src = content;
+  img.onerror = () => { img.replaceWith(document.createTextNode("[이미지 로드 실패]")); };
+
+  node.querySelector(".msg-time").textContent = formatChatTime() || "";
+  node.querySelector(".msg-read").textContent = "";
+	  
+  box.appendChild(node);
+  scrollToBottom(root);
+}
+
+function appendOtherImageMessage(root, { content }) {
+  const box = root.querySelector("#chat-messages");
+  const tpl = root.querySelector("#other-img-message");
+  if (!box || !tpl) return;
+
+  const node = tpl.content.cloneNode(true);
+
+  const img = node.querySelector("img.msg-img");
+  img.src = content;
+  img.onerror = () => { img.replaceWith(document.createTextNode("[이미지 로드 실패]")); };
+
+  node.querySelector(".msg-time").textContent = formatChatTime() || "";
+	  
+  box.appendChild(node);
+  scrollToBottom(root);
+}
+
 
 /* 스크롤 처리 */
 function scrollToBottom(root) {

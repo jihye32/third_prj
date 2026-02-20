@@ -14,14 +14,19 @@ select s.user_id, p.title, p.price, p.thumbnail
 from store s, product p
 where s.store_num = p.store_num and p.product_num = #{productNum}
 </select>
+
+<!-- 채팅방 번호 가져오기 -->
 <select id="selectChatRoom" parameterType="kr.co.sist.user.chat.ChatListDTO" resultType="Integer">
 select chatroom_num 
 from chat_list 
 where user_low = #{lowId} and user_high=#{highId}
 </select>
+
+<!-- 채팅방 번호가 없으면 새롭게 만들기 -->
 <insert id="insertChatRoom" parameterType="kr.co.sist.user.chat.ChatListDTO">
 insert into chat_list(chatroom_num, user_low, user_high, create_date) values (seq_chat_list.NEXTVAL, #{lowId}, #{highId}, systimestamp)
 </insert>
+
 <select id="selectChatProduct" parameterType="kr.co.sist.user.chat.ChatListDTO" resultType="String">
 select chatroom_num 
 from room_product 
@@ -36,12 +41,18 @@ where chatroom_num=#{roomNum}
 <insert id="insertRoomProduct" parameterType="kr.co.sist.user.chat.ChatDTO">
 insert into room_product(chatroom_num, product_num) values (#{roomNum}, #{productNum})
 </insert>
+
 <update id="updateLastChat" parameterType="kr.co.sist.user.chat.ChatListDTO">
-update chat_list set last_product_num=#{pnum}, last_talk=#{content}, last_talk_date=systimestamp
+update chat_list set 
+<if test="pnum != null">
+  last_product_num=#{pnum},
+</if>
+last_talk=#{content}, last_talk_date=systimestamp, last_talk_type=#{contentType}
 where user_low = #{lowId} and user_high=#{highId}
 </update>
+
 <insert id="insertChat" parameterType="kr.co.sist.user.chat.ChatDTO">
-insert into chat(chat_num, talk, writer_id, chat_date, chatroom_num) values (seq_chat_num.NEXTVAL, #{content}, #{writerId}, systimestamp, #{roomNum})
+insert into chat(chat_num, talk, writer_id, chat_date, chatroom_num, type) values (seq_chat_num.NEXTVAL, #{content}, #{writerId}, systimestamp, #{roomNum}, #{type})
 </insert>
 
 
@@ -53,6 +64,7 @@ insert into chat(chat_num, talk, writer_id, chat_date, chatroom_num) values (seq
 <result column="last_product_num" property="pnum"/>
 <result column="last_talk" property="content"/>
 <result column="last_talk_date" property="sendDate"/>
+<result column="last_talk_type" property="contentType"/>
 </resultMap>
 <select id="selectChatList" parameterType="String" resultMap="chatListDomain">
 select chatroom_num,
@@ -60,7 +72,7 @@ select chatroom_num,
          when user_low = #{uid} then user_high
          else user_low
        end as other_id, 
-       last_product_num, last_talk, last_talk_date
+       last_product_num, last_talk, last_talk_date, last_talk_type
 from chat_list
 where user_low = #{uid}
    or user_high = #{uid}
@@ -70,6 +82,11 @@ order by last_talk_date desc
 select delete_flag
 from member
 where user_id = #{other}
+</select>
+<select id="selectSuspension" parameterType="String" resultType="String">
+select flag 
+from suspension 
+where user_id=#{other}
 </select>
 
 <resultMap type="kr.co.sist.user.chat.ChatListInfoDomain" id="infoDomain">
@@ -100,9 +117,10 @@ where chatroom_num = #{roomNum}
 	<result column="chat_date" property="chatDate"/>
 	<result column="read_date" property="readDate"/>
 	<result column="chatroom_num" property="roomNum"/>
+	<result column="type" property="type"/>
 </resultMap>
 <select id="selectChat" parameterType="int" resultMap="ChatDomain">
-select chat_num, talk, writer_id, chat_date, read_date, chatroom_num
+select chat_num, talk, writer_id, chat_date, read_date, chatroom_num, type
 from chat 
 where chatroom_num = #{roomNum}
 order by chat_num
