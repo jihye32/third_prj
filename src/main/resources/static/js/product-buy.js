@@ -6,10 +6,10 @@ document.addEventListener("click", (e) => {
 		   	// 1) UI 강조
 		    document.querySelectorAll(".deal-option").forEach(opt => {
 		      opt.classList.remove("border-gray-900");
-		      opt.classList.add("border-gray-200");
+		      opt.classList.add("border-gray-300");
 		    });
 		
-		    actionBtn.classList.remove("border-gray-200");
+		    actionBtn.classList.remove("border-gray-300");
 		    actionBtn.classList.add("border-gray-900");
 		
 		    // 2) 선택값 저장 (DIRECT/DELIVERY)

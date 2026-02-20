@@ -42,7 +42,7 @@
 				</div>
 			</div>
 			<button type="button" onclick="execDaumPostcode()" class="rounded inline-flex items-center gap-2 py-3 min-w-[75px] h-11 bg-white border text-gray-900 active:border-gray-900 px-3 border-gray-300 w-full justify-start" aria-placeholder="주소 검색">
-				<span class="whitespace-pre-line font-medium text-inherit text-14"><span class="whitespace-pre-line text-gray-500" id="roadAddr" th:text="${'주소검색'}"></span>
+				<span class="whitespace-pre-line font-medium text-inherit text-14"><span class="whitespace-pre-line text-gray-600 text-sm" id="roadAddr" th:text="${'주소검색'}"></span>
 				</span>
 			</button>
 			
@@ -75,11 +75,11 @@
 			<li class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row">
 				<h3 class="text-14 font-regular text-gray-500 flex gap-[2px] items-center">
 					<span class="whitespace-pre-line text-gray-900">안심결제 수수료</span>
-					<span th:text="|*{chargeRate}%|" class="whitespace-pre-line text-gray-900 none"> 설정해둔 수수료</span>
+					<span th:text="|*{chargeRate}%|" class="whitespace-pre-line none text-sm px-3"style="color: rgb(156, 163, 175);">설정해둔 수수료</span>
 				</h3> 
 				<span class="z-auto rounded-none relative text-right break-all">
 					<span class="whitespace-pre-line text-14 flex gap-1" aria-hidden="true"> 
-						<span th:text="|*{#numbers.formatInteger(price*chargeRate/100,3,'COMMA')}원|" class="whitespace-pre-line font-semibold" style="color: rgb(20, 19, 19);">
+						<span th:text="|*{#numbers.formatInteger(price*chargeRate/100,3,'COMMA')}원|" class="whitespace-pre-line" style="color: rgb(20, 19, 19);">
 						계산된 수수료 값</span></span></span>
 			</li>
 			<li class="outline-none gap-1 flex flex-row justify-start items-stretch flex-nowrap" style="color: rgb(156, 163, 175);">
@@ -89,14 +89,13 @@
 						aria-hidden="true">
 						<path d="M.728 9.316V.064h.6v8.652h4.848v.6z"></path></svg>
 				</div> 
-				<span class="whitespace-pre-line text-12 font-medium order-payment-description-text">안심결제 수수료는 구매자가 부담합니다</span>
+				<span class="text-sm whitespace-pre-line text-12 font-medium order-payment-description-text">안심결제 수수료는 구매자가 부담합니다</span>
 			</li>
 		</ul>
 	</section>
 </div>
 <footer class="z-auto rounded-none static bg-gray-100 py-[20px] px-[24px] leading-[17px] tracking-[0.2px]">
-	<span class="text-12 font-regular whitespace-pre-line text-left text-gray-600 leading-[16px] tracking-[0.2px]">
-		<span>“중고나라” 상점의 판매상품을 제외한 모든 상품들에 대하여</span> <strong class="whitespace-pre-line font-medium text-gray-900">(주)중고나라</strong><span>는 통신판매중개자로서 거래 당사자가 아니며 판매 회원과 구매 회원 간의 상품거래 정보 및 거래에 관여하지 않고 어떠한 의무와 책임도 부담하지 않습니다.</span>
+	<span class="text-sm font-regular whitespace-pre-line text-left text-gray-600 leading-[16px] tracking-[0.2px]">“중고마켓” 상점의 판매상품을 제외한 모든 상품들에 대하여 <strong class="whitespace-pre-line font-medium text-gray-900">(주)중고마켓</strong><span>는 통신판매중개자로서 거래 당사자가 아니며 판매 회원과 구매 회원 간의 상품거래 정보 및 거래에 관여하지 않고 어떠한 의무와 책임도 부담하지 않습니다.</span>
 	</span>
 </footer>
 <div class="sticky bottom-0 left-0 w-full bg-white py-4 px-5 z-50 mt-auto">
