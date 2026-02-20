@@ -228,8 +228,8 @@
             url: '/manage/product/delete_product',
             type: 'POST',
             data: {
-                productNo: productNo,
-                deleteReason: deleteReason
+            	product_num: productNo, 
+                delete_text: deleteReason
             },
             success: function(res) {
                 if(res === "success") {
