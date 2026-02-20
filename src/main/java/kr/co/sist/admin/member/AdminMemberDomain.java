@@ -9,14 +9,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AdminMemberDomain {
-    private String user_id;     // 회원 아이디
-    private String name;       // 회원 이름
-    private String email;      // 이메일
-    private Date input_date;    // 계정 생성일
+    private String user_id;     
+    private String name;       
+    private String email;     
+    private Date input_date;    
     private String store_name;
     private String delete_flag;
     
-    private String suspension_flag;    // 'Y' 또는 'N'
-    private Date suspension_end_date;  // 정지 종료일
+    private String suspension_flag;   
+    private Date suspension_end_date;
     
 }

@@ -73,19 +73,14 @@ public class AdminMemberController {
                                  @RequestParam(value="currentPage", defaultValue="1") int currentPage,
                                  Model model) {
         
-        // 상점 프로필 정보
         AdminMemberPrdvDomain store = ms.getStoreDetail(userId);
         
-        // 상품 페이징을 위한 전체 개수
         int totalCount = ms.getStoreProductCount(userId);
         
-        // 현재 페이지/정렬에 맞는 상품 리스트 (10개)
         List<AdminMemberPrdvDomain> productList = ms.getStoreProducts(userId, sort, currentPage);
         
-        // 상점 후기 전체 리스트
         List<AdminMemberPrdvDomain> reviewList = ms.getStoreReviews(userId);
         
-        // prdv 전용 페이지네이션 HTML
         String pagination = ms.getPrdvPagination(userId, sort, currentPage, totalCount);
 
         model.addAttribute("store", store);
@@ -105,23 +100,18 @@ public class AdminMemberController {
                                     @RequestParam(value="currentPage", defaultValue="1") int currentPage,
                                     Model model) {
         
-        // 1. 상점 정보 조회 (Header용)
         AdminMemberProductDomain storeInfo = ms.getMemberStoreInfo(userId);
         
-        // 2. 전체 내역 개수 조회 (페이징용)
         int totalCount = ms.getHistoryCount(userId, type);
         
-        // 3. 페이징 처리된 내역 리스트 조회 (10개씩)
         List<AdminMemberProductDomain> historyList = ms.getMemberHistoryList(userId, type, currentPage);
         
-        // 4. 전용 페이지네이션 HTML 생성
         String pagination = ms.getHistoryPagination(userId, type, currentPage, totalCount);
 
-        // [중요] HTML의 변수명과 일치시킴
         model.addAttribute("store", storeInfo); 
         model.addAttribute("historyList", historyList);
         model.addAttribute("type", type);
-        model.addAttribute("userId", userId); // 👈 탭 클릭 시 다시 사용하기 위해 필수!
+        model.addAttribute("userId", userId); 
         model.addAttribute("pagination", pagination);
         model.addAttribute("totalCount", totalCount);
         
@@ -129,10 +119,9 @@ public class AdminMemberController {
     }
     
     @PostMapping("/manage/member/delete")
-    @ResponseBody // AJAX 요청에 응답하기 위해 사용
+    @ResponseBody 
     public ResponseEntity<String> deleteMember(@RequestParam("userId") String userId) {
         try {
-            // 실제 삭제가 아닌 delete_flag를 'Y'로 업데이트하는 로직 실행
             boolean isUpdated = ms.removeMember(userId);
             
             if (isUpdated) {
@@ -149,9 +138,8 @@ public class AdminMemberController {
     @ResponseBody
     public ResponseEntity<String> suspendMember(@RequestParam("userId") String userId, 
                                                 @RequestParam("action") String action,
-                                                @RequestParam(value="days", defaultValue="0") int days) { // [추가]
+                                                @RequestParam(value="days", defaultValue="0") int days) {
         try {
-            // 서비스에 days 정보도 함께 넘겨줍니다.
             boolean isUpdated = ms.modifySuspension(userId, action, days);
             
             if (isUpdated) return ResponseEntity.ok("Success");
