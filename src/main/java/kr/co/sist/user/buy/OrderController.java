@@ -195,7 +195,8 @@ public class OrderController {
         	String buyerId = (String)session.getAttribute("uid");
         	ChatDTO cDTO = new ChatDTO();
         	cDTO.setProductNum(pnum);
-        	cDTO.setWriterId(buyerId);  // 또는 "SYSTEM"
+        	cDTO.setType("TEXT");
+        	cDTO.setWriterId(buyerId);
         	String sellerId = bs.searchSellerId(pnum);
         	cDTO.setOtherId(sellerId); //판매자 아이디(찾아야함)
         	AddressDTO address = bs.searchAddress(orderId); //주소 찾기
