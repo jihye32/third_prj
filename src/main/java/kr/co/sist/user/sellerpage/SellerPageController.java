@@ -62,7 +62,7 @@ public class SellerPageController {
 		model.addAttribute("allProductCnt", totalCnt);// 전체 물품 수
 		model.addAttribute("hasNext", hasNext);
 		
-		return "/seller_page/sellerPage";
+		return "seller_page/sellerPage";
 	}//sellerPage
 	
 	@ResponseBody
