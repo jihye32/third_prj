@@ -5,6 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/manage/report")
 public class ReportController {
@@ -13,6 +17,20 @@ public class ReportController {
 
     public ReportController(ReportService rs) {
         this.rs = rs;
+    }
+    
+    @ModelAttribute
+    public void checkAdminLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+        if (session == null || session.getAttribute("loginAdmin") == null) {
+            
+            String loginUrl = request.getContextPath() + "/manage";
+            
+            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            } else {
+                response.sendRedirect(loginUrl);
+            }
+        }
     }
 
     @GetMapping("/reportlist")

@@ -1,19 +1,45 @@
 package kr.co.sist.admin.ask;
 
 import java.util.List;
-
+import kr.co.sist.admin.login.AdminLoginController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/manage/ask")
 public class AskController {
 
+    private final AdminLoginController adminLoginController;
+
     private final AskService as;
 
-    public AskController(AskService as) {
+    public AskController(AskService as, AdminLoginController adminLoginController) {
         this.as = as;
+        this.adminLoginController = adminLoginController;
+    }
+    
+    private String getAdminId(HttpSession session) {
+        Object v = session.getAttribute("loginAdmin");
+        return v == null ? null : v.toString();
+    }
+    
+    @ModelAttribute
+    public void checkAdminLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+        if (session == null || session.getAttribute("loginAdmin") == null) {
+            
+            String loginUrl = request.getContextPath() + "/manage";
+            
+            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            } else {
+                response.sendRedirect(loginUrl);
+            }
+        }
     }
 
     // 문의 목록
@@ -86,7 +112,10 @@ public class AskController {
 
     // 답변 처리
     @PostMapping("/answerProcess")
-    public String answerProcess(AskDTO dto) {
+    public String answerProcess(AskDTO dto, HttpSession session) {
+    	
+    	String adminId = (String) session.getAttribute("loginAdmin");
+        dto.setAdminId(adminId);
 
         as.answerAsk(dto);
         return "redirect:/manage/ask/detail?askNum=" + dto.getAskNum();
