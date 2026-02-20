@@ -85,8 +85,8 @@ public class AdminProductController {
 	    AdminProductDomain product = ps.getProductDetail(pDTO.getProduct_num());
     	ChatDTO cDTO = new ChatDTO();
     	cDTO.setProductNum(product.getProduct_num());
-    	cDTO.setWriterId("SYSTEM");  // 또는 "SYSTEM"
-    	
+    	cDTO.setWriterId("SYSTEM");
+    	cDTO.setType("TEXT");
     	//해당 상품의 판매자 아이디
     	cDTO.setOtherId(product.getUser_id());
     	

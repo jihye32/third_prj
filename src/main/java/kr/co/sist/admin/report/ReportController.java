@@ -93,6 +93,7 @@ public class ReportController {
         
         ChatDTO cDTO = new ChatDTO();
         cDTO.setWriterId("SYSTEM");
+        cDTO.setType("TEXT");
         	
         cDTO.setOtherId(report.getReporterId()); //구매자 아이디(찾아야함)
         	
