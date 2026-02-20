@@ -1,9 +1,15 @@
 package kr.co.sist.user.chat;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service("UserChatService")
 public class ChatService {
@@ -66,6 +72,7 @@ public class ChatService {
 			clDTO.setPnum(productNum);
 		}
 		clDTO.setContent(cDTO.getContent());
+		clDTO.setContentType(cDTO.getType());
 		
 		String me = cDTO.getWriterId();
 		String other = cDTO.getOtherId();
@@ -95,6 +102,34 @@ public class ChatService {
 		
 		return cDTO;
 	}
+	
+	//이미지 보내기
+	public String saveChatImageToStatic(MultipartFile file) throws IOException {
+	    // 확장자 체크(최소)
+	    String original = file.getOriginalFilename();
+	    String ext = (original != null && original.contains("."))
+	            ? original.substring(original.lastIndexOf(".")).toLowerCase()
+	            : ".jpg";
+
+	    if (!ext.equals(".png") && !ext.equals(".jpg") && !ext.equals(".jpeg")) {
+	        throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
+	    }
+
+	    // 파일명은 UUID로
+	    String filename = UUID.randomUUID().toString().replace("-", "") + ext;
+
+	    // ✅ 로컬 개발에서만 가능한 경로 (프로젝트 소스 폴더)
+	    String basePath = System.getProperty("user.dir");
+	    Path saveDir = Paths.get(basePath, "src", "main", "resources", "static", "images", "chat");
+	    Files.createDirectories(saveDir);
+
+	    Path savePath = saveDir.resolve(filename);
+	    file.transferTo(savePath.toFile());
+
+	    // 웹에서 접근할 URL 리턴
+	    return "/upload/chat/" + filename;
+	}
+
 	
 	public List<ChatDomain> searchChat(int roomNum, String uid){
 		// 읽음 처리 먼저
