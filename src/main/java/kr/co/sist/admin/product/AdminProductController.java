@@ -7,10 +7,14 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import kr.co.sist.user.chat.ChatService;
 
 @Controller
@@ -23,6 +27,21 @@ public class AdminProductController {
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 
+	@ModelAttribute
+	public void checkAdminLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+	    if (session == null || session.getAttribute("loginAdmin") == null) {
+	        
+	        String loginUrl = request.getContextPath() + "/manage";
+	        
+	        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+	            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+	        } else {
+	            response.sendRedirect(loginUrl);
+	        }
+	    }
+	}
+	
+	
 	@GetMapping("/manage/product/product_main")
 	public String memberMainPage(AdminProductDTO pDTO,
 			@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
