@@ -28,6 +28,15 @@ public class ChatDAO {
 		
 		return flag;
 	}
+	public String selectSuspension(String other){
+		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		String flag=ss.selectOne("kr.co.sist.user.chat.selectSuspension", other);
+		
+		if( ss != null) { ss.close(); }//end if
+		
+		return flag;
+	}
 	
 	public ChatListInfoDomain selectStoreName(String otherId) {
 		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);

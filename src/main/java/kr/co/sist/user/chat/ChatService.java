@@ -22,11 +22,15 @@ public class ChatService {
 			cld.setStoreName(clid.getStoreName());
 			cld.setThumbnail(cDAO.selectProductProfile(cld.getPnum()));
 			cld.setDeleteFlag(cDAO.selectDelete(cld.getOtherId()));
+			cld.setSusFlag(cDAO.selectSuspension(cld.getOtherId()));
 		}
 		return list;
 	}
 	public String searchDelete(String id) {
 		return cDAO.selectDelete(id);
+	}
+	public String searchSuspension(String id) {
+		return cDAO.selectSuspension(id);
 	}
 	
 	//거래하는 상품 정보

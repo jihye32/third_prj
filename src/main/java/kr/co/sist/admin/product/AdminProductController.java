@@ -3,6 +3,7 @@ package kr.co.sist.admin.product;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +11,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.sist.user.chat.ChatService;
+
 @Controller
 public class AdminProductController {
 
 	@Autowired
 	private AdminProductService ps;
+	@Autowired
+	private ChatService chatService;
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
 
 	@GetMapping("/manage/product/product_main")
 	public String memberMainPage(AdminProductDTO pDTO,
