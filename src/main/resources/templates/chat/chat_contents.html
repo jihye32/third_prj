@@ -41,7 +41,8 @@
 					<div type="textMessage" th:each="chatLog:${chatList}" th:object="${chatLog}">
 						<div th:if="*{writerId} == ${session.uid}" class="flex items-end w-auto mb-2 flex-start space-x-1 flex-row-reverse space-x-reverse">
 							<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tr bg-[#363C45] text-white w-auto">
-								<p th:text="*{content}" class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-jngreen [&amp;&gt;a]:underline"></p>
+								<img th:if="*{'IMAGE' == type}" th:src="*{content}" class="max-w-[220px] rounded-md"/>
+							    <p th:unless="*{'IMAGE' == type}" th:text="*{content}" class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-green [&amp;&gt;a]:underline"></p>
 							</div>
 							<div class="flex flex-col">
 								<p th:text="*{readDate != null?'읽음':''}" class="msg-read mb-0 text-right text-[13px]"></p>
@@ -50,7 +51,8 @@
 						</div>
 						<div th:unless="*{writerId} == ${session.uid}" class="flex items-end w-auto mb-2 flex-start space-x-1">
 							<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tl bg-white w-auto">
-								<p th:text="*{content}" class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-jngreen [&amp;&gt;a]:underline"></p>
+								<img th:if="*{'IMAGE' == type}" th:src="*{content}" class="max-w-[220px] rounded-md"/>
+							    <p th:unless="*{'IMAGE' == type}" th:text="*{content}" class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-green [&amp;&gt;a]:underline"></p>
 							</div>
 							<div class="flex">
 								<span th:text="*{#dates.format(chatDate, 'a h:mm')}" class="msg-time block text-[13px] uppercase text-start"></span>
@@ -111,6 +113,31 @@
 	<div class="flex items-end w-auto mb-2 flex-start space-x-1">
 		<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tl bg-white w-auto">
 			<p class="msg-text break-all whitespace-pre-wrap [&amp;&gt;a]:text-jngreen [&amp;&gt;a]:underline"></p>
+		</div>
+		<div class="flex">
+			<span class="msg-time block text-[13px] uppercase text-start"></span>
+		</div>
+	</div>
+</div>
+</template>
+<template id="my-img-message">
+<div type="imgMessage" class="my-msg">
+	<div class="flex items-end w-auto mb-2 flex-start space-x-1 flex-row-reverse space-x-reverse">
+		<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tr bg-[#363C45] text-white w-auto">
+			<img class="msg-img max-w-[220px] rounded-md" loading="lazy"/>
+		</div>
+		<div class="flex flex-col">
+			<p class="msg-read mb-0 text-right text-[13px]"></p>
+			<span class="msg-time block text-[13px] uppercase text-end"></span>
+		</div>
+	</div>
+</div>
+</template>
+<template id="other-img-message">
+<div type="imgMessage">
+	<div class="flex items-end w-auto mb-2 flex-start space-x-1">
+		<div class="p-3 rounded-xl h-auto overflow-hidden rounded-tl bg-white w-auto">
+			<img class="msg-img max-w-[220px] rounded-md" loading="lazy"/>
 		</div>
 		<div class="flex">
 			<span class="msg-time block text-[13px] uppercase text-start"></span>
