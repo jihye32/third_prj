@@ -18,7 +18,7 @@ public class BuyController {
 	private BuyService bs;
 	
 	@GetMapping("/{pnum}")
-	public String openBuyType(@PathVariable int pnum, Model model) {
+	public String openBuyType(@PathVariable Integer pnum, Model model) {
 		BuyDomain bd = bs.searchProduct(pnum);
 		if(bd==null)return "redirect: /";
 		model.addAttribute("BuyDomain", bd);

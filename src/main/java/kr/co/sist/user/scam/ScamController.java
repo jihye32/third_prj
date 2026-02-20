@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ScamController {
 	
 
-    @GetMapping("/scam") // 이 주소가 브라우저 주소창과 일치해야 함!
+    @GetMapping("/scam") 
     public String scamPage() {
         return "/scam/scam"; 
     }

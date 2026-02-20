@@ -7,12 +7,12 @@
 <select id="selectSafepayToday" resultType="int">
 select count(order_id) 
 from payment
-where approved_date=trunc(sysdate)
+where trunc(approved_date)=trunc(sysdate)
 </select>
 <select id="selectSafepayYesterday" resultType="int">
 select count(order_id) 
 from payment
-where approved_date=TRUNC(SYSDATE) - 1
+where trunc(approved_date)=TRUNC(SYSDATE) - 1
 </select>
 <select id="selectSafepayMonth" resultType="int">
 select count(order_id) 
@@ -37,13 +37,13 @@ select count(order_id)
 <select id="selectChargeToday" resultType="int">
 select nvl(sum(charge),0)
 from product_order
-where created_date=trunc(sysdate)
+where trunc(created_date)=trunc(sysdate)
 
 </select>
 <select id="selectChargeYesterday" resultType="int">
 select nvl(sum(charge),0)
 from product_order
-where created_date=trunc(sysdate)-1
+where trunc(created_date)=trunc(sysdate)-1
 
 </select>
 <select id="selectChargeMonth" resultType="int">

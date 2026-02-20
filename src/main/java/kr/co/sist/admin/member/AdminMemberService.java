@@ -19,7 +19,6 @@ public class AdminMemberService {
     @Autowired
     private AdminMemberDAO mDAO;
 
-    // application.properties에서 직접 값 읽기
     @Value("${user.crypto.key}")
     private String cryptoKey;
 
@@ -114,7 +113,6 @@ public class AdminMemberService {
                     if (detail.getName() != null) detail.setName(textEncryptor.decrypt(detail.getName()));
                     if (detail.getEmail() != null) detail.setEmail(textEncryptor.decrypt(detail.getEmail()));
                 } catch (Exception e) {
-                    // 복호화 실패 시 원본 데이터 유지
                 }
             }
         } catch (SQLException e) {

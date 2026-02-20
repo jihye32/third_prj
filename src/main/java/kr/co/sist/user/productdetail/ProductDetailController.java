@@ -106,7 +106,7 @@ public class ProductDetailController {
     		flag = true;
     		ps.modifyUpDate(pnum);
     	}
-    	String resultMsg = flag ? "끌올 되었습니다." : "끌올 되지 못했습니다. 잠시 후 다시 시도해주세요.";
+    	String resultMsg = flag ? "끌올 되었습니다." : "끌올은 하루에 한 번만 가능합니다.";
 	    
 	    response.put("msg", resultMsg);
 	    response.put("flag", flag);

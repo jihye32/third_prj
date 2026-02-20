@@ -5,18 +5,18 @@ import lombok.Data;
 @Data
 public class AdminMemberProductDomain {
     // --- 상점 정보 (Store Profile) ---
-    private String user_id;      // USER_ID
-    private String store_name;          // 상점명 (COL)
-    private String profile_img;  // PROFILE_IMG
-    private String introduce;    // INTRODUCE
-    private String input_date;   // INPUT_DATE (상점 등록일)
-    private long open_days;      // 계산된 오픈 일수
+    private String user_id;     
+    private String store_name;     
+    private String profile_img; 
+    private String introduce;    
+    private String input_date;   
+    private long open_days;      
 
     // --- 거래 내역 (Transaction History) ---
-    private int product_num;     // 상품번호
-    private String title;        // 상품 이름
-    private String trade_date;   // 거래체결일자
-    private String target_id;    // 상대방 ID (판매자 혹은 구매자)
-    private int price;           // 가격
+    private int product_num;     
+    private String title;        
+    private String trade_date;   
+    private String target_id;    
+    private int price;          
     private String status_text;
 }

@@ -1,13 +1,12 @@
-/* 기준이 되는 틀 생성해줌 */
 const loadDrawerContent = (url, callback) => {
 	fetch(url)
 		.then(res => {
-	      if (res.status === 401) {
-	        window.top.location.href = "/user/login/loginFrm"; // 부모로 이동
-	        return null;
-	      }
-	      return res.text();
-	    })
+		      if (res.status === 401) {
+		        window.top.location.href = "/user/login/loginFrm"; // 부모로 이동
+		        return null;
+		      }
+		      return res.text();
+		    })
 		.then(html => {
 		    const drawer = document.getElementById('drawerContent');
 		    drawer.innerHTML = html;
@@ -15,9 +14,6 @@ const loadDrawerContent = (url, callback) => {
 		    if (callback) callback();
 		})
 		.catch(err => console.error('Drawer Load Error:', err));
-		console.log("fetch is", fetch);
-		const res = fetch(url);
-		console.log("res is", res);
 };
 
 function openDrawer(title) {

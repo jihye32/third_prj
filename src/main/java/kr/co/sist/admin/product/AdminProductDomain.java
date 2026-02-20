@@ -18,7 +18,7 @@ public class AdminProductDomain {
     private String description;
     private String product_status;
     private int status_code;
-    private String addr;              /* 발송지 (Origin) */
+    private String addr;             
     private String thumbnail;
     private List<String> product_images;
     private String store_name;
@@ -27,23 +27,23 @@ public class AdminProductDomain {
     private int bookmark_count;
     private String user_id;
     
-    // 2. [추가] 삭제 관련 필드 (에러 해결 핵심)
-    private String delete_flag;       /* 삭제 여부 (Y/N) */
-    private String delete_text;       /* 삭제 사유 */
+    // 2. 삭제 관련 필드 (에러 해결 핵심)
+    private String delete_flag;     
+    private String delete_text;       
     
     // 3. 날짜 및 시간 계산 필드
     private Date input_date;
     private Date modify_date;
-    private String time_string;       /* "방금 전", "1일 전" 등 */
+    private String time_string;     
 
-    // 4. [보강] 거래 정보 필드 (매퍼 조인 결과용)
-    private String order_id;          /* 주문 번호 (po.ORDER_ID) */
-    private String buyer_id;          /* 구매자 ID (po.BUYER_ID) */
-    private String order_status;      /* 배송 상태 (po.ORDER_STATUS) */
-    private Date shipped_date;        /* 발송 날짜 */
-    private Date delivered_date;      /* 도착 날짜 */
-    private String destination_addr;    /* 수령지 주소 (ad.address) */
-    private String destination_detail;  /* 수령지 상세주소 (ad.address_detail) */
+    // 4. 거래 정보 필드 (매퍼 조인 결과용)
+    private String order_id;         
+    private String buyer_id;          
+    private String order_status;      
+    private Date shipped_date;      
+    private Date delivered_date;   
+    private String destination_addr;    
+    private String destination_detail;  
 
     /**
      * [Thymeleaf SpEL 에러 방지용 수동 Getter]
@@ -57,7 +57,6 @@ public class AdminProductDomain {
         this.delete_flag = delete_flag;
     }
 
-    // 서비스 레이어에서 사용하는 Getter들 (에러 방지용)
     public Date getModify_date() { return modify_date; }
     public Date getInput_date() { return input_date; }
     public int getProductNo() { return product_num; }

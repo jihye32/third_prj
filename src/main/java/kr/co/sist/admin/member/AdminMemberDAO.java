@@ -132,7 +132,7 @@ public class AdminMemberDAO {
         return list;
     }
 
-    // [11] 추가: 회원 삭제 플래그 업데이트
+    // [11] 회원 삭제 플래그 업데이트
     public int updateMemberDeleteFlag(String userId) throws SQLException {
         int result = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
@@ -144,6 +144,7 @@ public class AdminMemberDAO {
         return result;
     }
     
+    // [12] 정지상태 새로고침
     public int updateSuspension(Map<String, Object> map) throws SQLException {
         int result = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
