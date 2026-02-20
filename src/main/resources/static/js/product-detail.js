@@ -201,7 +201,7 @@ function sendProduct(pnum){
     });
 }
 
-function openBuyForm(pnum) { 
-	loadDrawerContent(`/buy/${pnum}`, () => openDrawer('거래 방법 선택')); 
+function openBuyForm(pnum) {
+	loadDrawerContent(`/buy/${pnum}`, () => openDrawer("거래 방법 선택"));
 }
 

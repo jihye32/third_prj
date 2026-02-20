@@ -102,7 +102,6 @@ public class ProductDetailController {
 
 		boolean flag = false;
     	boolean check = ps.searchUpDate(pnum);
-    	System.out.println(check);
     	if(check) {
     		flag = true;
     		ps.modifyUpDate(pnum);
