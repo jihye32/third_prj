@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>통합 사기조회 - 중고나라</title>
+<title>통합 사기조회</title>
 <link th:href="@{/css/output.css}" rel="stylesheet">
 <link th:href="@{/css/test.css}" rel="stylesheet">
 <link th:href="@{/css/scam1.css}" rel="stylesheet">
@@ -22,25 +22,20 @@ $(function() {
             return;
         }
 
-        // 1. 결과 안내 영역 보여주기
         $("#searchResultArea").removeClass("hidden");
 
-        // 2. 입력 번호 클립보드 복사 (사용자 편의성)
         navigator.clipboard.writeText(keyword).then(function() {
             $("#copyTarget").text(keyword);
             
-            // 3. 경찰청 공식 팝업창 띄우기
             const cyberUrl = "https://www.police.go.kr/www/security/cyber/cyber04.jsp";
             window.open(cyberUrl, "police_popup", "width=1100, height=850, scrollbars=yes");
         });
 
-        // 결과 영역으로 화면 스크롤
         $('html, body').animate({
             scrollTop : $("#searchResultArea").offset().top - 100
         }, 500);
     });
 
-    // 엔터키 지원
     $("#searchInfo").on("keyup", function(e) {
         if (e.keyCode === 13) $("#btnCyberSearch").click();
     });
