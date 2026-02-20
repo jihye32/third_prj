@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.sist.admin.ask">
+
+    <!-- 총 건수 -->
+    <select id="selectTotalCount"
+            parameterType="kr.co.sist.admin.ask.AskDTO"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM ask
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'title'">
+                        AND ask_title LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'content'">
+                        AND ask_text LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'user'">
+                        AND user_id LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <otherwise>
+                        AND (ask_title LIKE '%' || #{keyword} || '%'
+                             OR ask_text LIKE '%' || #{keyword} || '%'
+                             OR user_id LIKE '%' || #{keyword} || '%')
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAskList"
+            parameterType="kr.co.sist.admin.ask.AskDTO"
+            resultType="kr.co.sist.admin.ask.AskDomain">
+        SELECT *
+        FROM (
+            SELECT
+                a.ask_num    AS askNum,
+                a.ask_code   AS askCode,
+                a.ask_title  AS askTitle,
+                a.ask_text   AS askText,
+                a.ask_date   AS askDate,
+                a.user_id    AS userId,
+                a.answer_text AS answerText,
+                a.answer_date AS answerDate,
+                ROW_NUMBER() OVER (ORDER BY a.ask_date DESC) rnum
+            FROM ask a
+            <where>
+                <if test="keyword != null and keyword != ''">
+                    <choose>
+                        <when test="searchType == 'title'">
+                            AND a.ask_title LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <when test="searchType == 'content'">
+                            AND a.ask_text LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <when test="searchType == 'user'">
+                            AND a.user_id LIKE '%' || #{keyword} || '%'
+                        </when>
+                        <otherwise>
+                            AND (a.ask_title LIKE '%' || #{keyword} || '%'
+                                 OR a.ask_text LIKE '%' || #{keyword} || '%'
+                                 OR a.user_id LIKE '%' || #{keyword} || '%')
+                        </otherwise>
+                    </choose>
+                </if>
+            </where>
+        )
+        WHERE rnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="selectAskDetail"
+            parameterType="int"
+            resultType="kr.co.sist.admin.ask.AskDomain">
+        SELECT
+            a.ask_num      AS askNum,
+            a.ask_code     AS askCode,
+            v.ask_text     AS askTypeText,
+            a.ask_title    AS askTitle,
+            a.ask_text     AS askText,
+            a.ask_date     AS askDate,
+            a.user_id      AS userId,
+            a.answer_text  AS answerText,
+            a.answer_date  AS answerDate
+        FROM ask a
+        LEFT JOIN ask_value v
+               ON a.ask_code = v.ask_code
+        WHERE a.ask_num = #{value}
+    </select>
+
+    <select id="selectAskImages"
+            parameterType="int"
+            resultType="string">
+        SELECT ask_img
+        FROM ask_img
+        WHERE ask_num = #{value}
+        ORDER BY ask_img
+    </select>
+
+    <update id="updateAnswer"
+            parameterType="kr.co.sist.admin.ask.AskDTO">
+        UPDATE ask
+        SET answer_text = #{answerText},
+            answer_date = SYSDATE
+        WHERE ask_num = #{askNum}
+    </update>
+
+</mapper>

@@ -19,7 +19,7 @@ public class LoginController {
 
 	@GetMapping("/loginFrm")
 	public String loginFrm() {
-		return "/login/loginFrm";
+		return "login/loginFrm";
 	}// loginFrm
 
 	@PostMapping("/loginProcess")

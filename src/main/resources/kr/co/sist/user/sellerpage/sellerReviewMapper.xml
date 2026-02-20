@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.user.sellerpage">
+<!-- 특정 상점의 모든 리뷰 -->
+<select id="selectReviews" parameterType="String" resultType="kr.co.sist.user.sellerpage.SellerReviewDTO">
+SELECT
+        r.product_num,
+        r.review_text,
+        r.review_date,
+        r.review_rate,
+		s_writer.user_id as reviewerId,
+        s_writer.store_name AS writerNickname,
+        s_writer.profile_img AS writerProfile
+    FROM review r
+    JOIN store s_writer ON r.store_num = s_writer.store_num
+    JOIN product p ON r.product_num = p.product_num
+    JOIN store s_seller ON p.store_num = s_seller.store_num
+    WHERE s_seller.store_num = #{storeId}
+    ORDER BY r.review_date DESC
+</select>
+
+<!-- 평균 별점 -->
+<select id="selectReviewStar" parameterType="String" resultType="double">
+SELECT NVL(ROUND(AVG(r.review_rate), 1), 0) as review_rate
+    FROM review r
+    JOIN product p ON r.product_num = p.product_num
+    JOIN store s_seller ON p.store_num = s_seller.store_num
+    WHERE s_seller.store_num = #{storeId}
+</select>
+
+<!-- 전체 리뷰 개수 -->
+<select id="selectCountReview" parameterType="String" resultType="int">
+SELECT COUNT(*)
+FROM review r
+JOIN product p ON r.product_num = p.product_num
+JOIN store s_seller ON p.store_num = s_seller.store_num
+WHERE s_seller.store_num = #{storeId}
+
+</select>
+
+</mapper>

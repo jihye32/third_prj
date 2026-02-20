@@ -131,7 +131,7 @@ public class SalesDAO {
 	public int allPayMethod() {
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
 		try {
-			return ss.selectOne("kr.co.sist.admin.sales.selectPayMethod");
+			return ss.selectOne("kr.co.sist.admin.sales.allPayMethod");
 		} finally {
 			ss.close();
 		}

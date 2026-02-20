@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.admin.product">
+
+	<resultMap id="productDetailMap"
+		type="kr.co.sist.admin.product.AdminProductDomain">
+		<id property="product_num" column="product_num" />
+		<result property="title" column="title" />
+		<result property="price" column="price" />
+		<result property="description" column="description" />
+		<result property="view_count" column="view_count" />
+		<result property="product_status" column="product_status" />
+		<result property="status_code" column="status_code" />
+		<result property="category_code" column="category_code" />
+		<result property="input_date" column="input_date" />
+		<result property="modify_date" column="modify_date" />
+		<result property="delete_flag" column="delete_flag" />
+		<result property="addr" column="addr" />
+		<result property="thumbnail" column="thumbnail" />
+		<result property="store_name" column="store_name" />
+		<result property="user_id" column="user_id" />
+		<result property="bookmark_count" column="bookmark_count" />
+		<result property="buyer_id" column="buyer_id" />
+		<result property="destination_addr" column="destination_addr" />
+		<result property="destination_detail"
+			column="destination_detail" />
+		<collection property="product_images"
+			ofType="java.lang.String">
+			<result column="product_img" />
+		</collection>
+	</resultMap>
+
+	<select id="selectTotalCount" resultType="int"
+		parameterType="kr.co.sist.admin.product.AdminProductDTO">
+		SELECT COUNT(*)
+		FROM product p
+		JOIN store st ON p.store_num =
+		st.store_num
+		JOIN member m ON st.user_id = m.user_id
+		<where>
+			AND m.delete_flag = 'N'
+			<if test="category_code != null and category_code != 0"> AND p.category_code = #{category_code} </if>
+			<if test="keyword != null and keyword != ''"> AND p.title LIKE '%' || #{keyword} || '%' </if>
+		</where>
+	</select>
+
+	<select id="selectProductList"
+		resultType="kr.co.sist.admin.product.AdminProductDomain"
+		parameterType="kr.co.sist.admin.product.AdminProductDTO">
+		SELECT * FROM (
+		SELECT rownum rnum, p_sub.* FROM (
+		SELECT
+		p.product_num,
+		p.title, p.price, s_p.addr, p.input_date, p.modify_date,
+		ss.status_text AS product_status, p.status_code, p.thumbnail,
+		p.delete_flag
+		FROM product p
+		LEFT OUTER JOIN sell_place s_p ON
+		p.product_num = s_p.product_num
+		LEFT OUTER JOIN sell_status ss ON
+		p.status_code = ss.status_code
+		JOIN store st ON p.store_num =
+		st.store_num
+		JOIN member m ON st.user_id = m.user_id
+		<where>
+			AND m.delete_flag = 'N'
+			<if test="category_code != null and category_code != 0"> AND p.category_code = #{category_code} </if>
+			<if test="keyword != null and keyword != ''"> AND p.title LIKE '%' || #{keyword} || '%' </if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="sortBy == 'lowPrice'"> p.price ASC </when>
+			<when test="sortBy == 'highPrice'"> p.price DESC </when>
+			<otherwise> p.input_date DESC </otherwise>
+		</choose>
+		) p_sub
+		) WHERE rnum BETWEEN #{startNum} AND #{endNum}
+	</select>
+
+	<select id="selectProductDetail" resultMap="productDetailMap"
+		parameterType="int">
+		SELECT
+		p.product_num, p.title, p.price, p.content AS
+		description, p.view_count,
+		ss.status_text AS product_status,
+		p.status_code, p.category_code,
+		p.input_date, p.modify_date,
+		p.delete_flag,
+		s_p.addr, p.thumbnail, st.store_name, st.user_id,
+		(SELECT COUNT(*) FROM bookmark WHERE product_num = p.product_num) AS
+		bookmark_count,
+		po.BUYER_ID,
+		ad.address AS destination_addr,
+		ad.address_detail AS destination_detail,
+		i.product_img
+		FROM product p
+		LEFT OUTER JOIN sell_place s_p ON p.product_num = s_p.product_num
+		LEFT
+		OUTER JOIN sell_status ss ON p.status_code = ss.status_code
+		JOIN store
+		st ON p.store_num = st.store_num
+		JOIN member m ON st.user_id =
+		m.user_id LEFT OUTER JOIN product_ORDER po
+		ON p.product_num =
+		po.product_num
+		LEFT OUTER JOIN address ad ON po.ORDER_ID = ad.ORDER_ID
+		LEFT OUTER JOIN product_img i ON p.product_num = i.product_num
+		WHERE
+		p.product_num = #{product_num}
+		AND m.delete_flag = 'N'
+	</select>
+
+	<update id="updateProductState"
+		parameterType="kr.co.sist.admin.product.AdminProductDTO">
+		UPDATE product SET status_code = #{statusCode}
+		WHERE product_num = #{product_num}
+	</update>
+
+	<update id="deleteProduct"
+		parameterType="kr.co.sist.admin.product.AdminProductDTO">
+		UPDATE product
+		SET delete_flag = 'Y',
+		delete_text =
+		#{delete_text}, modify_date = SYSDATE
+		WHERE product_num =
+		#{product_num}
+	</update>
+
+	<select id="selectProductImages" resultType="String"
+		parameterType="int">
+		SELECT product_img
+		FROM product_img
+		WHERE product_num =
+		#{product_num}
+	</select>
+
+</mapper>

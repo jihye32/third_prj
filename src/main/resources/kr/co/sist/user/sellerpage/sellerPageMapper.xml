@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.user.sellerPage">
+ 
+<select id="selectSellerInfo" parameterType="int" resultType="kr.co.sist.user.sellerpage.SellerPageDomain" >
+select store_name storename, profile_img profileimg, introduce introduce
+from store
+where store_num = #{storenum}
+</select>
+
+<select id="selectProductList" 
+		parameterType="kr.co.sist.user.sellerpage.SellerPageRangeDTO" 
+		resultType="kr.co.sist.user.ProductDomain">
+select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY, bookmarkFlag
+from(
+	select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY, bookmarkFlag, rownum r
+	from(
+		select
+			pv.productNum productNum,
+			pv.productName productName,
+			pv.PRICE price,
+			pv.THUMBNAIL thumbnail,
+			pv.timDif timDif,
+			pv.sellStateCode sellStateCode,
+			pv.tradingArea tradingArea,
+			pv.sellState sellState,
+			pv.lastModify lastModify,
+			pv.timeString timeString,
+		    
+		    CASE
+		        WHEN b.PRODUCT_NUM IS NOT NULL THEN 'Y'
+		        ELSE 'N'
+		    END AS bookmarkFlag
+		    
+		    from seller_product_view pv
+		    
+		    
+		    LEFT OUTER JOIN bookmark b
+				    ON pv.productNum = b.product_num
+					<if test="myId neq null and myId neq '' ">
+				   	AND b.store_num = #{myId}
+					</if>
+					<if test="myId eq null or myId eq ''">
+					AND b.store_num = 0
+		            </if>
+		    where pv.storeNum =#{sellerId}
+		    <if test="sellStateCode != 0">
+			and sellStateCode = #{sellStateCode}
+			</if>
+		    
+			<choose>
+			    <when test="sortBy eq 'asc'">order by pv.PRICE ASC </when>
+			    <when test="sortBy eq 'desc'">order by pv.PRICE DESC </when>
+			    <otherwise>order by pv.lastModify DESC </otherwise>
+			 </choose>
+   		)
+	)
+where r between #{startNum} and #{endNum}
+</select>
+
+
+<select id="selectProdcutListCnt" 
+		parameterType="kr.co.sist.user.sellerpage.SellerPageRangeDTO" 
+		resultType="int">
+select count(product_Num)
+from product
+
+<where>
+store_num = #{sellerId}
+<if test="sellStateCode != 0">
+and status_code = #{sellStateCode}
+</if>
+</where>
+
+</select>
+
+<select id="selectSellerId" resultType="String" parameterType="int">
+select user_id
+from store
+where store_num = #{storeNum}
+</select>
+
+<select id="selectCountReview" resultType="int" parameterType="int">
+SELECT COUNT(r.product_num)
+FROM REVIEW r
+WHERE r.PRODUCT_NUM IN (
+			         SELECT p.product_num
+			         FROM PRODUCT p
+			         WHERE p.STORE_NUM = #{storeNum}
+					     )
+</select>
+
+
+</mapper>

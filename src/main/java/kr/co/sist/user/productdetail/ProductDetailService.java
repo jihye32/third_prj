@@ -3,6 +3,7 @@ package kr.co.sist.user.productdetail;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,10 +75,8 @@ public class ProductDetailService {
 		//현재 날짜와 select으로 받은 날짜의 차이를 구해 반환
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime bumpAt = pDAO.selectUpDate(num);
-
-		Period p = Period.between(bumpAt.toLocalDate(), now.toLocalDate());
-        
-        if(p.getDays() > 14) check = true;
+		long days = ChronoUnit.DAYS.between(bumpAt, now);
+        if(days > 1) check = true;
         
 		return check;
 	}//searchUpDate
