@@ -84,14 +84,21 @@ public class AdminProductController {
 	    
 	    AdminProductDomain product = ps.getProductDetail(pDTO.getProductNo());
     	ChatDTO cDTO = new ChatDTO();
-    	cDTO.setProductNum(product.getProductNo());
+    	cDTO.setProductNum(pDTO.getProductNo());
     	cDTO.setWriterId("SYSTEM");
     	cDTO.setType("TEXT");
     	//해당 상품의 판매자 아이디
     	cDTO.setOtherId(product.getUser_id());
-    	
+    	String deleteMsg = "";
+    	switch (pDTO.getDeleteReason()) {
+    		case "1": deleteMsg = "사기로 의심됨"; break;
+    		case "2": deleteMsg = "부적절한 물품"; break;
+    		case "3": deleteMsg = "검색 노출 조작 및 도배"; break;
+    		case "4": deleteMsg = "현금 외 거래 유도"; break;
+    		default : deleteMsg = "기타 사유";
+    	}
     	StringBuilder msg = new StringBuilder();
-    	msg.append("상품 ").append(product.getTitle()).append("이 운영정책 상 삭제되었습니다.\n문의사항이 있으시다면 1:1문의하기를 이용해주시기 바랍니다.");
+    	msg.append("상품 ").append(product.getTitle()).append("이 ").append(deleteMsg).append("에 해당하여 삭제되었습니다.");
     	cDTO.setContent(msg.toString());
     	
     	Integer roomNum = chatService.searchChatRoom(cDTO.getWriterId(), cDTO.getOtherId());
