@@ -62,7 +62,7 @@ SalesService ss;
     
     @PostMapping("/insert-charge")
     public String insertCharge(@RequestParam("chargeNow") Double chargeNow) {
-        System.out.println("변경할 수수료율: " + chargeNow);
+        //System.out.println("변경할 수수료율: " + chargeNow);
         
         ss.insertCharge(chargeNow);
 

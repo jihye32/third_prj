@@ -22,7 +22,7 @@ public class JoinController {
 
 	@GetMapping("/joinFrm")
 	public String joinFrm() {
-		return "/join/joinFrm";
+		return "join/joinFrm";
 	}// joinFrm
 
 	@ResponseBody
@@ -105,7 +105,7 @@ public class JoinController {
 
 	@GetMapping("/joinSuccess")
 	public String joinSuccess() {
-		return "/join/joinSuccess";
+		return "join/joinSuccess";
 	}// joinSuccess
 
 }// class
