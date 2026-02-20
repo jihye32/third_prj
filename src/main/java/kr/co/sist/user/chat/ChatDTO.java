@@ -8,6 +8,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ChatDTO {
-	private String content, writerId, otherId;
+	private String content, writerId, otherId, type;
 	private Integer roomNum, productNum;
 }
