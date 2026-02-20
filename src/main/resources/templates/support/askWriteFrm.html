@@ -98,7 +98,7 @@ $(function () {
     selectedFiles.forEach(f => dt.items.add(f));
     input.files = dt.files;
 
-    // ✅ 실제로 주입됐는지 검증
+    
     return input.files && input.files.length === selectedFiles.length;
   }
 
@@ -108,7 +108,7 @@ $(function () {
     $("#files").click();
   });
 
-  // 파일 선택(누적)
+  // 파일 선택
   $(document).on("change", "#files", function () {
     const picked = this.files ? Array.from(this.files) : [];
     if (picked.length === 0) return;
@@ -119,7 +119,7 @@ $(function () {
       return;
     }
 
-    // 중복 제거(선택)
+    // 중복 제거
     const keys = new Set(selectedFiles.map(fileKey));
     picked.forEach(f => {
       const k = fileKey(f);
@@ -135,7 +135,7 @@ $(function () {
     renderThumbs();
   });
 
-  // 썸네일 삭제(X)
+  // 썸네일 삭제
   $(document).on("click", ".btnRemoveThumb", function () {
     const idx = parseInt($(this).data("idx"), 10);
     if (!Number.isNaN(idx)) {
@@ -154,7 +154,6 @@ $(function () {
     if (!title) { alert("문의 제목을 입력해 주세요."); $("#askTitle").focus(); return; }
     if (!text)  { alert("문의 내용을 입력해 주세요."); $("#askContent").focus(); return; }
 
-    // ✅ submit 직전 파일 동기화
     const ok = syncToInputOrFail();
 
     console.log("selectedFiles=", selectedFiles.length,

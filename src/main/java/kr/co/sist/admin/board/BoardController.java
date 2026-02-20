@@ -19,7 +19,7 @@ public class BoardController {
     }
     
     private String getAdminId(HttpSession session) {
-        Object v = session.getAttribute("adminId");
+        Object v = session.getAttribute("loginAdmin");
         return v == null ? null : v.toString();
     }
 
@@ -113,10 +113,10 @@ public class BoardController {
     public String faqWriteProcess(BoardDTO dto, HttpSession session) {
         dto.setType("FAQ");
         dto.setBoardType("F");
-        //dto.setAdminId(getAdminId(session)); // 세션에서 관리자 아이디
+        dto.setAdminId(getAdminId(session)); // 세션에서 관리자 아이디
 
-        String adminId = getAdminId(session);   
-        dto.setAdminId(adminId);
+//        String adminId = getAdminId(session);   
+//        dto.setAdminId(adminId);
         bs.addBoard(dto);
         System.out.println("adminId = " + dto.getAdminId());
 
@@ -145,9 +145,9 @@ public class BoardController {
     public String noticeWriteProcess(BoardDTO dto, HttpSession session) {
         dto.setType("NOTICE");
         dto.setBoardType("N");
-        //dto.setAdminId(getAdminId(session));
-        String adminId = getAdminId(session);   
-        dto.setAdminId(adminId);
+        dto.setAdminId(getAdminId(session));
+//        String adminId = getAdminId(session);   
+//        dto.setAdminId(adminId);
 
         bs.addBoard(dto);
 
@@ -205,10 +205,10 @@ public class BoardController {
 
         dto.setBoardType("F");
         dto.setType("FAQ");
-        //dto.setAdminId((String)session.getAttribute("adminId"));
+        dto.setAdminId((String)session.getAttribute("loginAdmin"));
 
-        String adminId = getAdminId(session);   
-        dto.setAdminId(adminId);
+//        String adminId = getAdminId(session);   
+//        dto.setAdminId(adminId);
         bs.modifyBoard(dto);
 
         return "redirect:/manage/faq/faq";
@@ -219,10 +219,10 @@ public class BoardController {
 
         dto.setBoardType("N");
         dto.setType("NOTICE");
-        //dto.setAdminId((String)session.getAttribute("adminId"));
+        dto.setAdminId((String)session.getAttribute("loginAdmin"));
 
-        String adminId = getAdminId(session);   
-        dto.setAdminId(adminId);
+//        String adminId = getAdminId(session);   
+//        dto.setAdminId(adminId);
         bs.modifyBoard(dto);
 
         return "redirect:/manage/notice/notice";
