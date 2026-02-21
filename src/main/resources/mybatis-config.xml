@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<properties resource="properties/database.properties"/>
+<typeAliases>
+    <!-- product detail -->
+	<typeAlias type="kr.co.sist.user.productdetail.ProductDetailDomain" alias="productDetailDomain"/>
+	<typeAlias type="kr.co.sist.user.productdetail.ProductModifyDTO" alias="productModifyDTO"/>
+	<typeAlias type="kr.co.sist.user.productdetail.SellerInfoDomain" alias="sellerInfoDomain"/>
+	<typeAlias type="kr.co.sist.user.productdetail.OrderDomain" alias="orderDomain"/>
+	<typeAlias type="kr.co.sist.user.productdetail.BookmarkDTO" alias="bookmarkDTO"/>
+	<typeAlias type="kr.co.sist.user.productdetail.SellStatusDTO" alias="sellStatusDTO"/>
+	<!-- product buy -->
+	<typeAlias type="kr.co.sist.user.buy.BuyDomain" alias="buyDomain"/>
+	<typeAlias type="kr.co.sist.user.buy.PaymentDTO" alias="paymentDTO"/>
+	<typeAlias type="kr.co.sist.user.buy.OrderDTO" alias="orderDTO"/>
+	<typeAlias type="kr.co.sist.user.buy.AddressDTO" alias="addressDTO"/>
+	<typeAlias type="kr.co.sist.user.buy.PaymentDTO" alias="paymentDTO"/>
+	<typeAlias type="kr.co.sist.user.buy.PaymentDomain" alias="PaymentDomain"/>
+	<!-- chat -->
+	<typeAlias type="kr.co.sist.user.chat.ChatDTO" alias="chatDTO"/>
+	<typeAlias type="kr.co.sist.user.chat.ChatDomain" alias="chatDomain"/>
+	<typeAlias type="kr.co.sist.user.chat.ChatListDTO" alias="chatListDTO"/>
+	<typeAlias type="kr.co.sist.user.chat.ChatListDomain" alias="chatListDomain"/>
+	
+	
+    <!-- 자빈님 typeAlias -->
+    <typeAlias type="kr.co.sist.admin.product.AdminProductDomain" alias="AdminProductDomain"/>
+    <typeAlias type="kr.co.sist.admin.product.AdminProductDTO" alias="AdminProductDTO"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberDTO" alias="AdminMemberDTO"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberDomain" alias="AdminMemberDomain"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberDetailDomain" alias="AdminMemberDetailDomain"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberProductDomain" alias="AdminMemberProductDomain"/>
+    <typeAlias type="kr.co.sist.admin.member.AdminMemberPrdvDomain" alias="AdminMemberPrdvDomain"/>
+
+</typeAliases>
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+      	<!-- .properties를 이용해서 넣을 수 있음 -->
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${id}"/>
+        <property name="password" value="${pass}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+  
+	<!-- 관리자 mapper -->
+	<mapper resource="kr/co/sist/admin/ask/Askmapper.xml"/>
+	<mapper resource="kr/co/sist/admin/board/BoardMapper.xml"/>
+	<mapper resource="kr/co/sist/admin/dashboard/dashboardMapper.xml"/>
+	<mapper resource="kr/co/sist/admin/login/adminLoginMapper.xml"/>
+    <mapper resource="kr/co/sist/admin/member/adminMemberMapper.xml"/> 
+    <mapper resource="kr/co/sist/admin/product/adminProductMapper.xml"/> 
+	<mapper resource="kr/co/sist/admin/report/ReportMapper.xml"/>
+	<mapper resource="kr/co/sist/admin/sales/salesMapper.xml"/>
+	
+	<!-- 사용자 mapper -->
+	<mapper resource="kr/co/sist/user/mainMapper.xml"/>
+	<mapper resource="kr/co/sist/user/buy/buyMapper.xml"/>
+	<mapper resource="kr/co/sist/user/chat/chatMapper.xml"/>
+	<mapper resource="kr/co/sist/user/findAccount/findAccountMapper.xml"/>
+	<mapper resource="kr/co/sist/user/info/infoMapper.xml"/>
+	<mapper resource="kr/co/sist/user/join/joinMapper.xml"/>
+	<mapper resource="kr/co/sist/user/login/loginMapper.xml"/>
+	<mapper resource="kr/co/sist/user/mypage/myPageMapper.xml"/>
+	<mapper resource="kr/co/sist/user/productdetail/productDetailMapper.xml"/>
+	<mapper resource="kr/co/sist/user/productlist/productListMapper.xml"/>
+	<mapper resource="kr/co/sist/user/report/reportMapper.xml"/>
+	<mapper resource="kr/co/sist/user/scam/scamMapper.xml"/>
+	<mapper resource="kr/co/sist/user/sell/sellMapper.xml"/>
+	<mapper resource="kr/co/sist/user/sellerpage/sellerReviewMapper.xml"/>
+	<mapper resource="kr/co/sist/user/sellerpage/sellerPageMapper.xml"/>
+	<mapper resource="kr/co/sist/user/support/supportMapper.xml"/>
+	
+  </mappers>
+</configuration>

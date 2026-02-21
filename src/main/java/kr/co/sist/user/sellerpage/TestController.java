@@ -20,29 +20,29 @@ public class TestController {
 		 model.addAttribute("reviewStar",srs.selectReviewStar(storeId));
 		 model.addAttribute("reviews",srs.selectReviews(storeId));
 		 
-	    	return "/seller_page/wrapper_review :: fragmentWrapperReview";
+	    	return "seller_page/wrapper_review :: fragmentWrapperReview";
 	    }
     
 	 @GetMapping("/test/testReview") // 이 주소가 브라우저 주소창과 일치해야 함!
 	 public String testReview() {
 		 // templates/manage/login/login.html 파일을 찾아가게 함
-		 return "/seller_page/testReview"; 
+		 return "seller_page/testReview"; 
 	 }
     @GetMapping("/report/testReport") // 이 주소가 브라우저 주소창과 일치해야 함!
     public String scamPage2() {
     	// templates/manage/login/login.html 파일을 찾아가게 함
-    	return "/report/testReport"; 
+    	return "report/testReport"; 
     }
     @GetMapping("/report/wrapper_report") // 이 주소가 브라우저 주소창과 일치해야 함!
     public String scamPage3() {
     	// templates/manage/login/login.html 파일을 찾아가게 함
-    	return "/report/wrapper_report :: fragmentReport";
+    	return "report/wrapper_report :: fragmentReport";
     }
     @PostMapping("/report/wrapper_reportDone") // 이 주소가 브라우저 주소창과 일치해야 함!
     public String scamPage4(Model model) {
     	model.addAttribute("viewMode","done");
     	// templates/manage/login/login.html 파일을 찾아가게 함
-    	return "/report/wrapper_report :: fragmentScamComplete";
+    	return "report/wrapper_report :: fragmentScamComplete";
     }
 
 

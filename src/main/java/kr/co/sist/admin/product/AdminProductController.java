@@ -89,7 +89,6 @@ public class AdminProductController {
 	    
 	    if (result > 0) {
 	        ChatDTO cDTO = new ChatDTO();
-	        cDTO.setProductNum(product.getProduct_num());
 	        cDTO.setWriterId("SYSTEM");
 	        cDTO.setType("TEXT");
 	        cDTO.setOtherId(product.getUser_id()); 

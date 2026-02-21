@@ -55,7 +55,7 @@ public class DashboardController {
     	model.addAttribute("date",LocalDate.now());
     	model.addAttribute("now",LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM월-dd일-HH시 mm분 ")));
     	
-    	return "/manage/dashboard/dashboard"; 
+    	return "manage/dashboard/dashboard"; 
     }
     
 }

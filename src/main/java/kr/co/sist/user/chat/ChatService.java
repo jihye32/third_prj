@@ -26,9 +26,11 @@ public class ChatService {
 			
 			cld.setProfile(clid.getProfile());
 			cld.setStoreName(clid.getStoreName());
-			cld.setThumbnail(cDAO.selectProductProfile(cld.getPnum()));
 			cld.setDeleteFlag(cDAO.selectDelete(cld.getOtherId()));
 			cld.setSusFlag(cDAO.selectSuspension(cld.getOtherId()));
+			if(cld.getPnum() != null) {
+				cld.setThumbnail(cDAO.selectProductProfile(cld.getPnum()));
+			}
 		}
 		return list;
 	}
