@@ -140,7 +140,11 @@ function toggleBookmark(productNum, $input) {
 }// toggleBookmark
 
 function deleteCount(){
+	if(confirm(`정말로 탈퇴하시겠습니까?
+회원 탈퇴 후에는 계정 복구가 불가능합니다.
+탈퇴 후 동일 아이디로 재가입이 불가합니다.`)){ 
 	location.href='/myPage/deleteCount';
+	}// end if
 }// deleteCount
 
 var pageByStatus =  [1, 1];
@@ -471,8 +475,8 @@ function goToInfo(){
 							<div class="block mt-8 lg:mt-[72px] mb-8 lg:mb-0">
 								<div class="relative col-span-2 w-full h-full text-black grid grid-cols-1 gap-x-0 gap-y-4 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5 lg:min-w-[800px]">
 									<div class="flex flex-col justify-start order-1 mx-5 sm:mx-0 row-span-2">
+										<form action=""></form>
 										<form action="/myPage/modifyProfile" method="post" id="profileFrm" enctype="multipart/form-data">
-										
 										
 										<div class="flex order-1 gap-3 items-center">
 											
