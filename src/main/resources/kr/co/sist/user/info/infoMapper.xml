@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.user.info">
+	<!-- member 테이블 조회 -->
+	<select id="selectMember" parameterType="String" resultType="kr.co.sist.user.info.MemberDomain">
+		select  m.user_id,
+	            m.user_pass,
+	            m.name,
+	            m.email,
+	            m.birthday,
+	            s.store_name
+	    from    member m
+	    join    store s on m.user_id = s.user_id
+	    where   m.user_id = #{value}
+	</select>
+
+	<!-- store name 중복 조회 -->
+	<select id="selectStoreName" parameterType="String" resultType="int">
+		select count(*) cnt
+		from store
+		where store_name = #{value}
+	</select>
+	
+	<!-- member 업데이트 -->
+	<update id="updateMember" parameterType="kr.co.sist.user.info.InfoDTO">
+		update 	member
+		<set>
+	        <if test="pass != null and pass != ''">
+	            user_pass = #{pass},
+	        </if>
+        email = #{email},
+        email_hash = #{emailHash}
+    	</set>
+		where 	user_id = #{id}
+	</update>
+	
+	<!-- store 업데이트 -->
+	<update id="updateStore" parameterType="kr.co.sist.user.info.InfoDTO">
+		update 	store
+		set		store_name = #{storeName}
+		where 	user_id = #{id}
+	</update>
+</mapper>
+
+
+
+
+
+
+
+
+

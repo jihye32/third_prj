@@ -107,18 +107,18 @@
 					class="outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap w-full">
 					<li
 						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">거래방법</h3>
+							class="text-gray-700">거래방법</h3>
 						<span class="z-auto rounded-none relative text-right break-all">
 						<span th:text="*{dealType == 'DIRECT'?'직거래':'택배거래'}"class="whitespace-pre-line" aria-hidden="false">직거래</span></span></li>
 					<li
 						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">결제일시</h3>
+							class="text-gray-700">결제일시</h3>
 						<span class="z-auto rounded-none relative text-right break-all">
 							<span th:text="*{approvedDate}" class="whitespace-pre-line" aria-hidden="true">2026.01.19 15:55</span>
 							</span></li>
 					<li
 						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">결제수단</h3>
+							class="text-gray-700">결제수단</h3>
 						<span class="z-auto rounded-none relative text-right break-all">
 						<span th:text="*{provider}" class="whitespace-pre-line" aria-hidden="false">무통장입금</span></span></li>
 				</ul>
@@ -144,13 +144,13 @@
 					class="outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap w-full">
 					<li
 						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row">
-						<h3	class="text-gray-500">상품금액</h3>
+						<h3	class="text-gray-700">상품금액</h3>
 						<span class="z-auto rounded-none relative text-right break-all">
 							<span th:text="|*{#numbers.formatInteger(price,3,'COMMA')}원|" class="whitespace-pre-line" aria-hidden="false">11,111원</span>
 						</span></li>
 					<li
 						class="outline-none flex items-stretch flex-nowrap justify-between w-full flex-row"><h3
-							class="text-gray-500">안심결제 수수료</h3>
+							class="text-gray-700">안심결제 수수료</h3>
 						<span class="z-auto rounded-none relative text-right break-all">
 							<span th:text="|*{#numbers.formatInteger(charge,3,'COMMA')}원|" class="whitespace-pre-line" aria-hidden="false">0원</span></span></li>
 				</ul>
@@ -182,7 +182,7 @@
 						class="whitespace-pre-line font-medium text-inherit text-16">계속 쇼핑</span>
 				</button>
 				<button data-action="my-page"
-					class="rounded inline-flex justify-center items-center gap-2 px-4 py-3.5 w-full h-13 text-white bg-gray-900 border active:border-gray-700 flex-1">
+					class="rounded inline-flex justify-center items-center gap-2 px-4 py-3.5 w-full h-13 text-white bg-black border flex-1">
 					<span
 						class="whitespace-pre-line font-medium text-inherit text-16">구매내역</span>
 				</button>

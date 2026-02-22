@@ -46,7 +46,6 @@ public class ChatController {
 				content = content.substring(0, 20)+"...";
 			}
 			cld.setContent(content);
-			
 		}
 		model.addAttribute("list", clDomain);
 		
@@ -56,10 +55,12 @@ public class ChatController {
 	@GetMapping("/{otherId}")
 	public String chat(@PathVariable String otherId, @RequestParam(required = false) Integer pnum, HttpSession session, Model model) {
 		String uid = (String)session.getAttribute("uid");
-		
 		ProductDomain pd = null;
 		
 		Integer room = cs.searchChatRoom(otherId, uid);
+		if("SYSTEM".equals(otherId)) {
+			pnum = null;
+		}
 		if(room != null) {
 			//이전에 대화한 기록 가져오기
 			List<ChatDomain> chatList = cs.searchChat(room, uid);
@@ -71,9 +72,11 @@ public class ChatController {
 				pnum = cs.searchProductNum(room);
 			}
 		}
+		
 		if(pnum != null) {
 			pd=cs.searchProduct(pnum);
 			model.addAttribute("pnum", pnum);
+			model.addAttribute("product", pd);
 		}
 		
 		String deleteFlag = cs.searchDelete(otherId);
@@ -81,7 +84,6 @@ public class ChatController {
 		
 		model.addAttribute("suspensionFlag", susFlag);
 		model.addAttribute("deleteFlag", deleteFlag);
-		model.addAttribute("product", pd);
 		model.addAttribute("otherId", otherId);
 		model.addAttribute("roomNum", room);
 		return "chat/chat_contents :: chatContentsForm";
