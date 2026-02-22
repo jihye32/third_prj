@@ -21,7 +21,11 @@ public class AdminLoginController {
 	    return "manage/login/login"; 
 	}
 	
-	
+	@GetMapping("/adminLogout")
+	public String adminLogout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/manage";
+	}
 	
 	
 	@PostMapping("/adminLoginProcess")
