@@ -9,7 +9,7 @@ public class ScamController {
 
     @GetMapping("/scam") 
     public String scamPage() {
-        return "/scam/scam"; 
+        return "scam/scam"; 
     }
 
 }

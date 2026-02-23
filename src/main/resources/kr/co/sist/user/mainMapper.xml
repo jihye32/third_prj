@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.user.main">
+
+<select id="selectMostViewProdcut" resultType="kr.co.sist.user.ProductDomain">
+select productnum, price, timdif, sellstatecode, tradingarea, lastmodify, productname, thumbnail, timestring  
+from (
+	select 
+			productnum, 
+			productname, 
+			price, 
+			thumbnail, 
+			timdif, 
+			sellstatecode, 
+			tradingarea, 
+			lastmodify, 
+			row_number() over (order by view_count desc) as rn,
+			timestring
+	from product_view
+	)
+where 30 >= rn
+</select>
+
+<select id="selectMostLikeProdcut" resultType="kr.co.sist.user.ProductDomain">
+select productname,productnum, price, thumbnail, timdif, sellstatecode, tradingarea, lastmodify, timestring
+from (
+    select
+			pv.productnum productnum,
+			pv.productname productname,
+			pv.price price,
+			pv.thumbnail thumbnail,
+			pv.timdif timdif,
+			pv.sellstatecode sellstatecode,
+			pv.tradingarea tradingarea,
+			pv.lastmodify lastmodify,
+			pv.timestring timestring,
+		  row_number() over (order by d.like_cnt desc) as rn
+    from (
+        select product_num, count(product_num) as like_cnt
+        from bookmark
+        group by product_num
+    ) d, product_view pv
+
+    where d.product_num = pv.productnum
+) subquery
+where 30 >= rn
+</select>
+
+<insert id="insertHistory" parameterType="String">
+insert into user_history(ip, input_date)  values (#{ip}, sysdate) 
+</insert>
+
+</mapper>

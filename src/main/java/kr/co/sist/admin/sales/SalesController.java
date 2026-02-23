@@ -8,13 +8,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class SalesController {
 	@Autowired
 SalesService ss;
+	
+	/**
+	 * 컨트롤러별 로그인 체크 (기존 AdminLoginController 설정에 맞춤)
+	 */
+	@ModelAttribute
+	public void checkAdminLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+	    if (session == null || session.getAttribute("loginAdmin") == null) {
+	        
+	        String loginUrl = request.getContextPath() + "/manage";
+	        
+	        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+	            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+	        } else {
+	            response.sendRedirect(loginUrl);
+	        }
+	    }
+	}
 	
     @GetMapping("/manage/sales") // 브라우저에 /manage/sales을 입력하면 실행
     public String salesPage(@RequestParam(value = "currentMonth", required = false) String currentMonth,Model model) {
@@ -57,7 +79,7 @@ SalesService ss;
     	model.addAttribute("date",LocalDate.now());
     	model.addAttribute("now",LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM월-dd일-HH시 mm분 ")));
     	
-    	return "/manage/sales/sales"; 
+    	return "manage/sales/sales"; 
     }
     
     @PostMapping("/insert-charge")

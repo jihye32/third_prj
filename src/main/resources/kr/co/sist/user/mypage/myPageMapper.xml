@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.sist.user.myPage">
+
+<select id="myPageInfo" parameterType="int" resultType="kr.co.sist.user.mypage.MyPageDomain">
+SELECT
+    s.STORE_NAME storeName,
+    s.PROFILE_IMG profileImg,
+    s.INTRODUCE intro,
+    (SELECT COUNT(r.product_num)
+     FROM REVIEW r
+     WHERE r.PRODUCT_NUM IN (
+         SELECT p.product_num
+         FROM PRODUCT p
+         WHERE p.STORE_NUM = s.STORE_NUM
+     )
+    ) AS reviewCnt,
+    (	select count(product_num)
+			FROM PRODUCT
+			WHERE STORE_NUM = #{myStoreNum}) as sellProductCnt
+FROM STORE s
+WHERE s.STORE_NUM = #{myStoreNum}
+</select>
+
+
+<select id="selectSellProduct" resultType="kr.co.sist.user.ProductDomain" parameterType="kr.co.sist.user.mypage.MyPageRangeDTO">
+select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY
+from(
+	select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY,  rownum r
+	from(
+		select
+			pv.productNum productNum,
+			pv.productName productName,
+			pv.PRICE price,
+			pv.THUMBNAIL thumbnail,
+			pv.timDif timDif,
+			pv.sellStateCode sellStateCode,
+			pv.tradingArea tradingArea,
+			pv.sellState sellState,
+			pv.lastModify lastModify,
+			pv.timeString timeString
+		    
+		    from seller_product_view pv
+		    
+		    where pv.storeNum =#{myStoreNum}
+			
+			<choose>
+			    <when test="sortBy eq 'asc'">order by pv.PRICE ASC </when>
+			    <when test="sortBy eq 'desc'">order by pv.PRICE DESC </when>
+			    <otherwise>order by pv.lastModify DESC </otherwise>
+			 </choose>
+   		)
+	)
+where r between #{startNum} and #{endNum}
+</select>
+
+<select id="selectBookmarkProduct" resultType="kr.co.sist.user.ProductDomain" parameterType="kr.co.sist.user.mypage.MyPageRangeDTO">
+select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY, bookmarkFlag
+from(
+	select PRODUCTNUM, PRODUCTNAME, PRICE, THUMBNAIL, TIMDIF, SELLSTATECODE, TRADINGAREA, SELLSTATE, LASTMODIFY, bookmarkFlag,	 rownum r
+	from(
+		select
+			pv.productNum productNum,
+			pv.productName productName,
+			pv.PRICE price,
+			pv.THUMBNAIL thumbnail,
+			pv.timDif timDif,
+			pv.sellStateCode sellStateCode,
+			pv.tradingArea tradingArea,
+			pv.sellState sellState,
+			pv.lastModify lastModify,
+			pv.timeString timeString,
+			'Y' BookmarkFlag
+			
+		    
+		    from seller_product_view pv, bookmark bm
+
+		    where pv.productNum = bm.PRODUCT_NUM and bm.STORE_NUM=#{myStoreNum}
+		    
+			<choose>
+			    <when test="sortBy eq 'asc'">order by pv.PRICE ASC </when>
+			    <when test="sortBy eq 'desc'">order by pv.PRICE DESC </when>
+			    <otherwise>order by pv.lastModify DESC </otherwise>
+			 </choose>
+   		)
+	)
+where r between #{startNum} and #{endNum}
+</select>
+
+
+<select id="selectMySellCnt" parameterType="int" resultType="int">
+select count(*)
+from product
+where store_num = #{myStoreNum}
+</select>
+
+
+<select id="selectMyBookmarkCnt" parameterType="int" resultType="int">
+select count(*)
+from bookmark
+where store_num = #{myStoreNum}
+</select>
+
+<update id="deleteCount" parameterType="String">
+update member
+set DELETE_FLAG='Y'
+where USER_ID = #{myId}
+</update>
+
+<update id="deleteProduct" parameterType="int">
+update product
+set delete_flag = 'Y'
+where store_num = #{myStoreNum}
+</update>
+
+<update id="updateProfile" parameterType="kr.co.sist.user.mypage.ProfileDTO">
+update store
+set introduce = #{intro}, profile_img = #{newImg}
+where user_id = #{userId}
+</update>
+
+
+<select id="selectBuyProduct" parameterType="String" resultType="kr.co.sist.user.mypage.BuyProductDomain">
+select
+    pd.product_num productNum,
+    pd.title productName,
+    pd.thumbnail thumbnail,
+    pd.price price,
+    po.created_date createdDate,
+    po.delivered_date deliverdDate,
+    case
+        when r.product_num is not null then r.review_text
+        else null
+    end as review,
+    CASE
+        WHEN r.product_num IS NOT NULL THEN r.review_rate
+        ELSE null
+    END AS reviewRate
+from product pd
+join product_order po
+    on pd.product_num = po.product_num
+left join review r
+    on pd.product_num = r.product_num
+where po.buyer_id = #{myid}
+</select>
+
+
+<update id="updateReceive" parameterType="kr.co.sist.user.mypage.ReviewDTO">
+update product_order
+set DELIVERED_DATE = sysdate
+where product_num = #{productNum} and buyer_id=#{reviewerId}
+</update>
+
+<insert id="insertReview" parameterType="kr.co.sist.user.mypage.ReviewDTO">
+insert into review(PRODUCT_NUM, STORE_NUM, REVIEW_TEXT, REVIEW_DATE, REVIEW_RATE)
+values(#{productNum},#{myStoreNum},#{review},sysdate,#{reviewRate})
+</insert>
+
+</mapper>

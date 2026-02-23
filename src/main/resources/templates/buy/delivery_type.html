@@ -8,10 +8,10 @@
 <th:block th:fragment="deliveryType" th:object="${BuyDomain}">
 <main role="main" aria-label="본문 영역" id="main-content"class="h-[calc(100%-var(--top-navigation-height))] overflow-auto relative p-4">
 	<div class="outline-none gap-5 flex flex-col justify-start items-stretch flex-nowrap">
-		<div th:each="type : *{dealType}" data-action="select-deal-type" th:data-type="${type.name()}"  class="deal-option outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap p-4 w-full border rounded-lg px-5 text-gray-700 cursor-pointer border-gray-200">
+		<div th:each="type : *{dealType}" data-action="select-deal-type" th:data-type="${type.name()}"  class="deal-option outline-none gap-2 flex flex-col justify-start items-stretch flex-nowrap p-4 w-full border rounded-lg px-5 text-gray-700 cursor-pointer border-gray-300">
 			<div th:if="${type.name() == 'DELIVERY'}" class="outline-none flex flex-row justify-between items-center flex-nowrap">
 				<div class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap">
-					<span class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">일반 택배</span><span class="whitespace-pre-line text-12">상품이 문 앞으로 도착해요.</span>
+					<span class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">일반 택배</span><span class="whitespace-pre-line text-sm">상품이 문 앞으로 도착해요.</span>
 				</div>
 				<svg width="56" height="56" viewBox="0 0 56 56" fill="none"
 					xmlns="http://www.w3.org/2000/svg">
@@ -192,7 +192,7 @@
 			<th:block th:if="${type.name() == 'DIRECT'}">
 			<div class="outline-none flex flex-row justify-between items-center flex-nowrap">
 				<div class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap">
-					<span class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">만나서 직거래</span><span class="whitespace-pre-line text-12">상품을 직접 받을 수 있어요</span>
+					<span class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">만나서 직거래</span><span class="whitespace-pre-line text-sm">상품을 직접 받을 수 있어요</span>
 				</div>
 				<svg width="56" height="56" viewBox="0 0 56 56" fill="none"
 					xmlns="http://www.w3.org/2000/svg">
@@ -293,7 +293,7 @@
 				<span th:text="|*{chargeRate}%|" class="text-gray-400 ml-1"> 관리자가 정한 수수료</span></span>
 			</div>
 			<div class="flex items-center gap-1">
-				<span th:text="|*{#numbers.formatInteger(price*chargeRate/100,3,'COMMA')}원|" class="text-jnGreen-700 font-bold text-base">무조건 수수료 있음 </span>
+				<span th:text="|*{#numbers.formatInteger(price*chargeRate/100,3,'COMMA')}원|" class="text-green-700 font-bold text-base">무조건 수수료 있음 </span>
 			</div>
 		</div>
 	</section>
@@ -301,7 +301,7 @@
 		<img loading="lazy" class="w-10 h-10 rounded-md object-cover"
 			th:src="@{/images/thumbnail/{thumbnail}(thumbnail=*{thumbnail})}">
 		<div class="flex flex-col flex-1 min-w-0">
-			<span th:text="*{title}" class="text-xs text-gray-500 truncate"> 상품명 </span>
+			<span th:text="*{title}" class="text-xs text-gray-600 truncate"> 상품명 </span>
 			<div class="flex items-center gap-1.5 mt-0.5">
 				<span class="text-sm font-bold text-gray-900">예상금액</span> 
 				<span th:text="|*{#numbers.formatInteger(price+price*chargeRate/100,3,'COMMA')}원|" class="text-base font-bold text-jnGreen-700"> 
@@ -310,7 +310,7 @@
 		</div>
 	</div>
 	<div class="p-5 bg-white">
-		<button class="w-full h-14 bg-gray-900 text-white rounded-lg font-bold text-lg active:bg-gray-800 transition-colors" data-action="payment-submit">구매하기</button>
+		<button class="w-full h-14 bg-black text-white rounded-lg font-bold text-lg transition-colors" data-action="payment-submit">구매하기</button>
 	</div>
 </div>
 </th:block>

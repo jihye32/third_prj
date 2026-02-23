@@ -69,25 +69,35 @@ public class MyPageService {
 	
 	public boolean modifyProfile(ProfileDTO pDTO) {
 		boolean flag = false;
-		
-		String fileName = UUID.randomUUID() + "-" + pDTO.getProfileImg().getOriginalFilename();
-		File upFile = new File(uploadDir , fileName);
-		pDTO.setNewImg(fileName);
-		
-		String removeImgName = pDTO.getOldImg();
-		if(!"default.jpg".equals(removeImgName)) {
-			File removeFile = new File(uploadDir , removeImgName);
-			removeFile.delete();// 기존 파일 삭제
-		}// end if
+		File upFile = null;
+		if(!pDTO.getProfileImg().isEmpty()) {// 새로운 프로필 이미지를 선택한 경우
+			String fileName = UUID.randomUUID() + "-" + pDTO.getProfileImg().getOriginalFilename();
+			upFile = new File(uploadDir , fileName);
+			pDTO.setNewImg(fileName);
+			
+			String removeImgName = pDTO.getOldImg();
+			if(!"default.jpg".equals(removeImgName)) {
+				File removeFile = new File(uploadDir , removeImgName);
+				removeFile.delete();// 기존 파일 삭제
+			}// end if
+			
+			try {
+				pDTO.getProfileImg().transferTo(upFile);// 파일 업로드를 수행
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}// end catch
+			
+		}else {
+			pDTO.setNewImg(pDTO.getOldImg());
+		}// end else
 		
 		try {
-			pDTO.getProfileImg().transferTo(upFile);// 파일 업로드를 수행
 			mpDAO.updateProfile(pDTO);
 			flag = true;
-		} catch (IllegalStateException ie) {
-			ie.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+		} catch (PersistenceException pe) {
+			pe.printStackTrace();
 		}// end catch
 		
 		return flag;

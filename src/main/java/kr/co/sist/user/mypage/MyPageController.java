@@ -127,7 +127,7 @@ public class MyPageController {
 		model.addAttribute("list", list);
 		model.addAttribute("flag", flag);
 		
-		return "myPage/wrapper_purchased :: fragmentPurchased";
+		return "mypage/wrapper_purchased :: fragmentPurchased";
 	}// purchased
 	
 	@ResponseBody
