@@ -40,7 +40,7 @@ document.addEventListener("click", (e) => {
 /* 선택한 타입을 가져와서 반환함 */
 function setSelectedType(type) {
   const drawer = document.getElementById("drawerContent");
-  drawer.dataset.selectedType = type; // "1" or "2"
+  drawer.dataset.selectedType = type; // DIRECT/DELIVERY
 }
 
 function getSelectedType() {

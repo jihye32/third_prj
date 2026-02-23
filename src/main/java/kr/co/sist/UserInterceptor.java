@@ -18,7 +18,6 @@ public class UserInterceptor implements HandlerInterceptor{
 		if(uri.matches("^" + ctx + "/product/\\d+")) {
 			return true;
 		}
-			
 		HttpSession session = request.getSession(false);
 	    if (session == null || session.getAttribute("uid") == null) {
 	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401

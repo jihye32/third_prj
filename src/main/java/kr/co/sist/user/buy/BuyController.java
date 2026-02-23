@@ -1,12 +1,16 @@
 package kr.co.sist.user.buy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import kr.co.sist.user.productdetail.enums.DealType;
 
@@ -20,18 +24,19 @@ public class BuyController {
 	@GetMapping("/{pnum}")
 	public String openBuyType(@PathVariable Integer pnum, Model model) {
 		BuyDomain bd = bs.searchProduct(pnum);
-		if(bd==null)return "redirect: /";
+		if (bd == null) {
+	        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+	    }
 		model.addAttribute("BuyDomain", bd);
-		model.addAttribute("DealType", DealType.class);
-		
 		return "buy/delivery_type :: deliveryType";
 	}
 	
 	@GetMapping("/payment/{pnum}")
 	public String openPayment(@PathVariable int pnum, @RequestParam String type, Model model) {
 		BuyDomain bd = bs.searchProduct(pnum);
-		if(bd==null)return "redirect: /";
-
+		if (bd == null) {
+	        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+	    }
 		model.addAttribute("type", type);
 		model.addAttribute("BuyDomain", bd);
 		return "buy/payment_form :: paymentFrm";
@@ -61,5 +66,15 @@ public class BuyController {
 		model.addAttribute("msg", failMsg);
 		return "buy/buy_fail :: sellFailFrm";
 	}
+	
+	@ExceptionHandler(ResponseStatusException.class)
+    public String handleResponseStatus(ResponseStatusException ex) {
+
+        if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+            return "redirect:/";
+        }
+
+        throw ex;
+    }
 	
 }

@@ -13,9 +13,14 @@
 	<result column="addr" property="dealAddress"/>
 </resultMap>
 <select id="selectProduct" parameterType="int" resultMap="bDomain">
-select p.product_num, p.title, p.price,p.thumbnail, s.addr
-from product p, sell_place s
-where p.product_num = s.product_num and p.product_num = #{productNum}
+select p.product_num, p.title, p.price,p.thumbnail
+from product p
+where p.product_num = #{productNum}
+</select>
+<select id="selectDealAddress" parameterType="int" resultType="String">
+select addr
+from SELL_PLACE
+where product_num = #{productNum}
 </select>
 
 <!-- 수수료 정보 받는 쿼리문 -->

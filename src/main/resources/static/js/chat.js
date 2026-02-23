@@ -43,6 +43,7 @@ function openChatForm(sellerId, store) {
 	}
 
   loadDrawerContent(url, async () => {
+	console.log("loadDrawerContent chat url=", JSON.stringify(url));
     openDrawer(`${store}`);
 
 	const root = getChatRoot();

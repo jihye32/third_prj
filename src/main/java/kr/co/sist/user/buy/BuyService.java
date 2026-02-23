@@ -27,9 +27,11 @@ public class BuyService {
 		List<Integer> typeCode = bDAO.selectProductDealType(pnum);
 		for(int code : typeCode) {
 			type.add(DealType.fromCode(code));
+			if(code == 1) {
+				bd.setDealAddress(bDAO.selectAddress(pnum));
+			}
 		}
 		bd.setDealType(type);
-		
 		return bd;
 	}
 	
