@@ -10,12 +10,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class DashboardController {
 
 	@Autowired
    DashboardService ds;
+	
+	/**
+	 * 컨트롤러별 로그인 체크 (기존 AdminLoginController 설정에 맞춤)
+	 */
+	@ModelAttribute
+	public void checkAdminLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+	    if (session == null || session.getAttribute("loginAdmin") == null) {
+	        
+	        String loginUrl = request.getContextPath() + "/manage";
+	        
+	        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+	            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+	        } else {
+	            response.sendRedirect(loginUrl);
+	        }
+	    }
+	}
 
     @GetMapping("/manage/dashboard") // 브라우저에 /manage/dashboard을 입력하면 실행
     public String dashboardPage(Model model) {
