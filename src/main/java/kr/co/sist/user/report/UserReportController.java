@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,8 @@ public class UserReportController {
 	@Autowired
 	UserReportService urs;
 	
+	@Value("${user.report-dir}")
+	private String reportUploadDir;
 	
 	@ResponseBody
 	@PostMapping("/report/review_process")
@@ -86,13 +89,12 @@ public class UserReportController {
 	private List<String> uploadFiles(List<MultipartFile> files) throws IOException {
 	    List<String> savedFileNames = new ArrayList<>();
 	    
-	    String fullPath = "C:/dev/workspace/third_prj/src/main/resources/static/images/report/";
 
 	    for (MultipartFile mf : files) {
 	        if (mf != null && !mf.isEmpty()) {
 	            String fileName = UUID.randomUUID() + "-" + mf.getOriginalFilename();
 	            
-	            File upFile = new File(fullPath + fileName);
+	            File upFile = new File(reportUploadDir + fileName);
 	            mf.transferTo(upFile);
 	            
 	            savedFileNames.add(fileName); 
