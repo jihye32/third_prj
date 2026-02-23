@@ -179,8 +179,8 @@ public class SellService {
 						removeFile = new File(thumbnailUploadDir, removeFileName);// 삭제할 세부 이미지
 						removeFile.delete();// 이미지 삭제
 					}// end if
-					queryCnt += sDAO.deleteDetailImg(removeFileName, ss);// db에서 이미지 삭제
-					standardCnt++;
+					 	sDAO.deleteDetailImg(removeFileName, ss);// db에서 이미지 삭제
+					
 				}// end for
 			}// end if
 			
