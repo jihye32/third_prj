@@ -16,7 +16,7 @@ public class SupportService {
 
     // 1. WebConfig에서 사용하는 팀 공통 업로드 경로 주입
     @Value("${user.ask-dir}")
-    private String askdDir;
+    private String askDir;
 
     public SupportService(SupportDAO dao) {
         this.dao = dao;
@@ -63,8 +63,7 @@ public class SupportService {
         if (dto.getFiles() == null) return;
 
         // 2-1. 저장 경로를 팀 공통 경로 하위의 'ask' 폴더로 설정
-        // WebConfig의 /upload/** 매핑을 타기 위해 uploadDir 내부로 경로를 잡습니다.
-        File dir = new File(uploadDir, "ask"); 
+        File dir = new File(askDir); 
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -109,7 +108,7 @@ public class SupportService {
             dao.deleteAskImg(dto.getAskNum());
 
             // 3-2. 새 파일 저장 (기존 writeAsk 로직 활용)
-            File dir = new File(uploadDir, "ask");
+            File dir = new File(askDir);
             for (MultipartFile mf : dto.getFiles()) {
                 if (mf == null || mf.isEmpty()) continue;
 
