@@ -178,8 +178,8 @@ public class SellService {
 					if(!"default.jpg".equals(removeFileName)) {
 						removeFile = new File(thumbnailUploadDir, removeFileName);// 삭제할 세부 이미지
 						removeFile.delete();// 이미지 삭제
+						sDAO.deleteDetailImg(removeFileName, ss);// db에서 이미지 삭제
 					}// end if
-					 	sDAO.deleteDetailImg(removeFileName, ss);// db에서 이미지 삭제
 					
 				}// end for
 			}// end if
