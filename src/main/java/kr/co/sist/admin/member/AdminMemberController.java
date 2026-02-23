@@ -55,6 +55,10 @@ public class AdminMemberController {
         
         model.addAttribute("memberList", memberList);
         model.addAttribute("pagination", pagination);
+        model.addAttribute("currentPage", currentPage);
+        
+        model.addAttribute("pageSize", 10);
+        
         return "manage/member/member_main"; 
     }
 

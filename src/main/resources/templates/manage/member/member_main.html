@@ -38,13 +38,13 @@
 								style="cursor: pointer"
 								th:classappend="${m.suspension_flag == 'Y'} ? 'table-danger-light' : ''">
 
-								<td th:text="${mStat.count}"></td>
+								<td th:text="${((currentPage - 1) * pageSize) + mStat.count}"></td>
 								<td th:text="${m.user_id}" class="fw-bold"></td>
 
 								<td>
 									<div class="status-flex-box"
 										th:if="${m.suspension_flag == 'Y'}">
-										<span class="badge-stop">정지</span> 
+										<span class="badge-stop">정지</span>
 									</div> <span th:if="${m.suspension_flag == 'N'}" class="badge-normal">정상</span>
 								</td>
 
@@ -58,7 +58,8 @@
 								</td>
 								<td onclick="event.stopPropagation();">
 									<button class="btn-table-navy"
-										th:onclick="|location.href='@{/manage/member/member_prdv(userId=${m.user_id})}'|">상점 상세정보</button>
+										th:onclick="|location.href='@{/manage/member/member_prdv(userId=${m.user_id})}'|">상점
+										상세정보</button>
 								</td>
 								<td onclick="event.stopPropagation();">
 									<button class="btn-table-navy"

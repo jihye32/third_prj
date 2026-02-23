@@ -150,8 +150,10 @@ public class SellService {
 		File removeFile = null;
 		File upFile = null;
 		if(!thumbnailFile.isEmpty()) {// 새로운 이미지가 선택되어 파일로 전달될때
-			removeFile = new File(thumbnailUploadDir, sDTO.getThumbnailName());// 기존 썸네일 삭제
-			removeFile.delete();
+			if(!"default.jpg".equals(sDTO.getThumbnailName())) {
+				removeFile = new File(thumbnailUploadDir, sDTO.getThumbnailName());// 기존 썸네일 삭제
+				removeFile.delete();
+			}// end if
 			String tempthumbnailName = UUID.randomUUID() + "-" + thumbnailFile.getOriginalFilename();
 			upFile = new File(thumbnailUploadDir , tempthumbnailName);
 			sDTO.setThumbnailName(tempthumbnailName);// 썸네일 이미지명 DTO에 저장
@@ -173,10 +175,12 @@ public class SellService {
 		
 			if(!sDTO.getDeletedImageIds().isEmpty()) {// 삭제할 이미지명 리스트의 내용이 있다면
 				for(String removeFileName : sDTO.getDeletedImageIds()) {
-					removeFile = new File(thumbnailUploadDir, removeFileName);// 삭제할 세부 이미지
-					removeFile.delete();// 이미지 삭제
-					queryCnt += sDAO.deleteDetailImg(removeFileName, ss);// db에서 이미지 삭제
-					standardCnt++;
+					if(!"default.jpg".equals(removeFileName)) {
+						removeFile = new File(thumbnailUploadDir, removeFileName);// 삭제할 세부 이미지
+						removeFile.delete();// 이미지 삭제
+						sDAO.deleteDetailImg(removeFileName, ss);// db에서 이미지 삭제
+					}// end if
+					
 				}// end for
 			}// end if
 			

@@ -14,6 +14,28 @@
 
 <script type="text/javascript">
 $(function() {
+    function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        } else {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Fallback 복사 실패:', err);
+            }
+            document.body.removeChild(textArea);
+            return Promise.resolve(); 
+        }
+    }
+
     $("#btnCyberSearch").on("click", function() {
         const keyword = $("#searchInfo").val().trim();
         
@@ -23,13 +45,12 @@ $(function() {
         }
 
         $("#searchResultArea").removeClass("hidden");
+        $("#copyTarget").text(keyword);
 
-        navigator.clipboard.writeText(keyword).then(function() {
-            $("#copyTarget").text(keyword);
-            
-            const cyberUrl = "https://www.police.go.kr/www/security/cyber/cyber04.jsp";
-            window.open(cyberUrl, "police_popup", "width=1100, height=850, scrollbars=yes");
-        });
+        copyToClipboard(keyword);
+
+        const cyberUrl = "https://www.police.go.kr/www/security/cyber/cyber04.jsp";
+        window.open(cyberUrl, "police_popup", "width=1100, height=850, scrollbars=yes");
 
         $('html, body').animate({
             scrollTop : $("#searchResultArea").offset().top - 100
@@ -121,8 +142,9 @@ $(function() {
 				</div>
 			</div>
 		</main>
+
         <div th:replace="~{template/footer :: footerFragment}"></div>
-        </div>
         <div th:replace="~{template/wrapper_frm :: drawerFrame}"></div>
+    </div>
 </body>
 </html>
