@@ -72,7 +72,7 @@
       <div th:if="${imgList == null or #lists.isEmpty(imgList)}" class="control">첨부 없음</div>
       <div th:if="${imgList != null and !#lists.isEmpty(imgList)}" class="control files">
         <a th:each="img : ${imgList}"
-           th:href="@{/upload/report/{f}(f=${img})}"
+           th:href="@{/images/report/{f}(f=${img})}"
            th:text="${img}"
            download></a>
       </div>
