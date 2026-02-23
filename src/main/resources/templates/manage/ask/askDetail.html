@@ -45,7 +45,7 @@
            <div class="ask-images"
      th:if="${imgList != null and !#lists.isEmpty(imgList)}">
     <img th:each="img : ${imgList}"
-         th:src="@{/upload/ask/{file}(file=${img})}"
+         th:src="@{/images/ask/{file}(file=${img})}"
          alt="문의이미지"
          style="max-width: 200px; margin-right: 10px; border: 1px solid #ddd;">
 </div>

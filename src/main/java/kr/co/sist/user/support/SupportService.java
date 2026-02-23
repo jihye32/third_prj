@@ -15,8 +15,8 @@ public class SupportService {
     private final SupportDAO dao;
 
     // 1. WebConfig에서 사용하는 팀 공통 업로드 경로 주입
-    @Value("${user.upload-dir}")
-    private String uploadDir;
+    @Value("${user.ask-dir}")
+    private String askdDir;
 
     public SupportService(SupportDAO dao) {
         this.dao = dao;
