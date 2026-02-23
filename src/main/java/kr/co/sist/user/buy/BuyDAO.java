@@ -21,6 +21,18 @@ public class BuyDAO {
 		return bd;
 	}
 	
+	//직거래 주소
+		public String selectAddress(int pnum) {
+			
+			SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);
+			
+			String addr=ss.selectOne("kr.co.sist.user.buy.selectDealAddress", pnum);
+			
+			if( ss != null) { ss.close(); }//end if
+			
+			return addr;
+		}//selectProduct
+	
 	public BigDecimal selectCharge() {
 		BigDecimal charge= null;
 		SqlSession ss=MyBatisHandler.getInstance().getMyBatisHandler(false);

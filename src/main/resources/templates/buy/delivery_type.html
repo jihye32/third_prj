@@ -189,7 +189,7 @@
 									<stop stop-color="#B98351"></stop>
 									<stop offset="1" stop-color="#A2744E"></stop></linearGradient></defs></svg>
 			</div>
-			<th:block th:if="${type.name() == 'DIRECT'}">
+			<div th:if="${type.name() == 'DIRECT'}">
 			<div class="outline-none flex flex-row justify-between items-center flex-nowrap">
 				<div class="outline-none gap-1 flex flex-col justify-start items-stretch flex-nowrap">
 					<span class="whitespace-pre-line text-16 font-semibold flex items-center gap-1 text-gray-900">만나서 직거래</span><span class="whitespace-pre-line text-sm">상품을 직접 받을 수 있어요</span>
@@ -272,7 +272,7 @@
 					<path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
 				<span th:text="${BuyDomain.dealAddress}" class="text-sm text-black cursor-pointer"> 저장해둔 직거래 지역</span>
 			</div>
-		</th:block>
+			</div>
 		</div>
 	</div>
 </main>

@@ -3,129 +3,127 @@
  */
 /* 상세화면을 로드할 때 drawerUrl이 없으면 작동하지 않게 함 */
 document.addEventListener("DOMContentLoaded", () => {
-  const qs = new URLSearchParams(location.search);
-  const drawerUrl = qs.get("drawerUrl");
-  
-  if (drawerUrl) {
-    loadDrawerContent(drawerUrl, () => openDrawer('결제 결과'));
+	const qs = new URLSearchParams(location.search);
+	const drawerUrl = qs.get("drawerUrl");
 
-    qs.delete("drawerUrl");
-	const cleanUrl = location.pathname + (qs.toString() ? "?" + qs.toString() : "");
+	if (drawerUrl) {
+		loadDrawerContent(drawerUrl, () => openDrawer('결제 결과'));
 
-    //주소창만 바꾸고, 새로고침/뒤로가기 히스토리는 유지
-    history.replaceState(null, "", cleanUrl);
-  }
-  
-  let currentIndex = 0;
-  const slider = document.getElementById('image-slider');
-  const currentText = document.getElementById('current-slide');
+		qs.delete("drawerUrl");
+		const cleanUrl = location.pathname + (qs.toString() ? "?" + qs.toString() : "");
 
-  if (slider && slider.children.length > 0) {
-      const totalSlides = slider.children.length;
-
-      window.updateSlider = function() {
-          slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-          if (currentText) currentText.innerText = currentIndex + 1;
-      };
-
-      window.nextSlide = function() {
-          currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
-          updateSlider();
-      };
-
-      window.prevSlide = function() {
-          currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
-          updateSlider();
-      };
-  }
- 
-});
-
-
-
-document.getElementById("heart-checkbox")?.addEventListener("change", async (e) => {
-  const checkbox = e.target;
-  const checked = checkbox.checked;
-  const pnum = PageContext.pnum;
-
-  try {
-    const res = await fetch("/product/bookmark", {
-      method: checked ? "POST" : "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pnum }),
-    });
-	
-	if (res.status === 401) {
-	  location.href = "/user/login/loginFrm";
-	  return;
+		//주소창만 바꾸고, 새로고침/뒤로가기 히스토리는 유지
+		history.replaceState(null, "", cleanUrl);
 	}
 
-    if (!res.ok) throw new Error("bookmark failed");
-  } catch (err) {
-    checkbox.checked = !checked; // 원상복구
-    alert("북마크 처리에 실패했습니다.");
-    console.error(err);
-  }
+	let currentIndex = 0;
+	const slider = document.getElementById('image-slider');
+	const currentText = document.getElementById('current-slide');
+
+	if (slider && slider.children.length > 0) {
+		const totalSlides = slider.children.length;
+
+		window.updateSlider = function() {
+			slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+			if (currentText) currentText.innerText = currentIndex + 1;
+		};
+
+		window.nextSlide = function() {
+			currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
+			updateSlider();
+		};
+
+		window.prevSlide = function() {
+			currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
+			updateSlider();
+		};
+	}
+
 });
 
+document.getElementById("heart-checkbox")?.addEventListener("change", async (e) => {
+	const checkbox = e.target;
+	const checked = checkbox.checked;
+	const pnum = PageContext.pnum;
+
+	try {
+		const res = await fetch("/product/bookmark", {
+			method: checked ? "POST" : "DELETE",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ pnum }),
+		});
+
+		if (res.status === 401) {
+			location.href = "/user/login/loginFrm";
+			return;
+		}
+
+		if (!res.ok) throw new Error("bookmark failed");
+	} catch (err) {
+		checkbox.checked = !checked; // 원상복구
+		alert("북마크 처리에 실패했습니다.");
+		console.error(err);
+	}
+});
 
 
 //버튼을 클릭하면 data-action의 값에 해당하는 함수 실행
 document.addEventListener("click", (e) => {
-  const actionBtn = e.target.closest("button[data-action]");
-  const pnum = PageContext.pnum;
-  
-  if (actionBtn){
-	  switch (actionBtn.dataset.action) {
-	    case "bump-date": //끌올 시간 확인 및 변경
-	      	bumpDate(pnum);
-	      	return;
-			
-		case "open-status-list": {//상품 상태 변경 버튼 출력
-			const container = actionBtn.closest(".status-container");
-			const menu = container?.querySelector(".status-option");
-			menu?.classList.toggle("hidden");
-	    	return;
+	const actionBtn = e.target.closest("button[data-action]");
+	const pnum = PageContext.pnum;
+	console.log("binding product-detail click handler", new Error().stack);
+
+	if (actionBtn) {
+		switch (actionBtn.dataset.action) {
+			case "bump-date": //끌올 시간 확인 및 변경
+				bumpDate(pnum);
+				return;
+
+			case "open-status-list": {//상품 상태 변경 버튼 출력
+				const container = actionBtn.closest(".status-container");
+				const menu = container?.querySelector(".status-option");
+				menu?.classList.toggle("hidden");
+				return;
+			}
+
+			case "change-status": {
+				const statusCode = actionBtn.dataset.option;
+				updateStatus(pnum, statusCode);
+
+				const container = actionBtn.closest(".status-container");
+				const menu = container?.querySelector(".status-option");
+				menu?.classList.add("hidden");
+				return;
+			}
+
+			case "modify-product": {
+				modifyProduct(pnum);
+				return;
+			}
+
+			case "remove-product": //상품 삭제
+				confirmRemove(pnum);
+				return;
+
+			case "send-product": //상품 발송
+				sendProduct(pnum);
+				return;
+
+			case "buy-product": //상품 구매
+				openBuyForm(pnum);
+				return;
+
+			case "chat": //상품 구매
+				const store = actionBtn.dataset.store;
+				const seller = actionBtn.dataset.sellerId;
+				openChatForm(seller, store);
+				return;
 		}
-		
-		case "change-status": {
-			const statusCode = actionBtn.dataset.option;
-			updateStatus(pnum, statusCode);
-			
-			const container = actionBtn.closest(".status-container");
-			const menu = container?.querySelector(".status-option");
-			menu?.classList.add("hidden");
-			return;
-		}
-		
-		case "modify-product":{
-			modifyProduct(pnum);
-			return;
-		}
-			
-		case "remove-product": //상품 삭제
-	      	confirmRemove(pnum);
-	      	return;
-		
-		case "send-product": //상품 발송
-	      	sendProduct(pnum);
-	      	return;
-			
-		case "buy-product": //상품 구매
-	      	openBuyForm(pnum);
-	      	return;
-			
-		case "chat": //상품 구매
-			const store = actionBtn.dataset.store;
-			const seller = actionBtn.dataset.sellerId;
-	      	openChatForm(seller, store);
-	      	return;
-	  }
-  }
-  
-  closeStatusDropdown();
+	}
+
+	closeStatusDropdown();
 });
-function closeStatusDropdown(){
+function closeStatusDropdown() {
 	document.querySelectorAll(".status-option").forEach((menu) => {
 		menu.classList.add("hidden");
 	});
@@ -134,71 +132,71 @@ function closeStatusDropdown(){
 //끌올 시간 확인 및 변경 함수
 function bumpDate(pnum) {
 	fetch('/product/modifyUpDate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pnum)
-    }).then(res => res.json())
-    .then(data => {
-    	alert(data.msg); 
-		if(data.flag){
-			$("#timeAgo").text("방금");
-		}
-    });
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(pnum)
+	}).then(res => res.json())
+		.then(data => {
+			alert(data.msg);
+			if (data.flag) {
+				$("#timeAgo").text("방금");
+			}
+		});
 }
 
 //상품 상태 변경 함수
 function updateStatus(pnum, statusCode) {
-    fetch('/product/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pnum, sellStatusCode : statusCode })
+	fetch('/product/status', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ pnum, sellStatusCode: statusCode })
 	}).then(res => res.json())
-    .then(data => {
-		if(data.flag){
-			location.reload();
-		}else{
-    		alert(data.msg); 
-		}
-    });
+		.then(data => {
+			if (data.flag) {
+				location.reload();
+			} else {
+				alert(data.msg);
+			}
+		});
 }
 
-function modifyProduct(pnum){
-	location.href="/sell/modify/"+pnum;
+function modifyProduct(pnum) {
+	location.href = "/sell/modify/" + pnum;
 }
 
 //상품 삭제 함수
 function confirmRemove(pnum) {
-  if (!confirm("정말 삭제하시겠습니까?")) return;
-  removeProduct(pnum);
+	if (!confirm("정말 삭제하시겠습니까?")) return;
+	removeProduct(pnum);
 }
 
 function removeProduct(pnum) {
 	fetch('/product/deleteProduct', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pnum )
-    }).then(res => res.json())
-    .then(data => {
-    	alert(data.msg); 
-		if(data.flag){
-			location.href="/store/"+data.snum;
-		}
-    });
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(pnum)
+	}).then(res => res.json())
+		.then(data => {
+			alert(data.msg);
+			if (data.flag) {
+				location.href = "/store/" + data.snum;
+			}
+		});
 }
 
 //발송완료 함수
-function sendProduct(pnum){
+function sendProduct(pnum) {
 	fetch('/product/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pnum)
-    }).then(res => res.json())
-    .then(data => {
-		alert(data.msg);
-		if(data.flag){
-			location.reload();
-		}
-    });
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(pnum)
+	}).then(res => res.json())
+		.then(data => {
+			alert(data.msg);
+			if (data.flag) {
+				location.reload();
+			}
+		});
 }
 
 function openBuyForm(pnum) {
