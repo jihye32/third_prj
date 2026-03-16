@@ -80,12 +80,8 @@ public class SupportService {
             // 파일명 충돌 방지 및 보안을 위해 UUID 사용
             String saveName = "ASK_" + askNum + "_" + UUID.randomUUID().toString().replace("-", "") + ext;
             File saveFile = new File(dir, saveName);
-
-            // 실제 HDD에 파일 물리적 저장
             mf.transferTo(saveFile);
 
-            // 3) DB에는 파일명만 저장
-            // 결과적으로 HTML에서 /upload/ask/파일명 으로 접근하게 됩니다.
             dao.insertAskImg(askNum, saveName); 
         }
     }
